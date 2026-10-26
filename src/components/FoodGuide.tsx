@@ -72,7 +72,7 @@ const localT: Record<string, Record<string, string>> = {
     solidFoodBadge: 'Smart Guide to First Foods at Every Age',
     solidFoodTitle: 'AI NutriChef: Your Kitchen Assistant',
     solidFoodDesc: '250+ Age-Matched Indian Recipes & Custom Ingredient Cooker. Blends scientific pediatric nutrition with cooking ease.',
-    selectAgeGroup: 'Select Age',
+    selectAgeGroup: 'Select Stage Guidelines',
     readinessMilestones: 'Developmental Eating Milestones',
     feedingGuidelines: 'Feeding Guidelines & Schedule',
     recipesHeader: 'Nutritious Recipes to Choose',
@@ -937,8 +937,53 @@ Each object must have these exact keys:
         </div>
       </div>
 
-      {/* 4 Big Attractive Navigation Menu Buttons (Tags removed from top of buttons) */}
+      {/* 4 Big Attractive Navigation Menu Buttons */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-8">
+        {/* 1. AI Recipe Maker */}
+        <button
+          type="button"
+          onClick={() => {
+            playSound('pop');
+            document.getElementById('ai-recipe-maker-section')?.scrollIntoView({ behavior: 'smooth' });
+          }}
+          className="group text-left p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-teal-950/40 via-slate-900/60 to-[#0c1424] hover:from-teal-900/50 hover:to-teal-950/60 border border-teal-500/30 hover:border-teal-400 transition-all duration-300 shadow-lg hover:shadow-teal-500/20 active:scale-98 cursor-pointer relative overflow-hidden flex flex-col justify-between min-h-[96px]"
+        >
+          <div className="w-10 h-10 rounded-xl bg-teal-500/20 border border-teal-400/40 flex items-center justify-center text-teal-300 group-hover:scale-110 transition-transform mb-3">
+            <Sparkles className="w-5 h-5 text-teal-400" />
+          </div>
+          <div>
+            <h3 className="font-black text-sm sm:text-base text-white group-hover:text-teal-200 transition-colors">
+              AI Recipe Maker
+            </h3>
+            <p className="text-[11px] text-white/60 mt-0.5 line-clamp-1">
+              Custom Ingredient Cooker
+            </p>
+          </div>
+        </button>
+
+        {/* 2. Nutritious Recipes */}
+        <button
+          type="button"
+          onClick={() => {
+            playSound('pop');
+            document.getElementById('nutritious-recipes-section')?.scrollIntoView({ behavior: 'smooth' });
+          }}
+          className="group text-left p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-amber-950/40 via-slate-900/60 to-[#0c1424] hover:from-amber-900/50 hover:to-amber-950/60 border border-amber-500/30 hover:border-amber-400 transition-all duration-300 shadow-lg hover:shadow-amber-500/20 active:scale-98 cursor-pointer relative overflow-hidden flex flex-col justify-between min-h-[96px]"
+        >
+          <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-400/40 flex items-center justify-center text-amber-300 group-hover:scale-110 transition-transform mb-3">
+            <UtensilsCrossed className="w-5 h-5 text-amber-400" />
+          </div>
+          <div>
+            <h3 className="font-black text-sm sm:text-base text-white group-hover:text-amber-200 transition-colors">
+              Nutritious Recipes
+            </h3>
+            <p className="text-[11px] text-white/60 mt-0.5 line-clamp-1">
+              250+ Age-Matched Indian Dishes
+            </p>
+          </div>
+        </button>
+
+        {/* 3. AI Recipe History */}
         <button
           type="button"
           onClick={() => {
@@ -965,53 +1010,12 @@ Each object must have these exact keys:
           </div>
         </button>
 
+        {/* 4. Stage Guidelines */}
         <button
           type="button"
           onClick={() => {
             playSound('pop');
-            document.getElementById('ai-recipe-maker-section')?.scrollIntoView({ behavior: 'smooth' });
-          }}
-          className="group text-left p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-teal-950/40 via-slate-900/60 to-[#0c1424] hover:from-teal-900/50 hover:to-teal-950/60 border border-teal-500/30 hover:border-teal-400 transition-all duration-300 shadow-lg hover:shadow-teal-500/20 active:scale-98 cursor-pointer relative overflow-hidden flex flex-col justify-between min-h-[96px]"
-        >
-          <div className="w-10 h-10 rounded-xl bg-teal-500/20 border border-teal-400/40 flex items-center justify-center text-teal-300 group-hover:scale-110 transition-transform mb-3">
-            <Sparkles className="w-5 h-5 text-teal-400" />
-          </div>
-          <div>
-            <h3 className="font-black text-sm sm:text-base text-white group-hover:text-teal-200 transition-colors">
-              AI Recipe Maker
-            </h3>
-            <p className="text-[11px] text-white/60 mt-0.5 line-clamp-1">
-              Custom Ingredient Cooker
-            </p>
-          </div>
-        </button>
-
-        <button
-          type="button"
-          onClick={() => {
-            playSound('pop');
-            document.getElementById('nutritious-recipes-section')?.scrollIntoView({ behavior: 'smooth' });
-          }}
-          className="group text-left p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-amber-950/40 via-slate-900/60 to-[#0c1424] hover:from-amber-900/50 hover:to-amber-950/60 border border-amber-500/30 hover:border-amber-400 transition-all duration-300 shadow-lg hover:shadow-amber-500/20 active:scale-98 cursor-pointer relative overflow-hidden flex flex-col justify-between min-h-[96px]"
-        >
-          <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-400/40 flex items-center justify-center text-amber-300 group-hover:scale-110 transition-transform mb-3">
-            <UtensilsCrossed className="w-5 h-5 text-amber-400" />
-          </div>
-          <div>
-            <h3 className="font-black text-sm sm:text-base text-white group-hover:text-amber-200 transition-colors">
-              Nutritious Recipes
-            </h3>
-            <p className="text-[11px] text-white/60 mt-0.5 line-clamp-1">
-              250+ Age-Matched Indian Dishes
-            </p>
-          </div>
-        </button>
-
-        <button
-          type="button"
-          onClick={() => {
-            playSound('pop');
-            document.getElementById('stage-guidelines-section')?.scrollIntoView({ behavior: 'smooth' });
+            document.getElementById('select-stage-guidelines-section')?.scrollIntoView({ behavior: 'smooth' });
           }}
           className="group text-left p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-purple-950/40 via-slate-900/60 to-[#0c1424] hover:from-purple-900/50 hover:to-purple-950/60 border border-purple-500/30 hover:border-purple-400 transition-all duration-300 shadow-lg hover:shadow-purple-500/20 active:scale-98 cursor-pointer relative overflow-hidden flex flex-col justify-between min-h-[96px]"
         >
@@ -1196,130 +1200,7 @@ Each object must have these exact keys:
         </div>
       </div>
 
-      {/* =========================================================
-          2. SELECT AGE (With All Button & Child Auto-Select)
-      ========================================================== */}
-      <div id="select-age-section" className="mb-8 scroll-mt-24">
-        <div className="glass-card p-5 sm:p-6 border border-white/10 rounded-3xl bg-[#0c1424]/90 shadow-xl">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4 pb-3 border-b border-white/5">
-            <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-indigo-400 animate-pulse" />
-              <h2 className="text-xs sm:text-sm font-black text-indigo-300 uppercase tracking-widest flex items-center gap-2">
-                <span>Select Age</span>
-              </h2>
-            </div>
-            <span className="text-xs font-mono text-white/50">
-              10 Age Brackets (0 to 18 Years)
-            </span>
-          </div>
 
-          {/* Dedicated Child Profile Banner (Prominent, Elegant & Never Overlapping) */}
-          {profileAge && (
-            <div className="mb-5 p-4 rounded-2xl bg-gradient-to-r from-emerald-500/15 via-emerald-500/10 to-teal-950/20 border border-emerald-400/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-md">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-2xl bg-emerald-400 text-slate-950 flex items-center justify-center font-black text-lg shrink-0 shadow">
-                  👶
-                </div>
-                <div>
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span className="text-sm font-black text-white tracking-wide">
-                      Personalized for <span className="text-emerald-400 font-extrabold">{childName || 'Ashwath'}</span>
-                    </span>
-                    <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-400/20 text-emerald-300 border border-emerald-400/30 font-mono">
-                      Age: {profileAge}
-                    </span>
-                    <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-cyan-400/20 text-cyan-300 border border-cyan-400/30 font-mono flex items-center gap-1">
-                      <MapPin className="w-3 h-3 text-cyan-300" />
-                      State: {indianState}
-                    </span>
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-400/30 font-mono">
-                      {userRegion} Region
-                    </span>
-                  </div>
-                  <p className="text-xs text-white/60 mt-0.5">
-                    Personalized for {childName || 'Ashwath'} based on both developmental age ({profileAge}) and regional home cuisine of {indianState}.
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Horizontal Age Filters Grid including "All" button */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2.5 sm:gap-3">
-            {/* ALL BUTTON */}
-            <button
-              type="button"
-              onClick={() => handleStageChange('all')}
-              className={`p-3 sm:p-3.5 rounded-2xl border text-left transition-all duration-200 cursor-pointer min-h-[96px] flex flex-col justify-between overflow-hidden relative ${
-                activeStage === 'all'
-                  ? 'bg-gradient-to-br from-indigo-500/25 to-purple-500/25 border-indigo-400 text-white ring-2 ring-indigo-400/40 shadow-lg shadow-indigo-500/15 scale-[1.02]'
-                  : 'bg-white/[0.03] border-white/10 text-white/70 hover:border-white/20 hover:text-white hover:bg-white/[0.06]'
-              }`}
-            >
-              <div>
-                <div className="flex items-center justify-between">
-                  <span className="font-black text-sm">All</span>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-300 bg-indigo-500/20 px-1.5 py-0.5 rounded-md">
-                    0-18 Yrs
-                  </span>
-                </div>
-                <div className="text-[11px] text-white/50 mt-1 font-medium leading-tight">
-                  All Recipes & Stages
-                </div>
-              </div>
-              <div className="mt-2 pt-1.5 border-t border-white/5 text-[10px] text-indigo-300 font-mono font-bold">
-                {allRecipesFlat.length} Recipes
-              </div>
-            </button>
-
-            {/* AGE STAGES */}
-            {ageStages.map((stage) => {
-              const isActive = activeStage === stage.id;
-              const isChildStage = stage.id === childStageId;
-              return (
-                <button
-                  key={stage.id}
-                  type="button"
-                  onClick={() => handleStageChange(stage.id)}
-                  className={`p-3 sm:p-3.5 rounded-2xl border text-left transition-all duration-200 cursor-pointer min-h-[96px] flex flex-col justify-between overflow-hidden relative ${
-                    isActive
-                      ? isChildStage
-                        ? 'bg-gradient-to-br from-emerald-500/25 to-teal-500/25 border-emerald-400 text-white ring-2 ring-emerald-400/50 shadow-lg shadow-emerald-500/20 scale-[1.02]'
-                        : 'bg-gradient-to-br from-indigo-500/25 to-purple-500/25 border-indigo-400 text-white ring-2 ring-indigo-400/40 shadow-lg shadow-indigo-500/15 scale-[1.02]'
-                      : isChildStage
-                        ? 'bg-emerald-500/[0.08] border-emerald-400/60 text-white ring-1 ring-emerald-400/30 hover:border-emerald-400'
-                        : 'bg-white/[0.03] border-white/10 text-white/70 hover:border-white/20 hover:text-white hover:bg-white/[0.06]'
-                  }`}
-                >
-                  <div className="w-full">
-                    <div className="font-black text-sm text-white truncate">
-                      {stage.ageLimit}
-                    </div>
-                    <div className="text-[11px] text-white/50 mt-0.5 font-medium line-clamp-1 leading-tight">
-                      {stage.title}
-                    </div>
-                  </div>
-
-                  {/* Clean bottom row indicator - NO overlap with top text */}
-                  {isChildStage ? (
-                    <div className="mt-2 pt-1.5 border-t border-emerald-400/25 flex items-center justify-between text-[10px] font-black text-emerald-300">
-                      <div className="flex items-center gap-1.5 truncate">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0 animate-pulse" />
-                        <span className="truncate">For {childName || 'Child'}</span>
-                      </div>
-                      <span className="font-mono text-[9px] text-emerald-300/80 shrink-0 ml-1">{stage.recipes.length} Recipes</span>
-                    </div>
-                  ) : (
-                    <div className="mt-2 pt-1.5 border-t border-transparent text-[10px] text-white/40 font-mono">
-                      {stage.recipes.length} Recipes
-                    </div>
-                  )}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      </div>
 
             {/* =========================================================
           4. NUTRITIOUS RECIPES TO CHOOSE (With Meal Category Filter)
@@ -1724,7 +1605,133 @@ Each object must have these exact keys:
       </div>
 
       {/* =========================================================
-          5. STAGE GUIDELINES (Readable, High-Contrast & Clear)
+          5. SELECT STAGE GUIDELINES (With All Button & Child Auto-Select)
+      ========================================================== */}
+      <div id="select-stage-guidelines-section" className="mb-8 scroll-mt-24">
+        <span id="select-age-section" className="sr-only" />
+        <div className="glass-card p-5 sm:p-6 border border-white/10 rounded-3xl bg-[#0c1424]/90 shadow-xl">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4 pb-3 border-b border-white/5">
+            <div className="flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-indigo-400 animate-pulse" />
+              <h2 className="text-xs sm:text-sm font-black text-indigo-300 uppercase tracking-widest flex items-center gap-2">
+                <span>Select Stage Guidelines</span>
+              </h2>
+            </div>
+            <span className="text-xs font-mono text-white/50">
+              10 Age Brackets (0 to 18 Years)
+            </span>
+          </div>
+
+          {/* Dedicated Child Profile Banner (Prominent, Elegant & Never Overlapping) */}
+          {profileAge && (
+            <div className="mb-5 p-4 rounded-2xl bg-gradient-to-r from-emerald-500/15 via-emerald-500/10 to-teal-950/20 border border-emerald-400/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-md">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-emerald-400 text-slate-950 flex items-center justify-center font-black text-lg shrink-0 shadow">
+                  👶
+                </div>
+                <div>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="text-sm font-black text-white tracking-wide">
+                      Personalized for <span className="text-emerald-400 font-extrabold">{childName || 'Ashwath'}</span>
+                    </span>
+                    <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-400/20 text-emerald-300 border border-emerald-400/30 font-mono">
+                      Age: {profileAge}
+                    </span>
+                    <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-cyan-400/20 text-cyan-300 border border-cyan-400/30 font-mono flex items-center gap-1">
+                      <MapPin className="w-3 h-3 text-cyan-300" />
+                      State: {indianState}
+                    </span>
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-400/30 font-mono">
+                      {userRegion} Region
+                    </span>
+                  </div>
+                  <p className="text-xs text-white/60 mt-0.5">
+                    Personalized for {childName || 'Ashwath'} based on both developmental age ({profileAge}) and regional home cuisine of {indianState}.
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Horizontal Age Filters Grid including "All" button */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2.5 sm:gap-3">
+            {/* ALL BUTTON */}
+            <button
+              type="button"
+              onClick={() => handleStageChange('all')}
+              className={`p-3 sm:p-3.5 rounded-2xl border text-left transition-all duration-200 cursor-pointer min-h-[96px] flex flex-col justify-between overflow-hidden relative ${
+                activeStage === 'all'
+                  ? 'bg-gradient-to-br from-indigo-500/25 to-purple-500/25 border-indigo-400 text-white ring-2 ring-indigo-400/40 shadow-lg shadow-indigo-500/15 scale-[1.02]'
+                  : 'bg-white/[0.03] border-white/10 text-white/70 hover:border-white/20 hover:text-white hover:bg-white/[0.06]'
+              }`}
+            >
+              <div>
+                <div className="flex items-center justify-between">
+                  <span className="font-black text-sm">All</span>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-300 bg-indigo-500/20 px-1.5 py-0.5 rounded-md">
+                    0-18 Yrs
+                  </span>
+                </div>
+                <div className="text-[11px] text-white/50 mt-1 font-medium leading-tight">
+                  All Recipes & Stages
+                </div>
+              </div>
+              <div className="mt-2 pt-1.5 border-t border-white/5 text-[10px] text-indigo-300 font-mono font-bold">
+                {allRecipesFlat.length} Recipes
+              </div>
+            </button>
+
+            {/* AGE STAGES */}
+            {ageStages.map((stage) => {
+              const isActive = activeStage === stage.id;
+              const isChildStage = stage.id === childStageId;
+              return (
+                <button
+                  key={stage.id}
+                  type="button"
+                  onClick={() => handleStageChange(stage.id)}
+                  className={`p-3 sm:p-3.5 rounded-2xl border text-left transition-all duration-200 cursor-pointer min-h-[96px] flex flex-col justify-between overflow-hidden relative ${
+                    isActive
+                      ? isChildStage
+                        ? 'bg-gradient-to-br from-emerald-500/25 to-teal-500/25 border-emerald-400 text-white ring-2 ring-emerald-400/50 shadow-lg shadow-emerald-500/20 scale-[1.02]'
+                        : 'bg-gradient-to-br from-indigo-500/25 to-purple-500/25 border-indigo-400 text-white ring-2 ring-indigo-400/40 shadow-lg shadow-indigo-500/15 scale-[1.02]'
+                      : isChildStage
+                        ? 'bg-emerald-500/[0.08] border-emerald-400/60 text-white ring-1 ring-emerald-400/30 hover:border-emerald-400'
+                        : 'bg-white/[0.03] border-white/10 text-white/70 hover:border-white/20 hover:text-white hover:bg-white/[0.06]'
+                  }`}
+                >
+                  <div className="w-full">
+                    <div className="font-black text-sm text-white truncate">
+                      {stage.ageLimit}
+                    </div>
+                    <div className="text-[11px] text-white/50 mt-0.5 font-medium line-clamp-1 leading-tight">
+                      {stage.title}
+                    </div>
+                  </div>
+
+                  {/* Clean bottom row indicator - NO overlap with top text */}
+                  {isChildStage ? (
+                    <div className="mt-2 pt-1.5 border-t border-emerald-400/25 flex items-center justify-between text-[10px] font-black text-emerald-300">
+                      <div className="flex items-center gap-1.5 truncate">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0 animate-pulse" />
+                        <span className="truncate">For {childName || 'Child'}</span>
+                      </div>
+                      <span className="font-mono text-[9px] text-emerald-300/80 shrink-0 ml-1">{stage.recipes.length} Recipes</span>
+                    </div>
+                  ) : (
+                    <div className="mt-2 pt-1.5 border-t border-transparent text-[10px] text-white/40 font-mono">
+                      {stage.recipes.length} Recipes
+                    </div>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* =========================================================
+          6. STAGE GUIDELINES (Readable, High-Contrast & Clear)
       ========================================================== */}
       <div id="stage-guidelines-section" className="mb-12 scroll-mt-24">
         <div className="glass-card p-6 sm:p-8 border border-white/15 rounded-3xl bg-[#0b1220]/95 shadow-2xl">
@@ -2024,8 +2031,8 @@ Each object must have these exact keys:
         </div>
       </div>
 
-            {/* =========================================================
-          6. FOOD LENS AI SCANNER
+      {/* =========================================================
+          7. FOOD LENS AI SCANNER
       ========================================================== */}
       <div id="food-lens-section" className="mb-12">
         <div className="relative overflow-hidden rounded-3xl border border-amber-400/30 bg-gradient-to-r from-amber-500/15 via-orange-500/10 to-indigo-950/40 p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 backdrop-blur-xl shadow-xl shadow-amber-500/5">
