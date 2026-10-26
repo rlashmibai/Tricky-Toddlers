@@ -50,7 +50,8 @@ export const Navbar: React.FC = () => {
   const { language, setLanguage, t } = useLanguage();
   const navigate = useNavigate();
   const location = useLocation();
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [langDropdownOpen, setLangDropdownOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [aboutDropdownOpen, setAboutDropdownOpen] = useState(false);
   const [setupNotice, setSetupNotice] = useState(false);
 
@@ -60,7 +61,8 @@ export const Navbar: React.FC = () => {
   // Close dropdowns on route changes
   useEffect(() => {
     setAboutDropdownOpen(false);
-    setDropdownOpen(false);
+    setLangDropdownOpen(false);
+    setMobileMenuOpen(false);
   }, [location.pathname, location.search]);
 
   // Close dropdowns when clicking anywhere outside
@@ -71,7 +73,7 @@ export const Navbar: React.FC = () => {
         setAboutDropdownOpen(false);
       }
       if (langDropdownRef.current && !langDropdownRef.current.contains(target)) {
-        setDropdownOpen(false);
+        setLangDropdownOpen(false);
       }
     };
 
@@ -282,26 +284,26 @@ export const Navbar: React.FC = () => {
           <div className="flex justify-between h-16 items-center gap-2">
             
             {/* Left: Brand - Takes to Home Page */}
-            <div className="flex items-center gap-3 sm:gap-6 min-w-0">
+            <div className="flex items-center gap-2 sm:gap-3 shrink-0">
               <button 
                 type="button"
                 onClick={handleBrandClick}
-                className="flex items-center gap-2.5 group shrink-0 cursor-pointer text-left focus:outline-none"
+                className="flex items-center gap-2 sm:gap-2.5 group shrink-0 cursor-pointer text-left focus:outline-none"
                 title="Go to Tricky Toddlers Home"
               >
-                <div className="w-9 h-9 bg-gradient-to-tr from-indigo-600 to-purple-500 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform shadow-lg shadow-indigo-500/30 shrink-0">
-                  <Baby className="text-white w-5 h-5" />
+                <div className="w-8 h-8 sm:w-9 sm:h-9 bg-gradient-to-tr from-indigo-600 to-purple-500 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform shadow-lg shadow-indigo-500/30 shrink-0">
+                  <Baby className="text-white w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
-                <span className="font-sans font-black text-lg sm:text-xl tracking-tight text-white group-hover:text-indigo-200 transition-colors inline">
+                <span className="font-sans font-black text-base sm:text-lg lg:text-xl tracking-tight text-white group-hover:text-indigo-200 transition-colors whitespace-nowrap shrink-0">
                   Tricky Toddlers
                 </span>
               </button>
             </div>
 
             {/* Right: About Menu, Language Selector & User Controls */}
-            <div className="flex items-center gap-2 sm:gap-3">
-              {/* About Me Dropdown (Placed before English Menu) */}
-              <div className="relative" ref={aboutDropdownRef}>
+            <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+              {/* About Me Dropdown (Visible on tablet & desktop; on mobile available in Main Menu) */}
+              <div className="relative hidden sm:block" ref={aboutDropdownRef}>
                 <button
                   type="button"
                   id="nav-about-btn"
@@ -352,7 +354,6 @@ export const Navbar: React.FC = () => {
                           </div>
                         </Link>
 
-
                         {/* Contact & Feedback */}
                         <Link
                           to="/contact"
@@ -383,7 +384,7 @@ export const Navbar: React.FC = () => {
                   type="button"
                   onClick={() => {
                     playSound('click');
-                    setDropdownOpen(!dropdownOpen);
+                    setLangDropdownOpen(!langDropdownOpen);
                   }}
                   className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition-colors text-xs font-bold text-white/80 hover:text-white"
                   title="Select Language"
@@ -398,11 +399,11 @@ export const Navbar: React.FC = () => {
                 </button>
 
                 <AnimatePresence>
-                  {dropdownOpen && (
+                  {langDropdownOpen && (
                     <>
                       <div 
                         className="fixed inset-0 z-40" 
-                        onClick={() => setDropdownOpen(false)} 
+                        onClick={() => setLangDropdownOpen(false)} 
                       />
                       <motion.div
                         initial={{ opacity: 0, y: 10, scale: 0.95 }}
@@ -420,7 +421,7 @@ export const Navbar: React.FC = () => {
                             onClick={() => {
                               playSound('glass');
                               setLanguage(lang.code);
-                              setDropdownOpen(false);
+                              setLangDropdownOpen(false);
                             }}
                             className={`w-full text-left px-2.5 py-2 rounded-xl text-xs font-semibold transition-all flex justify-between items-center ${
                               language === lang.code
@@ -462,7 +463,7 @@ export const Navbar: React.FC = () => {
                       playSound('glass');
                       window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
                     }}
-                    className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl border transition-all text-xs font-bold ${
+                    className={`hidden sm:flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl border transition-all text-xs font-bold ${
                       location.pathname === '/dietary-preferences' || location.pathname.includes('baby-health')
                         ? 'bg-emerald-500/20 text-emerald-200 border-emerald-400/40 shadow-sm shadow-emerald-500/10'
                         : 'bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border-emerald-400/30'
@@ -578,37 +579,115 @@ export const Navbar: React.FC = () => {
         {/* Mobile Hamburger Menu */}
         <div className="md:hidden relative z-30 border-b border-white/10 bg-[#060a16]/95 backdrop-blur-2xl shadow-md">
           <div className="flex justify-between items-center px-4 py-3">
-             <span className="text-white font-bold text-sm">Main Menu</span>
+             <div className="flex items-center gap-2">
+               <span className="text-white font-black text-sm tracking-tight">Main Menu</span>
+               <span className="text-[10px] text-indigo-300 bg-indigo-500/20 px-2 py-0.5 rounded-full font-bold">14 Features</span>
+             </div>
              <button
-                onClick={() => setDropdownOpen(!dropdownOpen)}
-                className="p-2 rounded-xl bg-white/10 border border-white/20"
+                type="button"
+                onClick={() => {
+                  playSound('click');
+                  setMobileMenuOpen(!mobileMenuOpen);
+                }}
+                className={`p-2 rounded-xl border transition-all cursor-pointer flex items-center gap-1.5 ${
+                  mobileMenuOpen 
+                    ? 'bg-indigo-600 text-white border-indigo-400/50 shadow-md shadow-indigo-500/20' 
+                    : 'bg-white/10 hover:bg-white/15 border-white/20 text-white'
+                }`}
                 aria-label="Toggle menu"
              >
-                <Menu className="w-6 h-6 text-white" />
+                <span className="text-xs font-bold text-white/90">{mobileMenuOpen ? 'Close' : 'Menu'}</span>
+                <Menu className="w-5 h-5 text-white" />
              </button>
           </div>
-          {dropdownOpen && (
-            <div className="grid grid-cols-2 gap-3 p-4 border-t border-white/10 bg-[#0a0f1d]">
-                {menuItems.map((item) => {
+          
+          <AnimatePresence>
+            {mobileMenuOpen && (
+              <motion.div 
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                className="p-4 border-t border-white/10 bg-[#0a0f1d] space-y-3.5 overflow-hidden"
+              >
+                {/* Mobile Quick Links: About Me, Contact, and Dietary Preferences */}
+                <div className="grid grid-cols-3 gap-2 pb-3 border-b border-white/10">
+                  <Link
+                    to="/about?tab=story"
+                    onClick={() => {
+                      playSound('glass');
+                      setMobileMenuOpen(false);
+                      window.scrollTo({ top: 0, behavior: 'instant' });
+                    }}
+                    className="flex flex-col items-center justify-center p-2 rounded-xl bg-pink-500/10 border border-pink-500/20 text-pink-300 text-[10px] font-bold hover:bg-pink-500/20 transition-all text-center gap-1 active:scale-95"
+                  >
+                    <Heart className="w-3.5 h-3.5 text-pink-400 fill-pink-400/20" />
+                    <span>About Me</span>
+                  </Link>
+
+                  <Link
+                    to="/contact"
+                    onClick={() => {
+                      playSound('glass');
+                      setMobileMenuOpen(false);
+                      window.scrollTo({ top: 0, behavior: 'instant' });
+                    }}
+                    className="flex flex-col items-center justify-center p-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-[10px] font-bold hover:bg-emerald-500/20 transition-all text-center gap-1 active:scale-95"
+                  >
+                    <MessageSquareHeart className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>Contact</span>
+                  </Link>
+
+                  <Link
+                    to="/dietary-preferences"
+                    onClick={() => {
+                      playSound('glass');
+                      setMobileMenuOpen(false);
+                      window.scrollTo({ top: 0, behavior: 'instant' });
+                    }}
+                    className="flex flex-col items-center justify-center p-2 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-[10px] font-bold hover:bg-indigo-500/20 transition-all text-center gap-1 active:scale-95"
+                  >
+                    <Utensils className="w-3.5 h-3.5 text-indigo-400" />
+                    <span>Diet</span>
+                  </Link>
+                </div>
+
+                {/* 14 Features Grid */}
+                <div className="grid grid-cols-2 gap-2.5">
+                  {menuItems.map((item) => {
                     const active = isItemActive(item);
                     const Icon = item.icon;
                     return (
-                        <button
-                          key={item.id}
-                          onClick={() => { handleMenuClick(item); setDropdownOpen(false); }}
-                          className={`flex flex-col items-center justify-center gap-2 p-4 rounded-2xl text-[10px] font-bold transition-all border ${
-                            active
-                              ? 'bg-indigo-600/20 text-indigo-100 border-indigo-500/50'
-                              : 'bg-white/5 text-white/70 border-white/5'
-                          }`}
-                        >
-                            <Icon className="w-5 h-5 shrink-0" />
-                            <span className="text-center leading-tight">{item.label}</span>
-                        </button>
-                    )
-                })}
-            </div>
-          )}
+                      <button
+                        key={item.id}
+                        type="button"
+                        onClick={() => { 
+                          handleMenuClick(item); 
+                          setMobileMenuOpen(false); 
+                        }}
+                        className={`flex items-center gap-2.5 p-3 rounded-2xl text-xs font-bold transition-all border cursor-pointer active:scale-95 text-left ${
+                          active
+                            ? 'bg-gradient-to-r from-indigo-600/30 to-purple-600/30 text-white border-indigo-500/60 shadow-md shadow-indigo-500/20'
+                            : 'bg-white/5 text-white/80 hover:text-white border-white/5 hover:border-white/15 hover:bg-white/10'
+                        }`}
+                      >
+                        <div className={`p-2 rounded-xl shrink-0 ${active ? 'bg-indigo-500 text-white' : 'bg-white/5 ' + item.iconColor}`}>
+                          <Icon className="w-4 h-4 shrink-0" />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <div className="leading-tight truncate">{item.label}</div>
+                          {item.badge && (
+                            <span className={`inline-block mt-0.5 px-1.5 py-0.2 rounded-full text-[8px] font-black uppercase tracking-wider ${item.badgeClass}`}>
+                              {item.badge}
+                            </span>
+                          )}
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </>
     )}
