@@ -6,6 +6,7 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import { AuthProvider, useAuth } from './lib/AuthContext';
 import { LanguageProvider } from './lib/LanguageContext';
 import { Navbar } from './components/Navbar';
@@ -321,6 +322,7 @@ export default function App() {
           <ScrollToTop />
           <AppContent />
           <ScrollToTopButton />
+          <SpeedInsights />
         </Router>
       </LanguageProvider>
     </AuthProvider>
