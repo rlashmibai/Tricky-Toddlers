@@ -95,7 +95,7 @@ export const LoginForm: React.FC = () => {
       >
         <div className="glass-card p-6 sm:p-8 rounded-3xl relative overflow-hidden shadow-2xl">
           <div className="text-center mb-5">
-            <h1 className="text-2xl sm:text-3xl font-black text-white mb-1">Welcome Back</h1>
+            <h1 className="text-2xl sm:text-3xl font-black text-white mb-1">Welcome</h1>
             <p className="text-white/50 text-xs sm:text-sm whitespace-normal sm:whitespace-nowrap">
               Sign in to your parent dashboard or explore instantly
             </p>
