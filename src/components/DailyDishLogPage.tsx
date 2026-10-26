@@ -257,7 +257,7 @@ export const DailyDishLogPage: React.FC = () => {
                 <span>Daily Meal &amp; Dish Journal</span>
               </div>
               <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-                Logged Dishes for the Day
+                Meal Diary
               </h1>
               <p className="text-xs sm:text-sm text-slate-300 font-normal">
                 Review all meals, snacks, and dishes logged for your child with daily calorie and nutrient totals.

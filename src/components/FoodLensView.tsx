@@ -561,7 +561,7 @@ export const FoodLensView: React.FC<FoodLensViewProps> = ({
               <ArrowDown className="w-3.5 h-3.5 text-slate-950 shrink-0" />
             </button>
 
-            {/* View Dishes for the Day */}
+            {/* Meal Diary */}
             <Link
               to="/dish-log"
               onClick={() => playSound('glass')}
@@ -647,9 +647,6 @@ export const FoodLensView: React.FC<FoodLensViewProps> = ({
           {/* How it Works */}
           <div className="text-center max-w-5xl mx-auto space-y-4 mb-12" id="how-it-works-section">
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight">How it Works</h2>
-            <div className="rounded-3xl overflow-hidden border border-white/10 bg-white/95 shadow-xl mb-4">
-              <img src="/assets/aistudio/image_6668e8cc.png" alt="FoodLens AI Banner" className="w-full h-auto object-contain" />
-            </div>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div className="rounded-3xl overflow-hidden border border-white/10 bg-white/95 shadow-xl">
                 <img src="/assets/aistudio/Gemini_Generated_Image_2vihgd2vihgd2vih__1__7cdf258c.png" alt="Scan Label" className="w-full h-auto object-contain" />

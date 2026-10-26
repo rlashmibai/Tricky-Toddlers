@@ -357,32 +357,20 @@ export const SampleFoodsPage: React.FC = () => {
       <header className="relative z-10 bg-[#0b1222]/95 border-b border-white/10 px-4 sm:px-8 py-3.5 shadow-xl">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
           
-          {/* Left: Go Back to Homepage option */}
+          {/* Left: Back to FoodLens Main */}
           <div className="flex items-center gap-3 w-full md:w-auto justify-between md:justify-start">
             <button
-              id="back-to-homepage-btn"
-              onClick={() => {
-                playSound('glass');
-                navigate('/?tab=home');
-                window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-              }}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs sm:text-sm border border-white/15 active:scale-95 transition-all cursor-pointer shadow-md hover:border-amber-400/40"
-              title="Return to Homepage"
-            >
-              <Home className="w-4 h-4 text-amber-400" />
-              <span>← Go Back to Homepage</span>
-            </button>
-
-            <button
+              id="back-to-foodlens-btn"
               onClick={() => {
                 playSound('glass');
                 navigate('/?tab=foodlens');
                 window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
               }}
-              className="text-xs text-slate-400 hover:text-white font-semibold transition-colors hidden sm:inline-flex items-center gap-1 cursor-pointer"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs sm:text-sm border border-white/15 active:scale-95 transition-all cursor-pointer shadow-md hover:border-emerald-400/40"
+              title="Back to FoodLens Main"
             >
-              <Utensils className="w-3.5 h-3.5 text-emerald-400" />
-              <span>FoodLens Main</span>
+              <Utensils className="w-4 h-4 text-emerald-400" />
+              <span>← Back to FoodLens Main</span>
             </button>
           </div>
 
@@ -395,7 +383,7 @@ export const SampleFoodsPage: React.FC = () => {
           {/* Right: View Dishes for Day & Action Buttons */}
           <div className="flex flex-wrap items-center gap-2.5 w-full md:w-auto justify-end">
             
-            {/* View Dishes for the Day Button */}
+            {/* Meal Diary Button */}
             <button
               onClick={() => {
                 playSound('glass');
@@ -403,10 +391,10 @@ export const SampleFoodsPage: React.FC = () => {
                 window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
               }}
               className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 hover:text-white font-bold text-xs sm:text-sm border border-amber-400/40 active:scale-95 transition-all cursor-pointer shadow-md"
-              title="View dishes logged for the day"
+              title="Meal Diary"
             >
               <CalendarIcon className="w-4 h-4 text-amber-400" />
-              <span>View Dishes for the Day</span>
+              <span>Meal Diary</span>
             </button>
 
             {/* Scan Food Option */}
@@ -607,71 +595,6 @@ export const SampleFoodsPage: React.FC = () => {
           </section>
         )}
 
-        {/* =========================================================
-            HERO SECTION: SAMPLE FOOD SCORECARD (GENERIC & CLEAN)
-        ========================================================== */}
-        <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#101b33] via-[#0d1629] to-[#070d1a] border border-white/10 p-6 sm:p-10 shadow-2xl">
-          <div className="relative z-10 max-w-4xl space-y-4 text-left">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-400/30 text-emerald-300 text-xs font-black tracking-wider uppercase">
-              <Sparkles className="w-3.5 h-3.5 text-emerald-400 fill-emerald-400" />
-              <span>FoodLens Nutrition Intelligence</span>
-            </div>
-
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight">
-              Sample Food Scorecard
-            </h1>
-
-            <p className="text-sm sm:text-base text-slate-300 leading-relaxed max-w-3xl font-normal">
-              Review verified food nutrient scorecards, compare sodium and sugar levels, or scan your own dish for immediate nutritional analysis.
-            </p>
-
-            {/* Quick Actions Strip */}
-            <div className="pt-2 flex flex-wrap items-center gap-3">
-              <button
-                onClick={() => {
-                  playSound('pop');
-                  handleStartCamera();
-                }}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-emerald-400 hover:bg-emerald-300 text-slate-950 font-black text-xs sm:text-sm shadow-xl active:scale-95 transition-all cursor-pointer"
-              >
-                <Camera className="w-4 h-4" />
-                <span>Launch Camera Scanner</span>
-              </button>
-
-              <button
-                onClick={() => fileInputRef.current?.click()}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-white/10 hover:bg-white/15 text-white font-bold text-xs sm:text-sm border border-white/15 active:scale-95 transition-all cursor-pointer"
-              >
-                <Upload className="w-4 h-4 text-amber-400" />
-                <span>Upload Photos</span>
-              </button>
-
-              <button
-                onClick={() => {
-                  playSound('glass');
-                  navigate('/dish-log');
-                  window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-                }}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-amber-400/15 hover:bg-amber-400/25 text-amber-300 hover:text-white font-bold text-xs sm:text-sm border border-amber-400/30 active:scale-95 transition-all cursor-pointer"
-              >
-                <CalendarIcon className="w-4 h-4 text-amber-400" />
-                <span>View Dishes for the Day</span>
-              </button>
-
-              <button
-                onClick={() => {
-                  playSound('glass');
-                  navigate('/?tab=home');
-                  window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-                }}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-white/5 hover:bg-white/10 text-slate-300 font-semibold text-xs sm:text-sm border border-white/10 active:scale-95 transition-all cursor-pointer"
-              >
-                <Home className="w-4 h-4" />
-                <span>Back to Homepage</span>
-              </button>
-            </div>
-          </div>
-        </section>
 
         {/* =========================================================
             LIVE SCANNER OR LABEL ANALYZER (EXPANDABLE)

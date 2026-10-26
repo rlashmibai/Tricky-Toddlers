@@ -536,12 +536,12 @@ export const HomePage: React.FC<HomePageProps> = ({
             “Less juggling apps, more caring.”
           </div>
 
-          <p className="text-xs sm:text-sm md:text-base text-slate-200 leading-relaxed font-normal w-full text-balance">
+          <p className="text-xs sm:text-sm md:text-base text-slate-200 leading-relaxed font-normal max-w-4xl">
             Technology should quietly handle the clutter in the background, so parents can spend less time managing apps, reminders and scattered information, and more time enjoying the beautiful, funny and precious moments with their toddlers.
           </p>
 
           <div className="p-3.5 sm:p-4 rounded-2xl bg-purple-500/10 border border-purple-500/25">
-            <p className="text-xs sm:text-sm md:text-base text-purple-200 font-semibold leading-relaxed text-balance">
+            <p className="text-xs sm:text-sm md:text-base text-purple-200 font-semibold leading-relaxed">
               Tricky Toddlers is not about adding more technology to parenting. It is about making technology work for parents.
             </p>
           </div>
@@ -555,12 +555,12 @@ export const HomePage: React.FC<HomePageProps> = ({
         <div className="absolute -top-24 -right-24 w-80 h-80 bg-amber-500/10 blur-[100px] rounded-full pointer-events-none" />
 
         <div className="relative z-10 space-y-4">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-white tracking-tight text-balance">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-white tracking-tight">
             What Makes Tricky Toddlers Different?
           </h2>
 
           <div className="p-4 sm:p-5 rounded-2xl bg-amber-500/10 border border-amber-500/25">
-            <p className="text-sm sm:text-base md:text-lg font-bold text-amber-200 leading-snug text-balance">
+            <p className="text-sm sm:text-base md:text-lg font-bold text-amber-200 leading-snug">
               “The problem is not a lack of information. The problem is scattered information.”
             </p>
           </div>
@@ -573,8 +573,8 @@ export const HomePage: React.FC<HomePageProps> = ({
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
               <div className="p-4 sm:p-5 rounded-2xl bg-white/[0.04] border border-white/10 flex items-start gap-3 hover:border-amber-400/30 transition-colors">
-                <div className="w-8 h-8 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center shrink-0 font-black text-xs">
-                  1
+                <div className="w-8 h-8 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center shrink-0 shadow-sm">
+                  <Layers className="w-4 h-4" />
                 </div>
                 <div>
                   <h4 className="text-sm sm:text-base font-bold text-white">15-in-1 Parenting Tools in One Ecosystem</h4>
@@ -585,8 +585,8 @@ export const HomePage: React.FC<HomePageProps> = ({
               </div>
 
               <div className="p-4 sm:p-5 rounded-2xl bg-white/[0.04] border border-white/10 flex items-start gap-3 hover:border-amber-400/30 transition-colors">
-                <div className="w-8 h-8 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center shrink-0 font-black text-xs">
-                  2
+                <div className="w-8 h-8 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center shrink-0 shadow-sm">
+                  <Clock className="w-4 h-4" />
                 </div>
                 <div>
                   <h4 className="text-sm sm:text-base font-bold text-white">24/7 Availability for Everyday Questions</h4>
@@ -597,8 +597,8 @@ export const HomePage: React.FC<HomePageProps> = ({
               </div>
 
               <div className="p-4 sm:p-5 rounded-2xl bg-white/[0.04] border border-white/10 flex items-start gap-3 hover:border-amber-400/30 transition-colors">
-                <div className="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 font-black text-xs">
-                  3
+                <div className="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 shadow-sm">
+                  <Baby className="w-4 h-4" />
                 </div>
                 <div>
                   <h4 className="text-sm sm:text-base font-bold text-white">Fine-Tuned AI Specially Designed for Toddlers</h4>
@@ -609,8 +609,8 @@ export const HomePage: React.FC<HomePageProps> = ({
               </div>
 
               <div className="p-4 sm:p-5 rounded-2xl bg-white/[0.04] border border-white/10 flex items-start gap-3 hover:border-amber-400/30 transition-colors">
-                <div className="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0 font-black text-xs">
-                  4
+                <div className="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0 shadow-sm">
+                  <Zap className="w-4 h-4" />
                 </div>
                 <div>
                   <h4 className="text-sm sm:text-base font-bold text-white">Real-Time Decision Support When Parents Need</h4>
@@ -621,8 +621,8 @@ export const HomePage: React.FC<HomePageProps> = ({
               </div>
 
               <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-pink-500/10 via-purple-500/10 to-indigo-500/10 border border-pink-500/30 md:col-span-2 flex items-start gap-3 shadow-md">
-                <div className="w-8 h-8 rounded-xl bg-pink-500/20 text-pink-400 flex items-center justify-center shrink-0 font-black text-xs">
-                  ★
+                <div className="w-8 h-8 rounded-xl bg-pink-500/20 text-pink-400 flex items-center justify-center shrink-0 shadow-sm">
+                  <Sparkles className="w-4 h-4" />
                 </div>
                 <div>
                   <h4 className="text-sm sm:text-base font-bold text-white">Personalisation Based on Each Child’s Profile</h4>

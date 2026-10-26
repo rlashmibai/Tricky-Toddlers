@@ -317,9 +317,9 @@ export const NutriBandView: React.FC<NutriBandViewProps> = ({
             </div>
           </div>
 
-          {/* Effortless Everyday Use: 2 lines in medium-large text */}
-          <div className="text-center pt-3 pb-1 space-y-1">
-            <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-white tracking-tight">
+          {/* Effortless Everyday Use */}
+          <div className="text-center pt-3 pb-1 space-y-1.5">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight">
               Effortless Everyday Use
             </h2>
             <p className="text-base sm:text-lg md:text-xl font-medium text-cyan-200/90 tracking-tight">
@@ -349,7 +349,7 @@ export const NutriBandView: React.FC<NutriBandViewProps> = ({
             <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
             <span>One Single Device · Three Ways to Wear</span>
           </div>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight">
             How to Wear NutriBand Across Every Childhood Stage
           </h2>
           <p className="text-cyan-100/80 text-sm sm:text-base md:text-lg max-w-3xl mx-auto leading-relaxed">
@@ -603,11 +603,7 @@ export const NutriBandView: React.FC<NutriBandViewProps> = ({
       >
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-white/10">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-400/10 text-cyan-300 text-xs font-black uppercase tracking-wider mb-2">
-              <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-              <span>Live Dashboard Preview</span>
-            </div>
-            <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight">
               See NutriBand in Action
             </h2>
             <p className="text-slate-300 text-sm mt-1">
@@ -875,10 +871,10 @@ export const NutriBandView: React.FC<NutriBandViewProps> = ({
       ========================================================== */}
       <section id="telemetry-breakdown" className="space-y-4 scroll-mt-24">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-1 border-b border-white/10">
-          <h3 className="text-lg sm:text-xl font-black text-white uppercase tracking-wider flex items-center gap-2">
-            <Activity className="w-5 h-5 text-cyan-400" />
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight flex items-center gap-2.5">
+            <Activity className="w-6 h-6 text-cyan-400" />
             <span>Detailed Telemetry Breakdown</span>
-          </h3>
+          </h2>
           <span className="text-xs text-slate-400 font-mono">(Click row to inspect)</span>
         </div>
 
