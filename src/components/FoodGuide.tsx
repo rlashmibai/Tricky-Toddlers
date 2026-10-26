@@ -4,7 +4,6 @@ import { motion, AnimatePresence } from 'motion/react';
 import { useLanguage } from '../lib/LanguageContext';
 import { useAuth } from '../lib/AuthContext';
 import { playSound } from '../lib/sounds';
-import { GoogleGenAI, ThinkingLevel } from "@google/genai";
 import Markdown from 'react-markdown';
 import { 
   Sparkles, 
@@ -48,8 +47,6 @@ import { Recipe, AgeGroupData, ageStagesData, MealCategory, getRecipeCategory } 
 import { getRecipeNutrientDetails } from '../lib/recipeNutrition';
 import { GeneratedRecipe, AIRecipeBatchRecord, getSavedRecipeHistory, saveRecipeBatch } from '../lib/aiRecipeHistory';
 import { AIRecipeResultsView } from './AIRecipeResultsView';
-
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 // Regional affinity mapper based on Indian State selected in Profile settings
 export const getStateRegion = (stateName: string): 'South' | 'North' | 'West' | 'East' => {
@@ -774,36 +771,23 @@ Each object must have these exact keys:
 `;
 
     try {
-      const result = await ai.models.generateContent({
-        model: "gemini-3.5-flash",
-        contents: promptText,
-        config: {
-          thinkingConfig: { thinkingLevel: ThinkingLevel.LOW },
-          systemInstruction: "You are an expert pediatric nutritionist and master chef specializing in toddler solid foods. Return only valid JSON array of 3 distinct recipes.",
-        }
+      const response = await fetch('/api/generate-recipes', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          childAgeYears: customAgeYears,
+          ingredients: customIngredients,
+          defaultRecipes: defaultBatchRecipes,
+        }),
       });
 
       let recipesToUse = defaultBatchRecipes;
-      if (result.text) {
-        try {
-          const cleanedText = result.text.replace(/```json/g, '').replace(/```/g, '').trim();
-          const parsed = JSON.parse(cleanedText);
-          if (Array.isArray(parsed) && parsed.length >= 2) {
-            recipesToUse = parsed.map((item: any, idx: number) => ({
-              id: item.id || `rec-${Date.now()}-${idx}`,
-              name: item.name || `Nutritious Meal ${idx + 1}`,
-              mealType: item.mealType || (idx === 0 ? 'Breakfast' : idx === 1 ? 'Lunch' : 'Snack'),
-              prepTime: item.prepTime || '10 mins',
-              cookTime: item.cookTime || '12 mins',
-              textureGuide: item.textureGuide || `Safe texture for ${customAgeYears} yr old`,
-              ingredients: Array.isArray(item.ingredients) ? item.ingredients : [String(item.ingredients)],
-              instructions: Array.isArray(item.instructions) ? item.instructions : [String(item.instructions)],
-              nutritionBenefits: item.nutritionBenefits || 'Rich in essential micronutrients for toddler growth.',
-              safetyAlerts: item.safetyAlerts || 'Check temperature before serving. Supervise toddler while eating.'
-            }));
-          }
-        } catch (jsonErr) {
-          console.warn('AI Recipe JSON parse fallback engaged:', jsonErr);
+      if (response.ok) {
+        const data = await response.json();
+        if (Array.isArray(data.recipes) && data.recipes.length >= 2) {
+          recipesToUse = data.recipes;
         }
       }
 

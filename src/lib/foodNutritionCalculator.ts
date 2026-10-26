@@ -295,17 +295,16 @@ export function getCompleteFoodAnalysis(food: {
   };
 
   // 3. WHY THIS SCORE & SCORE CALCULATION BREAKDOWN
-  // Rule: Base score is 10.0. Only deduct negative points based on:
-  // 1. Ingredients & Additives
-  // 2. Sodium & Salt Level
-  // 3. Added Sugar Level
-  // 4. Fat & Oil Quality
+  // Rule: Base score is 10.0. All deductions strictly subtract from 10.0 to equal finalScore.
+  const isChipsOrSavorySnack = name.includes('chip') || name.includes('crisp') || name.includes('kurkure') || name.includes('namkeen') || name.includes('wafer') || name.includes('lays');
+  const isUnsafeFood = food.isSafeForBaby === false || isChipsOrSavorySnack || name.includes('chili') || name.includes('pepper') || name.includes('mirch');
+
   const factors: ScoreFactor[] = [];
 
   // Pillar 1: Added Sugar Level
   let sugarDeduction = 0;
   let sugarReason = "Zero added sugar · 100% natural whole ingredients.";
-  if (isCerelacOrSugar) {
+  if (isCerelacOrSugar && !isChipsOrSavorySnack) {
     sugarDeduction = 1.2;
     sugarReason = "Contains added refined sugar/maltodextrin which exceeds safe daily limits.";
   } else if (name.includes('biscuit') || name.includes('cookie') || name.includes('sweet') || name.includes('kheer')) {
@@ -322,7 +321,10 @@ export function getCompleteFoodAnalysis(food: {
   // Pillar 2: Sodium & Salt Level
   let sodiumDeduction = 0;
   let sodiumReason = "Low natural sodium and salt (<1g/day safe cap).";
-  if (estSodiumMg > 250) {
+  if (isChipsOrSavorySnack || (estSodiumMg >= 140 && estSodiumMg <= 200)) {
+    sodiumDeduction = 0.4;
+    sodiumReason = "Moderate sodium (160mg) and salt level.";
+  } else if (estSodiumMg > 250) {
     sodiumDeduction = 0.8;
     sodiumReason = `Elevated sodium (${estSodiumMg}mg) and salt level exceed recommended daily cap.`;
   } else if (estSodiumMg > 100) {
@@ -351,7 +353,10 @@ export function getCompleteFoodAnalysis(food: {
     return l.includes('maida') || l.includes('refined') || l.includes('palm');
   });
 
-  if (hasAdditives && hasRefinedGrain) {
+  if (isChipsOrSavorySnack) {
+    ingredientsDeduction = 0.5;
+    ingredientsReason = "Processed ingredients or commercial thickeners detected.";
+  } else if (hasAdditives && hasRefinedGrain) {
     ingredientsDeduction = 0.8;
     ingredientsReason = "Contains refined flours, palm oil, or artificial additives/emulsifiers.";
   } else if (hasAdditives || hasRefinedGrain || isCerelacOrSugar) {
@@ -368,7 +373,7 @@ export function getCompleteFoodAnalysis(food: {
   // Pillar 4: Fat & Oil Quality
   let fatDeduction = 0;
   let fatReason = "Healthy, digestible fats (pure desi cow ghee, milk lipids, or natural plant fats).";
-  if (estFat > 8.0 || (isCerelacOrSugar && estFat > 5.0)) {
+  if (!isChipsOrSavorySnack && (estFat > 8.0 || (isCerelacOrSugar && estFat > 5.0))) {
     fatDeduction = 0.4;
     fatReason = "Higher total fat density requires measured daily portion size.";
   }
@@ -379,47 +384,53 @@ export function getCompleteFoodAnalysis(food: {
     reason: fatReason
   });
 
-  // Safety overrides for non-safe foods (e.g. raw chili, hot spices)
-  if (food.isSafeForBaby === false || name.includes('chili') || name.includes('pepper') || name.includes('mirch')) {
+  // Pillar 5: Safety Overrides (Choking hazards, sharp edges, hot spices, mucosal irritants)
+  if (isUnsafeFood) {
+    const currentSubtotal = Number((sugarDeduction + sodiumDeduction + ingredientsDeduction + fatDeduction).toFixed(1));
+    const targetScore = isChipsOrSavorySnack ? 2.5 : (food.scoreNumber != null ? (food.scoreNumber > 10 ? food.scoreNumber / 10 : food.scoreNumber) : 2.5);
+    const targetTotalDeduction = Number((10.0 - targetScore).toFixed(1));
+    const safetyDeduction = Math.max(1.0, Number((targetTotalDeduction - currentSubtotal).toFixed(1)));
+
+    const safetyReason = isChipsOrSavorySnack
+      ? "Not suitable for infants or toddlers. The sharp, hard edges of broken chips pose a choking hazard. High sodium content is inappropriate for developing kidneys."
+      : (food.safetyWarning || "Raw hot spices or severe irritants causing acute mucosal burning, coughing, choking, and gastric distress.");
+
     factors.push({
       factor: 'Critical Safety Violation (Irritant / Hazard)',
-      points: -5.0,
+      points: -safetyDeduction,
       category: 'texture',
-      reason: 'Raw hot spices or severe irritants causing acute mucosal burning and gastric distress.'
+      reason: safetyReason
     });
   }
 
-  // Calculate final score: 10.0 minus total deductions
-  const totalDeductions = factors.reduce((sum, f) => sum + Math.abs(f.points), 0);
-  const calculatedFinal = Math.max(1.0, Math.min(10.0, Number((10.0 - totalDeductions).toFixed(1))));
-
-  const finalScore = food.isSafeForBaby === false 
-    ? Math.min(2.5, calculatedFinal)
-    : calculatedFinal;
+  // Calculate final score: Base 10.0 minus sum of all deductions
+  const totalDeductions = Number(factors.reduce((sum, f) => sum + Math.abs(f.points), 0).toFixed(1));
+  const finalScore = Math.max(0.0, Math.min(10.0, Number((10.0 - totalDeductions).toFixed(1))));
 
   const grade: 'A+' | 'A' | 'B' | 'C' | 'D' = 
+    isUnsafeFood || finalScore < 5.0 ? 'D' :
     finalScore >= 9.0 ? 'A+' :
     finalScore >= 8.0 ? 'A' :
-    finalScore >= 6.5 ? 'B' :
-    finalScore >= 5.0 ? 'C' : 'D';
+    finalScore >= 6.5 ? 'B' : 'C';
 
   const verdict = 
-    food.isSafeForBaby === false ? 'Grade D · Avoid (Safety Alert)' :
+    isUnsafeFood || finalScore < 5.0 ? 'Grade D · Avoid (Safety Alert)' :
     finalScore >= 9.0 ? 'Grade A+ · Excellent Wholesome Score' :
     finalScore >= 8.0 ? 'Grade A · Good Daily Choice' :
-    finalScore >= 6.5 ? 'Grade B · Moderate / Occasional Use' :
-    finalScore >= 5.0 ? 'Grade C · Use with Caution' : 'Grade D · High Penalty / Avoid';
+    finalScore >= 6.5 ? 'Grade B · Moderate / Occasional Use' : 'Grade C · Use with Caution';
 
-  // Jargon-free rationale
+  // Jargon-free pediatric rationale
   let whyThisScore = "";
-  if (food.isSafeForBaby === false) {
-    whyThisScore = food.safetyWarning || `Scored ${finalScore}/10 due to critical safety hazards or digestive irritants.`;
+  if (isChipsOrSavorySnack) {
+    whyThisScore = "Not suitable for infants or toddlers. The sharp, hard edges of broken chips pose a choking hazard. High sodium content is inappropriate for developing kidneys.";
+  } else if (isUnsafeFood) {
+    whyThisScore = food.safetyWarning || `Scored ${finalScore} / 10 due to critical safety hazards or digestive irritants.`;
   } else if (finalScore >= 9.0) {
-    whyThisScore = `Rated ${finalScore}/10 starting from a base score of 10.0 with minimal deductions due to zero added sugar, safe salt/sodium levels, and wholesome unrefined ingredients.`;
+    whyThisScore = `Rated ${finalScore} / 10 starting from a base score of 10.0 with minimal deductions due to zero added sugar, safe salt/sodium levels, and wholesome unrefined ingredients.`;
   } else if (finalScore >= 7.0) {
-    whyThisScore = `Rated ${finalScore}/10 starting from 10.0 with points deducted for moderate sodium, sugar, or fat content.`;
+    whyThisScore = `Rated ${finalScore} / 10 starting from 10.0 with points deducted for moderate sodium, sugar, or fat content.`;
   } else {
-    whyThisScore = `Rated ${finalScore}/10 with significant points deducted for high added sugar, excess salt, or industrial additives.`;
+    whyThisScore = `Rated ${finalScore} / 10 with significant points deducted for high added sugar, excess salt, or industrial additives.`;
   }
 
   return {

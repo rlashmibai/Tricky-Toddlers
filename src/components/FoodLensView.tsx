@@ -12,7 +12,6 @@ import {
   Search, 
   Check, 
   HelpCircle, 
-  Maximize2, 
   RefreshCw, 
   Info,
   ArrowDown,
@@ -36,7 +35,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useLanguage } from '../lib/LanguageContext';
 import { INDIAN_BABY_FOODS, IndianBabyFood } from '../data/indianBabyFoods';
 import { FoodNutritionMetricsDisplay } from './FoodNutritionMetricsDisplay';
-import { formatScaleOf10 } from '../lib/foodNutritionCalculator';
+import { formatScaleOf10, calculateScoreForFood } from '../lib/foodNutritionCalculator';
 import { saveLoggedMeal } from './DailyDishLogPage';
 
 interface StatTile {
@@ -101,7 +100,6 @@ export const FoodLensView: React.FC<FoodLensViewProps> = ({
   } | null>(null);
   
   const [loggedMealToast, setLoggedMealToast] = useState<string | null>(null);
-  const [zoomComparisonModal, setZoomComparisonModal] = useState(false);
   
   const fileInputBottomRef = useRef<HTMLInputElement>(null);
   const nativeCameraInputRef = useRef<HTMLInputElement>(null);
@@ -621,35 +619,15 @@ export const FoodLensView: React.FC<FoodLensViewProps> = ({
             </div>
           </div>
 
-          {/* Comparison Infographic */}
+          {/* Comparison Infographic - Immediate full view without expand button or bottom breakdown text */}
           <div className="flex flex-col items-center">
-            <div className="group relative rounded-3xl overflow-hidden border border-amber-400/30 bg-slate-950/90 shadow-[0_20px_50px_rgba(0,0,0,0.6)] p-3 sm:p-6 w-full max-w-2xl transition-all duration-300 hover:border-amber-400/50">
-              <div 
-                className="cursor-pointer relative overflow-hidden rounded-2xl"
-                onClick={() => setZoomComparisonModal(true)}
-              >
-                <img 
-                  src="/foodlens-vs-general-ai.png" 
-                  alt="General-Purpose AI vs FoodLens AI Comparison" 
-                  className="w-full h-auto object-contain rounded-2xl mx-auto transition-transform duration-300 group-hover:scale-[1.01]"
-                  loading="eager"
-                />
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors pointer-events-none rounded-2xl" />
-              </div>
-              <div className="mt-4 flex items-center justify-between px-2 text-xs sm:text-sm text-slate-300 border-t border-white/10 pt-3">
-                <span className="flex items-center gap-1.5 font-medium text-amber-200">
-                  <Sparkles className="w-4 h-4 text-amber-400" />
-                  General-Purpose AI vs FoodLens AI Breakdown
-                </span>
-                <button
-                  type="button"
-                  onClick={() => setZoomComparisonModal(true)}
-                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-400/15 hover:bg-amber-400/25 border border-amber-400/30 text-amber-300 hover:text-amber-200 font-semibold transition-all cursor-pointer active:scale-95"
-                >
-                  <Maximize2 className="w-3.5 h-3.5" />
-                  <span>Tap to expand</span>
-                </button>
-              </div>
+            <div className="rounded-3xl overflow-hidden border border-amber-400/30 bg-slate-950/90 shadow-[0_20px_50px_rgba(0,0,0,0.6)] p-3 sm:p-6 w-full max-w-3xl">
+              <img 
+                src="/foodlens-vs-general-ai.png" 
+                alt="General-Purpose AI vs FoodLens AI Comparison" 
+                className="w-full h-auto object-contain rounded-2xl mx-auto"
+                loading="eager"
+              />
             </div>
           </div>
         </div>
@@ -1206,7 +1184,7 @@ export const FoodLensView: React.FC<FoodLensViewProps> = ({
                         ) : (
                           <AlertTriangle className="w-5 h-5 text-rose-400" />
                         )}
-                        <span>Score: {formatScaleOf10(scanResult.score)}</span>
+                        <span>Score: {calculateScoreForFood(scanResult)}</span>
                       </div>
                       <div className="px-3.5 py-2 rounded-2xl bg-amber-500/20 text-amber-300 font-bold text-xs sm:text-sm border border-amber-500/40">
                         {scanResult.novaLevel}
@@ -1383,41 +1361,6 @@ export const FoodLensView: React.FC<FoodLensViewProps> = ({
 
         </div>
       </section>
-
-      {/* Zoom Comparison Infographic Lightbox Modal */}
-      <AnimatePresence>
-        {zoomComparisonModal && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setZoomComparisonModal(false)}
-            className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-md cursor-zoom-out"
-          >
-            <motion.div 
-              initial={{ scale: 0.95, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.95, opacity: 0 }}
-              className="relative max-w-4xl max-h-[92vh] overflow-auto rounded-3xl border border-white/20 bg-slate-950 p-2 sm:p-4 shadow-2xl"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <button
-                type="button"
-                onClick={() => setZoomComparisonModal(false)}
-                className="absolute top-4 right-4 z-10 p-2.5 rounded-full bg-slate-900/90 text-white/80 hover:text-white border border-white/20 shadow-lg hover:bg-slate-800 transition-all cursor-pointer"
-                aria-label="Close"
-              >
-                <X className="w-5 h-5" />
-              </button>
-              <img 
-                src="/foodlens-vs-general-ai.png" 
-                alt="General-Purpose AI vs FoodLens AI Comparison Full View" 
-                className="w-full h-auto max-h-[85vh] object-contain rounded-2xl mx-auto"
-              />
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
 
     </div>
   );

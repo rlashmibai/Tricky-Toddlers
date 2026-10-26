@@ -43,14 +43,6 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
   }
   
   if (!user) {
-    const userLoggedOut = typeof window !== 'undefined' && localStorage.getItem('user_logged_out') === 'true';
-    if (!userLoggedOut) {
-      return (
-        <div className="min-h-screen flex items-center justify-center bg-[#0f172a]">
-          <Loader2 className="w-8 h-8 animate-spin text-indigo-500" />
-        </div>
-      );
-    }
     return <Navigate to="/login" replace />;
   }
   

@@ -83,7 +83,7 @@ export const FoodNutritionMetricsDisplay: React.FC<FoodNutritionMetricsDisplayPr
             title="Click to view score calculation formula"
           >
             <ShieldCheck className="w-4 h-4 text-slate-950 stroke-[2.5]" />
-            <span>Overall Scope: {scoreCalculation.finalScore} / 10</span>
+            <span>Overall Scope: {scoreCalculation.finalScore.toFixed(1)} / 10</span>
           </button>
 
           {/* 2. Calories */}
@@ -157,78 +157,135 @@ export const FoodNutritionMetricsDisplay: React.FC<FoodNutritionMetricsDisplayPr
           (CLEAN, JARGON-FREE SIMPLE ARITHMETIC)
       ========================================================== */}
       {(activeTab === 'all' || activeTab === 'score') && (
-        <section className="p-6 sm:p-7 rounded-3xl bg-[#0c1426] border border-indigo-500/30 shadow-xl space-y-6">
+        <section className="p-6 sm:p-8 rounded-3xl bg-[#0c1426] border border-indigo-500/30 shadow-2xl space-y-7">
           
           {/* Section Header */}
-          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-4">
-            <div className="flex items-center gap-2.5">
-              <span className="p-2 rounded-xl bg-indigo-500/20 text-indigo-300">
+          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-5">
+            <div className="flex items-center gap-3">
+              <span className="p-2.5 rounded-2xl bg-indigo-500/20 text-indigo-300 border border-indigo-400/30">
                 <Calculator className="w-5 h-5" />
               </span>
               <div>
-                <h3 className="text-base sm:text-lg font-black text-white tracking-tight">
+                <h3 className="text-lg sm:text-xl font-black text-white tracking-tight">
                   Nutrition Scorecard &amp; Calculation
                 </h3>
-                <p className="text-xs text-slate-400">
+                <p className="text-xs sm:text-sm text-slate-400 mt-0.5">
                   Base 10.0 scale with simple deductions based on ingredients, sodium/salt, added sugar, and fat.
                 </p>
               </div>
             </div>
 
             <div className="flex items-center gap-2">
-              <span className="px-4 py-1.5 rounded-2xl bg-indigo-500/20 text-indigo-300 border border-indigo-400/30 font-black text-sm sm:text-base flex items-center gap-1.5">
+              <span className="px-4 py-2 rounded-2xl bg-indigo-500/20 text-indigo-300 border border-indigo-400/40 font-black text-sm sm:text-base flex items-center gap-2 shadow-lg">
                 <ShieldCheck className="w-4 h-4 text-emerald-400" />
-                <span>Calculated Score: {scoreCalculation.finalScore} / 10</span>
+                <span>Calculated Score: {scoreCalculation.finalScore.toFixed(1)} / 10</span>
               </span>
             </div>
           </div>
 
-          {/* Clean Formula Card */}
-          <div className="p-5 sm:p-6 rounded-2xl bg-gradient-to-r from-indigo-950/60 via-slate-900 to-black/60 border border-indigo-400/20 space-y-4">
-            <div className="flex flex-wrap items-baseline justify-between gap-2">
-              <span className="text-xs font-black uppercase tracking-wider text-slate-300">
+          {/* Stepped Formula & Total Result Box */}
+          <div className="p-6 rounded-2xl bg-gradient-to-br from-indigo-950/70 via-slate-900 to-black/80 border border-indigo-400/25 space-y-5 shadow-xl">
+            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-3">
+              <span className="text-xs font-black uppercase tracking-widest text-slate-300">
                 Total Calculated Result:
               </span>
-              <span className="text-xs text-indigo-300 font-bold">
+              <span className={`text-xs sm:text-sm font-black px-3.5 py-1 rounded-full border ${
+                scoreCalculation.grade === 'D'
+                  ? 'bg-rose-500/20 text-rose-300 border-rose-500/40'
+                  : scoreCalculation.grade === 'A+' || scoreCalculation.grade === 'A'
+                  ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+                  : 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+              }`}>
                 {scoreCalculation.verdict}
               </span>
             </div>
 
-            {/* Arithmetic Formula Equation */}
-            <div className="p-3.5 sm:p-4 rounded-xl bg-black/60 border border-white/10 font-mono text-sm sm:text-base font-black text-emerald-300 flex flex-wrap items-center gap-2.5">
-              <span className="text-white px-2 py-1 rounded bg-white/10">Base: 10.0</span>
-              
-              {negativeFactors.length > 0 ? (
-                negativeFactors.map((f, i) => (
-                  <span key={i} className="text-rose-400 flex items-center gap-1">
-                    <span>−</span>
-                    <span>{Math.abs(f.points).toFixed(1)}</span>
-                    <span className="text-[11px] font-sans text-rose-300/80">({f.factor})</span>
-                  </span>
-                ))
-              ) : (
-                <span className="text-emerald-400 text-xs font-sans">
-                  − 0.0 deductions (100% wholesome composition)
+            {/* Arithmetic Formula Display */}
+            <div className="p-4 sm:p-5 rounded-2xl bg-black/75 border border-white/10 font-mono space-y-4">
+              {/* Responsive Equation Row */}
+              <div className="flex flex-wrap items-center gap-2.5 text-sm sm:text-base font-black text-white">
+                <span className="px-3 py-1 rounded-xl bg-white/15 border border-white/20 text-white font-mono shadow-sm">
+                  Base: 10.0
                 </span>
-              )}
+                
+                {negativeFactors.length > 0 ? (
+                  negativeFactors.map((f, i) => (
+                    <div key={i} className="flex items-center gap-1.5 text-rose-400">
+                      <span className="text-rose-400 font-black text-lg">−</span>
+                      <span className="px-2 py-0.5 rounded-lg bg-rose-500/20 border border-rose-500/30 text-rose-300 font-mono">
+                        {Math.abs(f.points).toFixed(1)}
+                      </span>
+                      <span className="text-xs font-sans font-semibold text-rose-300/80">
+                        ({f.factor})
+                      </span>
+                    </div>
+                  ))
+                ) : (
+                  <span className="text-emerald-400 text-xs font-sans font-semibold">
+                    − 0.0 deductions (100% wholesome composition)
+                  </span>
+                )}
 
-              <span className="text-slate-400 font-sans">=</span>
-              
-              <span className="text-lg sm:text-xl font-black text-white px-3 py-1 rounded-lg bg-emerald-500/20 border border-emerald-400/40">
-                {scoreCalculation.finalScore} / 10
-              </span>
+                <span className="text-slate-400 font-sans font-black text-lg">=</span>
+                
+                <span className="text-lg sm:text-xl font-black text-white px-3.5 py-1.5 rounded-xl bg-emerald-500/20 border border-emerald-400/40 shadow-inner">
+                  {scoreCalculation.finalScore.toFixed(1)} / 10
+                </span>
+              </div>
+
+              {/* Vertical Step Breakdown */}
+              {negativeFactors.length > 0 && (
+                <div className="pt-3 border-t border-white/10 font-sans text-xs space-y-1.5 text-slate-300">
+                  <div className="text-[11px] font-black text-slate-400 uppercase tracking-wider mb-1">
+                    Step-by-Step Subtraction:
+                  </div>
+                  <div className="flex items-center gap-2 text-white">
+                    <span className="font-mono font-bold w-12 text-slate-200">10.0</span>
+                    <span className="text-slate-400">Initial gold-standard pediatric baseline score</span>
+                  </div>
+                  {negativeFactors.map((f, i) => (
+                    <div key={i} className="flex items-center gap-2 text-rose-300">
+                      <span className="font-mono font-bold w-12 text-rose-400">− {Math.abs(f.points).toFixed(1)}</span>
+                      <span>({f.factor}) · <span className="text-slate-400">{f.reason}</span></span>
+                    </div>
+                  ))}
+                  <div className="flex items-center gap-2 pt-1.5 border-t border-white/10 text-emerald-300 font-bold">
+                    <span className="font-mono w-12 text-emerald-400">= {scoreCalculation.finalScore.toFixed(1)}</span>
+                    <span className="text-slate-200">Final Calculated Score out of 10 ({scoreCalculation.verdict})</span>
+                  </div>
+                </div>
+              )}
             </div>
 
-            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-normal">
-              {scoreCalculation.whyThisScore}
-            </p>
+            {/* Pediatric Health Rationale Alert Box */}
+            <div className={`p-4 rounded-xl border flex items-start gap-3 ${
+              scoreCalculation.grade === 'D'
+                ? 'bg-rose-500/15 border-rose-500/30 text-rose-200'
+                : scoreCalculation.grade === 'A+' || scoreCalculation.grade === 'A'
+                ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-200'
+                : 'bg-amber-500/15 border-amber-500/30 text-amber-200'
+            }`}>
+              {scoreCalculation.grade === 'D' ? (
+                <AlertTriangle className="w-5 h-5 text-rose-400 shrink-0 mt-0.5" />
+              ) : (
+                <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
+              )}
+              <p className="text-xs sm:text-sm leading-relaxed font-normal">
+                {scoreCalculation.whyThisScore}
+              </p>
+            </div>
           </div>
 
-          {/* 4 Pillars Breakdown: Ingredients, Sodium/Salt, Sugar, Fat */}
-          <div className="space-y-3">
-            <span className="text-xs font-black uppercase tracking-wider text-slate-400 block">
-              Why Points Were Deducted (Pillar Breakdown)
-            </span>
+          {/* Pillars Breakdown: Added Sugar, Sodium/Salt, Ingredients, Fat, Safety */}
+          <div className="space-y-3.5">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-black uppercase tracking-wider text-slate-300">
+                Why Points Were Deducted (Pillar Breakdown)
+              </span>
+              <span className="text-[11px] text-slate-400 font-semibold">
+                Transparent Pediatric Analysis
+              </span>
+            </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
               {scoreCalculation.factors.map((factor, idx) => {
@@ -237,23 +294,23 @@ export const FoodNutritionMetricsDisplay: React.FC<FoodNutritionMetricsDisplayPr
                 return (
                   <div 
                     key={idx}
-                    className={`p-4 rounded-2xl border transition-all flex flex-col justify-between space-y-2 ${
+                    className={`p-4 sm:p-4.5 rounded-2xl border transition-all flex flex-col justify-between space-y-2.5 ${
                       isDeducted 
                         ? 'bg-rose-950/20 border-rose-500/30' 
                         : 'bg-emerald-950/15 border-emerald-500/20'
                     }`}
                   >
                     <div className="flex items-center justify-between gap-2">
-                      <span className="text-xs font-black text-white flex items-center gap-1.5">
+                      <span className="text-xs sm:text-sm font-black text-white flex items-center gap-1.5">
                         {isDeducted ? (
-                          <MinusCircle className="w-3.5 h-3.5 text-rose-400 shrink-0" />
+                          <MinusCircle className="w-4 h-4 text-rose-400 shrink-0" />
                         ) : (
-                          <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                          <Check className="w-4 h-4 text-emerald-400 shrink-0" />
                         )}
                         <span>{factor.factor}</span>
                       </span>
 
-                      <span className={`text-xs font-black px-2.5 py-0.5 rounded-md ${
+                      <span className={`text-xs font-black px-2.5 py-0.5 rounded-lg ${
                         isDeducted 
                           ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30' 
                           : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
@@ -262,7 +319,7 @@ export const FoodNutritionMetricsDisplay: React.FC<FoodNutritionMetricsDisplayPr
                       </span>
                     </div>
 
-                    <p className="text-xs text-slate-300 leading-relaxed">
+                    <p className="text-xs text-slate-300 leading-relaxed font-normal">
                       {factor.reason}
                     </p>
                   </div>

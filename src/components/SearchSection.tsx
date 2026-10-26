@@ -26,6 +26,20 @@ interface ChatMessage {
   timestamp: string;
 }
 
+function cleanAssistantGreeting(text: string, parentName?: string): string {
+  if (!text) return '';
+  const p = (parentName || 'Lashmi').trim();
+  return text
+    .replace(new RegExp(`\\b${p}[,\\s]+${p.slice(-2)}[!\\?,\\s]*`, 'gi'), `${p}, `)
+    .replace(new RegExp(`\\b${p}[,\\s]+${p}[!,\\s]*`, 'gi'), `${p}, `)
+    .replace(/\b([A-Z][a-z]+)[,\s]+([a-z]{1,3})[!,\s]+/gi, (m, name, suffix) => {
+      if (name.toLowerCase().endsWith(suffix.toLowerCase())) {
+        return `${name}, `;
+      }
+      return m;
+    });
+}
+
 function getSmartFallbackGuidance(q: string, parentName: string, childName: string, childAge?: string): string {
   const lq = q.toLowerCase();
   const pName = parentName?.trim() || 'Lashmi';
@@ -364,6 +378,10 @@ export const SearchSection: React.FC = () => {
     }
 
     let accumulatedText = '';
+    const abortController = new AbortController();
+    let timeoutId: any = setTimeout(() => {
+      abortController.abort();
+    }, 7000);
 
     try {
       const apiRes = await fetch('/api/ai-assistant', {
@@ -371,6 +389,7 @@ export const SearchSection: React.FC = () => {
         headers: {
           'Content-Type': 'application/json',
         },
+        signal: abortController.signal,
         body: JSON.stringify({
           query: finalQuery,
           messages: [{ role: 'user', content: finalQuery }],
@@ -413,6 +432,10 @@ export const SearchSection: React.FC = () => {
           streamedAny = true;
           accumulatedText += chunkText;
           if (firstChunk) {
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(() => {
+              abortController.abort();
+            }, 10000);
             playSound('pop');
             firstChunk = false;
           }
@@ -420,13 +443,15 @@ export const SearchSection: React.FC = () => {
         }
       }
 
+      clearTimeout(timeoutId);
       if (animFrameId) {
         cancelAnimationFrame(animFrameId);
       }
 
-      const finalResponse = streamedAny && accumulatedText.trim().length > 0 
+      const rawResponse = streamedAny && accumulatedText.trim().length > 0 
         ? accumulatedText 
         : getSmartFallbackGuidance(finalQuery, parentName, childName, childAge);
+      const finalResponse = cleanAssistantGreeting(rawResponse, parentName);
 
       clientInstantCache.set(cacheKey, finalResponse);
       setMessages(prev => 
@@ -434,6 +459,7 @@ export const SearchSection: React.FC = () => {
       );
       saveAISearchRecord(finalQuery, finalResponse);
     } catch (error) {
+      clearTimeout(timeoutId);
       console.warn("Server AI streaming encountered issue, using comprehensive pediatric guidance:", error);
       const fallbackText = getSmartFallbackGuidance(finalQuery, parentName, childName, childAge);
       clientInstantCache.set(cacheKey, fallbackText);
@@ -443,6 +469,7 @@ export const SearchSection: React.FC = () => {
       saveAISearchRecord(finalQuery, fallbackText);
       playSound('pop');
     } finally {
+      clearTimeout(timeoutId);
       setLoading(false);
     }
   };
@@ -518,6 +545,10 @@ export const SearchSection: React.FC = () => {
     }
 
     let accumulatedText = '';
+    const abortController = new AbortController();
+    let timeoutId: any = setTimeout(() => {
+      abortController.abort();
+    }, 7000);
 
     try {
       const apiRes = await fetch('/api/ai-assistant', {
@@ -525,6 +556,7 @@ export const SearchSection: React.FC = () => {
         headers: {
           'Content-Type': 'application/json',
         },
+        signal: abortController.signal,
         body: JSON.stringify({
           query: textToSend,
           messages: conversationHistoryForApi,
@@ -567,6 +599,10 @@ export const SearchSection: React.FC = () => {
           streamedAny = true;
           accumulatedText += chunkText;
           if (firstChunk) {
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(() => {
+              abortController.abort();
+            }, 10000);
             playSound('pop');
             firstChunk = false;
           }
@@ -574,13 +610,15 @@ export const SearchSection: React.FC = () => {
         }
       }
 
+      clearTimeout(timeoutId);
       if (animFrameId) {
         cancelAnimationFrame(animFrameId);
       }
 
-      const finalResponse = streamedAny && accumulatedText.trim().length > 0 
+      const rawResponse = streamedAny && accumulatedText.trim().length > 0 
         ? accumulatedText 
         : getSmartFallbackGuidance(textToSend, parentName, childName, childAge);
+      const finalResponse = cleanAssistantGreeting(rawResponse, parentName);
 
       clientInstantCache.set(followUpCacheKey, finalResponse);
       setMessages(prev => 
@@ -588,6 +626,7 @@ export const SearchSection: React.FC = () => {
       );
       saveAISearchRecord(textToSend, finalResponse);
     } catch (error) {
+      clearTimeout(timeoutId);
       console.warn("Server AI streaming encountered issue, using comprehensive pediatric guidance:", error);
       const fallbackText = getSmartFallbackGuidance(textToSend, parentName, childName, childAge);
       clientInstantCache.set(followUpCacheKey, fallbackText);
@@ -597,6 +636,7 @@ export const SearchSection: React.FC = () => {
       saveAISearchRecord(textToSend, fallbackText);
       playSound('pop');
     } finally {
+      clearTimeout(timeoutId);
       setLoading(false);
     }
   };

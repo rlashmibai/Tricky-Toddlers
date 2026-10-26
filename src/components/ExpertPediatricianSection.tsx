@@ -6,7 +6,6 @@ import { useAuth } from '../lib/AuthContext';
 import { db, handleFirestoreError } from '../lib/firebase';
 import { playSound } from '../lib/sounds';
 import { INDIAN_CITIES_BY_STATE } from '../data/indianCitiesData';
-import { GoogleGenAI, ThinkingLevel } from "@google/genai";
 import { 
   Sparkles, 
   Stethoscope, 
@@ -65,8 +64,6 @@ import {
   Legend,
   ReferenceDot
 } from 'recharts';
-
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 const localT: Record<string, Record<string, string>> = {
   en: {
@@ -1114,27 +1111,35 @@ export const ExpertPediatricianSection: React.FC = () => {
     playSound('click');
 
     try {
-      const prompt = `You are ${activeChatDoc.name} (${activeChatDoc.degrees}), practicing at ${activeChatDoc.hospital}, ${activeChatDoc.location} in ${activeChatDoc.city}.
-Your pediatric subspecialty is ${activeChatDoc.specialty} with ${activeChatDoc.experience}+ years of pediatric clinical experience.
-The parent, ${parentName}, is asking you a clinical/developmental query regarding their toddler, ${childName}: "${userText}".
-Provide a warm, reassuring, highly qualified, and medical-council aligned pediatric response addressed warmly to ${parentName}, mentioning ${childName} where relevant.
-Use bullet points if recommending steps or dietary/nutritional tips.
-Keep it strictly under 3 short paragraphs.
-Finish with a comforting, warm supportive doctor sign-off: "${activeChatDoc.name}, ${activeChatDoc.degrees} (${activeChatDoc.hospital})".
-Always include a subtle reminder that for acute illnesses or high persistent fevers, an in-person physical consultation is best.`;
-
-      const result = await ai.models.generateContent({
-        model: "gemini-3.5-flash",
-        contents: prompt,
-        config: {
-          thinkingConfig: { thinkingLevel: ThinkingLevel.LOW },
-          systemInstruction: `You are ${activeChatDoc.name} (${activeChatDoc.degrees}), a verified, friendly, comforting pediatric doctor at ${activeChatDoc.hospital}, ${activeChatDoc.location}. You address the parent warmly as ${parentName} and their toddler as ${childName}. You explain things simply with compassionate bedside manners and zero jargon.`,
-        }
+      const response = await fetch('/api/pediatrician-chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          doctor: {
+            name: activeChatDoc.name,
+            degrees: activeChatDoc.degrees,
+            hospital: activeChatDoc.hospital,
+            location: activeChatDoc.location,
+            city: activeChatDoc.city,
+            specialty: activeChatDoc.specialty,
+            experience: activeChatDoc.experience,
+          },
+          parentName,
+          childName,
+          userText,
+        }),
       });
 
-      if (result.text) {
-        setChatMessages(prev => [...prev, { sender: 'doctor', text: result.text, timestamp: new Date() }]);
-        playSound('glass');
+      if (response.ok) {
+        const data = await response.json();
+        if (data.reply) {
+          setChatMessages(prev => [...prev, { sender: 'doctor', text: data.reply, timestamp: new Date() }]);
+          playSound('glass');
+        } else {
+          setChatMessages(prev => [...prev, { sender: 'doctor', text: `I am ${activeChatDoc.name}. I'm sorry, I couldn't process your question at the moment. Please feel free to ask again or reach out to ${activeChatDoc.hospital}.`, timestamp: new Date() }]);
+        }
       } else {
         setChatMessages(prev => [...prev, { sender: 'doctor', text: `I am ${activeChatDoc.name}. I'm sorry, I couldn't process your question at the moment. Please feel free to ask again or reach out to ${activeChatDoc.hospital}.`, timestamp: new Date() }]);
       }

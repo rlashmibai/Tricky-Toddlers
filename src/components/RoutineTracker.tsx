@@ -10,12 +10,8 @@ import { useLanguage } from '../lib/LanguageContext';
 import { db } from '../lib/firebase';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { withRetry } from '../lib/firebaseUtils';
-import { GoogleGenAI, ThinkingLevel } from "@google/genai";
 import Markdown from 'react-markdown';
 import { playSound } from '../lib/sounds';
-
-// Initialize Gemini API
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 import { AGE_GROUPS, RoutineItem, AgeGroupData } from '../data/routinesData';
 
@@ -189,21 +185,27 @@ Please construct a comprehensive, positive, and beautiful daily hour-by-hour sch
 `;
 
     try {
-      const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
-        contents: promptText,
-        config: {
-          thinkingConfig: {
-            thinkingBudget: 1024,
-          },
-        }
+      const response = await fetch('/api/generate-routine', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ageLabel: currentAgeGroupData.label,
+          wakeTime,
+          temperament,
+        }),
       });
-      
-      const text = response.text;
-      setAiCustomRoutine(text || 'Could not generate customized routine at this time.');
+
+      if (response.ok) {
+        const data = await response.json();
+        setAiCustomRoutine(data.routine || 'Could not generate customized routine at this time.');
+      } else {
+        setAiCustomRoutine('Could not generate customized routine at this time.');
+      }
       playSound('glass');
     } catch (error) {
-      console.error("Gemini routine customizer error:", error);
+      console.error("Routine customizer error:", error);
       setAiCustomRoutine("Failed to reach pediatric advisor. Please verify network or key environment parameters.");
     } finally {
       setAiLoading(false);
