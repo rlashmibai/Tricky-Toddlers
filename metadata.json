@@ -1,0 +1,8 @@
+{
+  "name": "Tricky Toddlers",
+  "description": "Expert toddler parenting advice, pediatric consults, milestone tracking, and community support.",
+  "requestFramePermissions": [
+    "camera"
+  ],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

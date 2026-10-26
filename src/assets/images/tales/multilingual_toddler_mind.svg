@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 480" width="800" height="480">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e1b4b" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+    <radialGradient id="brainGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#a855f7" stop-opacity="0.8" />
+      <stop offset="70%" stop-color="#6366f1" stop-opacity="0.3" />
+      <stop offset="100%" stop-color="#3b82f6" stop-opacity="0" />
+    </radialGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.5" />
+    </filter>
+  </defs>
+
+  <rect width="800" height="480" fill="url(#bgGrad)" />
+
+  <!-- Category Pill Badge -->
+  <g transform="translate(48, 36)">
+    <rect width="160" height="32" rx="16" fill="#000000" opacity="0.4" />
+    <rect width="160" height="32" rx="16" fill="none" stroke="#a855f7" stroke-width="1.5" opacity="0.7" />
+    <circle cx="20" cy="16" r="5" fill="#a855f7" />
+    <text x="32" y="21" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="11" fill="#a855f7" letter-spacing="2">LEARNING</text>
+  </g>
+
+  <!-- Central Thematic Illustration: The Multilingual Mind (Neural Synapses & Language Speech Bubbles) -->
+  <g filter="url(#shadow)" transform="translate(400, 180)">
+    <!-- Central Brain Silhouette / Glowing Synaptic Aura -->
+    <circle cx="0" cy="0" r="100" fill="url(#brainGlow)" />
+
+    <!-- Connecting Synaptic Neural Lines -->
+    <path d="M -80 -45 Q -30 -15 0 0 Q 30 15 90 -40" fill="none" stroke="#c084fc" stroke-width="2" stroke-dasharray="4 4" />
+    <path d="M -90 40 Q -30 15 0 0 Q 30 -15 85 45" fill="none" stroke="#60a5fa" stroke-width="2" stroke-dasharray="4 4" />
+    <circle cx="0" cy="0" r="12" fill="#fbcfe8" stroke="#f472b6" stroke-width="3" />
+
+    <!-- Speech Bubble 1 (Top Left): "Hello! 👋" in English -->
+    <g transform="translate(-140, -55)">
+      <rect x="-55" y="-25" width="110" height="50" rx="16" fill="#3b82f6" stroke="#93c5fd" stroke-width="2" />
+      <polygon points="15,25 25,36 32,25" fill="#3b82f6" />
+      <text x="0" y="6" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="16" fill="#ffffff" text-anchor="middle">HELLO! 👋</text>
+    </g>
+
+    <!-- Speech Bubble 2 (Top Right): "नमस्ते! 🙏" in Hindi / Devanagari -->
+    <g transform="translate(140, -55)">
+      <rect x="-60" y="-25" width="120" height="50" rx="16" fill="#f59e0b" stroke="#fde68a" stroke-width="2" />
+      <polygon points="-25,25 -32,36 -15,25" fill="#f59e0b" />
+      <text x="0" y="7" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="16" fill="#ffffff" text-anchor="middle">नमस्ते! 🙏</text>
+    </g>
+
+    <!-- Speech Bubble 3 (Bottom Left): "வணக்கம்! ✨" in Tamil -->
+    <g transform="translate(-135, 55)">
+      <rect x="-60" y="-25" width="120" height="50" rx="16" fill="#ec4899" stroke="#fbcfe8" stroke-width="2" />
+      <polygon points="20,-25 28,-36 35,-25" fill="#ec4899" />
+      <text x="0" y="6" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="15" fill="#ffffff" text-anchor="middle">வணக்கம்! ✨</text>
+    </g>
+
+    <!-- Speech Bubble 4 (Bottom Right): "నమస్కారం! 🌟" in Telugu -->
+    <g transform="translate(135, 55)">
+      <rect x="-65" y="-25" width="130" height="50" rx="16" fill="#10b981" stroke="#a7f3d0" stroke-width="2" />
+      <polygon points="-20,-25 -28,-36 -12,-25" fill="#10b981" />
+      <text x="0" y="6" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="14" fill="#ffffff" text-anchor="middle">నమస్కారం! 🌟</text>
+    </g>
+
+    <!-- Central Brain Growth Badge -->
+    <rect x="-50" y="-12" width="100" height="24" rx="12" fill="#1e1b4b" stroke="#f472b6" stroke-width="2" />
+    <text x="0" y="4" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="9" fill="#fbcfe8" text-anchor="middle" letter-spacing="1">DUAL BRAIN</text>
+  </g>
+
+  <!-- Bottom Frosted Card Banner with Title and Tagline -->
+  <g transform="translate(48, 330)">
+    <rect width="704" height="114" rx="24" fill="#090d16" opacity="0.88" />
+    <rect width="704" height="114" rx="24" fill="none" stroke="#ffffff" stroke-width="1" opacity="0.12" />
+    <text x="32" y="44" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="24" fill="#ffffff" letter-spacing="-0.5">The Multilingual Toddler Mind</text>
+    <text x="32" y="78" font-family="system-ui, -apple-system, sans-serif" font-weight="600" font-size="13" fill="#94a3b8" letter-spacing="0.2">English · Hindi · Tamil · Telugu · Cultural Heritage &amp; Wit</text>
+    <g transform="translate(640, 48)">
+      <circle cx="0" cy="0" r="18" fill="#a855f7" opacity="0.15" />
+      <polygon points="0,-10 3,-3 10,-3 4,2 6,9 0,5 -6,9 -4,2 -10,-3 -3,-3" fill="#a855f7" />
+    </g>
+  </g>
+</svg>

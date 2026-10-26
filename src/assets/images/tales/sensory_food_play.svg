@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 480" width="800" height="480">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#064e3b" />
+      <stop offset="100%" stop-color="#022c22" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.5" />
+    </filter>
+  </defs>
+
+  <rect width="800" height="480" fill="url(#bgGrad)" />
+
+  <!-- Category Pill Badge -->
+  <g transform="translate(48, 36)">
+    <rect width="160" height="32" rx="16" fill="#000000" opacity="0.4" />
+    <rect width="160" height="32" rx="16" fill="none" stroke="#34d399" stroke-width="1.5" opacity="0.7" />
+    <circle cx="20" cy="16" r="5" fill="#34d399" />
+    <text x="32" y="21" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="11" fill="#34d399" letter-spacing="2">MEALTIME</text>
+  </g>
+
+  <!-- Central Thematic Illustration: High Chair Tray with Tactile Sensory Finger Foods & Handprints -->
+  <g filter="url(#shadow)" transform="translate(400, 180)">
+    <!-- High Chair Tray Table Outline -->
+    <rect x="-190" y="-35" width="380" height="115" rx="28" fill="#1e293b" stroke="#34d399" stroke-width="3" />
+    <rect x="-175" y="-22" width="350" height="88" rx="20" fill="#0f172a" stroke="#334155" stroke-width="1.5" />
+
+    <!-- Divided Silicone Suction Plate in Center -->
+    <g transform="translate(0, 20)">
+      <!-- Outer Plate Rim -->
+      <ellipse cx="0" cy="0" rx="90" ry="40" fill="#059669" stroke="#34d399" stroke-width="2" />
+      <!-- Left Compartment: Fresh Avocado Cubes & Broccoli Florets -->
+      <path d="M -80 0 C -80 -25 -10 -25 -10 0 C -10 25 -80 25 -80 0 Z" fill="#10b981" />
+      <rect x="-65" y="-12" width="16" height="12" rx="3" fill="#84cc16" />
+      <rect x="-45" y="-6" width="14" height="14" rx="3" fill="#84cc16" />
+      <circle cx="-55" cy="10" r="8" fill="#15803d" /> <!-- Steamed broccoli -->
+
+      <!-- Right Compartment: Sweet Potato / Carrot Batons -->
+      <path d="M 80 0 C 80 -25 10 -25 10 0 C 10 25 80 25 80 0 Z" fill="#047857" />
+      <rect x="25" y="-12" width="30" height="9" rx="3" fill="#f97316" transform="rotate(12 25 -12)" />
+      <rect x="35" y="4" width="28" height="9" rx="3" fill="#f97316" transform="rotate(-8 35 4)" />
+      <circle cx="30" cy="-6" r="5" fill="#facc15" />
+    </g>
+
+    <!-- Messy Tactile Fun: Toddler Handprint Swirl on Left of Tray -->
+    <g transform="translate(-130, 20)">
+      <!-- Palm smudge (Orange Puree) -->
+      <ellipse cx="0" cy="8" rx="14" ry="12" fill="#ea580c" opacity="0.85" />
+      <!-- Finger prints -->
+      <ellipse cx="-12" cy="-8" rx="4" ry="6" fill="#ea580c" opacity="0.85" />
+      <ellipse cx="-4" cy="-14" rx="4" ry="7" fill="#ea580c" opacity="0.85" />
+      <ellipse cx="6" cy="-12" rx="4" ry="7" fill="#ea580c" opacity="0.85" />
+      <ellipse cx="14" cy="-5" rx="3.5" ry="6" fill="#ea580c" opacity="0.85" />
+    </g>
+
+    <!-- Toddler Spoon & Berry Splashes on Right of Tray -->
+    <g transform="translate(130, 20)">
+      <!-- Silicone Teething Spoon -->
+      <ellipse cx="15" cy="-8" rx="10" ry="7" fill="#fb7185" stroke="#f43f5e" stroke-width="1.5" />
+      <rect x="-20" y="-11" width="35" height="6" rx="3" fill="#fb7185" transform="rotate(-15 -20 -11)" />
+      <!-- Blueberry dots -->
+      <circle cx="5" cy="15" r="5" fill="#3b82f6" />
+      <circle cx="-12" cy="18" r="4" fill="#3b82f6" />
+      <circle cx="20" cy="22" r="4.5" fill="#3b82f6" />
+    </g>
+
+    <!-- Exploration Badge Overhead -->
+    <g transform="translate(0, -60)">
+      <rect x="-80" y="0" width="160" height="26" rx="13" fill="#1e1b4b" stroke="#34d399" stroke-width="1.5" />
+      <text x="0" y="17" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="10" fill="#6ee7b7" text-anchor="middle" letter-spacing="1">TACTILE SENSORY PLAY</text>
+    </g>
+  </g>
+
+  <!-- Bottom Frosted Card Banner with Title and Tagline -->
+  <g transform="translate(48, 330)">
+    <rect width="704" height="114" rx="24" fill="#090d16" opacity="0.88" />
+    <rect width="704" height="114" rx="24" fill="none" stroke="#ffffff" stroke-width="1" opacity="0.12" />
+    <text x="32" y="44" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="24" fill="#ffffff" letter-spacing="-0.5">Sensory Food Exploration</text>
+    <text x="32" y="78" font-family="system-ui, -apple-system, sans-serif" font-weight="600" font-size="13" fill="#94a3b8" letter-spacing="0.2">Tactile Play Builds Adventurous Eaters · Zero Pressure</text>
+    <g transform="translate(640, 48)">
+      <circle cx="0" cy="0" r="18" fill="#6ee7b7" opacity="0.15" />
+      <polygon points="0,-10 3,-3 10,-3 4,2 6,9 0,5 -6,9 -4,2 -10,-3 -3,-3" fill="#6ee7b7" />
+    </g>
+  </g>
+</svg>

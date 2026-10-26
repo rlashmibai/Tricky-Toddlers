@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 480" width="800" height="480">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4a044e" />
+      <stop offset="100%" stop-color="#18021a" />
+    </linearGradient>
+    <radialGradient id="sunburst" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#fef08a" stop-opacity="0.9" />
+      <stop offset="50%" stop-color="#fb7185" stop-opacity="0.4" />
+      <stop offset="100%" stop-color="#701a75" stop-opacity="0" />
+    </radialGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.5" />
+    </filter>
+  </defs>
+
+  <rect width="800" height="480" fill="url(#bgGrad)" />
+
+  <!-- Category Pill Badge -->
+  <g transform="translate(48, 36)">
+    <rect width="160" height="32" rx="16" fill="#000000" opacity="0.4" />
+    <rect width="160" height="32" rx="16" fill="none" stroke="#fb7185" stroke-width="1.5" opacity="0.7" />
+    <circle cx="20" cy="16" r="5" fill="#fb7185" />
+    <text x="32" y="21" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="11" fill="#fb7185" letter-spacing="2">TANTRUMS</text>
+  </g>
+
+  <!-- Central Thematic Illustration: Post-Meltdown Warm Embrace & Rainbow After Storm -->
+  <g filter="url(#shadow)" transform="translate(400, 180)">
+    <!-- Sunburst behind after the rain -->
+    <circle cx="0" cy="0" r="110" fill="url(#sunburst)" />
+
+    <!-- Rainbow Arcs in the sky -->
+    <path d="M -110 50 A 110 110 0 0 1 110 50" fill="none" stroke="#ef4444" stroke-width="3" opacity="0.4" />
+    <path d="M -102 50 A 102 102 0 0 1 102 50" fill="none" stroke="#f59e0b" stroke-width="3" opacity="0.4" />
+    <path d="M -94 50 A 94 94 0 0 1 94 50" fill="none" stroke="#10b981" stroke-width="3" opacity="0.4" />
+    <path d="M -86 50 A 86 86 0 0 1 86 50" fill="none" stroke="#3b82f6" stroke-width="3" opacity="0.4" />
+
+    <!-- Fading storm cloud drifting to the side -->
+    <g transform="translate(-150, -40)">
+      <circle cx="0" cy="0" r="22" fill="#64748b" opacity="0.5" />
+      <circle cx="20" cy="-6" r="18" fill="#64748b" opacity="0.5" />
+      <circle cx="-16" cy="6" r="15" fill="#64748b" opacity="0.5" />
+      <path d="M 30 -5 Q 50 -10 65 -5" stroke="#fde047" stroke-width="3" stroke-linecap="round" /> <!-- Sun ray piercing cloud -->
+    </g>
+
+    <!-- Warm Loving Embrace: Parent Kneeling & Hugging Toddler -->
+    <g transform="translate(0, 10)">
+      <!-- Parent Silhouette / Torso -->
+      <path d="M -55 60 C -55 0 -15 -20 0 0 C 15 -20 55 0 55 60 Z" fill="#701a75" stroke="#a21caf" stroke-width="2" />
+      <!-- Parent Head tilted lovingly -->
+      <circle cx="-16" cy="-35" r="22" fill="#fed7aa" stroke="#fb923c" stroke-width="2" />
+      <!-- Parent Hair -->
+      <path d="M -36 -45 C -36 -62 0 -62 4 -40 Z" fill="#581c87" />
+
+      <!-- Toddler resting head on parent shoulder -->
+      <circle cx="15" cy="-20" r="16" fill="#fde68a" stroke="#f59e0b" stroke-width="2" />
+      <!-- Toddler Back & Arm wrapped around parent -->
+      <path d="M 0 35 C 15 5 35 15 30 50 Z" fill="#38bdf8" stroke="#0284c7" stroke-width="1.5" />
+
+      <!-- Parent arms wrapped completely around child -->
+      <path d="M -45 15 Q -10 35 30 25" fill="none" stroke="#fed7aa" stroke-width="12" stroke-linecap="round" />
+      <path d="M -45 15 Q -10 35 30 25" fill="none" stroke="#fb923c" stroke-width="2" stroke-linecap="round" />
+    </g>
+
+    <!-- Golden Reconnection Halo Token -->
+    <g transform="translate(0, -75)">
+      <rect x="-70" y="0" width="140" height="24" rx="12" fill="#1e1b4b" stroke="#fde047" stroke-width="1.5" />
+      <text x="0" y="16" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="10" fill="#fef08a" text-anchor="middle" letter-spacing="1">YOU ARE SAFE</text>
+    </g>
+  </g>
+
+  <!-- Bottom Frosted Card Banner with Title and Tagline -->
+  <g transform="translate(48, 330)">
+    <rect width="704" height="114" rx="24" fill="#090d16" opacity="0.88" />
+    <rect width="704" height="114" rx="24" fill="none" stroke="#ffffff" stroke-width="1" opacity="0.12" />
+    <text x="32" y="44" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="24" fill="#ffffff" letter-spacing="-0.5">Post-Storm Connection &amp; Repair</text>
+    <text x="32" y="78" font-family="system-ui, -apple-system, sans-serif" font-weight="600" font-size="13" fill="#94a3b8" letter-spacing="0.2">&quot;You Are Safe, I Will Always Love You&quot; · Reconnecting First</text>
+    <g transform="translate(640, 48)">
+      <circle cx="0" cy="0" r="18" fill="#fda4af" opacity="0.15" />
+      <polygon points="0,-10 3,-3 10,-3 4,2 6,9 0,5 -6,9 -4,2 -10,-3 -3,-3" fill="#fda4af" />
+    </g>
+  </g>
+</svg>

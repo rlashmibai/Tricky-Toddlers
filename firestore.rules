@@ -1,0 +1,143 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 3. Path Variable Hardening helper
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    // 2. Validation Blueprint (The "Anti-Update-Gap")
+    function isValidUser(data) {
+      return data.username is string && data.username.size() >= 3 && data.username.size() <= 32
+          && (!('firstName' in data) || (data.firstName is string && data.firstName.size() <= 100))
+          && (!('lastName' in data) || (data.lastName is string && data.lastName.size() <= 100));
+    }
+
+    function isValidMessage(data) {
+      let isDemo = data.userId is string && (data.userId.matches('^sample_.*') || data.userId.matches('^demo_.*'));
+      let isSelf = data.userId is string && data.userId == request.auth.uid;
+      return (isSelf || isDemo)
+          && data.username is string
+          && data.text is string && data.text.size() > 0;
+    }
+
+    function isValidPost(data) {
+      let isDemo = data.userId is string && (data.userId.matches('^sample_.*') || data.userId.matches('^demo_.*'));
+      return data.userId is string && (data.userId == request.auth.uid || isDemo)
+          && data.username is string && data.username.size() > 0
+          && data.content is string && data.content.size() > 0 && data.content.size() <= 5000
+          && (isDemo || data.createdAt <= request.time);
+    }
+
+    function isValidReply(data) {
+      let isDemo = data.userId is string && (data.userId.matches('^sample_.*') || data.userId.matches('^demo_.*'));
+      return data.userId is string && (data.userId == request.auth.uid || isDemo)
+          && data.username is string && data.username.size() > 0
+          && data.content is string && data.content.size() > 0 && data.content.size() <= 2000
+          && (isDemo || data.createdAt <= request.time);
+    }
+
+    function isValidMilestone(data) {
+      return data.userId is string && data.userId == request.auth.uid
+          && data.milestoneId is string && data.milestoneId.size() > 0 && data.milestoneId.size() <= 100
+          && data.achievedAge is number && data.achievedAge >= 0 && data.achievedAge <= 200
+          && data.achievedDate is string && data.achievedDate.size() <= 50
+          && (!('notes' in data) || (data.notes is string && data.notes.size() <= 2000));
+    }
+
+    function isValidConsultation(data) {
+      return data.userId is string && data.userId == request.auth.uid
+          && data.doctorName is string && data.doctorName.size() > 0 && data.doctorName.size() <= 100
+          && data.specialty is string && data.specialty.size() > 0 && data.specialty.size() <= 100
+          && data.city is string && data.city.size() > 0 && data.city.size() <= 100
+          && data.clinic is string && data.clinic.size() > 0 && data.clinic.size() <= 200
+          && data.date is string && data.date.size() > 0 && data.date.size() <= 50
+          && data.time is string && data.time.size() > 0 && data.time.size() <= 50
+          && data.status is string && (data.status == 'confirmed' || data.status == 'pending' || data.status == 'cancelled')
+          && data.createdAt <= request.time;
+    }
+
+    function isValidUserRoutine(data) {
+      return (!('completedIds' in data) || (data.completedIds is list && data.completedIds.size() <= 300))
+          && (!('updatedAt' in data) || (data.updatedAt is string && data.updatedAt.size() <= 100));
+    }
+
+    match /users/{userId} {
+      // Users can only see and manage their own profile document
+      allow get: if isOwner(userId);
+      
+      allow create: if isOwner(userId)
+                    && isValidId(userId)
+                    && isValidUser(incoming());
+
+      allow update: if isOwner(userId)
+                    && isValidId(userId)
+                    && isValidUser(incoming());
+    }
+
+    match /user_routines/{userId} {
+      // Users can only access and update their own routine progress
+      allow get: if isOwner(userId);
+      allow create, update: if isOwner(userId) && isValidId(userId) && isValidUserRoutine(incoming());
+      allow delete: if isOwner(userId);
+    }
+
+    match /messages/{messageId} {
+      allow list: if isSignedIn();
+      allow create: if isSignedIn() && isValidMessage(incoming());
+    }
+
+    match /posts/{postId} {
+      allow list: if isSignedIn();
+      allow get: if isSignedIn();
+      allow create: if isSignedIn() && isValidPost(incoming());
+      allow delete: if isSignedIn() && existing().userId == request.auth.uid;
+
+      match /replies/{replyId} {
+        allow list: if isSignedIn();
+        allow create: if isSignedIn() && isValidReply(incoming());
+        allow delete: if isSignedIn() && existing().userId == request.auth.uid;
+      }
+    }
+
+    match /milestones/{milestoneId} {
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow get: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create, update: if isSignedIn() && isValidMilestone(incoming());
+      allow delete: if isSignedIn() && existing().userId == request.auth.uid;
+    }
+
+    match /consultations/{consultationId} {
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow get: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isSignedIn() && isValidConsultation(incoming());
+      allow update: if isSignedIn() && isValidConsultation(incoming()) && existing().userId == request.auth.uid && incoming().userId == existing().userId;
+      allow delete: if isSignedIn() && existing().userId == request.auth.uid;
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+    function existing() {
+      return resource.data;
+    }
+
+    // Test connection health check
+    match /test/{docId} {
+      allow read: if true;
+    }
+
+    // 0. Global Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

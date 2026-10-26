@@ -1,0 +1,360 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1800 620" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg-grad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f8fbff"/>
+      <stop offset="100%" stop-color="#eef5fc"/>
+    </linearGradient>
+    <filter id="card-shadow" x="-8%" y="-8%" width="116%" height="116%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#0a2540" flood-opacity="0.08"/>
+    </filter>
+    <filter id="phone-shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="6" flood-color="#000" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+
+  <rect width="1800" height="620" rx="36" fill="url(#bg-grad)"/>
+
+  <!-- STEP 1: Register -->
+  <g transform="translate(40, 45)">
+    <!-- Card BG -->
+    <rect width="250" height="460" rx="28" fill="#E9F3FF" filter="url(#card-shadow)"/>
+    <!-- Header -->
+    <circle cx="52" cy="48" r="22" fill="#0066FF"/>
+    <text x="52" y="56" font-family="system-ui, -apple-system, sans-serif" font-size="22" font-weight="900" fill="#ffffff" text-anchor="middle">1</text>
+    <text x="88" y="56" font-family="system-ui, -apple-system, sans-serif" font-size="28" font-weight="900" fill="#0B2545">Register</text>
+
+    <!-- Phone mockup -->
+    <g transform="translate(32, 100)" filter="url(#phone-shadow)">
+      <rect width="186" height="270" rx="22" fill="#1E293B" stroke="#0F172A" stroke-width="3"/>
+      <rect x="6" y="8" width="174" height="254" rx="16" fill="#FFFFFF"/>
+      <!-- Speaker notch -->
+      <rect x="74" y="14" width="38" height="4" rx="2" fill="#CBD5E1"/>
+      <!-- Avatar circle -->
+      <circle cx="93" cy="54" r="26" fill="#FDE68A"/>
+      <!-- Simple child avatar face -->
+      <circle cx="93" cy="52" r="18" fill="#FBCFE8"/>
+      <circle cx="86" cy="50" r="2.5" fill="#1E293B"/>
+      <circle cx="100" cy="50" r="2.5" fill="#1E293B"/>
+      <path d="M 88 58 Q 93 63 98 58" stroke="#1E293B" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <!-- Hair -->
+      <path d="M 78 46 Q 93 32 108 46 Q 93 40 78 46" fill="#78350F"/>
+      
+      <!-- Input fields -->
+      <rect x="18" y="94" width="150" height="28" rx="8" fill="#F1F5F9" stroke="#E2E8F0"/>
+      <circle cx="32" cy="108" r="5" fill="#3B82F6"/>
+      <text x="46" y="112" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#475569">Child's Name</text>
+
+      <rect x="18" y="130" width="150" height="28" rx="8" fill="#F1F5F9" stroke="#E2E8F0"/>
+      <rect x="27" y="139" width="10" height="10" rx="2" fill="#3B82F6"/>
+      <text x="46" y="148" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#475569">Date of Birth</text>
+
+      <rect x="18" y="166" width="150" height="28" rx="8" fill="#F1F5F9" stroke="#E2E8F0"/>
+      <circle cx="32" cy="180" r="5" fill="#3B82F6"/>
+      <text x="46" y="184" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#475569">Basic Details</text>
+
+      <!-- Button -->
+      <rect x="18" y="206" width="150" height="32" rx="10" fill="#0284C7"/>
+      <text x="93" y="227" font-family="system-ui, sans-serif" font-size="12" font-weight="800" fill="#FFFFFF" text-anchor="middle">Create Profile</text>
+    </g>
+
+    <text x="125" y="405" font-family="system-ui, sans-serif" font-size="14" font-weight="500" fill="#334155" text-anchor="middle">Parent creates the</text>
+    <text x="125" y="425" font-family="system-ui, sans-serif" font-size="14" font-weight="500" fill="#334155" text-anchor="middle">child’s profile with</text>
+    <text x="125" y="445" font-family="system-ui, sans-serif" font-size="14" font-weight="500" fill="#334155" text-anchor="middle">relevant information.</text>
+  </g>
+
+  <!-- ARROW 1 -> 2 -->
+  <g transform="translate(298, 260)">
+    <path d="M 0 10 L 22 10 M 14 0 L 26 10 L 14 20" stroke="#0077FF" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- STEP 2: Collect -->
+  <g transform="translate(335, 45)">
+    <rect width="250" height="460" rx="28" fill="#E3FAF4" filter="url(#card-shadow)"/>
+    <circle cx="52" cy="48" r="22" fill="#0D9488"/>
+    <text x="52" y="56" font-family="system-ui, sans-serif" font-size="22" font-weight="900" fill="#ffffff" text-anchor="middle">2</text>
+    <text x="88" y="56" font-family="system-ui, sans-serif" font-size="28" font-weight="900" fill="#0B2545">Collect</text>
+
+    <!-- Source 1: FoodLens AI -->
+    <g transform="translate(18, 95)">
+      <rect width="214" height="68" rx="14" fill="#FFFFFF" stroke="#CCFBF1" stroke-width="1.5"/>
+      <rect x="12" y="12" width="44" height="44" rx="10" fill="#F0FDFA" stroke="#0D9488" stroke-width="2"/>
+      <!-- barcode / scan icon -->
+      <path d="M 22 22 L 22 46 M 26 22 L 26 46 M 32 22 L 32 46 M 38 22 L 38 46 M 44 22 L 44 46 M 46 22 L 46 46" stroke="#0D9488" stroke-width="2" stroke-linecap="round"/>
+      <text x="68" y="32" font-family="system-ui, sans-serif" font-size="14" font-weight="800" fill="#0F172A">FoodLens AI</text>
+      <text x="68" y="48" font-family="system-ui, sans-serif" font-size="12" font-weight="500" fill="#475569">Scans food labels</text>
+    </g>
+
+    <!-- Source 2: NutriBand -->
+    <g transform="translate(18, 175)">
+      <rect width="214" height="68" rx="14" fill="#FFFFFF" stroke="#CCFBF1" stroke-width="1.5"/>
+      <rect x="12" y="12" width="44" height="44" rx="10" fill="#0284C7"/>
+      <!-- Smartwatch icon -->
+      <rect x="22" y="18" width="24" height="32" rx="6" fill="#0369A1" stroke="#38BDF8" stroke-width="1.5"/>
+      <path d="M 26 34 L 29 34 L 31 30 L 34 38 L 36 34 L 42 34" stroke="#F43F5E" stroke-width="1.5" fill="none"/>
+      <text x="34" y="46" font-family="system-ui, sans-serif" font-size="8" font-weight="800" fill="#FFFFFF" text-anchor="middle">98</text>
+      <text x="68" y="32" font-family="system-ui, sans-serif" font-size="14" font-weight="800" fill="#0F172A">NutriBand</text>
+      <text x="68" y="48" font-family="system-ui, sans-serif" font-size="12" font-weight="500" fill="#475569">Tracks wellness</text>
+    </g>
+
+    <!-- Source 3: Health Records -->
+    <g transform="translate(18, 255)">
+      <rect width="214" height="76" rx="14" fill="#FFFFFF" stroke="#CCFBF1" stroke-width="1.5"/>
+      <rect x="12" y="14" width="44" height="48" rx="8" fill="#EFF6FF" stroke="#3B82F6" stroke-width="1.5"/>
+      <rect x="24" y="24" width="20" height="4" rx="1" fill="#EF4444"/>
+      <rect x="32" y="16" width="4" height="20" rx="1" fill="#EF4444"/>
+      <path d="M 20 42 L 48 42 M 20 48 L 42 48" stroke="#93C5FD" stroke-width="2" stroke-linecap="round"/>
+      <text x="68" y="32" font-family="system-ui, sans-serif" font-size="14" font-weight="800" fill="#0F172A">Health Records</text>
+      <text x="68" y="48" font-family="system-ui, sans-serif" font-size="11" font-weight="500" fill="#475569">Vaccinations,</text>
+      <text x="68" y="62" font-family="system-ui, sans-serif" font-size="11" font-weight="500" fill="#475569">checkups, etc.</text>
+    </g>
+
+    <text x="125" y="415" font-family="system-ui, sans-serif" font-size="14" font-weight="500" fill="#334155" text-anchor="middle">Data is gathered from</text>
+    <text x="125" y="435" font-family="system-ui, sans-serif" font-size="14" font-weight="500" fill="#334155" text-anchor="middle">multiple sources.</text>
+  </g>
+
+  <!-- ARROW 2 -> 3 -->
+  <g transform="translate(593, 260)">
+    <path d="M 0 10 L 22 10 M 14 0 L 26 10 L 14 20" stroke="#0D9488" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- STEP 3: Analyse -->
+  <g transform="translate(630, 45)">
+    <rect width="250" height="460" rx="28" fill="#FFFBEB" filter="url(#card-shadow)"/>
+    <circle cx="52" cy="48" r="22" fill="#D97706"/>
+    <text x="52" y="56" font-family="system-ui, sans-serif" font-size="22" font-weight="900" fill="#ffffff" text-anchor="middle">3</text>
+    <text x="88" y="56" font-family="system-ui, sans-serif" font-size="28" font-weight="900" fill="#0B2545">Analyse</text>
+
+    <!-- Cloud AI Graphic -->
+    <g transform="translate(45, 95)">
+      <!-- Cloud outline -->
+      <path d="M 40 50 A 25 25 0 0 1 80 35 A 35 35 0 0 1 130 45 A 25 25 0 0 1 150 70 A 20 20 0 0 1 140 100 L 35 100 A 25 25 0 0 1 40 50 Z" fill="#E0F2FE" stroke="#38BDF8" stroke-width="3"/>
+      <!-- AI Badge -->
+      <circle cx="85" cy="72" r="24" fill="#0284C7" stroke="#BAE6FD" stroke-width="2"/>
+      <text x="85" y="80" font-family="system-ui, sans-serif" font-size="18" font-weight="900" fill="#FFFFFF" text-anchor="middle">AI</text>
+      <!-- Tech circuit dots -->
+      <circle cx="50" cy="72" r="3" fill="#0284C7"/>
+      <path d="M 50 72 L 61 72" stroke="#0284C7" stroke-width="2"/>
+      <circle cx="120" cy="72" r="3" fill="#0284C7"/>
+      <path d="M 109 72 L 120 72" stroke="#0284C7" stroke-width="2"/>
+      <circle cx="85" cy="38" r="3" fill="#0284C7"/>
+      <path d="M 85 38 L 85 48" stroke="#0284C7" stroke-width="2"/>
+    </g>
+
+    <!-- 3 Data points -->
+    <g transform="translate(24, 215)">
+      <!-- Nutrition data -->
+      <g transform="translate(0, 0)">
+        <circle cx="16" cy="14" r="12" fill="#DCFCE7"/>
+        <path d="M 12 16 Q 16 20 20 16 Q 22 10 16 10 Q 10 10 12 16" fill="#16A34A"/>
+        <path d="M 16 10 Q 18 6 20 6" stroke="#15803D" stroke-width="1.5" fill="none"/>
+        <text x="36" y="18" font-family="system-ui, sans-serif" font-size="13" font-weight="700" fill="#1E293B">Nutrition Data</text>
+      </g>
+
+      <!-- Wellness data -->
+      <g transform="translate(0, 42)">
+        <circle cx="16" cy="14" r="12" fill="#FFE4E6"/>
+        <path d="M 16 10 C 13 6 8 8 8 13 C 8 17 16 22 16 22 C 16 22 24 17 24 13 C 24 8 19 6 16 10 Z" fill="#E11D48"/>
+        <text x="36" y="18" font-family="system-ui, sans-serif" font-size="13" font-weight="700" fill="#1E293B">Wellness Data</text>
+      </g>
+
+      <!-- Developmental data -->
+      <g transform="translate(0, 84)">
+        <circle cx="16" cy="14" r="12" fill="#E0F2FE"/>
+        <rect x="10" y="16" width="3" height="6" rx="1" fill="#0284C7"/>
+        <rect x="15" y="12" width="3" height="10" rx="1" fill="#0284C7"/>
+        <rect x="20" y="8" width="3" height="14" rx="1" fill="#0284C7"/>
+        <text x="36" y="18" font-family="system-ui, sans-serif" font-size="13" font-weight="700" fill="#1E293B">Developmental Data</text>
+      </g>
+    </g>
+
+    <text x="125" y="405" font-family="system-ui, sans-serif" font-size="14" font-weight="500" fill="#334155" text-anchor="middle">AI analyses the data</text>
+    <text x="125" y="425" font-family="system-ui, sans-serif" font-size="14" font-weight="500" fill="#334155" text-anchor="middle">to identify patterns</text>
+    <text x="125" y="445" font-family="system-ui, sans-serif" font-size="14" font-weight="500" fill="#334155" text-anchor="middle">and needs.</text>
+  </g>
+
+  <!-- ARROW 3 -> 4 -->
+  <g transform="translate(888, 260)">
+    <path d="M 0 10 L 22 10 M 14 0 L 26 10 L 14 20" stroke="#D97706" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- STEP 4: Personalise -->
+  <g transform="translate(925, 45)">
+    <rect width="250" height="460" rx="28" fill="#FFF1F2" filter="url(#card-shadow)"/>
+    <circle cx="52" cy="48" r="22" fill="#E11D48"/>
+    <text x="52" y="56" font-family="system-ui, sans-serif" font-size="22" font-weight="900" fill="#ffffff" text-anchor="middle">4</text>
+    <text x="88" y="56" font-family="system-ui, sans-serif" font-size="26" font-weight="900" fill="#0B2545">Personalise</text>
+
+    <!-- Tablet / Card Mockup -->
+    <g transform="translate(24, 95)" filter="url(#phone-shadow)">
+      <rect width="202" height="265" rx="18" fill="#1E293B" stroke="#0F172A" stroke-width="2.5"/>
+      <rect x="5" y="6" width="192" height="253" rx="14" fill="#FFFFFF"/>
+      <text x="101" y="28" font-family="system-ui, sans-serif" font-size="12" font-weight="900" fill="#1E3A8A" text-anchor="middle">Recommendations</text>
+
+      <!-- Item 1: Healthier food -->
+      <g transform="translate(14, 42)">
+        <circle cx="16" cy="16" r="14" fill="#DCFCE7"/>
+        <path d="M 12 18 Q 16 22 20 18 Q 22 12 16 12 Q 10 12 12 18" fill="#16A34A"/>
+        <path d="M 16 12 Q 18 8 20 8" stroke="#15803D" stroke-width="1.5" fill="none"/>
+        <text x="38" y="14" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#0F172A">Healthier</text>
+        <text x="38" y="27" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#0F172A">food choices</text>
+      </g>
+
+      <!-- Item 2: Better sleep -->
+      <g transform="translate(14, 94)">
+        <circle cx="16" cy="16" r="14" fill="#EDE9FE"/>
+        <path d="M 21 12 A 8 8 0 1 1 15 22 A 6.5 6.5 0 0 0 21 12 Z" fill="#7C3AED"/>
+        <text x="38" y="14" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#0F172A">Better sleep</text>
+        <text x="38" y="27" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#0F172A">routine</text>
+      </g>
+
+      <!-- Item 3: Activities -->
+      <g transform="translate(14, 146)">
+        <circle cx="16" cy="16" r="14" fill="#CCFBF1"/>
+        <circle cx="16" cy="11" r="3.5" fill="#0D9488"/>
+        <path d="M 12 23 L 15 17 L 18 19 L 20 23 M 13 16 L 19 16" stroke="#0D9488" stroke-width="2" stroke-linecap="round"/>
+        <text x="38" y="14" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#0F172A">Age-appropriate</text>
+        <text x="38" y="27" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#0F172A">activities</text>
+      </g>
+
+      <!-- Item 4: Development tips -->
+      <g transform="translate(14, 198)">
+        <circle cx="16" cy="16" r="14" fill="#E0F2FE"/>
+        <path d="M 11 12 C 14 11 16 12 16 12 C 16 12 18 11 21 12 L 21 21 C 18 20 16 21 16 21 C 16 21 14 20 11 21 Z" fill="#0284C7"/>
+        <text x="38" y="14" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#0F172A">Development</text>
+        <text x="38" y="27" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#0F172A">tips</text>
+      </g>
+    </g>
+
+    <text x="125" y="405" font-family="system-ui, sans-serif" font-size="14" font-weight="500" fill="#334155" text-anchor="middle">Generates customised,</text>
+    <text x="125" y="425" font-family="system-ui, sans-serif" font-size="14" font-weight="500" fill="#334155" text-anchor="middle">age-appropriate</text>
+    <text x="125" y="445" font-family="system-ui, sans-serif" font-size="14" font-weight="500" fill="#334155" text-anchor="middle">recommendations.</text>
+  </g>
+
+  <!-- ARROW 4 -> 5 -->
+  <g transform="translate(1183, 260)">
+    <path d="M 0 10 L 22 10 M 14 0 L 26 10 L 14 20" stroke="#E11D48" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- STEP 5: Alert -->
+  <g transform="translate(1220, 45)">
+    <rect width="250" height="460" rx="28" fill="#F3E8FF" filter="url(#card-shadow)"/>
+    <circle cx="52" cy="48" r="22" fill="#7C3AED"/>
+    <text x="52" y="56" font-family="system-ui, sans-serif" font-size="22" font-weight="900" fill="#ffffff" text-anchor="middle">5</text>
+    <text x="88" y="56" font-family="system-ui, sans-serif" font-size="28" font-weight="900" fill="#0B2545">Alert</text>
+
+    <!-- Notification Phone Display -->
+    <g transform="translate(24, 95)" filter="url(#phone-shadow)">
+      <rect width="202" height="265" rx="18" fill="#1E293B" stroke="#0F172A" stroke-width="2.5"/>
+      <rect x="5" y="6" width="192" height="253" rx="14" fill="#FFFFFF"/>
+      
+      <!-- Bell icon at top center -->
+      <circle cx="101" cy="24" r="14" fill="#E0F2FE"/>
+      <path d="M 97 22 C 97 18 105 18 105 22 L 107 26 L 95 26 Z M 99 28 A 2 2 0 0 0 103 28" fill="#0284C7"/>
+
+      <!-- Alert 1: Vaccination Reminder -->
+      <g transform="translate(14, 48)">
+        <circle cx="16" cy="16" r="14" fill="#EFF6FF"/>
+        <!-- syringe -->
+        <path d="M 22 10 L 20 8 M 16 12 L 20 16 M 14 14 L 18 18 L 14 22 L 10 18 Z M 10 22 L 8 24" stroke="#0284C7" stroke-width="2" stroke-linecap="round"/>
+        <text x="38" y="14" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#0F172A">Vaccination</text>
+        <text x="38" y="27" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#0F172A">Reminder</text>
+      </g>
+
+      <!-- Alert 2: Unhealthy food -->
+      <g transform="translate(14, 98)">
+        <circle cx="16" cy="16" r="14" fill="#FEF3C7"/>
+        <path d="M 16 8 L 24 22 L 8 22 Z" fill="#F59E0B"/>
+        <text x="16" y="20" font-family="system-ui, sans-serif" font-size="10" font-weight="900" fill="#FFFFFF" text-anchor="middle">!</text>
+        <text x="38" y="14" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#0F172A">Unhealthy</text>
+        <text x="38" y="27" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#0F172A">Food Detected</text>
+      </g>
+
+      <!-- Alert 3: Abnormal vitals -->
+      <g transform="translate(14, 148)">
+        <circle cx="16" cy="16" r="14" fill="#FFE4E6"/>
+        <path d="M 16 10 C 13 6 8 8 8 13 C 8 17 16 22 16 22 C 16 22 24 17 24 13 C 24 8 19 6 16 10 Z" fill="#E11D48"/>
+        <path d="M 11 14 L 14 14 L 15 11 L 17 17 L 18 14 L 21 14" stroke="#FFFFFF" stroke-width="1.2" fill="none"/>
+        <text x="38" y="14" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#0F172A">Abnormal</text>
+        <text x="38" y="27" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#0F172A">Vitals Alert</text>
+      </g>
+
+      <!-- Alert 4: Upcoming Checkup -->
+      <g transform="translate(14, 198)">
+        <circle cx="16" cy="16" r="14" fill="#EFF6FF"/>
+        <rect x="10" y="11" width="12" height="11" rx="2" fill="#0284C7"/>
+        <circle cx="13" cy="15" r="1" fill="#FFFFFF"/>
+        <circle cx="16" cy="15" r="1" fill="#FFFFFF"/>
+        <circle cx="19" cy="15" r="1" fill="#FFFFFF"/>
+        <circle cx="13" cy="18" r="1" fill="#FFFFFF"/>
+        <circle cx="16" cy="18" r="1" fill="#FFFFFF"/>
+        <text x="38" y="14" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#0F172A">Upcoming</text>
+        <text x="38" y="27" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#0F172A">Checkup</text>
+      </g>
+    </g>
+
+    <text x="125" y="405" font-family="system-ui, sans-serif" font-size="14" font-weight="500" fill="#334155" text-anchor="middle">Parents receive</text>
+    <text x="125" y="425" font-family="system-ui, sans-serif" font-size="14" font-weight="500" fill="#334155" text-anchor="middle">timely notifications</text>
+    <text x="125" y="445" font-family="system-ui, sans-serif" font-size="14" font-weight="500" fill="#334155" text-anchor="middle">and alerts.</text>
+  </g>
+
+  <!-- ARROW 5 -> 6 -->
+  <g transform="translate(1478, 260)">
+    <path d="M 0 10 L 22 10 M 14 0 L 26 10 L 14 20" stroke="#7C3AED" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- STEP 6: Monitor -->
+  <g transform="translate(1510, 45)">
+    <rect width="250" height="460" rx="28" fill="#E6FAF5" filter="url(#card-shadow)"/>
+    <circle cx="52" cy="48" r="22" fill="#059669"/>
+    <text x="52" y="56" font-family="system-ui, sans-serif" font-size="22" font-weight="900" fill="#ffffff" text-anchor="middle">6</text>
+    <text x="88" y="56" font-family="system-ui, sans-serif" font-size="28" font-weight="900" fill="#0B2545">Monitor</text>
+
+    <!-- Bar chart with arrow -->
+    <g transform="translate(30, 95)">
+      <!-- upward arrow curve -->
+      <path d="M 20 85 C 50 80, 110 50, 160 15" stroke="#06B6D4" stroke-width="6" fill="none" stroke-linecap="round"/>
+      <path d="M 145 15 L 160 15 L 160 30" stroke="#06B6D4" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <!-- Bars -->
+      <rect x="25" y="90" width="28" height="35" rx="6" fill="#93C5FD"/>
+      <rect x="65" y="70" width="28" height="55" rx="6" fill="#34D399"/>
+      <rect x="105" y="50" width="28" height="75" rx="6" fill="#FBBF24"/>
+      <rect x="145" y="30" width="28" height="95" rx="6" fill="#F43F5E"/>
+    </g>
+
+    <!-- Checklist items -->
+    <g transform="translate(24, 250)">
+      <g transform="translate(0, 0)">
+        <circle cx="16" cy="14" r="12" fill="#10B981"/>
+        <path d="M 11 14 L 14 17 L 21 10" stroke="#FFFFFF" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <text x="36" y="19" font-family="system-ui, sans-serif" font-size="13" font-weight="800" fill="#0F172A">Track Progress</text>
+      </g>
+
+      <g transform="translate(0, 42)">
+        <circle cx="16" cy="14" r="12" fill="#10B981"/>
+        <path d="M 11 14 L 14 17 L 21 10" stroke="#FFFFFF" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <text x="36" y="19" font-family="system-ui, sans-serif" font-size="13" font-weight="800" fill="#0F172A">Update Insights</text>
+      </g>
+
+      <g transform="translate(0, 84)">
+        <circle cx="16" cy="14" r="12" fill="#10B981"/>
+        <path d="M 11 14 L 14 17 L 21 10" stroke="#FFFFFF" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <text x="36" y="19" font-family="system-ui, sans-serif" font-size="13" font-weight="800" fill="#0F172A">Continuous Learning</text>
+      </g>
+    </g>
+
+    <text x="125" y="415" font-family="system-ui, sans-serif" font-size="14" font-weight="500" fill="#334155" text-anchor="middle">The system continuously</text>
+    <text x="125" y="435" font-family="system-ui, sans-serif" font-size="14" font-weight="500" fill="#334155" text-anchor="middle">updates the child’s</text>
+    <text x="125" y="455" font-family="system-ui, sans-serif" font-size="14" font-weight="500" fill="#334155" text-anchor="middle">wellness profile.</text>
+  </g>
+
+  <!-- BOTTOM PILL: A Brighter Tomorrow -->
+  <g transform="translate(710, 535)">
+    <rect width="380" height="58" rx="29" fill="#E0F2FE" filter="url(#card-shadow)"/>
+    <!-- sparkle rays -->
+    <path d="M 38 29 L 26 29 M 42 20 L 32 14 M 42 38 L 32 44" stroke="#F59E0B" stroke-width="3" stroke-linecap="round"/>
+    <path d="M 342 29 L 354 29 M 338 20 L 348 14 M 338 38 L 348 44" stroke="#F59E0B" stroke-width="3" stroke-linecap="round"/>
+    <!-- Heart outline -->
+    <path d="M 68 23 C 65 17 58 17 55 21 C 52 17 45 17 42 21 C 38 27 48 35 55 40 C 62 35 72 27 68 23 Z" fill="none" stroke="#0284C7" stroke-width="3.5" stroke-linejoin="round"/>
+    <text x="200" y="38" font-family="system-ui, -apple-system, sans-serif" font-size="24" font-weight="800" fill="#0369A1" text-anchor="middle">A Brighter Tomorrow</text>
+  </g>
+</svg>

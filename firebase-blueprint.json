@@ -1,0 +1,146 @@
+{
+  "entities": {
+    "User": {
+      "title": "User Profile",
+      "description": "User specific profile information.",
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string",
+          "description": "Unique username"
+        },
+        "firstName": {
+          "type": "string",
+          "description": "User's first name"
+        },
+        "lastName": {
+          "type": "string",
+          "description": "User's last name"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last time the profile was updated"
+        }
+      },
+      "required": ["username"]
+    },
+    "Message": {
+      "title": "Chat Message",
+      "description": "A message in a 1:1 or global chat.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "username": { "type": "string" },
+        "receiverName": { "type": "string" },
+        "text": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "username", "text", "createdAt"]
+    },
+    "Post": {
+      "title": "Community Post",
+      "description": "A community help request posted by a user.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "username": { "type": "string" },
+        "content": { "type": "string" },
+        "hashtags": { "type": "array", "items": { "type": "string" } },
+        "attachments": { "type": "array", "items": { "type": "string" } },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "username", "content", "createdAt"]
+    },
+    "Reply": {
+      "title": "Post Reply",
+      "description": "A reply to a community post.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "username": { "type": "string" },
+        "content": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "username", "content", "createdAt"]
+    },
+    "Milestone": {
+      "title": "Baby Milestone Log",
+      "description": "An infant/toddler developmental milestone achievement logged by their parent.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "The UID of the parent who logged this" },
+        "milestoneId": { "type": "string", "description": "ID of the milestone (e.g. crawling)" },
+        "achievedAge": { "type": "number", "description": "The baby's age in months when achieved" },
+        "achievedDate": { "type": "string", "description": "Approximate calendar date achieved" },
+        "notes": { "type": "string", "description": "Sweet memories or descriptions added by parents" },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Last saved timestamp" }
+      },
+      "required": ["userId", "milestoneId", "achievedAge", "achievedDate", "updatedAt"]
+    },
+    "Consultation": {
+      "title": "Pediatric Consultation Booking",
+      "description": "A consultation booked by a parent with a verified pediatrician.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "The UID of the parent who booked this" },
+        "doctorName": { "type": "string", "description": "Name of the pediatrician" },
+        "specialty": { "type": "string", "description": "Specialty of the pediatrician" },
+        "city": { "type": "string", "description": "Selected city" },
+        "clinic": { "type": "string", "description": "Selected clinic name" },
+        "date": { "type": "string", "description": "Preferred date" },
+        "time": { "type": "string", "description": "Preferred time" },
+        "status": { "type": "string", "description": "Booking status" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "When booking was created" }
+      },
+      "required": ["userId", "doctorName", "specialty", "city", "clinic", "date", "time", "status", "createdAt"]
+    },
+    "UserRoutine": {
+      "title": "User Routine Progress",
+      "description": "The tracked checklist items and routines for a user.",
+      "type": "object",
+      "properties": {
+        "completedIds": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Array of routine item IDs completed by the user"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last updated timestamp"
+        }
+      }
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "A collection of user profiles keyed by their authentication UID."
+    },
+    "/user_routines/{userId}": {
+      "schema": "UserRoutine",
+      "description": "Tracked routine checklist state for a parent keyed by their authentication UID."
+    },
+    "/messages/{messageId}": {
+      "schema": "Message",
+      "description": "A collection of real-time messages for the global chat."
+    },
+    "/posts/{postId}": {
+      "schema": "Post",
+      "description": "A collection of community help requests."
+    },
+    "/posts/{postId}/replies/{replyId}": {
+      "schema": "Reply",
+      "description": "A collection of replies to a specific community post."
+    },
+    "/milestones/{milestoneId}": {
+      "schema": "Milestone",
+      "description": "A collection of logged infant/toddler milestones."
+    },
+    "/consultations/{consultationId}": {
+      "schema": "Consultation",
+      "description": "A collection of booked pediatrician consultations."
+    }
+  }
+}

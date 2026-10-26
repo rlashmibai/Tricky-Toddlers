@@ -1,0 +1,242 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 520" width="100%" height="100%">
+  <defs>
+    <!-- Background Studio Gradients -->
+    <radialGradient id="studioDarkBg" cx="50%" cy="50%" r="70%">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="55%" stop-color="#090d16" />
+      <stop offset="100%" stop-color="#020408" />
+    </radialGradient>
+
+    <!-- Ambient Spotlights -->
+    <radialGradient id="xsSpot" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#f472b6" stop-opacity="0.18" />
+      <stop offset="100%" stop-color="#f472b6" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="smallSpot" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.18" />
+      <stop offset="100%" stop-color="#38bdf8" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="medSpot" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#34d399" stop-opacity="0.18" />
+      <stop offset="100%" stop-color="#34d399" stop-opacity="0" />
+    </radialGradient>
+
+    <!-- Realistic Cotton Fabric 1: XS Blush Pink Heather -->
+    <linearGradient id="cottonPinkGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fbcfe8" />
+      <stop offset="20%" stop-color="#f472b6" />
+      <stop offset="70%" stop-color="#ec4899" />
+      <stop offset="100%" stop-color="#be185d" />
+    </linearGradient>
+
+    <!-- Realistic Cotton Fabric 2: Small Sky Blue Heather -->
+    <linearGradient id="cottonBlueGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#bae6fd" />
+      <stop offset="20%" stop-color="#38bdf8" />
+      <stop offset="70%" stop-color="#0284c7" />
+      <stop offset="100%" stop-color="#0369a1" />
+    </linearGradient>
+
+    <!-- Realistic Cotton Fabric 3: Medium Sage Mint Heather -->
+    <linearGradient id="cottonMintGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#a7f3d0" />
+      <stop offset="20%" stop-color="#34d399" />
+      <stop offset="70%" stop-color="#059669" />
+      <stop offset="100%" stop-color="#065f46" />
+    </linearGradient>
+
+    <!-- Sensor Pod Metallic Outer Ring / Bezel -->
+    <linearGradient id="podMetalRing" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="30%" stop-color="#f1f5f9" />
+      <stop offset="70%" stop-color="#94a3b8" />
+      <stop offset="100%" stop-color="#475569" />
+    </linearGradient>
+
+    <!-- Sensor Pod Dark Gloss Glass Dial Face -->
+    <radialGradient id="podGlassFace" cx="35%" cy="30%" r="68%">
+      <stop offset="0%" stop-color="#1e293b" />
+      <stop offset="45%" stop-color="#0f172a" />
+      <stop offset="85%" stop-color="#020617" />
+      <stop offset="100%" stop-color="#000000" />
+    </radialGradient>
+
+    <!-- Active Biometric Telemetry Core -->
+    <radialGradient id="telemetryPulse" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="1" />
+      <stop offset="40%" stop-color="#0ea5e9" stop-opacity="0.8" />
+      <stop offset="80%" stop-color="#0284c7" stop-opacity="0.3" />
+      <stop offset="100%" stop-color="#0284c7" stop-opacity="0" />
+    </radialGradient>
+
+    <!-- Drop Shadow Filters -->
+    <filter id="strapShadow" x="-10%" y="-20%" width="120%" height="150%">
+      <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#000000" flood-opacity="0.65" />
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#000000" flood-opacity="0.35" />
+    </filter>
+
+    <filter id="podGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="#38bdf8" flood-opacity="0.5" />
+    </filter>
+  </defs>
+
+  <!-- Background Canvas -->
+  <rect width="800" height="520" fill="url(#studioDarkBg)" />
+
+  <!-- Ambient Backlights -->
+  <ellipse cx="440" cy="110" rx="260" ry="80" fill="url(#xsSpot)" />
+  <ellipse cx="440" cy="255" rx="300" ry="85" fill="url(#smallSpot)" />
+  <ellipse cx="440" cy="405" rx="340" ry="90" fill="url(#medSpot)" />
+
+  <!-- ========================================================================= -->
+  <!-- STRAP 1: EXTRA-SMALL (XS) · 1 TO 2 YEARS · WITH SENSOR POD INSERTED      -->
+  <!-- ========================================================================= -->
+  <g transform="translate(0, 75)" filter="url(#strapShadow)">
+    <!-- Size Label Badge (Positioned far left with zero overlap on strap) -->
+    <g transform="translate(48, 12)">
+      <rect x="0" y="0" width="102" height="34" rx="10" fill="#ec4899" fill-opacity="0.18" stroke="#f472b6" stroke-width="1.4" />
+      <circle cx="16" cy="17" r="4.5" fill="#f472b6" />
+      <text x="28" y="22" fill="#ffffff" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="13" letter-spacing="0.5">XS · 1–2Y</text>
+    </g>
+
+    <!-- Cotton Strap Band (XS: Compact length ~360px) -->
+    <!-- Left Wing -->
+    <rect x="235" y="10" width="170" height="38" rx="19" fill="url(#cottonPinkGrad)" stroke="#f472b6" stroke-width="1.5" />
+    <!-- Fine cotton rib stitching lines -->
+    <line x1="260" y1="10" x2="260" y2="48" stroke="#ffffff" stroke-width="1" stroke-dasharray="2 3" stroke-opacity="0.55" />
+    <line x1="285" y1="10" x2="285" y2="48" stroke="#ffffff" stroke-width="1" stroke-dasharray="2 3" stroke-opacity="0.55" />
+    <line x1="310" y1="10" x2="310" y2="48" stroke="#ffffff" stroke-width="1" stroke-dasharray="2 3" stroke-opacity="0.55" />
+    <line x1="335" y1="10" x2="335" y2="48" stroke="#ffffff" stroke-width="1" stroke-dasharray="2 3" stroke-opacity="0.55" />
+    <line x1="360" y1="10" x2="360" y2="48" stroke="#ffffff" stroke-width="1" stroke-dasharray="2 3" stroke-opacity="0.55" />
+
+    <!-- Right Wing -->
+    <rect x="445" y="10" width="170" height="38" rx="19" fill="url(#cottonPinkGrad)" stroke="#f472b6" stroke-width="1.5" />
+    <line x1="480" y1="10" x2="480" y2="48" stroke="#ffffff" stroke-width="1" stroke-dasharray="2 3" stroke-opacity="0.55" />
+    <line x1="505" y1="10" x2="505" y2="48" stroke="#ffffff" stroke-width="1" stroke-dasharray="2 3" stroke-opacity="0.55" />
+    <line x1="530" y1="10" x2="530" y2="48" stroke="#ffffff" stroke-width="1" stroke-dasharray="2 3" stroke-opacity="0.55" />
+    <line x1="555" y1="10" x2="555" y2="48" stroke="#ffffff" stroke-width="1" stroke-dasharray="2 3" stroke-opacity="0.55" />
+    <line x1="580" y1="10" x2="580" y2="48" stroke="#ffffff" stroke-width="1" stroke-dasharray="2 3" stroke-opacity="0.55" />
+
+    <!-- Watch Mount / Dock Ring (Cotton Frame) -->
+    <circle cx="430" cy="29" r="41" fill="#9d174d" stroke="#fbcfe8" stroke-width="2.5" />
+
+    <!-- SENSOR POD INSERTED SECURELY INSIDE XS WATCH HOLDER -->
+    <!-- Outer Metallic Bevel -->
+    <circle cx="430" cy="29" r="35" fill="url(#podMetalRing)" stroke="#64748b" stroke-width="1.5" />
+    <!-- Glossy Dial Glass Face -->
+    <circle cx="430" cy="29" r="31" fill="url(#podGlassFace)" />
+    <!-- Biometric Sensor Inner Chrome Ring -->
+    <circle cx="430" cy="29" r="23" fill="#090d16" stroke="#38bdf8" stroke-width="1.5" stroke-opacity="0.8" />
+    <!-- Active Cyan Telemetry Pulse Core -->
+    <circle cx="430" cy="29" r="14" fill="url(#telemetryPulse)" filter="url(#podGlow)" />
+    <circle cx="430" cy="29" r="6" fill="#38bdf8" />
+    <circle cx="430" cy="29" r="2.5" fill="#ffffff" />
+    <!-- Glass Specular Reflection Highlight Arc -->
+    <path d="M 408 22 A 25 25 0 0 1 445 13" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-opacity="0.45" />
+    <!-- Status Indicator LED -->
+    <circle cx="430" cy="8" r="2.5" fill="#34d399" />
+  </g>
+
+  <!-- ========================================================================= -->
+  <!-- STRAP 2: SMALL (S) · 2 TO 4 YEARS · WITH SENSOR POD INSERTED             -->
+  <!-- ========================================================================= -->
+  <g transform="translate(0, 225)" filter="url(#strapShadow)">
+    <!-- Size Label Badge (Positioned far left with zero overlap on strap) -->
+    <g transform="translate(48, 14)">
+      <rect x="0" y="0" width="102" height="34" rx="10" fill="#0284c7" fill-opacity="0.18" stroke="#38bdf8" stroke-width="1.4" />
+      <circle cx="16" cy="17" r="4.5" fill="#38bdf8" />
+      <text x="28" y="22" fill="#ffffff" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="13" letter-spacing="0.5">S · 2–4Y</text>
+    </g>
+
+    <!-- Cotton Strap Band (Small: Medium length ~460px) -->
+    <!-- Left Wing -->
+    <rect x="185" y="10" width="220" height="42" rx="21" fill="url(#cottonBlueGrad)" stroke="#38bdf8" stroke-width="1.5" />
+    <!-- Fine cotton rib stitching lines -->
+    <line x1="215" y1="10" x2="215" y2="52" stroke="#ffffff" stroke-width="1" stroke-dasharray="2 3" stroke-opacity="0.55" />
+    <line x1="245" y1="10" x2="245" y2="52" stroke="#ffffff" stroke-width="1" stroke-dasharray="2 3" stroke-opacity="0.55" />
+    <line x1="275" y1="10" x2="275" y2="52" stroke="#ffffff" stroke-width="1" stroke-dasharray="2 3" stroke-opacity="0.55" />
+    <line x1="305" y1="10" x2="305" y2="52" stroke="#ffffff" stroke-width="1" stroke-dasharray="2 3" stroke-opacity="0.55" />
+    <line x1="335" y1="10" x2="335" y2="52" stroke="#ffffff" stroke-width="1" stroke-dasharray="2 3" stroke-opacity="0.55" />
+    <line x1="365" y1="10" x2="365" y2="52" stroke="#ffffff" stroke-width="1" stroke-dasharray="2 3" stroke-opacity="0.55" />
+
+    <!-- Right Wing -->
+    <rect x="445" y="10" width="220" height="42" rx="21" fill="url(#cottonBlueGrad)" stroke="#38bdf8" stroke-width="1.5" />
+    <line x1="485" y1="10" x2="485" y2="52" stroke="#ffffff" stroke-width="1" stroke-dasharray="2 3" stroke-opacity="0.55" />
+    <line x1="515" y1="10" x2="515" y2="52" stroke="#ffffff" stroke-width="1" stroke-dasharray="2 3" stroke-opacity="0.55" />
+    <line x1="545" y1="10" x2="545" y2="52" stroke="#ffffff" stroke-width="1" stroke-dasharray="2 3" stroke-opacity="0.55" />
+    <line x1="575" y1="10" x2="575" y2="52" stroke="#ffffff" stroke-width="1" stroke-dasharray="2 3" stroke-opacity="0.55" />
+    <line x1="605" y1="10" x2="605" y2="52" stroke="#ffffff" stroke-width="1" stroke-dasharray="2 3" stroke-opacity="0.55" />
+    <line x1="635" y1="10" x2="635" y2="52" stroke="#ffffff" stroke-width="1" stroke-dasharray="2 3" stroke-opacity="0.55" />
+
+    <!-- Watch Mount / Dock Ring (Cotton Frame) -->
+    <circle cx="430" cy="31" r="42" fill="#0369a1" stroke="#bae6fd" stroke-width="2.5" />
+
+    <!-- SENSOR POD INSERTED SECURELY INSIDE SMALL WATCH HOLDER -->
+    <!-- Outer Metallic Bevel -->
+    <circle cx="430" cy="31" r="36" fill="url(#podMetalRing)" stroke="#64748b" stroke-width="1.5" />
+    <!-- Glossy Dial Glass Face -->
+    <circle cx="430" cy="31" r="32" fill="url(#podGlassFace)" />
+    <!-- Biometric Sensor Inner Chrome Ring -->
+    <circle cx="430" cy="31" r="24" fill="#090d16" stroke="#38bdf8" stroke-width="1.5" stroke-opacity="0.8" />
+    <!-- Active Cyan Telemetry Pulse Core -->
+    <circle cx="430" cy="31" r="15" fill="url(#telemetryPulse)" filter="url(#podGlow)" />
+    <circle cx="430" cy="31" r="6.5" fill="#38bdf8" />
+    <circle cx="430" cy="31" r="2.5" fill="#ffffff" />
+    <!-- Glass Specular Reflection Highlight Arc -->
+    <path d="M 407 23 A 26 26 0 0 1 446 14" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-opacity="0.45" />
+    <!-- Status Indicator LED -->
+    <circle cx="430" cy="9" r="2.5" fill="#34d399" />
+  </g>
+
+  <!-- ========================================================================= -->
+  <!-- STRAP 3: MEDIUM (M) · 4 TO 8 YEARS · WITH SENSOR POD INSERTED            -->
+  <!-- ========================================================================= -->
+  <g transform="translate(0, 375)" filter="url(#strapShadow)">
+    <!-- Size Label Badge (Positioned far left with zero overlap on strap) -->
+    <g transform="translate(48, 16)">
+      <rect x="0" y="0" width="102" height="34" rx="10" fill="#059669" fill-opacity="0.18" stroke="#34d399" stroke-width="1.4" />
+      <circle cx="16" cy="17" r="4.5" fill="#34d399" />
+      <text x="28" y="22" fill="#ffffff" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="13" letter-spacing="0.5">M · 4–8Y</text>
+    </g>
+
+    <!-- Cotton Strap Band (Medium: Longest length ~570px) -->
+    <!-- Left Wing -->
+    <rect x="135" y="10" width="270" height="46" rx="23" fill="url(#cottonMintGrad)" stroke="#34d399" stroke-width="1.5" />
+    <!-- Fine cotton rib stitching lines -->
+    <line x1="170" y1="10" x2="170" y2="56" stroke="#ffffff" stroke-width="1" stroke-dasharray="2 3" stroke-opacity="0.55" />
+    <line x1="205" y1="10" x2="205" y2="56" stroke="#ffffff" stroke-width="1" stroke-dasharray="2 3" stroke-opacity="0.55" />
+    <line x1="240" y1="10" x2="240" y2="56" stroke="#ffffff" stroke-width="1" stroke-dasharray="2 3" stroke-opacity="0.55" />
+    <line x1="275" y1="10" x2="275" y2="56" stroke="#ffffff" stroke-width="1" stroke-dasharray="2 3" stroke-opacity="0.55" />
+    <line x1="310" y1="10" x2="310" y2="56" stroke="#ffffff" stroke-width="1" stroke-dasharray="2 3" stroke-opacity="0.55" />
+    <line x1="345" y1="10" x2="345" y2="56" stroke="#ffffff" stroke-width="1" stroke-dasharray="2 3" stroke-opacity="0.55" />
+    <line x1="380" y1="10" x2="380" y2="56" stroke="#ffffff" stroke-width="1" stroke-dasharray="2 3" stroke-opacity="0.55" />
+
+    <!-- Right Wing -->
+    <rect x="445" y="10" width="270" height="46" rx="23" fill="url(#cottonMintGrad)" stroke="#34d399" stroke-width="1.5" />
+    <line x1="490" y1="10" x2="490" y2="56" stroke="#ffffff" stroke-width="1" stroke-dasharray="2 3" stroke-opacity="0.55" />
+    <line x1="525" y1="10" x2="525" y2="56" stroke="#ffffff" stroke-width="1" stroke-dasharray="2 3" stroke-opacity="0.55" />
+    <line x1="560" y1="10" x2="560" y2="56" stroke="#ffffff" stroke-width="1" stroke-dasharray="2 3" stroke-opacity="0.55" />
+    <line x1="595" y1="10" x2="595" y2="56" stroke="#ffffff" stroke-width="1" stroke-dasharray="2 3" stroke-opacity="0.55" />
+    <line x1="630" y1="10" x2="630" y2="56" stroke="#ffffff" stroke-width="1" stroke-dasharray="2 3" stroke-opacity="0.55" />
+    <line x1="665" y1="10" x2="665" y2="56" stroke="#ffffff" stroke-width="1" stroke-dasharray="2 3" stroke-opacity="0.55" />
+
+    <!-- Watch Mount / Dock Ring (Cotton Frame) -->
+    <circle cx="430" cy="33" r="43" fill="#047857" stroke="#a7f3d0" stroke-width="2.5" />
+
+    <!-- SENSOR POD INSERTED SECURELY INSIDE MEDIUM WATCH HOLDER -->
+    <!-- Outer Metallic Bevel -->
+    <circle cx="430" cy="33" r="37" fill="url(#podMetalRing)" stroke="#64748b" stroke-width="1.5" />
+    <!-- Glossy Dial Glass Face -->
+    <circle cx="430" cy="33" r="33" fill="url(#podGlassFace)" />
+    <!-- Biometric Sensor Inner Chrome Ring -->
+    <circle cx="430" cy="33" r="25" fill="#090d16" stroke="#38bdf8" stroke-width="1.5" stroke-opacity="0.8" />
+    <!-- Active Cyan Telemetry Pulse Core -->
+    <circle cx="430" cy="33" r="16" fill="url(#telemetryPulse)" filter="url(#podGlow)" />
+    <circle cx="430" cy="33" r="7" fill="#38bdf8" />
+    <circle cx="430" cy="33" r="2.5" fill="#ffffff" />
+    <!-- Glass Specular Reflection Highlight Arc -->
+    <path d="M 406 25 A 27 27 0 0 1 447 16" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-opacity="0.45" />
+    <!-- Status Indicator LED -->
+    <circle cx="430" cy="10" r="2.5" fill="#34d399" />
+  </g>
+</svg>

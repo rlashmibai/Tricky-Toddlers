@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 480" width="800" height="480">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#31101e" />
+      <stop offset="100%" stop-color="#14050b" />
+    </linearGradient>
+    <radialGradient id="dialGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </radialGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.5" />
+    </filter>
+  </defs>
+
+  <rect width="800" height="480" fill="url(#bgGrad)" />
+
+  <!-- Category Pill Badge -->
+  <g transform="translate(48, 36)">
+    <rect width="160" height="32" rx="16" fill="#000000" opacity="0.4" />
+    <rect width="160" height="32" rx="16" fill="none" stroke="#f43f5e" stroke-width="1.5" opacity="0.7" />
+    <circle cx="20" cy="16" r="5" fill="#f43f5e" />
+    <text x="32" y="21" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="11" fill="#f43f5e" letter-spacing="2">TANTRUMS</text>
+  </g>
+
+  <!-- Central Thematic Illustration: The 4-Quadrant H.A.L.T. Compass Dial -->
+  <g filter="url(#shadow)" transform="translate(400, 180)">
+    <!-- Outer Compass Brass Ring -->
+    <circle cx="0" cy="0" r="115" fill="#f59e0b" stroke="#fbbf24" stroke-width="3" />
+    <circle cx="0" cy="0" r="105" fill="#0f172a" stroke="#78350f" stroke-width="2" />
+
+    <!-- 4 Quadrant Divider Lines -->
+    <line x1="-105" y1="0" x2="105" y2="0" stroke="#334155" stroke-width="2" stroke-dasharray="4 4" />
+    <line x1="0" y1="-105" x2="0" y2="105" stroke="#334155" stroke-width="2" stroke-dasharray="4 4" />
+
+    <!-- Quadrant 1: Top = HUNGRY (H) -->
+    <g transform="translate(0, -60)">
+      <circle cx="0" cy="0" r="26" fill="#ef4444" opacity="0.25" />
+      <!-- Red Apple icon -->
+      <circle cx="-5" cy="4" r="11" fill="#ef4444" />
+      <circle cx="5" cy="4" r="11" fill="#ef4444" />
+      <path d="M 0 -8 Q 6 -16 12 -12" stroke="#15803d" stroke-width="2" fill="none" />
+      <text x="0" y="-18" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="10" fill="#f87171" text-anchor="middle">H · HUNGRY</text>
+    </g>
+
+    <!-- Quadrant 2: Right = ANGRY (A) -->
+    <g transform="translate(62, 0)">
+      <circle cx="0" cy="0" r="26" fill="#f97316" opacity="0.25" />
+      <!-- Small storm cloud & lightning -->
+      <path d="M -12 2 Q -16 -8 -6 -10 Q 0 -16 10 -10 Q 18 -8 14 2 Z" fill="#64748b" />
+      <polygon points="0,2 -4,9 2,9 -2,16 6,8 0,8" fill="#fde047" />
+      <text x="0" y="24" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="9" fill="#fb923c" text-anchor="middle">A · ANGRY</text>
+    </g>
+
+    <!-- Quadrant 3: Bottom = TIRED (T) -->
+    <g transform="translate(0, 58)">
+      <circle cx="0" cy="0" r="26" fill="#818cf8" opacity="0.25" />
+      <!-- Sleepy crescent moon -->
+      <path d="M 6 -12 A 12 12 0 0 0 -8 4 A 12 12 0 1 1 6 -12 Z" fill="#fef08a" />
+      <text x="0" y="22" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="10" fill="#a5b4fc" text-anchor="middle">T · TIRED</text>
+    </g>
+
+    <!-- Quadrant 4: Left = LONELY (L) -->
+    <g transform="translate(-62, 0)">
+      <circle cx="0" cy="0" r="26" fill="#ec4899" opacity="0.25" />
+      <!-- Open arms cuddle token -->
+      <circle cx="0" cy="-4" r="7" fill="#f472b6" />
+      <path d="M -10 12 C -10 4 10 4 10 12" fill="none" stroke="#f472b6" stroke-width="3" stroke-linecap="round" />
+      <text x="0" y="24" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="9" fill="#f472b6" text-anchor="middle">L · LONELY</text>
+    </g>
+
+    <!-- Center Compass Pivot Needle (Magnetic Gold pointer) -->
+    <circle cx="0" cy="0" r="16" fill="#f59e0b" stroke="#fde047" stroke-width="2" />
+    <polygon points="0,-36 7,0 0,6 -7,0" fill="#ef4444" />
+    <polygon points="0,36 7,0 0,-6 -7,0" fill="#3b82f6" />
+    <circle cx="0" cy="0" r="4" fill="#ffffff" />
+  </g>
+
+  <!-- Bottom Frosted Card Banner with Title and Tagline -->
+  <g transform="translate(48, 330)">
+    <rect width="704" height="114" rx="24" fill="#090d16" opacity="0.88" />
+    <rect width="704" height="114" rx="24" fill="none" stroke="#ffffff" stroke-width="1" opacity="0.12" />
+    <text x="32" y="44" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="24" fill="#ffffff" letter-spacing="-0.5">The HALT Prevention Compass</text>
+    <text x="32" y="78" font-family="system-ui, -apple-system, sans-serif" font-weight="600" font-size="13" fill="#94a3b8" letter-spacing="0.2">Hungry · Angry · Lonely · Tired · Spot Physiological Cues Early</text>
+    <g transform="translate(640, 48)">
+      <circle cx="0" cy="0" r="18" fill="#f43f5e" opacity="0.15" />
+      <polygon points="0,-10 3,-3 10,-3 4,2 6,9 0,5 -6,9 -4,2 -10,-3 -3,-3" fill="#f43f5e" />
+    </g>
+  </g>
+</svg>

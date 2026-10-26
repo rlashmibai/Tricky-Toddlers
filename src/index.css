@@ -1,0 +1,131 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --color-indigo-500: #6366f1;
+  --color-indigo-600: #4f46e5;
+  --color-cheerful-yellow: #fcd34d;
+  --color-cheerful-green: #34d399;
+  --color-cheerful-blue: #60a5fa;
+  --color-cheerful-pink: #f472b6;
+}
+
+@layer base {
+  body {
+    @apply bg-[#030612] text-white antialiased selection:bg-indigo-500/30 font-sans;
+  }
+}
+
+@layer components {
+  .theme-ai {
+    --theme-primary: var(--color-cheerful-yellow);
+    --theme-glow: var(--color-cheerful-yellow);
+  }
+  
+  .theme-community {
+    --theme-primary: var(--color-cheerful-green);
+    --theme-glow: var(--color-cheerful-green);
+  }
+  
+  .theme-connect {
+    --theme-primary: var(--color-cheerful-blue);
+    --theme-glow: var(--color-cheerful-blue);
+  }
+
+  .theme-learning {
+    --theme-primary: var(--color-cheerful-pink);
+    --theme-glow: var(--color-cheerful-pink);
+  }
+
+  .glass-container {
+    @apply relative min-h-screen flex flex-col overflow-x-hidden transition-colors duration-700 bg-[#030612];
+  }
+
+  .mesh-gradient {
+    @apply absolute inset-0 z-0 overflow-hidden opacity-30;
+  }
+
+  .glass-blob {
+    @apply absolute rounded-full blur-[100px] z-0 opacity-20 animate-pulse;
+  }
+
+  .glass-card {
+    @apply bg-white/[0.03] backdrop-blur-[32px] border border-white/[0.08] rounded-[32px] shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] relative z-10 hover:border-white/[0.12] transition-all duration-500;
+  }
+
+  .shadow-theme-glow {
+    box-shadow: 0 0 40px 0 rgba(var(--theme-glow), 0.1);
+  }
+
+  .glass-input {
+    @apply bg-white/[0.02] border border-white/[0.05] rounded-2xl px-4 py-3 text-white placeholder:text-white/20 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500/40 focus:bg-white/[0.04] transition-all;
+  }
+
+  .glass-button {
+    @apply bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl px-6 py-3 font-semibold transition-all shadow-lg shadow-indigo-500/20 disabled:opacity-50 active:scale-[0.98];
+  }
+
+  .glass-nav {
+    @apply border-b border-white/10 bg-white/5 backdrop-blur-md sticky top-0 z-50;
+  }
+
+  /* Hide scrollbars globally for scrollbar-none elements */
+  .scrollbar-none::-webkit-scrollbar {
+    display: none !important;
+  }
+  .scrollbar-none {
+    -ms-overflow-style: none !important;  /* IE and Edge */
+    scrollbar-width: none !important;  /* Firefox */
+  }
+
+  /* Sleek custom scrollbar for dark theme across all browsers */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: rgba(8, 14, 28, 0.7);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(245, 158, 11, 0.6);
+  }
+
+  html {
+    overflow-x: clip;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.25) rgba(8, 14, 28, 0.7);
+  }
+
+  body {
+    overflow: visible !important;
+    min-height: 100vh;
+  }
+
+  /* Seamless Google Translate styling cleanup */
+  .goog-te-banner-frame.skiptranslate,
+  .goog-te-banner-frame,
+  iframe.goog-te-banner-frame,
+  .goog-te-banner {
+    display: none !important;
+    visibility: hidden !important;
+  }
+  body {
+    top: 0px !important;
+    position: static !important;
+  }
+  .goog-te-gadget {
+    display: none !important;
+  }
+  #goog-gt-tt, .goog-te-balloon-frame {
+    display: none !important;
+  }
+  .goog-text-highlight {
+    background: none !important;
+    box-shadow: none !important;
+  }
+}

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 480" width="800" height="480">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#042f2e" />
+      <stop offset="100%" stop-color="#134e4a" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.5" />
+    </filter>
+  </defs>
+
+  <rect width="800" height="480" fill="url(#bgGrad)" />
+
+  <!-- Category Pill Badge -->
+  <g transform="translate(48, 36)">
+    <rect width="160" height="32" rx="16" fill="#000000" opacity="0.4" />
+    <rect width="160" height="32" rx="16" fill="none" stroke="#2dd4bf" stroke-width="1.5" opacity="0.7" />
+    <circle cx="20" cy="16" r="5" fill="#2dd4bf" />
+    <text x="32" y="21" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="11" fill="#2dd4bf" letter-spacing="2">DEVELOPMENT</text>
+  </g>
+
+  <!-- Central Thematic Illustration: Speech Explosion Bursting with Words & Toddler Profile -->
+  <g filter="url(#shadow)" transform="translate(400, 180)">
+    <!-- Toddler Head Profile on Left -->
+    <g transform="translate(-160, 20)">
+      <!-- Head -->
+      <circle cx="0" cy="-25" r="32" fill="#fde68a" stroke="#f59e0b" stroke-width="2.5" />
+      <!-- Toddler Hair Curls -->
+      <path d="M -25 -45 C -25 -65 20 -65 25 -45 Z" fill="#b45309" />
+      <!-- Talking Open Mouth Profile -->
+      <path d="M 28 -20 Q 38 -15 28 -8 Z" fill="#ef4444" />
+      <!-- Cute Eye & Ear -->
+      <circle cx="12" cy="-28" r="3.5" fill="#1e1b4b" />
+      <circle cx="-16" cy="-22" r="6" fill="#fde68a" stroke="#f59e0b" stroke-width="1.5" />
+      <!-- Neck & Shirt -->
+      <rect x="-10" y="7" width="20" height="30" fill="#fde68a" />
+      <path d="M -35 25 C -35 10 35 10 35 25 L 35 55 L -35 55 Z" fill="#0284c7" stroke="#0369a1" stroke-width="2" />
+    </g>
+
+    <!-- Speech Waves radiating from mouth -->
+    <path d="M -115 5 Q -95 10 -115 15" fill="none" stroke="#2dd4bf" stroke-width="3" stroke-linecap="round" />
+    <path d="M -100 -5 Q -75 10 -100 25" fill="none" stroke="#2dd4bf" stroke-width="3.5" stroke-linecap="round" />
+    <path d="M -85 -15 Q -55 10 -85 35" fill="none" stroke="#2dd4bf" stroke-width="4" stroke-linecap="round" />
+
+    <!-- Burst of Vocabulary Speech Bubbles Radiating Across Canvas -->
+    <!-- Bubble 1: "BALL! ⚽" -->
+    <g transform="translate(-10, -55)">
+      <rect x="-45" y="-22" width="90" height="44" rx="18" fill="#3b82f6" stroke="#93c5fd" stroke-width="2" />
+      <polygon points="-15,22 -25,32 -8,22" fill="#3b82f6" />
+      <text x="0" y="6" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="14" fill="#ffffff" text-anchor="middle">BALL! ⚽</text>
+    </g>
+
+    <!-- Bubble 2: "MAMA! ❤️" -->
+    <g transform="translate(130, -65)">
+      <rect x="-50" y="-22" width="100" height="44" rx="18" fill="#f43f5e" stroke="#fda4af" stroke-width="2" />
+      <polygon points="-20,22 -30,32 -12,22" fill="#f43f5e" />
+      <text x="0" y="6" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="14" fill="#ffffff" text-anchor="middle">MAMA! ❤️</text>
+    </g>
+
+    <!-- Bubble 3: "LOOK! 👀" -->
+    <g transform="translate(60, 5)">
+      <rect x="-45" y="-22" width="90" height="44" rx="18" fill="#f59e0b" stroke="#fde68a" stroke-width="2" />
+      <polygon points="-20,22 -30,30 -10,22" fill="#f59e0b" />
+      <text x="0" y="6" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="13" fill="#ffffff" text-anchor="middle">LOOK! 👀</text>
+    </g>
+
+    <!-- Bubble 4: "MORE! 🍎" -->
+    <g transform="translate(145, 60)">
+      <rect x="-45" y="-20" width="90" height="40" rx="16" fill="#10b981" stroke="#a7f3d0" stroke-width="2" />
+      <polygon points="-15,-20 -24,-28 -8,-20" fill="#10b981" />
+      <text x="0" y="5" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="13" fill="#ffffff" text-anchor="middle">MORE! 🍎</text>
+    </g>
+
+    <!-- Bubble 5: "DADA! 🌟" -->
+    <g transform="translate(-10, 50)">
+      <rect x="-45" y="-20" width="90" height="40" rx="16" fill="#8b5cf6" stroke="#c4b5fd" stroke-width="2" />
+      <polygon points="12,-20 22,-28 6,-20" fill="#8b5cf6" />
+      <text x="0" y="5" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="13" fill="#ffffff" text-anchor="middle">DADA! 🌟</text>
+    </g>
+  </g>
+
+  <!-- Bottom Frosted Card Banner with Title and Tagline -->
+  <g transform="translate(48, 330)">
+    <rect width="704" height="114" rx="24" fill="#090d16" opacity="0.88" />
+    <rect width="704" height="114" rx="24" fill="none" stroke="#ffffff" stroke-width="1" opacity="0.12" />
+    <text x="32" y="44" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="24" fill="#ffffff" letter-spacing="-0.5">Toddler Speech Explosion</text>
+    <text x="32" y="78" font-family="system-ui, -apple-system, sans-serif" font-weight="600" font-size="13" fill="#94a3b8" letter-spacing="0.2">Rich Vocabulary · Interactive Narrating · Language Milestones</text>
+    <g transform="translate(640, 48)">
+      <circle cx="0" cy="0" r="18" fill="#2dd4bf" opacity="0.15" />
+      <polygon points="0,-10 3,-3 10,-3 4,2 6,9 0,5 -6,9 -4,2 -10,-3 -3,-3" fill="#2dd4bf" />
+    </g>
+  </g>
+</svg>

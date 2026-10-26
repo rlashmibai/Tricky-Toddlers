@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 640 1000" width="640" height="1000" style="background-color:#FAF8F5; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+  <defs>
+    <linearGradient id="bgGrad3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FCFBF9" />
+      <stop offset="60%" stop-color="#F8F5F0" />
+      <stop offset="100%" stop-color="#F1EDE7" />
+    </linearGradient>
+
+    <linearGradient id="panelGrad3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="100%" stop-color="#FDF2F8" />
+    </linearGradient>
+
+    <filter id="cardShadow3" x="-10%" y="-10%" width="125%" height="130%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#0F2942" flood-opacity="0.06" />
+    </filter>
+
+    <clipPath id="lifestyleChildClip">
+      <circle cx="525" cy="150" r="52" />
+    </clipPath>
+
+    <clipPath id="cottonImgClip">
+      <rect x="170" y="220" width="300" height="200" rx="24" />
+    </clipPath>
+  </defs>
+
+  <!-- Background -->
+  <rect width="640" height="1000" fill="url(#bgGrad3)" rx="28" />
+
+  <!-- Subtle Blueprint Tech Circles -->
+  <g opacity="0.15">
+    <circle cx="320" cy="300" r="170" fill="none" stroke="#F472B6" stroke-width="1.5" />
+    <circle cx="320" cy="300" r="220" fill="none" stroke="#FBCFE8" stroke-width="1" stroke-dasharray="6,6" />
+  </g>
+
+  <!-- ================= TOP HEADER (LEFT) ================= -->
+  <g transform="translate(40, 44)">
+    <rect x="0" y="0" width="195" height="28" rx="14" fill="#DB2777" fill-opacity="0.1" stroke="#DB2777" stroke-width="1.2" />
+    <circle cx="14" cy="14" r="4" fill="#DB2777" />
+    <text x="26" y="19" font-size="11.5" font-weight="800" fill="#BE185D" letter-spacing="0.4">WAY 2 · 1 TO 8 YEARS</text>
+
+    <text x="0" y="64" font-size="34" font-weight="900" fill="#0A192F" letter-spacing="-1">Cotton Straps</text>
+    <text x="0" y="92" font-size="17" font-weight="800" fill="#DB2777">Soft. Breathable. Made for Growing Kids.</text>
+
+    <text x="0" y="116" font-size="12" font-weight="500" fill="#475569">Comfortable cotton straps designed for everyday wear.</text>
+    <text x="0" y="132" font-size="12" font-weight="500" fill="#475569">One reusable sensor, multiple sizes, and colors kids love.</text>
+  </g>
+
+  <!-- ================= LIFESTYLE INSET (UPPER RIGHT) ================= -->
+  <circle cx="525" cy="150" r="55" fill="none" stroke="#DB2777" stroke-width="2.5" />
+  <circle cx="525" cy="150" r="52" fill="#FDF2F8" />
+  <image href="/nutriband-cotton-straps.jpg" x="465" y="90" width="120" height="120" clip-path="url(#lifestyleChildClip)" preserveAspectRatio="xMidYMid slice" />
+  <g transform="translate(440, 212)">
+    <text x="85" y="0" font-size="11" font-weight="800" fill="#0A192F" text-anchor="end">Comfortable wrist fit</text>
+    <text x="85" y="14" font-size="10" font-weight="500" fill="#64748B" text-anchor="end">For play, learning &amp; rest</text>
+  </g>
+
+  <!-- ================= CENTRAL STRAP SHOWCASE ================= -->
+  <!-- Product Image Container -->
+  <rect x="35" y="195" width="570" height="210" rx="24" fill="#FFFFFF" stroke="#FBCFE8" stroke-width="1.5" filter="url(#cardShadow3)" />
+  
+  <g transform="translate(55, 210)">
+    <!-- Showcase Photo -->
+    <rect x="0" y="0" width="250" height="175" rx="18" fill="#FDF2F8" stroke="#FCE7F3" stroke-width="1" />
+    <image href="/nutriband-cotton-straps.jpg" x="5" y="5" width="240" height="165" preserveAspectRatio="xMidYMid slice" />
+
+    <!-- Handwritten style annotation -->
+    <rect x="270" y="10" width="225" height="36" rx="12" fill="#FDF2F8" stroke="#DB2777" stroke-width="1" stroke-dasharray="3,3" />
+    <text x="382" y="28" font-size="11" font-weight="800" fill="#BE185D" text-anchor="middle">
+      “Same sensor. Different sizes. Everyday comfort.”
+    </text>
+
+    <!-- 4 Features Upper Right in 2x2 Grid -->
+    <g transform="translate(270, 56)">
+      <!-- Feature 1: Breathable Cotton -->
+      <g transform="translate(0, 0)">
+        <circle cx="14" cy="14" r="12" fill="#FCE7F3" />
+        <text x="14" y="18" font-size="11" font-weight="900" fill="#DB2777" text-anchor="middle">✦</text>
+        <text x="32" y="14" font-size="11" font-weight="800" fill="#0A192F">Breathable Cotton</text>
+        <text x="32" y="26" font-size="9" font-weight="500" fill="#64748B">Soft gentle weave for daily wear</text>
+      </g>
+
+      <!-- Feature 2: Washable &amp; Reusable -->
+      <g transform="translate(125, 0)">
+        <circle cx="14" cy="14" r="12" fill="#E0F2FE" />
+        <text x="14" y="18" font-size="11" font-weight="900" fill="#0284C7" text-anchor="middle">💧</text>
+        <text x="32" y="14" font-size="11" font-weight="800" fill="#0A192F">Washable</text>
+        <text x="32" y="26" font-size="9" font-weight="500" fill="#64748B">Remove sensor &amp; wash</text>
+      </g>
+
+      <!-- Feature 3: Lightweight Design -->
+      <g transform="translate(0, 48)">
+        <circle cx="14" cy="14" r="12" fill="#FEF3C7" />
+        <text x="14" y="18" font-size="11" font-weight="900" fill="#D97706" text-anchor="middle">🪶</text>
+        <text x="32" y="14" font-size="11" font-weight="800" fill="#0A192F">Lightweight</text>
+        <text x="32" y="26" font-size="9" font-weight="500" fill="#64748B">For active little explorers</text>
+      </g>
+
+      <!-- Feature 4: Everyday Fit -->
+      <g transform="translate(125, 48)">
+        <circle cx="14" cy="14" r="12" fill="#DCFCE7" />
+        <text x="14" y="18" font-size="11" font-weight="900" fill="#16A34A" text-anchor="middle">✓</text>
+        <text x="32" y="14" font-size="11" font-weight="800" fill="#0A192F">Everyday Fit</text>
+        <text x="32" y="26" font-size="9" font-weight="500" fill="#64748B">Play, outings &amp; quiet rest</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- ================= 3 SIZES &amp; COLOR OPTIONS (MIDDLE SECTIONS) ================= -->
+  <g transform="translate(35, 425)">
+    <rect x="0" y="0" width="570" height="405" rx="24" fill="url(#panelGrad3)" stroke="#FBCFE8" stroke-width="1.5" filter="url(#cardShadow3)" />
+
+    <!-- PANEL 1: 3 SIZES FOR THE PERFECT FIT -->
+    <g transform="translate(25, 20)">
+      <text x="0" y="0" font-size="17" font-weight="900" fill="#0A192F">3 Sizes for the Perfect Fit</text>
+      <text x="0" y="18" font-size="11.5" font-weight="500" fill="#64748B">Engineered to comfortably adapt to your child’s wrist growth</text>
+      
+      <!-- 3 Rounded Sizing Cards -->
+      <g transform="translate(0, 32)">
+        <!-- Size XS (1-3 years) -->
+        <g transform="translate(0, 0)">
+          <rect x="0" y="0" width="165" height="125" rx="16" fill="#FFFFFF" stroke="#FCE7F3" stroke-width="1.2" />
+          <rect x="12" y="12" width="34" height="24" rx="8" fill="#FDF2F8" />
+          <text x="29" y="28" font-size="13" font-weight="900" fill="#DB2777" text-anchor="middle">XS</text>
+          <text x="54" y="28" font-size="12" font-weight="800" fill="#0A192F">1-3 Years</text>
+          <text x="12" y="52" font-size="10" font-weight="600" fill="#64748B">Wrist: 10-12 cm</text>
+          <text x="12" y="66" font-size="9.5" font-weight="500" fill="#475569">Snug soft stretch knit</text>
+          <rect x="12" y="88" width="140" height="24" rx="8" fill="#FDF2F8" />
+          <text x="82" y="104" font-size="9" font-weight="800" fill="#BE185D" text-anchor="middle">FIRST TODDLER STEPS</text>
+        </g>
+
+        <!-- Size M (3-6 years) -->
+        <g transform="translate(178, 0)">
+          <rect x="0" y="0" width="165" height="125" rx="16" fill="#FFFFFF" stroke="#E0F2FE" stroke-width="1.2" />
+          <rect x="12" y="12" width="34" height="24" rx="8" fill="#F0F9FF" />
+          <text x="29" y="28" font-size="13" font-weight="900" fill="#0284C7" text-anchor="middle">M</text>
+          <text x="54" y="28" font-size="12" font-weight="800" fill="#0A192F">3-6 Years</text>
+          <text x="12" y="52" font-size="10" font-weight="600" fill="#64748B">Wrist: 12-14 cm</text>
+          <text x="12" y="66" font-size="9.5" font-weight="500" fill="#475569">Preschool &amp; playground</text>
+          <rect x="12" y="88" width="140" height="24" rx="8" fill="#F0F9FF" />
+          <text x="82" y="104" font-size="9" font-weight="800" fill="#0369A1" text-anchor="middle">ACTIVE NURSERY</text>
+        </g>
+
+        <!-- Size L (6-8 years) -->
+        <g transform="translate(356, 0)">
+          <rect x="0" y="0" width="165" height="125" rx="16" fill="#FFFFFF" stroke="#DCFCE7" stroke-width="1.2" />
+          <rect x="12" y="12" width="34" height="24" rx="8" fill="#F0FDF4" />
+          <text x="29" y="28" font-size="13" font-weight="900" fill="#16A34A" text-anchor="middle">L</text>
+          <text x="54" y="28" font-size="12" font-weight="800" fill="#0A192F">6-8 Years</text>
+          <text x="12" y="52" font-size="10" font-weight="600" fill="#64748B">Wrist: 14-16 cm</text>
+          <text x="12" y="66" font-size="9.5" font-weight="500" fill="#475569">Primary school explorer</text>
+          <rect x="12" y="88" width="140" height="24" rx="8" fill="#F0FDF4" />
+          <text x="82" y="104" font-size="9" font-weight="800" fill="#15803D" text-anchor="middle">OUTDOOR SPORTS</text>
+        </g>
+      </g>
+    </g>
+
+    <!-- PANEL 2: COLOR OPTIONS (6 CIRCULAR FABRIC SWATCHES) -->
+    <g transform="translate(25, 205)">
+      <line x1="0" y1="0" x2="520" y2="0" stroke="#FCE7F3" stroke-width="1.2" />
+      <text x="0" y="22" font-size="16" font-weight="900" fill="#0A192F">Color Options</text>
+      <text x="0" y="38" font-size="11" font-weight="500" fill="#64748B">Kid-friendly soft woven pastel shades in hypoallergenic cotton</text>
+
+      <g transform="translate(0, 52)">
+        <!-- 6 swatches in 2 rows -->
+        <!-- Row 1: Pink, Blue, Green -->
+        <g transform="translate(20, 0)">
+          <!-- Pink -->
+          <g transform="translate(0, 0)">
+            <circle cx="24" cy="24" r="20" fill="#F472B6" stroke="#FFFFFF" stroke-width="2.5" filter="url(#cardShadow3)" />
+            <circle cx="24" cy="24" r="16" fill="#FBCFE8" />
+            <text x="60" y="22" font-size="12" font-weight="800" fill="#0A192F">Pink</text>
+            <text x="60" y="35" font-size="9.5" font-weight="600" fill="#DB2777">Sweet Blush</text>
+          </g>
+
+          <!-- Blue -->
+          <g transform="translate(170, 0)">
+            <circle cx="24" cy="24" r="20" fill="#38BDF8" stroke="#FFFFFF" stroke-width="2.5" filter="url(#cardShadow3)" />
+            <circle cx="24" cy="24" r="16" fill="#BAE6FD" />
+            <text x="60" y="22" font-size="12" font-weight="800" fill="#0A192F">Blue</text>
+            <text x="60" y="35" font-size="9.5" font-weight="600" fill="#0284C7">Sky Cloud</text>
+          </g>
+
+          <!-- Green -->
+          <g transform="translate(340, 0)">
+            <circle cx="24" cy="24" r="20" fill="#4ADE80" stroke="#FFFFFF" stroke-width="2.5" filter="url(#cardShadow3)" />
+            <circle cx="24" cy="24" r="16" fill="#BBF7D0" />
+            <text x="60" y="22" font-size="12" font-weight="800" fill="#0A192F">Green</text>
+            <text x="60" y="35" font-size="9.5" font-weight="600" fill="#16A34A">Mint Meadow</text>
+          </g>
+        </g>
+
+        <!-- Row 2: Lavender, Yellow, Grey -->
+        <g transform="translate(20, 68)">
+          <!-- Lavender -->
+          <g transform="translate(0, 0)">
+            <circle cx="24" cy="24" r="20" fill="#C084FC" stroke="#FFFFFF" stroke-width="2.5" filter="url(#cardShadow3)" />
+            <circle cx="24" cy="24" r="16" fill="#E9D5FF" />
+            <text x="60" y="22" font-size="12" font-weight="800" fill="#0A192F">Lavender</text>
+            <text x="60" y="35" font-size="9.5" font-weight="600" fill="#9333EA">Lilac Petal</text>
+          </g>
+
+          <!-- Yellow -->
+          <g transform="translate(170, 0)">
+            <circle cx="24" cy="24" r="20" fill="#FACC15" stroke="#FFFFFF" stroke-width="2.5" filter="url(#cardShadow3)" />
+            <circle cx="24" cy="24" r="16" fill="#FEF08A" />
+            <text x="60" y="22" font-size="12" font-weight="800" fill="#0A192F">Yellow</text>
+            <text x="60" y="35" font-size="9.5" font-weight="600" fill="#D97706">Buttercup</text>
+          </g>
+
+          <!-- Grey -->
+          <g transform="translate(340, 0)">
+            <circle cx="24" cy="24" r="20" fill="#94A3B8" stroke="#FFFFFF" stroke-width="2.5" filter="url(#cardShadow3)" />
+            <circle cx="24" cy="24" r="16" fill="#CBD5E1" />
+            <text x="60" y="22" font-size="12" font-weight="800" fill="#0A192F">Grey</text>
+            <text x="60" y="35" font-size="9.5" font-weight="600" fill="#475569">Heather Mist</text>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+
+  <!-- ================= BOTTOM BANNER ================= -->
+  <g transform="translate(35, 855)">
+    <rect x="0" y="0" width="570" height="110" rx="20" fill="#F5F3FF" stroke="#DDD6FE" stroke-width="1.5" filter="url(#cardShadow3)" />
+
+    <text x="285" y="32" font-size="13.5" font-weight="800" fill="#0A192F" text-anchor="middle">
+      “From curious crawlers to active explorers - comfort for every stage.”
+    </text>
+
+    <!-- 4 Small Outline Icons with Labels -->
+    <g transform="translate(25, 48)">
+      <g transform="translate(0, 0)">
+        <rect x="0" y="0" width="120" height="40" rx="10" fill="#FFFFFF" stroke="#E9D5FF" stroke-width="1" />
+        <circle cx="20" cy="20" r="10" fill="#F3E8FF" />
+        <text x="20" y="24" font-size="10" font-weight="900" fill="#9333EA" text-anchor="middle">♥</text>
+        <text x="38" y="24" font-size="11" font-weight="800" fill="#0A192F">Comfort</text>
+      </g>
+
+      <g transform="translate(133, 0)">
+        <rect x="0" y="0" width="120" height="40" rx="10" fill="#FFFFFF" stroke="#E9D5FF" stroke-width="1" />
+        <circle cx="20" cy="20" r="10" fill="#F3E8FF" />
+        <text x="20" y="24" font-size="10" font-weight="900" fill="#9333EA" text-anchor="middle">✓</text>
+        <text x="38" y="24" font-size="10" font-weight="800" fill="#0A192F">Everyday</text>
+      </g>
+
+      <g transform="translate(266, 0)">
+        <rect x="0" y="0" width="120" height="40" rx="10" fill="#FFFFFF" stroke="#E9D5FF" stroke-width="1" />
+        <circle cx="20" cy="20" r="10" fill="#F3E8FF" />
+        <text x="20" y="24" font-size="10" font-weight="900" fill="#9333EA" text-anchor="middle">✦</text>
+        <text x="38" y="24" font-size="11" font-weight="800" fill="#0A192F">Style</text>
+      </g>
+
+      <g transform="translate(400, 0)">
+        <rect x="0" y="0" width="120" height="40" rx="10" fill="#FFFFFF" stroke="#E9D5FF" stroke-width="1" />
+        <circle cx="20" cy="20" r="10" fill="#F3E8FF" />
+        <text x="20" y="24" font-size="10" font-weight="900" fill="#9333EA" text-anchor="middle">↑</text>
+        <text x="36" y="24" font-size="10" font-weight="800" fill="#0A192F">Growing</text>
+      </g>
+    </g>
+  </g>
+</svg>

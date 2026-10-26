@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1200 800" width="1200" height="800" style="background-color:#FAF8F5; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+  <defs>
+    <!-- Background Gradient: Warm Ivory -->
+    <linearGradient id="ivoryBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FCFBF9" />
+      <stop offset="50%" stop-color="#F8F5F0" />
+      <stop offset="100%" stop-color="#F2EFEB" />
+    </linearGradient>
+
+    <!-- Pastel Blue Panel Gradient -->
+    <linearGradient id="pastelPanel" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="100%" stop-color="#F0F8FF" />
+    </linearGradient>
+
+    <!-- Sensor Pod Realistic Shading -->
+    <radialGradient id="sensorBody" cx="35%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="40%" stop-color="#F8FAFC" />
+      <stop offset="75%" stop-color="#E2E8F0" />
+      <stop offset="100%" stop-color="#CBD5E1" />
+    </radialGradient>
+
+    <radialGradient id="sensorRim" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="85%" stop-color="#E2E8F0" />
+      <stop offset="100%" stop-color="#94A3B8" />
+    </radialGradient>
+
+    <!-- Clip Back Mechanism -->
+    <linearGradient id="clipPlastic" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#CBD5E1" />
+      <stop offset="50%" stop-color="#F1F5F9" />
+      <stop offset="100%" stop-color="#94A3B8" />
+    </linearGradient>
+
+    <!-- Glowing Green LED -->
+    <radialGradient id="ledGlow" cx="40%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#86EFAC" />
+      <stop offset="50%" stop-color="#22C55E" />
+      <stop offset="100%" stop-color="#15803D" />
+    </radialGradient>
+
+    <filter id="glowFilter" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="4" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <!-- Soft Drop Shadow Filter -->
+    <filter id="cardShadow" x="-10%" y="-10%" width="125%" height="130%">
+      <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#0F2942" flood-opacity="0.06" />
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#0F2942" flood-opacity="0.04" />
+    </filter>
+
+    <filter id="podShadow" x="-30%" y="-20%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="26" stdDeviation="28" flood-color="#0F2942" flood-opacity="0.16" />
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#0F2942" flood-opacity="0.09" />
+    </filter>
+
+    <!-- Clip Path for Circular Lifestyle Inset -->
+    <clipPath id="lifestyleCircle">
+      <circle cx="1055" cy="145" r="65" />
+    </clipPath>
+
+    <!-- Clip Path for Sensor Inside Preview -->
+    <clipPath id="sensorInsideClip">
+      <rect x="915" y="565" width="215" height="95" rx="14" />
+    </clipPath>
+  </defs>
+
+  <!-- 1. Background -->
+  <rect width="1200" height="800" fill="url(#ivoryBg)" />
+
+  <!-- Subtle Blueprint Tech Circles -->
+  <g opacity="0.22">
+    <circle cx="600" cy="350" r="260" fill="none" stroke="#38BDF8" stroke-width="1.5" />
+    <circle cx="600" cy="350" r="310" fill="none" stroke="#BAE6FD" stroke-width="1" stroke-dasharray="6,6" />
+    <line x1="60" y1="250" x2="1140" y2="250" stroke="#E2E8F0" stroke-width="1" stroke-dasharray="4,8" />
+    <line x1="60" y1="520" x2="1140" y2="520" stroke="#E2E8F0" stroke-width="1" stroke-dasharray="4,8" />
+  </g>
+
+  <!-- ================= 2. TOP-LEFT TEXT SECTION ================= -->
+  <g transform="translate(70, 75)">
+    <!-- Small rounded label: Way 1 · 0 to 12 Months -->
+    <rect x="0" y="0" width="195" height="32" rx="16" fill="#0284C7" fill-opacity="0.09" stroke="#0284C7" stroke-width="1.2" />
+    <circle cx="18" cy="16" r="4" fill="#0284C7" />
+    <text x="32" y="21" font-size="13" font-weight="700" fill="#0369A1" letter-spacing="0.3">Way 1 · 0 to 12 Months</text>
+
+    <!-- Large headline: Diaper Clip -->
+    <text x="0" y="80" font-size="44" font-weight="800" fill="#0A192F" letter-spacing="-1">Diaper Clip</text>
+
+    <!-- Subheading: Lightweight. Secure. Gentle. -->
+    <text x="0" y="114" font-size="21" font-weight="700" fill="#0284C7" letter-spacing="-0.2">Lightweight. Secure. Gentle.</text>
+
+    <!-- Supporting text -->
+    <text x="0" y="144" font-size="15" font-weight="400" fill="#475569">A compact wearable designed to monitor your baby’s</text>
+    <text x="0" y="168" font-size="15" font-weight="400" fill="#475569">daily movement and sleep patterns.</text>
+  </g>
+
+  <!-- ================= 3. TOP-RIGHT: LIFESTYLE INSET ================= -->
+  <rect x="795" y="60" width="345" height="172" rx="24" fill="url(#pastelPanel)" stroke="#BAE6FD" stroke-width="1.5" filter="url(#cardShadow)" />
+
+  <!-- Circular lifestyle inset at the upper right -->
+  <circle cx="1055" cy="145" r="68" fill="none" stroke="#0284C7" stroke-width="2.5" />
+  <circle cx="1055" cy="145" r="65" fill="#F8FAFC" />
+  <image href="/nutriband-diaper-clip.jpg" x="990" y="80" width="130" height="130" clip-path="url(#lifestyleCircle)" preserveAspectRatio="xMidYMid slice" />
+
+  <!-- Glow badge on lifestyle circular border -->
+  <circle cx="1010" cy="96" r="6" fill="#22C55E" filter="url(#glowFilter)" />
+
+  <!-- Caption text beside lifestyle inset -->
+  <g transform="translate(820, 106)">
+    <rect x="0" y="0" width="98" height="20" rx="6" fill="#ECFDF5" />
+    <text x="8" y="14" font-size="10.5" font-weight="800" fill="#059669" letter-spacing="0.5">LIFESTYLE FIT</text>
+    <text x="0" y="42" font-size="17" font-weight="800" fill="#0A192F">Designed for diaper wear</text>
+    <text x="0" y="64" font-size="13" font-weight="500" fill="#475569">A compact clip-on design</text>
+    <text x="0" y="82" font-size="13" font-weight="500" fill="#475569">for everyday use.</text>
+  </g>
+
+  <!-- ================= 4. CENTER: LARGE SMOOTH WHITE OVAL SENSOR POD ================= -->
+  <!-- Shadow under the device -->
+  <ellipse cx="600" cy="495" rx="140" ry="30" fill="#94A3B8" fill-opacity="0.35" filter="blur(14px)" />
+  <ellipse cx="600" cy="490" rx="95" ry="18" fill="#64748B" fill-opacity="0.2" />
+
+  <!-- Rear Diaper Clip Mechanism -->
+  <g id="diaperClipBack">
+    <path d="M562,220 C562,205 638,205 638,220 L646,425 C646,448 554,448 554,425 Z" 
+          fill="url(#clipPlastic)" stroke="#94A3B8" stroke-width="2" />
+    <!-- Rear spring tension groove & hinge -->
+    <rect x="584" y="226" width="32" height="14" rx="7" fill="#94A3B8" opacity="0.7" />
+    <line x1="600" y1="240" x2="600" y2="390" stroke="#64748B" stroke-width="2" stroke-dasharray="3,4" opacity="0.5" />
+  </g>
+
+  <!-- The Smooth White Oval Sensor Pod -->
+  <ellipse cx="600" cy="350" rx="92" ry="146" fill="url(#sensorBody)" stroke="#CBD5E1" stroke-width="2" filter="url(#podShadow)" />
+
+  <!-- Subtle Seam Around Its Shell -->
+  <ellipse cx="600" cy="350" rx="84" ry="138" fill="none" stroke="#E2E8F0" stroke-width="1.4" />
+
+  <!-- Specular highlight arc -->
+  <path d="M538,270 C544,230 574,210 600,208 C570,216 548,248 544,295 Z" fill="#FFFFFF" opacity="0.85" />
+  <ellipse cx="550" cy="330" rx="16" ry="68" fill="#FFFFFF" opacity="0.3" transform="rotate(-5 550 330)" />
+
+  <!-- Small Glowing Green LED Near the Top -->
+  <circle cx="600" cy="248" r="10" fill="#E2E8F0" stroke="#CBD5E1" stroke-width="1.2" />
+  <circle cx="600" cy="248" r="7.5" fill="#064E3B" />
+  <circle cx="600" cy="248" r="6" fill="url(#ledGlow)" filter="url(#glowFilter)" />
+  <circle cx="600" cy="246" r="2.2" fill="#FFFFFF" opacity="0.9" />
+
+  <!-- NutriBand Branding on Pod Surface -->
+  <g transform="translate(578, 345)" opacity="0.45">
+    <path d="M7,0 C18,-3 28,3 36,0 C34,9 27,14 22,22 C16,14 11,9 7,0 Z" fill="#0284C7" />
+    <circle cx="22" cy="7" r="2.8" fill="#0284C7" />
+  </g>
+  <text x="600" y="382" font-size="10" font-weight="800" fill="#64748B" letter-spacing="2.8" text-anchor="middle" opacity="0.7">NUTRIBAND</text>
+
+  <!-- Bottom Medical Sensor Contact -->
+  <ellipse cx="600" cy="450" rx="24" ry="7" fill="#F1F5F9" stroke="#CBD5E1" stroke-width="1.5" stroke-dasharray="3,3" />
+
+  <!-- ================= 5. PRODUCT CALLOUTS WITH THIN BLUE LINES ================= -->
+
+  <!-- CALLOUT 1: Ultra-lightweight · Just 12 grams -->
+  <g id="callout1">
+    <polyline points="375,230 460,230 514,310" fill="none" stroke="#0284C7" stroke-width="1.5" stroke-dasharray="3,3" />
+    <circle cx="514" cy="310" r="4.5" fill="#0284C7" stroke="#FFFFFF" stroke-width="2" />
+    
+    <rect x="165" y="196" width="210" height="68" rx="16" fill="#FFFFFF" stroke="#BAE6FD" stroke-width="1.5" filter="url(#cardShadow)" />
+    <circle cx="196" cy="230" r="17" fill="#E0F2FE" />
+    <path d="M190,235 C190,226 201,223 201,223 C201,223 201,232 192,237 Z" fill="#0284C7" />
+    <line x1="190" y1="237" x2="201" y2="223" stroke="#0284C7" stroke-width="1.5" />
+    <text x="225" y="223" font-size="14.5" font-weight="800" fill="#0A192F">Ultra-lightweight</text>
+    <text x="225" y="243" font-size="13" font-weight="700" fill="#0284C7">Just 12 grams</text>
+  </g>
+
+  <!-- CALLOUT 2: LED indicator · Shows device status -->
+  <g id="callout2">
+    <polyline points="600,248 685,190 770,190" fill="none" stroke="#0284C7" stroke-width="1.5" stroke-dasharray="3,3" />
+    <circle cx="600" cy="248" r="4.5" fill="#22C55E" stroke="#FFFFFF" stroke-width="2" />
+
+    <rect x="650" y="156" width="190" height="64" rx="16" fill="#FFFFFF" stroke="#BAE6FD" stroke-width="1.5" filter="url(#cardShadow)" />
+    <circle cx="678" cy="188" r="16" fill="#DCFCE7" />
+    <circle cx="678" cy="188" r="6" fill="#16A34A" />
+    <text x="705" y="181" font-size="14" font-weight="800" fill="#0A192F">LED indicator</text>
+    <text x="705" y="201" font-size="12.5" font-weight="600" fill="#15803D">Shows device status</text>
+  </g>
+
+  <!-- CALLOUT 3: Soft, rounded design · Designed for comfortable wear -->
+  <g id="callout3">
+    <polyline points="365,385 470,385 522,365" fill="none" stroke="#0284C7" stroke-width="1.5" stroke-dasharray="3,3" />
+    <circle cx="522" cy="365" r="4.5" fill="#0284C7" stroke="#FFFFFF" stroke-width="2" />
+
+    <rect x="145" y="350" width="220" height="70" rx="16" fill="#FFFFFF" stroke="#BAE6FD" stroke-width="1.5" filter="url(#cardShadow)" />
+    <circle cx="176" cy="385" r="17" fill="#F0FDF4" />
+    <path d="M171,379 C171,379 176,377 181,379 C181,387 176,392 176,392 C176,392 171,387 171,379 Z" fill="#10B981" />
+    <text x="204" y="377" font-size="14" font-weight="800" fill="#0A192F">Soft, rounded design</text>
+    <text x="204" y="397" font-size="12" font-weight="500" fill="#475569">Designed for comfortable wear</text>
+  </g>
+
+  <!-- ================= 6. BOTTOM-LEFT: KEY FEATURES (5 Columns) ================= -->
+  <rect x="60" y="530" width="815" height="225" rx="24" fill="url(#pastelPanel)" stroke="#BAE6FD" stroke-width="1.5" filter="url(#cardShadow)" />
+
+  <g transform="translate(90, 564)">
+    <text x="0" y="0" font-size="18" font-weight="800" fill="#0A192F" letter-spacing="-0.3">Key Features</text>
+    <line x1="115" y1="-5" x2="755" y2="-5" stroke="#E2E8F0" stroke-width="1.5" />
+  </g>
+
+  <!-- Col 1: Featherlight 12g -->
+  <g transform="translate(88, 592)">
+    <circle cx="32" cy="32" r="26" fill="#E0F2FE" />
+    <path d="M24,40 C24,28 40,24 40,24 C40,24 40,36 28,42 Z" fill="#0284C7" />
+    <line x1="23" y1="42" x2="34" y2="29" stroke="#0284C7" stroke-width="1.5" />
+    <text x="0" y="82" font-size="13.5" font-weight="800" fill="#0A192F">Featherlight 12g</text>
+    <text x="0" y="101" font-size="11" font-weight="500" fill="#64748B">Lightweight design for</text>
+    <text x="0" y="117" font-size="11" font-weight="500" fill="#64748B">everyday comfort</text>
+  </g>
+
+  <!-- Col 2: Wireless Design -->
+  <g transform="translate(250, 592)">
+    <circle cx="32" cy="32" r="26" fill="#F3E8FF" />
+    <path d="M22,30 C27,24 37,24 42,30 M26,34 C29,30 35,30 38,34 M32,38 A2,2 0 1,1 32,38.01" fill="none" stroke="#9333EA" stroke-width="2.4" stroke-linecap="round" />
+    <text x="0" y="82" font-size="13.5" font-weight="800" fill="#0A192F">Wireless Design</text>
+    <text x="0" y="101" font-size="11" font-weight="500" fill="#64748B">No wired connection</text>
+    <text x="0" y="117" font-size="11" font-weight="500" fill="#64748B">during wear</text>
+  </g>
+
+  <!-- Col 3: USB-C Charging -->
+  <g transform="translate(412, 592)">
+    <circle cx="32" cy="32" r="26" fill="#FEF3C7" />
+    <path d="M33,20 L25,33 L32,33 L31,44 L39,31 L32,31 Z" fill="#D97706" />
+    <text x="0" y="82" font-size="13.5" font-weight="800" fill="#0A192F">USB-C Charging</text>
+    <text x="0" y="101" font-size="11" font-weight="500" fill="#64748B">Convenient</text>
+    <text x="0" y="117" font-size="11" font-weight="500" fill="#64748B">rechargeable design</text>
+  </g>
+
+  <!-- Col 4: Skin-Friendly Materials -->
+  <g transform="translate(574, 592)">
+    <circle cx="32" cy="32" r="26" fill="#DCFCE7" />
+    <path d="M32,23 C27,18 20,24 24,30 L32,38 L40,30 C44,24 37,18 32,23 Z" fill="#16A34A" />
+    <text x="0" y="82" font-size="13.5" font-weight="800" fill="#0A192F">Skin-Friendly Materials</text>
+    <text x="0" y="101" font-size="11" font-weight="500" fill="#64748B">Designed with baby</text>
+    <text x="0" y="117" font-size="11" font-weight="500" fill="#64748B">comfort in mind</text>
+  </g>
+
+  <!-- Col 5: 5-Year Warranty -->
+  <g transform="translate(734, 592)">
+    <circle cx="32" cy="32" r="26" fill="#FCE7F3" />
+    <path d="M24,25 L32,22 L40,25 C40,34 32,41 32,41 C32,41 24,34 24,25 Z" fill="#DB2777" />
+    <text x="32" y="33" font-size="8.5" font-weight="900" fill="#FFFFFF" text-anchor="middle">5Y</text>
+    <text x="0" y="82" font-size="13.5" font-weight="800" fill="#0A192F">5-Year Warranty</text>
+    <text x="0" y="101" font-size="11" font-weight="500" fill="#64748B">Long-term product</text>
+    <text x="0" y="117" font-size="11" font-weight="500" fill="#64748B">support</text>
+  </g>
+
+  <!-- ================= 7. BOTTOM-RIGHT PANEL: SENSOR INSIDE ================= -->
+  <g id="bottomRightPanel" transform="translate(895, 530)">
+    <rect x="0" y="0" width="245" height="225" rx="24" fill="url(#pastelPanel)" stroke="#BAE6FD" stroke-width="1.5" filter="url(#cardShadow)" />
+
+    <!-- Open diaper-clip casing with sensor nested inside -->
+    <rect x="18" y="18" width="209" height="105" rx="14" fill="#F1F5F9" stroke="#CBD5E1" stroke-width="1" />
+    <image href="/nutriband-diaper-clip.jpg" x="20" y="20" width="205" height="101" clip-path="url(#sensorInsideClip)" preserveAspectRatio="xMidYMid slice" />
+
+    <!-- Micro badge on image -->
+    <rect x="26" y="26" width="92" height="20" rx="6" fill="#0A192F" fill-opacity="0.75" />
+    <circle cx="36" cy="36" r="3.5" fill="#22C55E" />
+    <text x="45" y="40" font-size="9.5" font-weight="800" fill="#FFFFFF" letter-spacing="0.5">SENSOR INSIDE</text>
+
+    <!-- Caption & Supporting Text -->
+    <g transform="translate(20, 140)">
+      <text x="0" y="16" font-size="16" font-weight="800" fill="#0A192F">Sensor Inside</text>
+      <text x="0" y="36" font-size="12" font-weight="500" fill="#475569">Compact sensor integration in a</text>
+      <text x="0" y="52" font-size="12" font-weight="500" fill="#475569">smooth, rounded enclosure.</text>
+    </g>
+  </g>
+</svg>
