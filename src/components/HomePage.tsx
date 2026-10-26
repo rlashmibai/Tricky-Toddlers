@@ -475,8 +475,8 @@ export const HomePage: React.FC<HomePageProps> = ({
             </a>
           </div>
 
-          {/* Quick 4 Stats Bar */}
-          <div className="pt-2 sm:pt-3 grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-2.5 max-w-3xl mx-auto text-left">
+          {/* Quick 5 Stats Bar */}
+          <div className="pt-2 sm:pt-3 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-2.5 max-w-5xl mx-auto text-left">
             <a
               href="#features-directory"
               onClick={() => playSound('pop')}
@@ -510,7 +510,15 @@ export const HomePage: React.FC<HomePageProps> = ({
               className="p-2 sm:p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-pink-400/40 transition-all block group cursor-pointer"
             >
               <div className="text-base sm:text-xl font-black text-pink-300 group-hover:text-pink-200 transition-colors">AI-Assisted</div>
-              <div className="text-[10px] sm:text-xs text-slate-300 font-medium">Safety/Privacy first design</div>
+              <div className="text-[10px] sm:text-xs text-slate-300 font-medium">Safety/Privacy first</div>
+            </a>
+            <a 
+              href="#problem-and-mission"
+              onClick={() => playSound('glass')}
+              className="p-2 sm:p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-purple-400/40 transition-all block group cursor-pointer col-span-2 sm:col-span-1 lg:col-span-1"
+            >
+              <div className="text-base sm:text-xl font-black text-purple-300 group-hover:text-purple-200 transition-colors">Personalised</div>
+              <div className="text-[10px] sm:text-xs text-slate-300 font-medium">Child profile calibrated</div>
             </a>
           </div>
         </div>
@@ -522,25 +530,25 @@ export const HomePage: React.FC<HomePageProps> = ({
       <section id="vision" className="space-y-4 rounded-3xl sm:rounded-[2.25rem] border border-purple-500/25 bg-gradient-to-br from-[#120d2b] via-[#0d0920] to-[#080514] p-5 sm:p-8 lg:p-10 shadow-2xl text-left scroll-mt-20 relative overflow-hidden">
         <div className="absolute -top-24 -right-24 w-80 h-80 bg-purple-500/10 blur-[100px] rounded-full pointer-events-none" />
 
-        <div className="relative z-10 space-y-3.5">
-          <div className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-purple-300 px-3 py-1 rounded-full bg-purple-500/15 border border-purple-400/30 text-balance">
+        <div className="relative z-10 space-y-3.5 w-full">
+          <div className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-purple-300 px-3 py-1 rounded-full bg-purple-500/15 border border-purple-400/30">
             <Eye className="w-3.5 h-3.5 text-purple-400 shrink-0" />
             <span>Guiding Vision</span>
           </div>
 
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-white tracking-tight text-balance">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-white tracking-tight">
             Why Tricky Toddlers
           </h2>
 
-          <div className="text-lg sm:text-xl font-bold text-purple-200 tracking-tight leading-snug text-balance">
+          <div className="text-lg sm:text-xl font-bold text-purple-200 tracking-tight leading-snug">
             “Less juggling apps, more caring.”
           </div>
 
-          <p className="text-xs sm:text-sm md:text-base text-slate-200 leading-relaxed font-normal max-w-4xl">
+          <p className="text-xs sm:text-sm md:text-base text-slate-200 leading-relaxed font-normal w-full max-w-none text-left">
             Technology should quietly handle the clutter in the background, so parents can spend less time managing apps, reminders and scattered information, and more time enjoying the beautiful, funny and precious moments with their toddlers.
           </p>
 
-          <div className="p-3.5 sm:p-4 rounded-2xl bg-purple-500/10 border border-purple-500/25">
+          <div className="p-3.5 sm:p-4 rounded-2xl bg-purple-500/10 border border-purple-500/25 w-full">
             <p className="text-xs sm:text-sm md:text-base text-purple-200 font-semibold leading-relaxed">
               Tricky Toddlers is not about adding more technology to parenting. It is about making technology work for parents.
             </p>

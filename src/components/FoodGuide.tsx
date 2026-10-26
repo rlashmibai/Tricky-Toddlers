@@ -540,6 +540,7 @@ export const FoodGuide: React.FC<FoodGuideProps> = ({ onNavigateToFoodLens }) =>
   // Custom AI generator state (Age now in Years)
   const [customAgeYears, setCustomAgeYears] = useState<string>(() => getInitialYears(profileAge));
   const [customIngredients, setCustomIngredients] = useState<string>('');
+  const [applyDietaryPreferences, setApplyDietaryPreferences] = useState<boolean>(true);
   const [aiRecipe, setAiRecipe] = useState<string>('');
   const [aiLoading, setAiLoading] = useState<boolean>(false);
   const [aiTranslating, setAiTranslating] = useState<boolean>(false);
@@ -673,7 +674,9 @@ export const FoodGuide: React.FC<FoodGuideProps> = ({ onNavigateToFoodLens }) =>
     setAiRecipe('');
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
-    const savedDietaryPreferences = getSavedDietaryPreferences();
+    const savedDietaryPreferences = applyDietaryPreferences 
+      ? getSavedDietaryPreferences() 
+      : 'None (Use available home ingredients directly without restrictions)';
     const primaryIngredient = customIngredients.split(',')[0]?.trim() || 'wholesome grains';
 
     // Algorithmic high-fidelity fallback recipes ensuring 2 to 3 distinct meals
@@ -1118,16 +1121,35 @@ Each object must have these exact keys:
             </div>
           </div>
 
-          {/* Active Dietary Preferences Indicator from Settings */}
-          <div className="mb-6 p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-start gap-3 text-xs text-emerald-200">
-            <Apple className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-            <div>
-              <span className="font-bold text-white">Active Dietary Preferences & Allergies (from Settings):</span>{" "}
-              <span className="text-emerald-300 font-medium">{getSavedDietaryPreferences()}</span>
-              <p className="text-[11px] text-white/40 mt-1">
-                The AI automatically applies your baby's dietary preferences and restrictions configured in your health settings.
-              </p>
+          {/* Apply Dietary Preferences Option & Note */}
+          <div className="mb-6 p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-emerald-200">
+            <div className="flex items-start gap-3">
+              <Apple className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+              <div>
+                <label className="flex items-center gap-2 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={applyDietaryPreferences}
+                    onChange={(e) => {
+                      playSound('pop');
+                      setApplyDietaryPreferences(e.target.checked);
+                    }}
+                    className="w-4 h-4 rounded text-emerald-500 bg-white/10 border-white/20 focus:ring-emerald-400 focus:ring-offset-0 cursor-pointer accent-emerald-400"
+                  />
+                  <span className="font-bold text-white text-sm">Apply Dietary Preferences</span>
+                </label>
+                <p className="text-[11px] text-white/70 mt-1">
+                  The AI automatically applies your baby's dietary preferences and restrictions configured in your health settings.
+                </p>
+              </div>
             </div>
+            <span className={`px-2.5 py-1 rounded-full text-[10px] font-mono font-bold self-start sm:self-center shrink-0 border ${
+              applyDietaryPreferences
+                ? 'bg-emerald-500/20 text-emerald-300 border-emerald-400/30'
+                : 'bg-white/5 text-white/50 border-white/10'
+            }`}>
+              {applyDietaryPreferences ? 'Profile Diet Enabled' : 'Home Ingredients Mode'}
+            </span>
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
