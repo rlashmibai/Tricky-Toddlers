@@ -305,15 +305,6 @@ export const NutriBandView: React.FC<NutriBandViewProps> = ({
                 <Layers className="w-4 h-4 text-cyan-400 shrink-0" />
                 <span>Nutriband Ecosystem</span>
               </a>
-
-              <a 
-                href="#dashboard-preview" 
-                onClick={() => playSound('glass')}
-                className="px-4 py-3 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/15 hover:border-white/30 text-slate-200 hover:text-white font-bold text-xs sm:text-sm tracking-tight transition-all flex items-center gap-2 whitespace-nowrap cursor-pointer hover:scale-[1.02] active:scale-95 shadow-md"
-              >
-                <Activity className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span>Live App Telemetry</span>
-              </a>
             </div>
           </div>
 
