@@ -260,11 +260,11 @@ export const PlansPremiumPage: React.FC = () => {
                 <span className="text-[10px] text-amber-400/90 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20 font-sans">Full Premium Suite</span>
               </div>
 
-              {/* Group 1: FOODLENS PRO | Smart Food Analysis */}
+              {/* Group 1: FoodLens Pro | Smart Food Analysis */}
               <div className="space-y-3">
                 <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-amber-300 bg-amber-500/10 border border-amber-500/25 px-3 py-1.5 rounded-xl">
                   <Camera className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-                  <span>FOODLENS PRO | Smart Food Analysis</span>
+                  <span>FoodLens Pro | Smart Food Analysis</span>
                 </div>
                 <ul className="space-y-2.5 text-xs sm:text-sm text-slate-200 pl-1">
                   {[
@@ -419,7 +419,7 @@ export const PlansPremiumPage: React.FC = () => {
             {/* Category 2: FoodLens Pro */}
             <div className="p-3 sm:p-3.5 bg-amber-500/10 border-y border-amber-500/20 text-amber-300 font-bold text-xs uppercase tracking-wider flex items-center gap-2 font-mono">
               <Camera className="w-4 h-4 text-amber-400" />
-              <span>FOODLENS PRO | Smart Food Analysis (Premium Only)</span>
+              <span>FoodLens Pro | Smart Food Analysis (Premium Only)</span>
             </div>
 
             {[

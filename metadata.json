@@ -1,6 +1,6 @@
 {
   "name": "Tricky Toddlers",
-  "description": "Expert toddler parenting advice, pediatric consults, milestone tracking, and community support.",
+  "description": "Expert toddler advice at your fingertips. Ask about behavior, sleep, health, nutrition, and pediatric consultations.",
   "requestFramePermissions": [
     "camera"
   ],

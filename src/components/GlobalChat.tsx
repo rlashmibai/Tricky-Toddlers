@@ -46,9 +46,9 @@ const INITIAL_PARENT_ACCOUNTS: ParentAccount[] = [
     status: 'Active now',
     isOnline: true,
     messages: [
-      { id: 's1', userId: 'sarah', username: 'Sarah', text: "Hi Lashmi! My 18-month-old daughter has started waking up multiple times crying around 1 AM and 3 AM. Any advice?", createdAt: new Date(Date.now() - 3600000 * 3), timeString: '18:52' },
-      { id: 's2', userId: 'lashmi', username: 'Lashmi', text: "Yes, we went through that 18-month sleep regression too! Try sitting beside her cot and placing a gentle hand on her tummy with soft shushing instead of picking her up immediately. It reassures her without restarting the bedtime routine.", createdAt: new Date(Date.now() - 3600000 * 2), timeString: '19:52' },
-      { id: 's3', userId: 'sarah', username: 'Sarah', text: "She settled back in 10 minutes and slept through till 6 AM! Thanks so much Lashmi, that hand-on-tummy trick was pure magic!", createdAt: new Date(Date.now() - 3600000), timeString: '21:42' }
+      { id: 's1', userId: 'sarah', username: 'Sarah', text: "Hi Lashmi! My 18-month-old daughter has started waking up multiple times crying around 1 AM and 3 AM. Any advice?", createdAt: new Date(Date.now() - 1000 * 60 * 6), timeString: '18:52' },
+      { id: 's2', userId: 'lashmi', username: 'Lashmi', text: "Yes, we went through that 18-month sleep regression too! Try sitting beside her cot and placing a gentle hand on her tummy with soft shushing instead of picking her up immediately. It reassures her without restarting the bedtime routine.", createdAt: new Date(Date.now() - 1000 * 60 * 4), timeString: '18:53' },
+      { id: 's3', userId: 'sarah', username: 'Sarah', text: "She settled back in 10 minutes and slept through till 6 AM! Thanks so much Lashmi, that hand-on-tummy trick was pure magic!", createdAt: new Date(Date.now() - 1000 * 60 * 2), timeString: '18:54' }
     ]
   },
   {
@@ -61,9 +61,9 @@ const INITIAL_PARENT_ACCOUNTS: ParentAccount[] = [
     status: 'Active now',
     isOnline: true,
     messages: [
-      { id: 'p1', userId: 'priya', username: 'Priya', text: "Lashmi, my 2.5-year-old completely rejects vegetables now. The moment she spots spinach or carrot pieces, she pushes the plate away! How do you handle this?", createdAt: new Date(Date.now() - 3600000 * 5), timeString: '10:05' },
-      { id: 'p2', userId: 'lashmi', username: 'Lashmi', text: "Totally understand, Priya! Toddlers can spot a tiny green speck from a mile away! What worked wonders for us was making grated beetroot and palak parathas kneaded with a little desi cow ghee and serving homemade curd on the side. When it looks pink and colorful, toddler curiosity takes over. Don't force them to finish, just keep exposure playful.", createdAt: new Date(Date.now() - 3600000 * 4), timeString: '10:28' },
-      { id: 'p3', userId: 'priya', username: 'Priya', text: "Making pink parathas tonight! Such a huge relief knowing this is a normal developmental phase and not a failure. Thank you!", createdAt: new Date(Date.now() - 3600000 * 2), timeString: '12:15' }
+      { id: 'p1', userId: 'priya', username: 'Priya', text: "Lashmi, my 2.5-year-old completely rejects vegetables now. The moment she spots spinach or carrot pieces, she pushes the plate away! How do you handle this?", createdAt: new Date(Date.now() - 1000 * 60 * 6), timeString: '10:05' },
+      { id: 'p2', userId: 'lashmi', username: 'Lashmi', text: "Totally understand, Priya! Toddlers can spot a tiny green speck from a mile away! What worked wonders for us was making grated beetroot and palak parathas kneaded with a little desi cow ghee and serving homemade curd on the side. When it looks pink and colorful, toddler curiosity takes over. Don't force them to finish, just keep exposure playful.", createdAt: new Date(Date.now() - 1000 * 60 * 4), timeString: '10:06' },
+      { id: 'p3', userId: 'priya', username: 'Priya', text: "Making pink parathas tonight! Such a huge relief knowing this is a normal developmental phase and not a failure. Thank you!", createdAt: new Date(Date.now() - 1000 * 60 * 2), timeString: '10:07' }
     ]
   },
   {
@@ -76,9 +76,9 @@ const INITIAL_PARENT_ACCOUNTS: ParentAccount[] = [
     status: 'Active now',
     isOnline: true,
     messages: [
-      { id: 'r1', userId: 'rahul', username: 'Rahul', text: "Hi Lashmi! Our 14-month-old son pulls at his diaper right after peeing and hides behind the sofa curtains. Is it too early to introduce a potty chair?", createdAt: new Date(Date.now() - 3600000 * 7), timeString: '09:00' },
-      { id: 'r2', userId: 'lashmi', username: 'Lashmi', text: "Hi Rahul! That awareness and wanting privacy is actually a wonderful readiness signal! You don't need strict potty training yet, but placing a small child potty chair in your bathroom and letting him sit fully clothed while looking at a picture book normalizes it without any pressure.", createdAt: new Date(Date.now() - 3600000 * 6), timeString: '09:40' },
-      { id: 'r3', userId: 'rahul', username: 'Rahul', text: "That makes so much sense! We placed the small potty chair today and he happily sat on it while clapping. Appreciate the calm practical tip!", createdAt: new Date(Date.now() - 3600000 * 3), timeString: '13:10' }
+      { id: 'r1', userId: 'rahul', username: 'Rahul', text: "Hi Lashmi! Our 14-month-old son pulls at his diaper right after peeing and hides behind the sofa curtains. Is it too early to introduce a potty chair?", createdAt: new Date(Date.now() - 1000 * 60 * 6), timeString: '09:00' },
+      { id: 'r2', userId: 'lashmi', username: 'Lashmi', text: "Hi Rahul! That awareness and wanting privacy is actually a wonderful readiness signal! You don't need strict potty training yet, but placing a small child potty chair in your bathroom and letting him sit fully clothed while looking at a picture book normalizes it without any pressure.", createdAt: new Date(Date.now() - 1000 * 60 * 4), timeString: '09:01' },
+      { id: 'r3', userId: 'rahul', username: 'Rahul', text: "That makes so much sense! We placed the small potty chair today and he happily sat on it while clapping. Appreciate the calm practical tip!", createdAt: new Date(Date.now() - 1000 * 60 * 2), timeString: '09:02' }
     ]
   },
   {
@@ -91,9 +91,9 @@ const INITIAL_PARENT_ACCOUNTS: ParentAccount[] = [
     status: 'Active now',
     isOnline: true,
     messages: [
-      { id: 'a1', userId: 'ananya', username: 'Ananya', text: "Hey Lashmi, after 7 PM my 2-year-old gets super hyper and demands nursery rhymes on the mobile phone. How do you keep evenings peaceful without screens?", createdAt: new Date(Date.now() - 3600000 * 8), timeString: '17:15' },
-      { id: 'a2', userId: 'lashmi', username: 'Lashmi', text: "Hi Ananya! We had that exact post-dinner screen battle. We switched to dim warm amber lighting after 7:30 PM, playing soft classical flute lullabies on a bluetooth speaker, and doing a 5-minute warm water foot wash. It drops cortisol levels and signals to their brain that night is here.", createdAt: new Date(Date.now() - 3600000 * 7), timeString: '17:45' },
-      { id: 'a3', userId: 'ananya', username: 'Ananya', text: "The warm foot wash and dim lights worked like magic! He fell asleep holding his plush bear without asking for the screen once.", createdAt: new Date(Date.now() - 3600000 * 4), timeString: '20:30' }
+      { id: 'a1', userId: 'ananya', username: 'Ananya', text: "Hey Lashmi, after 7 PM my 2-year-old gets super hyper and demands nursery rhymes on the mobile phone. How do you keep evenings peaceful without screens?", createdAt: new Date(Date.now() - 1000 * 60 * 6), timeString: '17:15' },
+      { id: 'a2', userId: 'lashmi', username: 'Lashmi', text: "Hi Ananya! We had that exact post-dinner screen battle. We switched to dim warm amber lighting after 7:30 PM, playing soft classical flute lullabies on a bluetooth speaker, and doing a 5-minute warm water foot wash. It drops cortisol levels and signals to their brain that night is here.", createdAt: new Date(Date.now() - 1000 * 60 * 4), timeString: '17:16' },
+      { id: 'a3', userId: 'ananya', username: 'Ananya', text: "The warm foot wash and dim lights worked like magic! He fell asleep holding his plush bear without asking for the screen once.", createdAt: new Date(Date.now() - 1000 * 60 * 2), timeString: '17:17' }
     ]
   },
   {
@@ -102,13 +102,13 @@ const INITIAL_PARENT_ACCOUNTS: ParentAccount[] = [
     initials: 'M',
     avatarGradient: 'from-amber-500 to-orange-600',
     childTag: 'Mom to 11mo',
-    location: 'Delhi · Food Lens & BLW',
+    location: 'Delhi · FoodLens & BLW',
     status: 'Active now',
     isOnline: true,
     messages: [
-      { id: 'm1', userId: 'meera', username: 'Meera', text: "Hi Lashmi! Little Ayaan is 11 months old now. I really want to introduce finger foods, but I get so anxious about choking. What are safe starters?", createdAt: new Date(Date.now() - 3600000 * 12), timeString: '08:30' },
-      { id: 'm2', userId: 'lashmi', username: 'Lashmi', text: "Hi Meera! Start with steamed sweet potato fingers, ripe banana spears, or well-boiled carrot sticks that easily squash between your thumb and index finger. At this stage, squishable texture is everything. Avoid hard raw foods like nuts, whole grapes, or crunchy chips. Always sit right with him face-to-face.", createdAt: new Date(Date.now() - 3600000 * 10), timeString: '09:15' },
-      { id: 'm3', userId: 'meera', username: 'Meera', text: "Steamed sweet potato sticks were a massive hit! He chewed them happily with his gums and self-fed for the first time. Thank you for calming my mommy anxiety!", createdAt: new Date(Date.now() - 3600000 * 6), timeString: '14:20' }
+      { id: 'm1', userId: 'meera', username: 'Meera', text: "Hi Lashmi! Little Ayaan is 11 months old now. I really want to introduce finger foods, but I get so anxious about choking. What are safe starters?", createdAt: new Date(Date.now() - 1000 * 60 * 6), timeString: '08:30' },
+      { id: 'm2', userId: 'lashmi', username: 'Lashmi', text: "Hi Meera! Start with steamed sweet potato fingers, ripe banana spears, or well-boiled carrot sticks that easily squash between your thumb and index finger. At this stage, squishable texture is everything. Avoid hard raw foods like nuts, whole grapes, or crunchy chips. Always sit right with him face-to-face.", createdAt: new Date(Date.now() - 1000 * 60 * 4), timeString: '08:31' },
+      { id: 'm3', userId: 'meera', username: 'Meera', text: "Steamed sweet potato sticks were a massive hit! He chewed them happily with his gums and self-fed for the first time. Thank you for calming my mommy anxiety!", createdAt: new Date(Date.now() - 1000 * 60 * 2), timeString: '08:32' }
     ]
   },
   {
@@ -121,9 +121,9 @@ const INITIAL_PARENT_ACCOUNTS: ParentAccount[] = [
     status: 'Active now',
     isOnline: true,
     messages: [
-      { id: 'k1', userId: 'kavita', username: 'Kavita', text: "Hi Lashmi, whenever my 3-year-old gets frustrated with blocks collapsing, he hits or throws items across the room. How should I respond in that moment?", createdAt: new Date(Date.now() - 3600000 * 14), timeString: '11:10' },
-      { id: 'k2', userId: 'lashmi', username: 'Lashmi', text: "Hi Kavita, hold his little hands gently, get down to his eye level, and say in a steady, calm voice: 'Hands are not for hitting. You are mad the tower fell. Let us stomp our feet or squeeze this cushion together.' Acknowledging the frustration while holding the physical boundary helps them learn emotional regulation.", createdAt: new Date(Date.now() - 3600000 * 13), timeString: '11:45' },
-      { id: 'k3', userId: 'kavita', username: 'Kavita', text: "Used the calm hands and cushion squeeze today when his puzzle got stuck. He took two big deep breaths instead of throwing it! Life saver advice.", createdAt: new Date(Date.now() - 3600000 * 9), timeString: '15:40' }
+      { id: 'k1', userId: 'kavita', username: 'Kavita', text: "Hi Lashmi, whenever my 3-year-old gets frustrated with blocks collapsing, he hits or throws items across the room. How should I respond in that moment?", createdAt: new Date(Date.now() - 1000 * 60 * 6), timeString: '11:10' },
+      { id: 'k2', userId: 'lashmi', username: 'Lashmi', text: "Hi Kavita, hold his little hands gently, get down to his eye level, and say in a steady, calm voice: 'Hands are not for hitting. You are mad the tower fell. Let us stomp our feet or squeeze this cushion together.' Acknowledging the frustration while holding the physical boundary helps them learn emotional regulation.", createdAt: new Date(Date.now() - 1000 * 60 * 4), timeString: '11:11' },
+      { id: 'k3', userId: 'kavita', username: 'Kavita', text: "Used the calm hands and cushion squeeze today when his puzzle got stuck. He took two big deep breaths instead of throwing it! Life saver advice.", createdAt: new Date(Date.now() - 1000 * 60 * 2), timeString: '11:12' }
     ]
   },
   {
@@ -136,9 +136,9 @@ const INITIAL_PARENT_ACCOUNTS: ParentAccount[] = [
     status: 'Offline',
     isOnline: false,
     messages: [
-      { id: 'rh1', userId: 'rohit', username: 'Rohit', text: "Hello Lashmi! My 2-year-old gets constipated whenever we travel or change routine. What gentle home remedies or diet tweaks do you suggest?", createdAt: new Date(Date.now() - 3600000 * 20), timeString: '07:20' },
-      { id: 'rh2', userId: 'lashmi', username: 'Lashmi', text: "Hello Rohit! Overnight soaked munakka (black raisins) water in the morning works wonders for toddler bowels. Also add half a teaspoon of pure A2 desi cow ghee to his warm moong dal khichdi, and offer fresh papaya slices. Ensure he drinks enough water throughout the day.", createdAt: new Date(Date.now() - 3600000 * 18), timeString: '08:10' },
-      { id: 'rh3', userId: 'rohit', username: 'Rohit', text: "The soaked munakka water and papaya worked within hours! He is comfortable and running around happily again. Thanks a ton!", createdAt: new Date(Date.now() - 3600000 * 12), timeString: '13:00' }
+      { id: 'rh1', userId: 'rohit', username: 'Rohit', text: "Hello Lashmi! My 2-year-old gets constipated whenever we travel or change routine. What gentle home remedies or diet tweaks do you suggest?", createdAt: new Date(Date.now() - 1000 * 60 * 6), timeString: '07:20' },
+      { id: 'rh2', userId: 'lashmi', username: 'Lashmi', text: "Hello Rohit! Overnight soaked munakka (black raisins) water in the morning works wonders for toddler bowels. Also add half a teaspoon of pure A2 desi cow ghee to his warm moong dal khichdi, and offer fresh papaya slices. Ensure he drinks enough water throughout the day.", createdAt: new Date(Date.now() - 1000 * 60 * 4), timeString: '07:21' },
+      { id: 'rh3', userId: 'rohit', username: 'Rohit', text: "The soaked munakka water and papaya worked within hours! He is comfortable and running around happily again. Thanks a ton!", createdAt: new Date(Date.now() - 1000 * 60 * 2), timeString: '07:22' }
     ]
   },
   {
@@ -151,9 +151,9 @@ const INITIAL_PARENT_ACCOUNTS: ParentAccount[] = [
     status: 'Active now',
     isOnline: true,
     messages: [
-      { id: 'd1', userId: 'deepa', username: 'Deepa', text: "Hi Lashmi, little Riya is cutting her molars and her gums look red and swollen. She is drooling constantly and refusing warm meals. Any soothing ideas?", createdAt: new Date(Date.now() - 3600000 * 24), timeString: '16:00' },
-      { id: 'd2', userId: 'lashmi', username: 'Lashmi', text: "Hi Deepa! Warm food stings inflamed gums right now. Try chilled thick fresh curd or cool cucumber sticks wrapped in a safe silicone feeder. You can also massage her gums with a clean damp cloth chilled in the fridge for a few minutes — it numbs the throbbing naturally.", createdAt: new Date(Date.now() - 3600000 * 22), timeString: '16:45' },
-      { id: 'd3', userId: 'deepa', username: 'Deepa', text: "The cold damp cloth and chilled curd soothed her instantly! She finally fell asleep for a peaceful 2-hour afternoon nap.", createdAt: new Date(Date.now() - 3600000 * 18), timeString: '19:10' }
+      { id: 'd1', userId: 'deepa', username: 'Deepa', text: "Hi Lashmi, little Riya is cutting her molars and her gums look red and swollen. She is drooling constantly and refusing warm meals. Any soothing ideas?", createdAt: new Date(Date.now() - 1000 * 60 * 6), timeString: '16:00' },
+      { id: 'd2', userId: 'lashmi', username: 'Lashmi', text: "Hi Deepa! Warm food stings inflamed gums right now. Try chilled thick fresh curd or cool cucumber sticks wrapped in a safe silicone feeder. You can also massage her gums with a clean damp cloth chilled in the fridge for a few minutes — it numbs the throbbing naturally.", createdAt: new Date(Date.now() - 1000 * 60 * 4), timeString: '16:01' },
+      { id: 'd3', userId: 'deepa', username: 'Deepa', text: "The cold damp cloth and chilled curd soothed her instantly! She finally fell asleep for a peaceful 2-hour afternoon nap.", createdAt: new Date(Date.now() - 1000 * 60 * 2), timeString: '16:02' }
     ]
   }
 ];

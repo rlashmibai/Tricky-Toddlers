@@ -27,7 +27,7 @@ export const PACKAGED_INDIAN_BABY_FOODS: IndianBabyFood[] = [
     blwStatus: 'Spoon Fed Starter',
     benefits: 'Provides 75% of baby’s daily iron requirement in two servings. CHE (Cereal Hydrolyzed Enzymatically) process makes grain starch easily digestible for early tummies.',
     allergyCheck: 'Contains Wheat (Gluten) and Milk Solids. Soy traces possible.',
-    score: '9.4 / 10',
+    score: '7.1 / 10',
     pediatricTip: 'Mix with warm boiled drinking water. Do not boil prepared cereal; preserve active micronutrients.'
   },
   {

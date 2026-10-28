@@ -237,9 +237,9 @@ export const AGE_GROUPS: AgeGroupData[] = [
       },
       {
         id: '0_6_b_noise',
-        name: 'Continuous White/Pink Noise',
-        emoji: '🌊',
-        desc: 'Activate continuous waterfall or rain sound at a safe 6-foot distance (<50dB) to mask household noises.',
+        name: 'Calming Sleep Sounds & Gentle Hum',
+        emoji: '🌧️',
+        desc: 'Play a soft, continuous soothing sound like gentle rainfall or a steady fan placed across the room to block sudden household noises and help baby sleep peacefully.',
         colorClass: 'from-indigo-400/10 to-indigo-400/5 border-indigo-400/20 text-indigo-300',
         glowClass: 'shadow-indigo-400/10',
         indicatorColor: 'bg-indigo-400',

@@ -279,7 +279,7 @@ export const Dashboard: React.FC = () => {
             <span>{t('pediatricConsultation')}</span>
           </button>
 
-          {/* Tab 11: Food Lens */}
+          {/* Tab 11: FoodLens */}
           <button
             onClick={() => handleTabChange('foodlens')}
             className={`flex items-center justify-center gap-2.5 px-4 py-3.5 rounded-[1.25rem] text-sm lg:text-base font-black tracking-tight transition-all duration-300 transform hover:scale-[1.02] active:scale-95 relative overflow-visible ${
@@ -289,7 +289,7 @@ export const Dashboard: React.FC = () => {
             }`}
           >
             <Camera className="w-5 h-5 shrink-0" />
-            <span>{t('foodLens') || 'Food Lens AI'}</span>
+            <span>{t('foodLens') || 'FoodLens AI'}</span>
             <span className="absolute -top-1.5 -right-1.5 px-2 py-0.5 rounded-full bg-gradient-to-r from-amber-500 to-yellow-400 text-black text-[8px] font-black tracking-wider uppercase shadow-lg flex items-center gap-0.5 border border-amber-300/30">
               <Sparkles className="w-2.5 h-2.5 text-black shrink-0 fill-black" />
               PREMIUM

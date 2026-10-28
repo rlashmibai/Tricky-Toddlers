@@ -670,9 +670,14 @@ export const SearchSection: React.FC = () => {
       <motion.h1 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="text-2xl sm:text-4xl md:text-5xl font-sans font-black text-white tracking-normal sm:tracking-tight leading-tight mb-4 px-2 overflow-visible"
+        className="text-2xl sm:text-4xl md:text-5xl font-sans font-black tracking-normal sm:tracking-tight leading-tight mb-4 px-2 overflow-visible"
       >
-        How can we help today?
+        <span className="text-white">
+          How can we help{' '}
+        </span>
+        <span className="italic font-serif bg-gradient-to-r from-teal-300 via-indigo-300 to-pink-400 bg-clip-text text-transparent">
+          today?
+        </span>
       </motion.h1>
       
       <motion.p

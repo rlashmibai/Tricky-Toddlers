@@ -48,7 +48,7 @@ export const INITIAL_PAST_CONSULTATIONS: PastConsultation[] = [
     status: "Completed",
     topic: "6-Month Solid Weaning & Iron Fortification",
     summary: "Infant tolerating stewed apple and ragi porridge well. Prescribed 1 tsp cold-pressed ghee addition and continuation of Vit D drops (400 IU/day). Growth percentile tracked at 58th percentile.",
-    vitals: "Weight: 7.8 kg • Height: 68 cm • Temp: 98.4°F",
+    vitals: "Weight: 7.8 kg • Height: 68 cm • Temp: 36.9°C (98.4°F)",
     prescriptionRx: [
       "Vitamin D3 Oral Drops (400 IU daily morning)",
       "Iron-fortified ragi malt porridge with cooked apple & ghee",
@@ -68,7 +68,7 @@ export const INITIAL_PAST_CONSULTATIONS: PastConsultation[] = [
     status: "Completed",
     topic: "Toddler Sleep Regression & Teething Protocol",
     summary: "Evaluated 18-month sleep regression. Prescribed consistent 7:30 PM sleep hygiene routine and chilled silicon teether for lower canine eruption. Night waking reduced.",
-    vitals: "Weight: 11.2 kg • Height: 82 cm • Temp: 98.6°F",
+    vitals: "Weight: 11.2 kg • Height: 82 cm • Temp: 37.0°C (98.6°F)",
     prescriptionRx: [
       "Calibrated gum massage with chilled silicone teether",
       "Magnesium-rich evening snack (banana & oatmeal)",
@@ -88,7 +88,7 @@ export const INITIAL_PAST_CONSULTATIONS: PastConsultation[] = [
     status: "Completed",
     topic: "Suspected Cow Milk Protein Allergy (CMPA)",
     summary: "Evaluated mild eczema flare after dairy introduction. Initiated 2-week dairy elimination trial with notable skin clearance. Prescribed ceramide barrier cream twice daily.",
-    vitals: "Weight: 6.9 kg • Height: 64 cm • Temp: 98.2°F",
+    vitals: "Weight: 6.9 kg • Height: 64 cm • Temp: 36.8°C (98.2°F)",
     prescriptionRx: [
       "Ceramide lipid barrier moisturizing cream twice daily",
       "Strict dairy elimination trial for next 14 days",
@@ -108,7 +108,7 @@ export const INITIAL_PAST_CONSULTATIONS: PastConsultation[] = [
     status: "Completed",
     topic: "Early Motor Milestones & Barefoot Walking Evaluation",
     summary: "Evaluated pull-to-stand posture and cruising balance. Feet show normal physiological infant fat pad with no rigid flatfoot pathology. Recommended barefoot sensory surface exploration.",
-    vitals: "Weight: 9.4 kg • Height: 75 cm • Temp: 98.4°F",
+    vitals: "Weight: 9.4 kg • Height: 75 cm • Temp: 36.9°C (98.4°F)",
     prescriptionRx: [
       "Barefoot outdoor grass and textured floor sensory walking",
       "Daily 30-minute interactive floor cruising obstacle play",

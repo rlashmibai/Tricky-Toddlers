@@ -199,7 +199,7 @@ export const NutriBandCartPage: React.FC<NutriBandCartPageProps> = ({ onBack }) 
       tagline: 'Featherlight 12g medical-grade telemetry engine',
       details: [
         'Dual high-precision thermistors tracking skin & ambient temperature with ±0.1°C clinical sensitivity',
-        '3-axis inertial accelerometer monitoring breathing rise-and-fall rhythm and tummy rollover risk',
+        '3-axis inertial accelerometer monitoring restful sleep patterns and tummy rollover risk',
         'Bluetooth Low Energy (BLE 5.3) ultra-low-radiation continuous connectivity with 15m parent nursery range',
         'IP67 splash & drool resistant enclosure with smooth rounded hypoallergenic medical polymer backplate'
       ]

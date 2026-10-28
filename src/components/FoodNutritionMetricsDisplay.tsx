@@ -53,9 +53,9 @@ export const FoodNutritionMetricsDisplay: React.FC<FoodNutritionMetricsDisplayPr
   const negativeFactors = scoreCalculation.factors.filter(f => f.points < 0);
   const compliantFactors = scoreCalculation.factors.filter(f => f.points === 0);
 
-  // Sodium and Salt values
+  // Sodium and Vitamin B12 values
   const sodiumItem = nutrients.find(n => n.id === 'sodium');
-  const saltItem = nutrients.find(n => n.id === 'salt');
+  const vitaminB12Item = nutrients.find(n => n.id === 'vitamin_b12');
   const calorieItem = nutrients.find(n => n.id === 'calories');
   const proteinItem = nutrients.find(n => n.id === 'protein');
 
@@ -64,15 +64,15 @@ export const FoodNutritionMetricsDisplay: React.FC<FoodNutritionMetricsDisplayPr
       
       {/* =========================================================
           KEY HIGHLIGHTS BAR:
-          1. Overall Scope / 10 Button (Before Calories)
+          1. Overall Score / 10 Button (Before Calories)
           2. Calories
           3. Protein
-          4. Salt Content
-          5. Sodium (Separate signal after Salt Content)
+          4. Vitamin B12
+          5. Sodium
       ========================================================== */}
       <div className="p-4 sm:p-5 rounded-2xl bg-[#091122] border border-white/10 shadow-lg flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-2.5">
-          {/* 1. Overall Scope Button before Calories */}
+          {/* 1. Overall Score Button before Calories */}
           <button
             type="button"
             onClick={() => {
@@ -83,7 +83,7 @@ export const FoodNutritionMetricsDisplay: React.FC<FoodNutritionMetricsDisplayPr
             title="Click to view score calculation formula"
           >
             <ShieldCheck className="w-4 h-4 text-slate-950 stroke-[2.5]" />
-            <span>Overall Scope: {scoreCalculation.finalScore.toFixed(1)} / 10</span>
+            <span>Overall Score: {scoreCalculation.finalScore.toFixed(1)} / 10</span>
           </button>
 
           {/* 2. Calories */}
@@ -100,14 +100,14 @@ export const FoodNutritionMetricsDisplay: React.FC<FoodNutritionMetricsDisplayPr
             <span>{proteinItem?.amount || food.protein || '5.2 g'}</span>
           </div>
 
-          {/* 8. Salt Content */}
+          {/* 4. Vitamin B12 */}
           <div className="px-3.5 py-2 rounded-xl bg-amber-500/10 border border-amber-400/30 text-xs sm:text-sm font-bold text-amber-300 flex items-center gap-1.5">
             <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-            <span className="text-amber-200/70 font-normal">Salt Content:</span>
-            <span>{saltItem?.amount || '0.11 g'}</span>
+            <span className="text-amber-200/70 font-normal">Vitamin B12:</span>
+            <span>{vitaminB12Item?.amount || '0.5 mcg'}</span>
           </div>
 
-          {/* 9. Sodium (Separate signal after Salt Content) */}
+          {/* 5. Sodium */}
           <div className="px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-xs sm:text-sm font-bold text-white flex items-center gap-1.5">
             <Droplets className="w-3.5 h-3.5 text-sky-400" />
             <span className="text-slate-400 font-normal">Sodium:</span>
@@ -116,10 +116,10 @@ export const FoodNutritionMetricsDisplay: React.FC<FoodNutritionMetricsDisplayPr
         </div>
 
         {/* Section Navigation Filter */}
-        <div className="flex items-center gap-1.5 bg-black/40 p-1 rounded-xl border border-white/10 text-xs font-semibold">
+        <div className="flex items-center gap-1.5 bg-black/40 p-1 rounded-xl border border-white/10 text-xs font-semibold overflow-x-auto">
           <button
             onClick={() => { playSound('click'); setActiveTab('all'); }}
-            className={`px-3 py-1 rounded-lg transition-all cursor-pointer ${
+            className={`px-3 py-1 rounded-lg transition-all cursor-pointer whitespace-nowrap ${
               activeTab === 'all' ? 'bg-amber-400 text-slate-950 font-black' : 'text-slate-400 hover:text-white'
             }`}
           >
@@ -127,27 +127,35 @@ export const FoodNutritionMetricsDisplay: React.FC<FoodNutritionMetricsDisplayPr
           </button>
           <button
             onClick={() => { playSound('click'); setActiveTab('score'); }}
-            className={`px-3 py-1 rounded-lg transition-all cursor-pointer ${
+            className={`px-3 py-1 rounded-lg transition-all cursor-pointer whitespace-nowrap ${
               activeTab === 'score' ? 'bg-amber-400 text-slate-950 font-black' : 'text-slate-400 hover:text-white'
             }`}
           >
             Scorecard
           </button>
           <button
-            onClick={() => { playSound('click'); setActiveTab('nutrients'); }}
-            className={`px-3 py-1 rounded-lg transition-all cursor-pointer ${
-              activeTab === 'nutrients' ? 'bg-amber-400 text-slate-950 font-black' : 'text-slate-400 hover:text-white'
-            }`}
-          >
-            Nutrients
-          </button>
-          <button
             onClick={() => { playSound('click'); setActiveTab('ingredients'); }}
-            className={`px-3 py-1 rounded-lg transition-all cursor-pointer ${
+            className={`px-3 py-1 rounded-lg transition-all cursor-pointer whitespace-nowrap ${
               activeTab === 'ingredients' ? 'bg-amber-400 text-slate-950 font-black' : 'text-slate-400 hover:text-white'
             }`}
           >
             Ingredients
+          </button>
+          <button
+            onClick={() => { playSound('click'); setActiveTab('allergens'); }}
+            className={`px-3 py-1 rounded-lg transition-all cursor-pointer whitespace-nowrap ${
+              activeTab === 'allergens' ? 'bg-amber-400 text-slate-950 font-black' : 'text-slate-400 hover:text-white'
+            }`}
+          >
+            Allergens
+          </button>
+          <button
+            onClick={() => { playSound('click'); setActiveTab('nutrients'); }}
+            className={`px-3 py-1 rounded-lg transition-all cursor-pointer whitespace-nowrap ${
+              activeTab === 'nutrients' ? 'bg-amber-400 text-slate-950 font-black' : 'text-slate-400 hover:text-white'
+            }`}
+          >
+            12 Signals
           </button>
         </div>
       </div>
@@ -332,7 +340,132 @@ export const FoodNutritionMetricsDisplay: React.FC<FoodNutritionMetricsDisplayPr
       )}
 
       {/* =========================================================
-          SECTION 2: 12 FOOD SIGNALS & NUTRIENTS PANEL (12 SIGNALS)
+          SECTION 2: INGREDIENTS & ADDITIVES PROFILE (SEPARATE)
+      ========================================================== */}
+      {(activeTab === 'all' || activeTab === 'ingredients') && (
+        <section className="p-6 sm:p-7 rounded-3xl bg-[#0c1426] border border-white/10 shadow-xl space-y-4">
+          
+          <div className="flex flex-wrap items-center justify-between gap-2.5 border-b border-white/10 pb-4">
+            <div className="flex items-center gap-2.5">
+              <span className="p-2 rounded-xl bg-amber-500/20 text-amber-300">
+                <Wheat className="w-5 h-5" />
+              </span>
+              <div>
+                <h3 className="text-base sm:text-lg font-black text-white tracking-tight">
+                  Ingredients &amp; Additives Analysis
+                </h3>
+                <p className="text-xs text-slate-400">
+                  Verified against clean-label, whole food, and safety standards.
+                </p>
+              </div>
+            </div>
+
+            <span className="text-xs font-bold text-amber-300 bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/20">
+              {ingredients.length} Listed Items
+            </span>
+          </div>
+
+          <div className="space-y-3">
+            <div className="flex flex-wrap gap-2">
+              {ingredients.map((ing, idx) => {
+                const isAdditive = ing.type === 'additive';
+                const isProcessed = ing.type === 'processed';
+
+                return (
+                  <span 
+                    key={idx}
+                    className={`text-xs px-3 py-1.5 rounded-xl border flex items-center gap-1.5 ${
+                      isAdditive 
+                        ? 'bg-rose-500/15 border-rose-500/30 text-rose-300 font-bold'
+                        : isProcessed
+                        ? 'bg-amber-500/15 border-amber-500/30 text-amber-300 font-medium'
+                        : 'bg-white/5 border-white/10 text-slate-200 font-medium'
+                    }`}
+                  >
+                    <span className={`w-1.5 h-1.5 rounded-full ${
+                      isAdditive ? 'bg-rose-400' : isProcessed ? 'bg-amber-400' : 'bg-emerald-400'
+                    }`} />
+                    <span>{ing.name}</span>
+                  </span>
+                );
+              })}
+            </div>
+
+            <div className="p-3.5 rounded-2xl bg-black/40 border border-white/5 text-xs text-slate-300 flex items-center gap-2">
+              <Leaf className="w-4 h-4 text-emerald-400 shrink-0" />
+              <span>
+                {ingredients.some(i => i.type === 'additive') 
+                  ? 'Notice: Contains industrial additives or flavorings. Recommended for occasional consumption.'
+                  : 'Purity Check: 100% whole food recipe with zero synthetic additives, chemical preservatives, or artificial dyes.'}
+              </span>
+            </div>
+          </div>
+
+        </section>
+      )}
+
+      {/* =========================================================
+          SECTION 3: ALLERGENS PROFILE & DIGESTIVE SAFETY
+      ========================================================== */}
+      {(activeTab === 'all' || activeTab === 'allergens') && (
+        <section className="p-6 sm:p-7 rounded-3xl bg-[#0c1426] border border-white/10 shadow-xl space-y-4">
+          
+          <div className="flex flex-wrap items-center justify-between gap-2.5 border-b border-white/10 pb-4">
+            <div className="flex items-center gap-2.5">
+              <span className="p-2 rounded-xl bg-cyan-500/20 text-cyan-300">
+                <Milk className="w-5 h-5" />
+              </span>
+              <div>
+                <h3 className="text-base sm:text-lg font-black text-white tracking-tight">
+                  Allergens Profile &amp; Digestive Safety
+                </h3>
+                <p className="text-xs text-slate-400">
+                  Screened against major common allergens (milk solids, gluten, soy, eggs, nuts).
+                </p>
+              </div>
+            </div>
+
+            <span className={`text-xs font-black px-3 py-1 rounded-full border ${
+              allergens.riskLevel === 'High' 
+                ? 'bg-rose-500/20 text-rose-300 border-rose-500/30' 
+                : allergens.riskLevel === 'Moderate'
+                ? 'bg-amber-500/20 text-amber-300 border-amber-500/30'
+                : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
+            }`}>
+              {allergens.riskLevel} Allergen Risk
+            </span>
+          </div>
+
+          <div className="space-y-3">
+            <div className="flex flex-wrap gap-2">
+              {allergens.detected.map((alg, idx) => (
+                <span 
+                  key={idx}
+                  className={`text-xs font-bold px-3 py-1.5 rounded-xl border flex items-center gap-2 ${
+                    allergens.isHypoallergenic 
+                      ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-300' 
+                      : 'bg-amber-500/15 border-amber-500/30 text-amber-200'
+                  }`}
+                >
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <span>{alg}</span>
+                </span>
+              ))}
+            </div>
+
+            <div className="p-4 rounded-2xl bg-black/40 border border-white/5 space-y-1">
+              <span className="text-xs font-bold text-amber-300 block">Nutrition Guidance:</span>
+              <p className="text-xs text-slate-300 leading-relaxed">
+                {allergens.advice}
+              </p>
+            </div>
+          </div>
+
+        </section>
+      )}
+
+      {/* =========================================================
+          SECTION 4: 12 FOOD SIGNALS & NUTRIENTS PANEL (MOVED TO BOTTOM)
       ========================================================== */}
       {(activeTab === 'all' || activeTab === 'nutrients') && (
         <section className="p-6 sm:p-7 rounded-3xl bg-[#0c1426] border border-white/10 shadow-xl space-y-5">
@@ -413,131 +546,6 @@ export const FoodNutritionMetricsDisplay: React.FC<FoodNutritionMetricsDisplayPr
                 </div>
               );
             })}
-          </div>
-
-        </section>
-      )}
-
-      {/* =========================================================
-          SECTION 3: INGREDIENTS & ADDITIVES PROFILE (SEPARATE)
-      ========================================================== */}
-      {(activeTab === 'all' || activeTab === 'ingredients') && (
-        <section className="p-6 sm:p-7 rounded-3xl bg-[#0c1426] border border-white/10 shadow-xl space-y-4">
-          
-          <div className="flex flex-wrap items-center justify-between gap-2.5 border-b border-white/10 pb-4">
-            <div className="flex items-center gap-2.5">
-              <span className="p-2 rounded-xl bg-amber-500/20 text-amber-300">
-                <Wheat className="w-5 h-5" />
-              </span>
-              <div>
-                <h3 className="text-base sm:text-lg font-black text-white tracking-tight">
-                  Ingredients &amp; Additives Analysis
-                </h3>
-                <p className="text-xs text-slate-400">
-                  Verified against clean-label, whole food, and safety standards.
-                </p>
-              </div>
-            </div>
-
-            <span className="text-xs font-bold text-amber-300 bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/20">
-              {ingredients.length} Listed Items
-            </span>
-          </div>
-
-          <div className="space-y-3">
-            <div className="flex flex-wrap gap-2">
-              {ingredients.map((ing, idx) => {
-                const isAdditive = ing.type === 'additive';
-                const isProcessed = ing.type === 'processed';
-
-                return (
-                  <span 
-                    key={idx}
-                    className={`text-xs px-3 py-1.5 rounded-xl border flex items-center gap-1.5 ${
-                      isAdditive 
-                        ? 'bg-rose-500/15 border-rose-500/30 text-rose-300 font-bold'
-                        : isProcessed
-                        ? 'bg-amber-500/15 border-amber-500/30 text-amber-300 font-medium'
-                        : 'bg-white/5 border-white/10 text-slate-200 font-medium'
-                    }`}
-                  >
-                    <span className={`w-1.5 h-1.5 rounded-full ${
-                      isAdditive ? 'bg-rose-400' : isProcessed ? 'bg-amber-400' : 'bg-emerald-400'
-                    }`} />
-                    <span>{ing.name}</span>
-                  </span>
-                );
-              })}
-            </div>
-
-            <div className="p-3.5 rounded-2xl bg-black/40 border border-white/5 text-xs text-slate-300 flex items-center gap-2">
-              <Leaf className="w-4 h-4 text-emerald-400 shrink-0" />
-              <span>
-                {ingredients.some(i => i.type === 'additive') 
-                  ? 'Notice: Contains industrial additives or flavorings. Recommended for occasional consumption.'
-                  : 'Purity Check: 100% whole food recipe with zero synthetic additives, chemical preservatives, or artificial dyes.'}
-              </span>
-            </div>
-          </div>
-
-        </section>
-      )}
-
-      {/* =========================================================
-          SECTION 4: ALLERGENS PROFILE (SEPARATE)
-      ========================================================== */}
-      {(activeTab === 'all' || activeTab === 'allergens') && (
-        <section className="p-6 sm:p-7 rounded-3xl bg-[#0c1426] border border-white/10 shadow-xl space-y-4">
-          
-          <div className="flex flex-wrap items-center justify-between gap-2.5 border-b border-white/10 pb-4">
-            <div className="flex items-center gap-2.5">
-              <span className="p-2 rounded-xl bg-cyan-500/20 text-cyan-300">
-                <Milk className="w-5 h-5" />
-              </span>
-              <div>
-                <h3 className="text-base sm:text-lg font-black text-white tracking-tight">
-                  Allergens Profile &amp; Digestive Safety
-                </h3>
-                <p className="text-xs text-slate-400">
-                  Screened against major common allergens (milk solids, gluten, soy, eggs, nuts).
-                </p>
-              </div>
-            </div>
-
-            <span className={`text-xs font-black px-3 py-1 rounded-full border ${
-              allergens.riskLevel === 'High' 
-                ? 'bg-rose-500/20 text-rose-300 border-rose-500/30' 
-                : allergens.riskLevel === 'Moderate'
-                ? 'bg-amber-500/20 text-amber-300 border-amber-500/30'
-                : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
-            }`}>
-              {allergens.riskLevel} Allergen Risk
-            </span>
-          </div>
-
-          <div className="space-y-3">
-            <div className="flex flex-wrap gap-2">
-              {allergens.detected.map((alg, idx) => (
-                <span 
-                  key={idx}
-                  className={`text-xs font-bold px-3 py-1.5 rounded-xl border flex items-center gap-2 ${
-                    allergens.isHypoallergenic 
-                      ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-300' 
-                      : 'bg-amber-500/15 border-amber-500/30 text-amber-200'
-                  }`}
-                >
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                  <span>{alg}</span>
-                </span>
-              ))}
-            </div>
-
-            <div className="p-4 rounded-2xl bg-black/40 border border-white/5 space-y-1">
-              <span className="text-xs font-bold text-amber-300 block">Nutrition Guidance:</span>
-              <p className="text-xs text-slate-300 leading-relaxed">
-                {allergens.advice}
-              </p>
-            </div>
           </div>
 
         </section>

@@ -116,27 +116,27 @@ export const NutriBandView: React.FC<NutriBandViewProps> = ({
 
   // Accordion expansion state for Live Dashboard - default to collapsed
   const [expandedSection, setExpandedSection] = useState<'temp' | 'sleep' | 'activity' | 'nutrients' | 'gps' | null>(null);
-  // Alert telemetry simulation state: toggles between Normal (98.4°F) and High (99.8°F)
+  // Alert telemetry simulation state: toggles between Normal (36.8°C) and High (37.6°C)
   const [isAlertTriggered, setIsAlertTriggered] = useState<boolean>(false);
 
   // Pediatric body temperature telemetry evaluation:
-  // Normal: 98.4°F (97.6°-99.2°F baseline, Normal status)
-  // High: 99.8°F (> 99.2°F pediatric low-grade fever elevation threshold, High status)
+  // Normal: 36.8°C (36.5°C–37.3°C baseline, Normal status)
+  // High: 37.6°C (> 37.3°C pediatric low-grade fever elevation threshold, High status)
   const getPediatricTelemetry = (isAlert: boolean) => {
     if (isAlert) {
       return {
         wornTime: '14h 20m',
-        tempValue: '99.8°F',
+        tempValue: '37.6°C',
         status: 'High' as const,
         statusLabel: 'High',
         badgeColor: 'bg-rose-500/25 text-rose-300 border-rose-500/50 font-black',
         tileBorder: 'border-rose-500/50 bg-rose-950/20 shadow-lg shadow-rose-500/10',
         textColor: 'text-rose-300',
-        rangeSubtitle: 'Above 99.2°F · High (Elevated)',
+        rangeSubtitle: 'Above 37.3°C · High (Elevated)',
         statusBannerTitle: 'Mild Temp Elevation (High)',
-        statusBannerMsg: `${childName}’s skin temp reached 99.8°F (+1.4°F above normal baseline). Pediatric low-grade elevation threshold exceeded. Rest and close temperature monitoring suggested.`,
+        statusBannerMsg: `${childName}’s skin temp reached 37.6°C (+0.8°C above normal baseline). Pediatric low-grade elevation threshold exceeded. Rest and close temperature monitoring suggested.`,
         overallStatusTitle: 'FEVER ALERT (HIGH)',
-        overallStatusSubtitle: 'Active Alert · Temp 99.8°F (High)',
+        overallStatusSubtitle: 'Active Alert · Temp 37.6°C (High)',
         overallStatusBorder: 'bg-rose-500/20 border-rose-500/50 text-rose-300 shadow-rose-500/20',
         pingColor: 'bg-rose-400',
         icon: AlertCircle,
@@ -164,22 +164,22 @@ export const NutriBandView: React.FC<NutriBandViewProps> = ({
         nutrientsSubtitle: 'Hydration & electrolyte targets met',
         nutrientsBorder: 'border-emerald-500/30 bg-emerald-950/15',
 
-        peakTempAccordion: '99.8°F at 3:15 PM (High)',
+        peakTempAccordion: '37.6°C at 3:15 PM (High)',
         feverRiskAccordion: 'High Alert (Low-grade elevation detected at 3:15 PM)',
         feverRiskAccordionClass: 'bg-rose-500/15 border-rose-500/30 text-rose-300'
       };
     }
 
-    // Default Normal state (98.4°F baseline)
+    // Default Normal state (36.8°C / 98.2°F baseline)
     return {
       wornTime: '14h 20m',
-      tempValue: '98.4°F',
+      tempValue: '36.8°C (98.2°F)',
       status: 'Normal' as const,
       statusLabel: 'Normal',
       badgeColor: 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30 font-bold',
       tileBorder: 'border-white/10 hover:border-emerald-400/30 bg-white/[0.03]',
       textColor: 'text-white',
-      rangeSubtitle: '97.6°-99.2°F Normal Range',
+      rangeSubtitle: '36.5°C–37.3°C (97.7°F–99.1°F) · Normal Range',
       statusBannerTitle: '',
       statusBannerMsg: '',
       overallStatusTitle: 'ALL NORMAL',
@@ -211,7 +211,7 @@ export const NutriBandView: React.FC<NutriBandViewProps> = ({
       nutrientsSubtitle: 'Micronutrient sync',
       nutrientsBorder: 'border-white/10 hover:border-emerald-400/30 bg-white/[0.03]',
 
-      peakTempAccordion: '98.6°F at 5:40 PM',
+      peakTempAccordion: '36.9°C (98.4°F) at 5:40 PM',
       feverRiskAccordion: 'Low (No rapid delta)',
       feverRiskAccordionClass: 'bg-emerald-500/10 border-emerald-500/20 text-emerald-300'
     };
@@ -254,7 +254,7 @@ export const NutriBandView: React.FC<NutriBandViewProps> = ({
               Not Just a Wristband.
             </span>
             <span className="bg-gradient-to-r from-cyan-300 via-teal-200 to-emerald-300 bg-clip-text text-transparent text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black inline-block text-balance">
-              Clips to Diapers. Straps to Wrists. Grows to Big Kids.
+              Clips to Diapers. Straps to Wrists.
             </span>
           </h1>
 
@@ -268,7 +268,7 @@ export const NutriBandView: React.FC<NutriBandViewProps> = ({
                   playSound('pop');
                   document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }}
-                className="px-4 py-3 rounded-2xl bg-cyan-500/15 hover:bg-cyan-500/25 border border-cyan-400/40 hover:border-cyan-300 text-cyan-200 hover:text-white font-black text-xs sm:text-sm tracking-tight transition-all flex items-center gap-2 whitespace-nowrap cursor-pointer hover:scale-[1.02] active:scale-95 shadow-md shadow-cyan-950/40"
+                className="px-4 py-3 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/15 hover:border-white/30 text-slate-200 hover:text-white font-bold text-xs sm:text-sm tracking-tight transition-all flex items-center gap-2 whitespace-nowrap cursor-pointer hover:scale-[1.02] active:scale-95 shadow-md"
               >
                 <Sparkles className="w-4 h-4 text-cyan-400 shrink-0" />
                 <span>How it Works</span>
@@ -281,7 +281,7 @@ export const NutriBandView: React.FC<NutriBandViewProps> = ({
                   playSound('pop');
                   document.getElementById('six-signals')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }}
-                className="px-4 py-3 rounded-2xl bg-cyan-500/15 hover:bg-cyan-500/25 border border-cyan-400/40 hover:border-cyan-300 text-cyan-200 hover:text-white font-black text-xs sm:text-sm tracking-tight transition-all flex items-center gap-2 whitespace-nowrap cursor-pointer hover:scale-[1.02] active:scale-95 shadow-md"
+                className="px-4 py-3 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/15 hover:border-white/30 text-slate-200 hover:text-white font-bold text-xs sm:text-sm tracking-tight transition-all flex items-center gap-2 whitespace-nowrap cursor-pointer hover:scale-[1.02] active:scale-95 shadow-md"
               >
                 <Radio className="w-4 h-4 text-cyan-300 shrink-0" />
                 <span>Six Signals</span>
@@ -298,21 +298,21 @@ export const NutriBandView: React.FC<NutriBandViewProps> = ({
               </a>
 
               <a 
-                href="#dashboard-preview" 
-                onClick={() => playSound('glass')}
-                className="px-4 py-3 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/15 hover:border-white/30 text-slate-200 hover:text-white font-bold text-xs sm:text-sm tracking-tight transition-all flex items-center gap-2 whitespace-nowrap cursor-pointer hover:scale-[1.02] active:scale-95 shadow-md"
-              >
-                <Activity className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span>Live App Telemetry</span>
-              </a>
-
-              <a 
                 href="#integrated-ecosystem" 
                 onClick={() => playSound('pop')}
                 className="px-4 py-3 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/15 hover:border-white/30 text-slate-200 hover:text-white font-bold text-xs sm:text-sm tracking-tight transition-all flex items-center gap-2 whitespace-nowrap cursor-pointer hover:scale-[1.02] active:scale-95 shadow-md"
               >
                 <Layers className="w-4 h-4 text-cyan-400 shrink-0" />
                 <span>Nutriband Ecosystem</span>
+              </a>
+
+              <a 
+                href="#dashboard-preview" 
+                onClick={() => playSound('glass')}
+                className="px-4 py-3 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/15 hover:border-white/30 text-slate-200 hover:text-white font-bold text-xs sm:text-sm tracking-tight transition-all flex items-center gap-2 whitespace-nowrap cursor-pointer hover:scale-[1.02] active:scale-95 shadow-md"
+              >
+                <Activity className="w-4 h-4 text-emerald-400 shrink-0" />
+                <span>Live App Telemetry</span>
               </a>
             </div>
           </div>
@@ -429,7 +429,7 @@ export const NutriBandView: React.FC<NutriBandViewProps> = ({
                   <Thermometer className="w-5 h-5" />
                 </div>
                 <span className="px-2.5 py-1 rounded-full bg-rose-500/20 text-rose-300 text-[10px] font-black tracking-wider border border-rose-500/30">
-                  97.8°F – 99.1°F
+                  36.5°C–37.3°C (97.7°F–99.1°F)
                 </span>
               </div>
               <div>
@@ -443,7 +443,7 @@ export const NutriBandView: React.FC<NutriBandViewProps> = ({
             </div>
             <div className="pt-2.5 border-t border-white/10 text-[11px] text-rose-300/90 font-bold flex items-center justify-between">
               <span>Clinical Skin Sensor</span>
-              <span>±0.1°F Precision</span>
+              <span>±0.1°C (±0.2°F) Precision</span>
             </div>
           </div>
 
@@ -595,7 +595,7 @@ export const NutriBandView: React.FC<NutriBandViewProps> = ({
           Stat grid (6 tiles):
           Body Temp | Activity | Sleep | Movement | Nutrients | GPS Location
           Accordion details: Temperature trend, sleep breakdown, activity log, nutrients, GPS location
-          Cross-sync box: Synced with Food Lens
+          Cross-sync box: Synced with FoodLens
       ========================================================== */}
       <section 
         id="dashboard-preview"
@@ -625,64 +625,8 @@ export const NutriBandView: React.FC<NutriBandViewProps> = ({
                 </div>
               </div>
             </div>
-
-            {/* Single Simulate Alert / Reset Alert Toggle Button */}
-            <button
-              type="button"
-              onClick={() => {
-                playSound('pop');
-                setIsAlertTriggered(!isAlertTriggered);
-              }}
-              className={`px-3.5 py-2 rounded-xl text-xs font-bold border transition-all cursor-pointer flex items-center gap-1.5 ${
-                isAlertTriggered 
-                  ? 'bg-rose-500 text-white border-rose-400 shadow-md shadow-rose-500/30 hover:bg-rose-600' 
-                  : 'bg-rose-500/20 text-rose-300 border-rose-500/30 hover:bg-rose-500/30'
-              }`}
-              title={isAlertTriggered ? 'Reset alert to normal' : 'Simulate high temperature alert (99.8°F)'}
-            >
-              <AlertCircle className="w-3.5 h-3.5" />
-              <span>{isAlertTriggered ? 'Reset Alert' : 'Simulate Alert'}</span>
-            </button>
           </div>
         </div>
-
-        {/* Simulated Alert Notification if toggled */}
-        {isAlertTriggered && (
-          <div className="p-4 rounded-2xl bg-rose-950/60 border border-rose-500/60 text-rose-200 shadow-rose-950/50 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-sm animate-pulse shadow-lg">
-            <div className="flex items-start gap-3">
-              <AlertCircle className="w-5 h-5 shrink-0 mt-0.5 text-rose-400" />
-              <div>
-                <strong className="font-black text-white">{telemetry.statusBannerTitle}:</strong>{' '}
-                {telemetry.statusBannerMsg}
-              </div>
-            </div>
-            <div className="flex items-center gap-2 shrink-0">
-              {onNavigateToPediatric && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    playSound('click');
-                    onNavigateToPediatric();
-                  }}
-                  className="px-3.5 py-1.5 rounded-xl bg-rose-500 hover:bg-rose-600 text-white font-black text-xs shrink-0 flex items-center justify-center gap-1.5 shadow-md cursor-pointer transition-all hover:scale-105 active:scale-95"
-                >
-                  <PhoneCall className="w-3.5 h-3.5" />
-                  <span>Call Pediatrician</span>
-                </button>
-              )}
-              <button
-                type="button"
-                onClick={() => {
-                  playSound('pop');
-                  setIsAlertTriggered(false);
-                }}
-                className="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs shrink-0 cursor-pointer transition-all"
-              >
-                Reset Alert
-              </button>
-            </div>
-          </div>
-        )}
 
         {/* 6 Stat Tiles for 6 Signals */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5">
@@ -811,7 +755,7 @@ export const NutriBandView: React.FC<NutriBandViewProps> = ({
                   <span className="bg-amber-400 text-slate-950 px-1.5 py-0.2 rounded text-[9px] font-black">SYNCED</span>
                 </div>
                 <p className="text-white text-sm sm:text-base font-bold leading-relaxed">
-                  Synced with Food Lens: Today's high-sodium snack may be linked to reduced afternoon activity; see nutrition insight.
+                  Synced with FoodLens: Today's high-sodium snack may be linked to reduced afternoon activity; see nutrition insight.
                 </p>
                 <p className="text-xs text-amber-200/80">
                   NutriBand sensor data dynamically correlates physical movement drops with scanned packaged foods in Tricky Toddlers.
@@ -827,7 +771,7 @@ export const NutriBandView: React.FC<NutriBandViewProps> = ({
                 }}
                 className="px-5 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs tracking-wide shadow-md hover:scale-105 active:scale-95 transition-all shrink-0 cursor-pointer flex items-center gap-1.5"
               >
-                <span>Open Food Lens</span>
+                <span>Open FoodLens</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </button>
             )}
@@ -853,16 +797,107 @@ export const NutriBandView: React.FC<NutriBandViewProps> = ({
             <Sparkles className="w-3.5 h-3.5" />
             <span>Product Comparison</span>
           </div>
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight">
+            Conventional Wearables vs. NutriBand Health Ecosystem
+          </h2>
+          <p className="text-slate-300 text-xs sm:text-sm md:text-base leading-relaxed">
+            Calibrated specifically for Indian childhood physiology with clinical sensors and FoodLens nutrition integration.
+          </p>
         </div>
 
-        {/* Attached Comparison Infographic */}
-        <div className="max-w-4xl mx-auto rounded-3xl overflow-hidden border border-cyan-500/20 bg-[#060c18] shadow-2xl p-2 sm:p-5 flex justify-center">
-          <img 
-            src="/assets/aistudio/NutriBand_Connected_Wellness_Infographic_394ce48c.png" 
-            alt="Other Wearables vs. NutriBand Comparison" 
-            className="w-full max-w-2xl sm:max-w-3xl h-auto object-contain rounded-2xl shadow-xl"
-            loading="lazy"
-          />
+        {/* Clean, High-Contrast Comparison Matrix (Replaces artifact image) */}
+        <div className="max-w-5xl mx-auto rounded-3xl overflow-hidden border border-cyan-500/30 bg-[#060c18] shadow-2xl p-4 sm:p-7">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
+            
+            {/* Left Card: Conventional Trackers & Baby Monitors */}
+            <div className="p-5 sm:p-6 rounded-2xl bg-slate-900/60 border border-white/10 space-y-4">
+              <div className="flex items-center justify-between border-b border-white/10 pb-3">
+                <div>
+                  <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Basic Fitness Trackers</span>
+                  <h3 className="text-lg sm:text-xl font-black text-slate-300 mt-0.5">Conventional Wearables</h3>
+                </div>
+                <span className="px-3 py-1 rounded-full bg-rose-500/15 border border-rose-500/30 text-rose-300 text-xs font-bold">
+                  Generic Only
+                </span>
+              </div>
+
+              <ul className="space-y-3.5 text-xs sm:text-sm text-slate-300">
+                <li className="flex items-start gap-2.5">
+                  <div className="w-5 h-5 rounded-full bg-rose-500/15 text-rose-400 flex items-center justify-center shrink-0 mt-0.5 font-black text-xs">✕</div>
+                  <div>
+                    <strong className="text-slate-200 block font-semibold">Single Rigid Form Factor</strong>
+                    <span className="text-slate-400 text-xs">Adult or teen wrist-only; slips off toddler wrists and unusable for infants in diapers.</span>
+                  </div>
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <div className="w-5 h-5 rounded-full bg-rose-500/15 text-rose-400 flex items-center justify-center shrink-0 mt-0.5 font-black text-xs">✕</div>
+                  <div>
+                    <strong className="text-slate-200 block font-semibold">Uncalibrated Fever Guesswork</strong>
+                    <span className="text-slate-400 text-xs">Generic optical pulse with ±1.5°C skin error; prone to false alerts during crying or room changes.</span>
+                  </div>
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <div className="w-5 h-5 rounded-full bg-rose-500/15 text-rose-400 flex items-center justify-center shrink-0 mt-0.5 font-black text-xs">✕</div>
+                  <div>
+                    <strong className="text-slate-200 block font-semibold">Zero Nutrition Telemetry</strong>
+                    <span className="text-slate-400 text-xs">Isolated step counter with no meal analysis, allergen warnings, or dietary tracking.</span>
+                  </div>
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <div className="w-5 h-5 rounded-full bg-rose-500/15 text-rose-400 flex items-center justify-center shrink-0 mt-0.5 font-black text-xs">✕</div>
+                  <div>
+                    <strong className="text-slate-200 block font-semibold">Constant High Wi-Fi Radiation</strong>
+                    <span className="text-slate-400 text-xs">Continuous Wi-Fi/4G transmission held directly against sensitive toddler skin.</span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+
+            {/* Right Card: NutriBand Ecosystem (India) */}
+            <div className="p-5 sm:p-6 rounded-2xl bg-gradient-to-b from-cyan-950/30 via-slate-900/80 to-[#040913] border-2 border-cyan-400/50 shadow-xl shadow-cyan-950/50 space-y-4">
+              <div className="flex items-center justify-between border-b border-cyan-500/30 pb-3">
+                <div>
+                  <span className="text-[10px] font-black uppercase tracking-widest text-cyan-400">NutriBand (India)</span>
+                  <h3 className="text-lg sm:text-xl font-black text-white mt-0.5">Pediatric Health Ecosystem</h3>
+                </div>
+                <span className="px-3 py-1 rounded-full bg-cyan-400/20 border border-cyan-300 text-cyan-200 text-xs font-black">
+                  Recommended ✓
+                </span>
+              </div>
+
+              <ul className="space-y-3.5 text-xs sm:text-sm text-slate-200">
+                <li className="flex items-start gap-2.5">
+                  <div className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-300 flex items-center justify-center shrink-0 mt-0.5 font-black text-xs">✓</div>
+                  <div>
+                    <strong className="text-white block font-bold">Triple Wear from 0 to 18 Years</strong>
+                    <span className="text-cyan-100/70 text-xs">0–12m Diaper Clip, 1–8y Organic Cotton Band, and 10–18y Silicone Sport Band all in one box.</span>
+                  </div>
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <div className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-300 flex items-center justify-center shrink-0 mt-0.5 font-black text-xs">✓</div>
+                  <div>
+                    <strong className="text-white block font-bold">Clinical ±0.1°C (±0.2°F) Thermistor Sensors</strong>
+                    <span className="text-cyan-100/70 text-xs">Continuous skin and ambient baseline logging with real-time pediatric fever spike alerts.</span>
+                  </div>
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <div className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-300 flex items-center justify-center shrink-0 mt-0.5 font-black text-xs">✓</div>
+                  <div>
+                    <strong className="text-white block font-bold">Seamless FoodLens AI Integration</strong>
+                    <span className="text-cyan-100/70 text-xs">Correlates daily activity and sleep with food nutrient scorecards compliant with IAP, FSSAI &amp; ICMR.</span>
+                  </div>
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <div className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-300 flex items-center justify-center shrink-0 mt-0.5 font-black text-xs">✓</div>
+                  <div>
+                    <strong className="text-white block font-bold">Ultra-Low Radiation BLE 5.3</strong>
+                    <span className="text-cyan-100/70 text-xs">Emits &lt;0.01% of standard smartphone radiation, specifically engineered for infant crib safety.</span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+
+          </div>
         </div>
       </section>
 
@@ -914,24 +949,24 @@ export const NutriBandView: React.FC<NutriBandViewProps> = ({
                 >
                   {/* Visual 24h Temperature Curve Representation */}
                   <div className="bg-[#050b14] p-4 rounded-xl border border-white/10">
-                    <div className="flex justify-between items-center text-xs text-slate-400 mb-3 font-semibold">
-                      <span>12:00 AM (98.2°F)</span>
-                      <span>6:00 AM (97.9°F)</span>
-                      <span>12:00 PM (98.4°F)</span>
-                      <span>6:00 PM (98.6°F)</span>
-                      <span>11:59 PM (98.3°F)</span>
+                    <div className="flex justify-between items-center text-xs text-slate-400 mb-3 font-semibold flex-wrap gap-1">
+                      <span>12:00 AM (36.8°C / 98.2°F)</span>
+                      <span>6:00 AM (36.6°C / 97.9°F)</span>
+                      <span>12:00 PM (36.9°C / 98.4°F)</span>
+                      <span>6:00 PM (37.0°C / 98.6°F)</span>
+                      <span>11:59 PM (36.8°C / 98.2°F)</span>
                     </div>
 
                     <div className="relative h-28 w-full flex items-end justify-between gap-1 pt-6 px-1">
                       {/* Fever Marker line */}
                       <div className="absolute top-3 left-0 right-0 border-b border-rose-500/50 border-dashed flex justify-between text-[10px] text-rose-400 px-2 font-bold">
-                        <span>Fever Alert Line: 100.4°F</span>
+                        <span>Fever Alert Line: 38.0°C (100.4°F)</span>
                         <span>Toddler Threshold</span>
                       </div>
                       
                       {/* Ambient Normal line */}
                       <div className="absolute top-12 left-0 right-0 border-b border-emerald-500/30 border-dashed flex justify-between text-[10px] text-emerald-400 px-2">
-                        <span>Normal Baseline: 98.6°F</span>
+                        <span>Normal Baseline: 36.8°C (98.2°F)</span>
                       </div>
 
                       {/* Mock 24 hourly bars */}
@@ -961,7 +996,7 @@ export const NutriBandView: React.FC<NutriBandViewProps> = ({
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
                     <div className="p-3 rounded-xl bg-white/5 border border-white/10">
                       <span className="text-slate-400 block">Lowest Night Temp:</span>
-                      <strong className="text-sm text-white">97.9°F at 4:12 AM</strong>
+                      <strong className="text-sm text-white">36.6°C (97.9°F) at 4:12 AM</strong>
                     </div>
                     <div className="p-3 rounded-xl bg-white/5 border border-white/10">
                       <span className="text-slate-400 block">Peak Afternoon Temp:</span>
@@ -1134,7 +1169,7 @@ export const NutriBandView: React.FC<NutriBandViewProps> = ({
                     Nutrients Detection & Consumption Alerts (FoodLens intake sync, high/low alerts, Indian RDA sync)
                   </h4>
                   <p className="text-xs text-slate-400 mt-0.5">
-                    Real-time physiological synergy with Food Lens logs: digestion rhythm, post-meal energy stability, and micronutrient synthesis.
+                    Real-time physiological synergy with FoodLens logs: digestion rhythm, post-meal energy stability, and micronutrient synthesis.
                   </p>
                 </div>
               </div>
@@ -1173,7 +1208,7 @@ export const NutriBandView: React.FC<NutriBandViewProps> = ({
 
                   <div className="p-4 rounded-xl bg-[#091712] border border-emerald-500/30 space-y-2">
                     <div className="font-bold text-emerald-300 flex items-center gap-1.5">
-                      <Sparkles className="w-4 h-4 text-emerald-400" /> Pediatric Biometric &amp; Food Lens Synchronization:
+                      <Sparkles className="w-4 h-4 text-emerald-400" /> Pediatric Biometric &amp; FoodLens Synchronization:
                     </div>
                     <p className="text-slate-300 leading-relaxed font-normal">
                       NutriBand biometric sensor confirms steady metabolic energy release following 12:30 PM meal. Skin micro-circulation and temperature variance indicate optimal digestive comfort with zero gastrointestinal strain or bloating distress.
@@ -1266,7 +1301,7 @@ export const NutriBandView: React.FC<NutriBandViewProps> = ({
             Empower Your Parenting with NutriBand
           </h3>
           <p className="text-slate-300 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
-            Continuous pediatric monitoring that seamlessly integrates with Food Lens and Tricky Toddlers expert consultations.
+            Continuous pediatric monitoring that seamlessly integrates with FoodLens and Tricky Toddlers expert consultations.
           </p>
         </div>
 
@@ -1280,7 +1315,7 @@ export const NutriBandView: React.FC<NutriBandViewProps> = ({
               className="px-6 py-3.5 rounded-2xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-sm shadow-xl flex items-center gap-2 cursor-pointer transition-all hover:scale-105 active:scale-95"
             >
               <Utensils className="w-4 h-4" />
-              <span>Explore Food Lens</span>
+              <span>Explore FoodLens</span>
             </button>
           )}
 

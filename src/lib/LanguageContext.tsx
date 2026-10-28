@@ -37,8 +37,8 @@ export const translations: Record<string, Record<string, string>> = {
     toddlerAcademy: 'Toddler Academy',
     toddlerTV: 'Toddler TV',
     babyStore: 'Baby Store',
-    foodLens: 'Food Lens AI',
-    foodLensPro: 'Food Lens AI',
+    foodLens: 'FoodLens AI',
+    foodLensPro: 'FoodLens AI',
     nutriBand: 'NutriBand',
     aboutMe: 'About Me',
     myStory: 'My Story',
@@ -66,7 +66,7 @@ export const translations: Record<string, Record<string, string>> = {
     
     // Milestones
     developmentalMilestones: 'Milestone Tracker',
-    whoComparison: 'WHO, Indian IAP & FSSAI standards comparison',
+    whoComparison: 'IAP, FSSAI & ICMR standards comparison',
     achieved: 'Achieved',
     notAchieved: 'Not Achieved yet',
     addMilestone: 'Log Milestone',

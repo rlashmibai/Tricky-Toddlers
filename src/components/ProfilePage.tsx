@@ -19,7 +19,9 @@ import {
   MapPin,
   Building2,
   Sparkles,
-  Mail
+  Mail,
+  Heart,
+  Check
 } from 'lucide-react';
 import { playSound } from '../lib/sounds';
 import { INDIAN_CITIES_BY_STATE } from '../data/indianCitiesData';
@@ -144,6 +146,66 @@ export const ProfilePage: React.FC = () => {
   const [allowDirectMessages, setAllowDirectMessages] = useState<boolean>(profile?.allowDirectMessages ?? true);
   const [parentName, setParentName] = useState<string>(() => profile?.parentName || localStorage.getItem('parent_name') || 'Lashmi');
 
+  // Child 1 Profile State (Primary / Default: Ashwath)
+  const [child1Name, setChild1Name] = useState<string>(() => {
+    return profile?.child1?.name || profile?.babyName || profile?.childName || localStorage.getItem('child_1_name') || localStorage.getItem('baby_name') || 'Ashwath';
+  });
+  const [child1DOB, setChild1DOB] = useState<string>(() => {
+    return profile?.child1?.birthDate || profile?.babyBirthDate || localStorage.getItem('child_1_dob') || localStorage.getItem('baby_birth_date') || '2024-04-12';
+  });
+  const [child1Gender, setChild1Gender] = useState<string>(() => {
+    return profile?.child1?.gender || localStorage.getItem('child_1_gender') || 'Boy';
+  });
+  const [child1BloodGroup, setChild1BloodGroup] = useState<string>(() => {
+    return profile?.child1?.bloodGroup || profile?.bloodGroup || localStorage.getItem('child_1_blood') || 'O+';
+  });
+  const [child1DietaryNotes, setChild1DietaryNotes] = useState<string>(() => {
+    return profile?.child1?.dietaryNotes || localStorage.getItem('child_1_dietary_notes') || 'Vegetarian, low salt, zero refined sugar';
+  });
+
+  // Child 2 Profile State (Second child profile)
+  const [child2Name, setChild2Name] = useState<string>(() => {
+    return profile?.child2?.name || localStorage.getItem('child_2_name') || 'Ananya';
+  });
+  const [child2DOB, setChild2DOB] = useState<string>(() => {
+    return profile?.child2?.birthDate || localStorage.getItem('child_2_dob') || '2026-01-15';
+  });
+  const [child2Gender, setChild2Gender] = useState<string>(() => {
+    return profile?.child2?.gender || localStorage.getItem('child_2_gender') || 'Girl';
+  });
+  const [child2BloodGroup, setChild2BloodGroup] = useState<string>(() => {
+    return profile?.child2?.bloodGroup || localStorage.getItem('child_2_blood') || 'B+';
+  });
+  const [child2DietaryNotes, setChild2DietaryNotes] = useState<string>(() => {
+    return profile?.child2?.dietaryNotes || localStorage.getItem('child_2_dietary_notes') || 'Mild lactose sensitivity, puree weaning stage';
+  });
+
+  // Active Child Index (1 or 2) - determines which child's profile is synced to health scans & guidance
+  const [selectedChildTab, setSelectedChildTab] = useState<1 | 2>(1);
+  const [activeChildIndex, setActiveChildIndex] = useState<1 | 2>(() => {
+    const saved = localStorage.getItem('active_child_index');
+    return (saved === '2' || profile?.activeChildIndex === 2) ? 2 : 1;
+  });
+
+  // Auto-calculated age helper
+  const calculateAge = (dobString: string): string => {
+    if (!dobString) return '';
+    const dob = new Date(dobString);
+    if (isNaN(dob.getTime())) return '';
+    const now = new Date();
+    let years = now.getFullYear() - dob.getFullYear();
+    let months = now.getMonth() - dob.getMonth();
+    if (months < 0) {
+      years--;
+      months += 12;
+    }
+    if (years === 0 && months === 0) {
+      const days = Math.floor((now.getTime() - dob.getTime()) / (1000 * 60 * 60 * 24));
+      return `${Math.max(1, days)} days`;
+    }
+    if (years === 0) return `${months} month${months > 1 ? 's' : ''}`;
+    return `${years} yr${years > 1 ? 's' : ''} ${months} mo${months > 1 ? 's' : ''}`;
+  };
 
   // Sync profile fields state when data loads
   useEffect(() => {
@@ -169,6 +231,24 @@ export const ProfilePage: React.FC = () => {
       } else {
         setContactEmail('lashm@gmail.com');
         localStorage.setItem('user_contact_email', 'lashm@gmail.com');
+      }
+
+      if (profile.child1) {
+        if (profile.child1.name) setChild1Name(profile.child1.name);
+        if (profile.child1.birthDate) setChild1DOB(profile.child1.birthDate);
+        if (profile.child1.gender) setChild1Gender(profile.child1.gender);
+        if (profile.child1.bloodGroup) setChild1BloodGroup(profile.child1.bloodGroup);
+        if (profile.child1.dietaryNotes) setChild1DietaryNotes(profile.child1.dietaryNotes);
+      }
+      if (profile.child2) {
+        if (profile.child2.name) setChild2Name(profile.child2.name);
+        if (profile.child2.birthDate) setChild2DOB(profile.child2.birthDate);
+        if (profile.child2.gender) setChild2Gender(profile.child2.gender);
+        if (profile.child2.bloodGroup) setChild2BloodGroup(profile.child2.bloodGroup);
+        if (profile.child2.dietaryNotes) setChild2DietaryNotes(profile.child2.dietaryNotes);
+      }
+      if (profile.activeChildIndex) {
+        setActiveChildIndex(profile.activeChildIndex as 1 | 2);
       }
 
       if (profile.indianState) {
@@ -243,6 +323,13 @@ export const ProfilePage: React.FC = () => {
     setSuccess(null);
 
     try {
+      const activeName = activeChildIndex === 1 ? child1Name.trim() : child2Name.trim();
+      const activeDOB = activeChildIndex === 1 ? child1DOB : child2DOB;
+      const activeAge = calculateAge(activeDOB) || savedChildAge;
+      const activeGender = activeChildIndex === 1 ? child1Gender : child2Gender;
+      const activeBlood = activeChildIndex === 1 ? child1BloodGroup : child2BloodGroup;
+      const activeDiet = activeChildIndex === 1 ? child1DietaryNotes.trim() : child2DietaryNotes.trim();
+
       const userRef = doc(db, 'users', user.uid);
       const updateData: any = {
         username: profile?.username || firstName.trim() || 'User',
@@ -251,11 +338,30 @@ export const ProfilePage: React.FC = () => {
         parentName: parentName.trim(),
         contactEmail: contactEmail.trim(),
         email: contactEmail.trim() || user.email,
-        childName: savedChildName,
-        babyName: savedChildName,
-        toddlerName: savedChildName,
-        toddlerAge: savedChildAge,
-        babyAge: savedChildAge,
+        child1: {
+          name: child1Name.trim(),
+          birthDate: child1DOB,
+          gender: child1Gender,
+          bloodGroup: child1BloodGroup,
+          dietaryNotes: child1DietaryNotes.trim(),
+        },
+        child2: {
+          name: child2Name.trim(),
+          birthDate: child2DOB,
+          gender: child2Gender,
+          bloodGroup: child2BloodGroup,
+          dietaryNotes: child2DietaryNotes.trim(),
+        },
+        activeChildIndex,
+        childName: activeName,
+        babyName: activeName,
+        toddlerName: activeName,
+        babyBirthDate: activeDOB,
+        bloodGroup: activeBlood,
+        childGender: activeGender,
+        toddlerAge: activeAge,
+        babyAge: activeAge,
+        dietaryNotes: activeDiet,
         needsProfileSetup: false,
         profileCompleted: true,
         ...(indianState ? { indianState: indianState.trim() } : {}),
@@ -271,15 +377,27 @@ export const ProfilePage: React.FC = () => {
       localStorage.setItem('profile_completed', 'true');
       localStorage.setItem('parent_name', firstName.trim());
       if (contactEmail.trim()) localStorage.setItem('user_contact_email', contactEmail.trim());
-      if (savedChildName) {
-        localStorage.setItem('baby_name', savedChildName);
-        localStorage.setItem('child_name', savedChildName);
-        localStorage.setItem('toddler_name', savedChildName);
-      }
-      if (savedChildAge) {
-        localStorage.setItem('baby_age', savedChildAge);
-        localStorage.setItem('toddler_age', savedChildAge);
-      }
+
+      localStorage.setItem('child_1_name', child1Name.trim());
+      localStorage.setItem('child_1_dob', child1DOB);
+      localStorage.setItem('child_1_gender', child1Gender);
+      localStorage.setItem('child_1_blood', child1BloodGroup);
+      localStorage.setItem('child_1_dietary_notes', child1DietaryNotes.trim());
+
+      localStorage.setItem('child_2_name', child2Name.trim());
+      localStorage.setItem('child_2_dob', child2DOB);
+      localStorage.setItem('child_2_gender', child2Gender);
+      localStorage.setItem('child_2_blood', child2BloodGroup);
+      localStorage.setItem('child_2_dietary_notes', child2DietaryNotes.trim());
+
+      localStorage.setItem('active_child_index', String(activeChildIndex));
+      localStorage.setItem('baby_name', activeName);
+      localStorage.setItem('child_name', activeName);
+      localStorage.setItem('toddler_name', activeName);
+      localStorage.setItem('baby_birth_date', activeDOB);
+      localStorage.setItem('baby_age', activeAge);
+      localStorage.setItem('toddler_age', activeAge);
+
       if (indianState) localStorage.setItem('user_indian_state', indianState.trim());
       if (effectiveCity) localStorage.setItem('user_city', effectiveCity);
       localStorage.setItem('user_language', language);
@@ -623,7 +741,261 @@ export const ProfilePage: React.FC = () => {
           </div>
         </div>
 
-        {/* Row 2: Location: Indian State & City (Full Width) */}
+        {/* Row 2: Parent & Baby Identification (Two Child Profiles) */}
+        <div id="section-identification" className="w-full">
+          <div className="glass-card p-6 sm:p-8 lg:p-10 rounded-3xl bg-[#0e1626]/90 border border-emerald-500/30 shadow-2xl space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/10 text-emerald-400">
+              <div className="flex items-center gap-4">
+                <div className="p-3.5 rounded-2xl bg-emerald-500/20 border border-emerald-400/40 shrink-0 shadow-md">
+                  <Baby className="w-7 h-7 text-emerald-300" />
+                </div>
+                <div>
+                  <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight flex items-center gap-2.5">
+                    <span>Parent &amp; Baby Identification</span>
+                    <span className="text-xs font-bold px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                      2 Child Profiles Supported
+                    </span>
+                  </h2>
+                  <p className="text-xs sm:text-sm text-white/60 mt-1">
+                    Manage identification, date of birth, and health profiles for both children. Switch the active profile anytime.
+                  </p>
+                </div>
+              </div>
+
+              {/* Child Switcher Tabs */}
+              <div className="flex items-center gap-2 bg-[#121d33] p-1.5 rounded-2xl border border-white/10 self-start sm:self-auto">
+                <button
+                  type="button"
+                  onClick={() => { playSound('pop'); setSelectedChildTab(1); }}
+                  className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-black transition-all flex items-center gap-2 cursor-pointer ${
+                    selectedChildTab === 1 
+                      ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 shadow-md' 
+                      : 'text-slate-300 hover:text-white'
+                  }`}
+                >
+                  <Baby className="w-4 h-4" />
+                  <span>Child 1: {child1Name || 'Ashwath'}</span>
+                  {activeChildIndex === 1 && (
+                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-black/30 text-slate-950 font-extrabold uppercase">Active</span>
+                  )}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => { playSound('pop'); setSelectedChildTab(2); }}
+                  className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-black transition-all flex items-center gap-2 cursor-pointer ${
+                    selectedChildTab === 2 
+                      ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 shadow-md' 
+                      : 'text-slate-300 hover:text-white'
+                  }`}
+                >
+                  <Baby className="w-4 h-4" />
+                  <span>Child 2: {child2Name || 'Child 2'}</span>
+                  {activeChildIndex === 2 && (
+                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-black/30 text-slate-950 font-extrabold uppercase">Active</span>
+                  )}
+                </button>
+              </div>
+            </div>
+
+            {/* Active Status & Switcher Banner */}
+            <div className="p-4 rounded-2xl bg-emerald-950/30 border border-emerald-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <div className={`w-3.5 h-3.5 rounded-full ${activeChildIndex === selectedChildTab ? 'bg-emerald-400' : 'bg-slate-500'}`} />
+                <span className="text-xs sm:text-sm font-medium text-slate-200">
+                  Currently editing: <strong className="text-white font-bold">Child {selectedChildTab} ({selectedChildTab === 1 ? child1Name : child2Name})</strong>
+                  {activeChildIndex === selectedChildTab ? ' (Currently Active in FoodLens & Health Tools ✓)' : ' (Inactive)'}
+                </span>
+              </div>
+              {activeChildIndex !== selectedChildTab && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    playSound('pop');
+                    setActiveChildIndex(selectedChildTab);
+                    const chosenName = selectedChildTab === 1 ? child1Name : child2Name;
+                    const chosenDOB = selectedChildTab === 1 ? child1DOB : child2DOB;
+                    localStorage.setItem('active_child_index', String(selectedChildTab));
+                    localStorage.setItem('baby_name', chosenName);
+                    localStorage.setItem('child_name', chosenName);
+                    localStorage.setItem('toddler_name', chosenName);
+                    localStorage.setItem('baby_birth_date', chosenDOB);
+                    setSuccess(`Set ${chosenName} as the active child profile!`);
+                    setTimeout(() => setSuccess(null), 3000);
+                  }}
+                  className="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-black transition-all shadow-md active:scale-95 cursor-pointer self-start sm:self-auto"
+                >
+                  Set as Active Child Profile
+                </button>
+              )}
+            </div>
+
+            {/* Child Tab 1 Form Fields */}
+            {selectedChildTab === 1 && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+                    <Baby className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>Child 1 Name</span> <span className="text-rose-400">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={child1Name}
+                    onChange={(e) => setChild1Name(e.target.value)}
+                    placeholder="e.g. Ashwath"
+                    className="w-full bg-[#16223a] border border-white/15 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-400 focus:ring-4 focus:ring-emerald-500/10 placeholder:text-slate-500 font-medium"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center justify-between">
+                    <span className="flex items-center gap-1.5">
+                      <Calendar className="w-3.5 h-3.5 text-emerald-400" />
+                      <span>Date of Birth (DOB)</span> <span className="text-rose-400">*</span>
+                    </span>
+                    {calculateAge(child1DOB) && (
+                      <span className="text-[10px] font-bold text-emerald-300">{calculateAge(child1DOB)}</span>
+                    )}
+                  </label>
+                  <input
+                    type="date"
+                    required
+                    value={child1DOB}
+                    onChange={(e) => setChild1DOB(e.target.value)}
+                    className="w-full bg-[#16223a] border border-emerald-400/40 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-400 focus:ring-4 focus:ring-emerald-500/10 font-medium cursor-pointer"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-slate-300 uppercase tracking-wider">
+                    Gender
+                  </label>
+                  <select
+                    value={child1Gender}
+                    onChange={(e) => setChild1Gender(e.target.value)}
+                    className="w-full bg-[#16223a] border border-white/15 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-400 focus:ring-4 focus:ring-emerald-500/10 font-medium cursor-pointer"
+                  >
+                    <option value="Boy">Boy</option>
+                    <option value="Girl">Girl</option>
+                    <option value="Prefer not to say">Prefer not to say</option>
+                  </select>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-slate-300 uppercase tracking-wider">
+                    Blood Group
+                  </label>
+                  <select
+                    value={child1BloodGroup}
+                    onChange={(e) => setChild1BloodGroup(e.target.value)}
+                    className="w-full bg-[#16223a] border border-white/15 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-400 focus:ring-4 focus:ring-emerald-500/10 font-medium cursor-pointer"
+                  >
+                    {['O+', 'O-', 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'Not Known'].map(bg => (
+                      <option key={bg} value={bg}>{bg}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="sm:col-span-2 space-y-2">
+                  <label className="text-xs font-bold text-slate-300 uppercase tracking-wider">
+                    Dietary Sensitivities &amp; Allergies
+                  </label>
+                  <input
+                    type="text"
+                    value={child1DietaryNotes}
+                    onChange={(e) => setChild1DietaryNotes(e.target.value)}
+                    placeholder="e.g. Vegetarian, low salt, zero refined sugar"
+                    className="w-full bg-[#16223a] border border-white/15 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-400 focus:ring-4 focus:ring-emerald-500/10 placeholder:text-slate-500 font-medium"
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Child Tab 2 Form Fields */}
+            {selectedChildTab === 2 && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+                    <Baby className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>Child 2 Name</span> <span className="text-rose-400">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={child2Name}
+                    onChange={(e) => setChild2Name(e.target.value)}
+                    placeholder="e.g. Ananya"
+                    className="w-full bg-[#16223a] border border-white/15 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-400 focus:ring-4 focus:ring-emerald-500/10 placeholder:text-slate-500 font-medium"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center justify-between">
+                    <span className="flex items-center gap-1.5">
+                      <Calendar className="w-3.5 h-3.5 text-emerald-400" />
+                      <span>Date of Birth (DOB)</span> <span className="text-rose-400">*</span>
+                    </span>
+                    {calculateAge(child2DOB) && (
+                      <span className="text-[10px] font-bold text-emerald-300">{calculateAge(child2DOB)}</span>
+                    )}
+                  </label>
+                  <input
+                    type="date"
+                    required
+                    value={child2DOB}
+                    onChange={(e) => setChild2DOB(e.target.value)}
+                    className="w-full bg-[#16223a] border border-emerald-400/40 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-400 focus:ring-4 focus:ring-emerald-500/10 font-medium cursor-pointer"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-slate-300 uppercase tracking-wider">
+                    Gender
+                  </label>
+                  <select
+                    value={child2Gender}
+                    onChange={(e) => setChild2Gender(e.target.value)}
+                    className="w-full bg-[#16223a] border border-white/15 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-400 focus:ring-4 focus:ring-emerald-500/10 font-medium cursor-pointer"
+                  >
+                    <option value="Girl">Girl</option>
+                    <option value="Boy">Boy</option>
+                    <option value="Prefer not to say">Prefer not to say</option>
+                  </select>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-slate-300 uppercase tracking-wider">
+                    Blood Group
+                  </label>
+                  <select
+                    value={child2BloodGroup}
+                    onChange={(e) => setChild2BloodGroup(e.target.value)}
+                    className="w-full bg-[#16223a] border border-white/15 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-400 focus:ring-4 focus:ring-emerald-500/10 font-medium cursor-pointer"
+                  >
+                    {['B+', 'B-', 'O+', 'O-', 'A+', 'A-', 'AB+', 'AB-', 'Not Known'].map(bg => (
+                      <option key={bg} value={bg}>{bg}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="sm:col-span-2 space-y-2">
+                  <label className="text-xs font-bold text-slate-300 uppercase tracking-wider">
+                    Dietary Sensitivities &amp; Allergies
+                  </label>
+                  <input
+                    type="text"
+                    value={child2DietaryNotes}
+                    onChange={(e) => setChild2DietaryNotes(e.target.value)}
+                    placeholder="e.g. Mild lactose sensitivity, puree weaning stage"
+                    className="w-full bg-[#16223a] border border-white/15 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-400 focus:ring-4 focus:ring-emerald-500/10 placeholder:text-slate-500 font-medium"
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Row 3: Location: Indian State & City (Full Width) */}
         <div className="w-full">
           <div className="glass-card p-6 sm:p-8 lg:p-10 rounded-3xl bg-[#0e1626]/90 border border-white/10 shadow-xl">
             <div className="flex items-center gap-4 mb-6 pb-4 border-b border-white/10 text-indigo-400">

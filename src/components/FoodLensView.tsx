@@ -72,7 +72,7 @@ export const FoodLensView: React.FC<FoodLensViewProps> = ({
   const [scanStatus, setScanStatus] = useState<'idle' | 'scanning' | 'analyzed' | 'error'>('idle');
   const [capturedImagePreview, setCapturedImagePreview] = useState<string | null>(null);
   
-  // Real Food Lens AI Analysis Result
+  // Real FoodLens AI Analysis Result
   const [scanResult, setScanResult] = useState<{
     isFood: boolean;
     isBlurry?: boolean;
@@ -124,14 +124,14 @@ export const FoodLensView: React.FC<FoodLensViewProps> = ({
 
   // 12 Standardized Food Signals for Telemetry & Nutrition Section
   const statTiles: StatTile[] = [
-    { label: "Overall Scope", value: "9.4 / 10", microTag: "Scale of 10", tone: "positive" },
+    { label: "Overall Score", value: "9.4 / 10", microTag: "Scale of 10", tone: "positive" },
     { label: "Calories", value: "310 kcal", microTag: "Energy density", tone: "neutral" },
     { label: "Protein", value: "5.5 g", microTag: "Growth amino acids", tone: "positive" },
     { label: "Carbohydrates", value: "43 g", microTag: "Complex carbs", tone: "neutral" },
     { label: "Added Sugar", value: "0.0 g", microTag: "Zero added sugar", tone: "positive" },
     { label: "Dietary Fiber", value: "3.4 g", microTag: "Prebiotic fiber", tone: "positive" },
     { label: "Bad Fat Content", value: "0.2 g", microTag: "Low trans & sat fats", tone: "positive" },
-    { label: "Salt Content", value: "0.11 g", microTag: "Safe daily cap", tone: "positive" },
+    { label: "Vitamin B12", value: "0.5 mcg", microTag: "Neuro development", tone: "positive" },
     { label: "Sodium", value: "45 mg", microTag: "Protected renal cap", tone: "positive" },
     { label: "Iron", value: "2.4 mg", microTag: "Cognitive support", tone: "positive" },
     { label: "Calcium", value: "110 mg", microTag: "Skeletal density", tone: "positive" },
@@ -146,7 +146,7 @@ export const FoodLensView: React.FC<FoodLensViewProps> = ({
     { capability: "Allergen & safety analysis", generalAI: "Prompt-dependent", foodlens: "✓ Purpose-built" },
     { capability: "Remember your food profile", generalAI: "Conversation-based", foodlens: "✓ Persistent profile" },
     { capability: "Regional standards framework", generalAI: "Prompt-dependent", foodlens: "✓ India, U.S. & EU frameworks" },
-    { capability: "Consistent health scoring", generalAI: "May vary by conversation", foodlens: "✓ Dedicated FOODLENS scoring" },
+    { capability: "Consistent health scoring", generalAI: "May vary by conversation", foodlens: "✓ Dedicated FoodLens scoring" },
     { capability: `"Why this score?" factor breakdown`, generalAI: "Requires follow-up", foodlens: "✓ Built into the result" },
     { capability: "Highlight what matters most", generalAI: "Requires follow-up", foodlens: "✓ Highlighted automatically" },
     { capability: "Dietary compatibility", generalAI: "Prompt-dependent", foodlens: "✓ Profile-based" },
@@ -520,24 +520,24 @@ export const FoodLensView: React.FC<FoodLensViewProps> = ({
 
           {/* Navigation Buttons Row - Wrap on small screens */}
           <div className="flex flex-wrap items-center justify-center gap-2 pt-3 w-full py-1">
-            {/* Why Food Lens */}
+            {/* Why FoodLens */}
             <button
               type="button"
               onClick={() => scrollToSection('comparison-section')}
               className="inline-flex items-center justify-center gap-1.5 sm:gap-2 px-3.5 sm:px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 hover:border-amber-400/40 text-white font-bold text-xs sm:text-sm tracking-tight transition-all active:scale-95 cursor-pointer shadow-md shrink-0 whitespace-nowrap"
             >
               <HelpCircle className="w-4 h-4 text-amber-300 shrink-0" />
-              <span>Why Food Lens</span>
+              <span>Why FoodLens</span>
             </button>
 
-            {/* Foodlens in Action */}
+            {/* FoodLens in Action */}
             <button
               type="button"
               onClick={() => scrollToSection('how-it-works-section')}
               className="inline-flex items-center justify-center gap-1.5 sm:gap-2 px-3.5 sm:px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 hover:border-blue-400/40 text-white font-bold text-xs sm:text-sm tracking-tight transition-all active:scale-95 cursor-pointer shadow-md shrink-0 whitespace-nowrap"
             >
               <Sparkles className="w-4 h-4 text-blue-300 shrink-0" />
-              <span>Foodlens in Action</span>
+              <span>FoodLens in Action</span>
             </button>
 
             {/* Nutrition Scorecard */}
@@ -570,6 +570,25 @@ export const FoodLensView: React.FC<FoodLensViewProps> = ({
               <Calendar className="w-4 h-4 text-amber-400 shrink-0" />
               <span>Meal Diary</span>
             </Link>
+
+            {/* Sample Foods Page */}
+            <button
+              id="top-sample-foods-btn"
+              type="button"
+              onClick={() => {
+                playSound('pop');
+                if (onNavigateToSampleFoods) {
+                  onNavigateToSampleFoods();
+                } else {
+                  navigate('/sample-foods');
+                }
+              }}
+              className="inline-flex items-center justify-center gap-1.5 sm:gap-2 px-3.5 sm:px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-400 hover:from-amber-300 hover:to-yellow-300 text-slate-950 font-black text-xs sm:text-sm tracking-tight shadow-lg shadow-amber-500/20 active:scale-95 transition-all cursor-pointer shrink-0 whitespace-nowrap"
+              title="Browse Indian Baby Foods in Dedicated Food Page"
+            >
+              <Sparkles className="w-4 h-4 text-slate-950 fill-slate-950 shrink-0" />
+              <span>Sample Foods Page</span>
+            </button>
           </div>
 
         </div>
@@ -606,7 +625,7 @@ export const FoodLensView: React.FC<FoodLensViewProps> = ({
               Intelligence Comparison
             </span>
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight">
-              Why Use FOODLENS Instead of Just Asking AI?
+              Why Use FoodLens Instead of Just Asking AI?
             </h2>
           </div>
 
@@ -669,7 +688,7 @@ export const FoodLensView: React.FC<FoodLensViewProps> = ({
               Understand the answer, not just the score.
             </h2>
             <p className="text-sm sm:text-base text-slate-300 leading-relaxed font-normal">
-              FOODLENS is designed to make its analysis easier to understand. Explore the nutrition data, ingredients, allergens, and factors that contributed to your result.
+              FoodLens is designed to make its analysis easier to understand. Explore the nutrition data, ingredients, allergens, and factors that contributed to your result.
             </p>
           </div>
 
@@ -823,12 +842,13 @@ export const FoodLensView: React.FC<FoodLensViewProps> = ({
           </div>
 
           {/* Top Scan Bar (Matching the top bar in image.png) */}
-          <div className="max-w-4xl mx-auto">
-            <div className="relative bg-[#111c30]/95 border border-white/20 rounded-full p-2.5 sm:p-3 shadow-[0_15px_40px_rgba(0,0,0,0.6)] backdrop-blur-xl flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 transition-all focus-within:border-amber-400/80 focus-within:ring-4 focus-within:ring-amber-500/10">
+          {/* Top Search Bar (Only search bar with Text Search by name) */}
+          <div className="max-w-3xl mx-auto">
+            <div className="relative bg-[#111c30]/95 border border-white/20 rounded-full p-2.5 sm:p-3 shadow-[0_15px_40px_rgba(0,0,0,0.6)] backdrop-blur-xl flex items-center gap-2.5 transition-all focus-within:border-emerald-400 focus-within:ring-4 focus-within:ring-emerald-500/10">
               
               {/* Left icon + input */}
               <div className="flex items-center gap-3 px-3 flex-1">
-                <Scan className="w-5 h-5 text-amber-400 shrink-0" />
+                <Search className="w-5 h-5 text-emerald-400 shrink-0" />
                 <input
                   type="text"
                   value={searchQuery}
@@ -836,7 +856,7 @@ export const FoodLensView: React.FC<FoodLensViewProps> = ({
                   onKeyDown={(e) => {
                     if (e.key === 'Enter') handleScanNowClick();
                   }}
-                  placeholder="Scan a food product or search by name..."
+                  placeholder="Search by name..."
                   className="w-full bg-transparent text-white placeholder-slate-400 text-xs sm:text-sm md:text-base font-medium focus:outline-none"
                 />
                 {searchQuery && (
@@ -849,42 +869,15 @@ export const FoodLensView: React.FC<FoodLensViewProps> = ({
                 )}
               </div>
 
-              {/* Right buttons */}
-              <div className="flex flex-wrap items-center gap-2 shrink-0 justify-end">
-                {/* Working Sample Foods Button: Navigates to dedicated page */}
-                <button
-                  id="sample-foods-btn"
-                  onClick={() => {
-                    playSound('pop');
-                    if (onNavigateToSampleFoods) {
-                      onNavigateToSampleFoods();
-                    } else {
-                      navigate('/sample-foods');
-                    }
-                  }}
-                  className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-full bg-gradient-to-r from-amber-400 to-yellow-400 hover:from-amber-300 hover:to-yellow-300 text-slate-950 font-black text-xs sm:text-sm tracking-tight shadow-lg shadow-amber-500/20 active:scale-95 transition-all cursor-pointer"
-                  title="Browse Indian Baby Foods in Dedicated Food Page"
-                >
-                  <Sparkles className="w-4 h-4 text-slate-950 fill-slate-950" />
-                  <span>Sample Foods Page</span>
-                </button>
-
-                <button
-                  onClick={() => fileInputBottomRef.current?.click()}
-                  className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-full bg-white/10 hover:bg-white/15 text-white/90 font-bold text-xs border border-white/15 active:scale-95 transition-all cursor-pointer"
-                >
-                  <Upload className="w-3.5 h-3.5 text-slate-300" />
-                  <span>Upload Photo</span>
-                </button>
-
-                <input
-                  type="file"
-                  ref={fileInputBottomRef}
-                  accept="image/*"
-                  onChange={handleFileUpload}
-                  className="hidden"
-                />
-              </div>
+              {/* Search Action Button */}
+              <button
+                type="button"
+                onClick={() => handleScanNowClick()}
+                className="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs sm:text-sm tracking-tight transition-all active:scale-95 cursor-pointer shrink-0"
+              >
+                <Search className="w-4 h-4 text-slate-950 stroke-[2.5]" />
+                <span>Search</span>
+              </button>
             </div>
           </div>
 
@@ -940,15 +933,45 @@ export const FoodLensView: React.FC<FoodLensViewProps> = ({
                     muted 
                     className="w-full h-full object-cover" 
                   />
-                  {/* Scanner view */}
-                  <div className="w-14 h-14 border-4 border-emerald-400/60 rounded-full flex items-center justify-center">
-                    <div className="w-4 h-4 rounded-full bg-emerald-400 animate-ping" />
-                  </div>
 
                   {/* Top-left guidance pill */}
-                  <div className="absolute top-5 left-5 px-4 py-2 rounded-full bg-black/85 backdrop-blur-md border border-emerald-400/50 text-emerald-300 text-xs sm:text-sm font-black flex items-center gap-2.5 shadow-2xl">
+                  <div className="absolute top-5 left-5 px-4 py-2 rounded-full bg-black/85 backdrop-blur-md border border-emerald-400/50 text-emerald-300 text-xs sm:text-sm font-black flex items-center gap-2.5 shadow-2xl z-10">
                     <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping shrink-0" />
                     <span>Point at nutrition facts label or barcode</span>
+                  </div>
+
+                  {/* Camera Reticle in center */}
+                  <div className="pointer-events-none absolute inset-x-8 inset-y-16 sm:inset-x-20 sm:inset-y-24 border-2 border-emerald-400/30 rounded-3xl z-10 flex items-center justify-center">
+                    <div className="w-16 h-16 border-2 border-emerald-400/60 rounded-full flex items-center justify-center">
+                      <div className="w-3 h-3 rounded-full bg-emerald-400 animate-ping" />
+                    </div>
+                  </div>
+
+                  {/* Bottom Camera Controls Overlay inside Viewfinder */}
+                  <div className="absolute bottom-5 inset-x-0 flex items-center justify-center gap-4 z-20 px-4">
+                    <button
+                      type="button"
+                      onClick={handleCaptureAndAnalyze}
+                      className="group flex items-center gap-3 px-5 sm:px-6 py-2.5 rounded-full bg-black/85 hover:bg-black/95 border-2 border-emerald-400 shadow-2xl backdrop-blur-md active:scale-95 transition-all cursor-pointer"
+                      title="Capture and Analyse"
+                    >
+                      {/* Circle matching attached image: green outer ring + solid green center */}
+                      <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-full border-4 border-emerald-400 p-0.5 flex items-center justify-center bg-black/60 shrink-0 shadow-[0_0_15px_rgba(52,211,153,0.4)]">
+                        <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-emerald-400 group-hover:scale-105 transition-transform" />
+                      </div>
+                      <span className="text-white font-black text-xs sm:text-sm tracking-wide">
+                        Capture and Analyse
+                      </span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => fileInputBottomRef.current?.click()}
+                      className="flex items-center gap-2 px-4 sm:px-5 py-3 rounded-full bg-black/80 hover:bg-black/95 border border-white/20 hover:border-emerald-400/50 text-white font-bold text-xs sm:text-sm backdrop-blur-md active:scale-95 transition-all cursor-pointer shadow-xl"
+                    >
+                      <Upload className="w-4 h-4 text-emerald-400" />
+                      <span>Upload Image</span>
+                    </button>
                   </div>
                 </>
               ) : (
@@ -998,48 +1021,47 @@ export const FoodLensView: React.FC<FoodLensViewProps> = ({
               )}
             </div>
 
-            {/* Scanner Control Bar - Single Capture & Analyze and Upload Image */}
-            <div className="mt-4 flex flex-wrap items-center justify-center gap-3 pt-2 border-t border-white/10">
-              <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
-                <button
-                  onClick={handleCaptureAndAnalyze}
-                  className="flex-1 sm:flex-initial px-8 py-3.5 rounded-xl bg-gradient-to-r from-emerald-400 to-teal-300 hover:from-emerald-300 hover:to-teal-200 text-slate-950 font-black text-xs sm:text-sm shadow-xl active:scale-95 transition-all cursor-pointer flex items-center justify-center gap-2"
-                >
-                  <Camera className="w-4 h-4 text-slate-950 stroke-[2.5]" />
-                  <span>{isCameraActive ? 'Capture & Analyze' : 'Turn On & Analyze'}</span>
-                </button>
+            {/* Scanner Control Bar - Circular Capture & Analyse and Upload Image */}
+            <div className="mt-4 flex flex-wrap items-center justify-center gap-4 pt-2 border-t border-white/10">
+              <button
+                type="button"
+                onClick={handleCaptureAndAnalyze}
+                className="group flex items-center gap-3 px-6 sm:px-8 py-3 rounded-2xl bg-gradient-to-r from-emerald-500/20 to-teal-500/20 hover:from-emerald-500/30 hover:to-teal-500/30 border-2 border-emerald-400 text-white font-black text-xs sm:text-sm shadow-xl active:scale-95 transition-all cursor-pointer"
+              >
+                {/* Green circular shutter matching reference image */}
+                <div className="w-11 h-11 rounded-full border-4 border-emerald-400 p-0.5 flex items-center justify-center bg-black shrink-0 shadow-[0_0_15px_rgba(52,211,153,0.3)]">
+                  <div className="w-6 h-6 rounded-full bg-emerald-400 group-hover:scale-105 transition-transform" />
+                </div>
+                <span>{isCameraActive ? 'Capture and Analyse' : 'Turn On & Analyse'}</span>
+              </button>
 
-                <button
-                  onClick={() => fileInputBottomRef.current?.click()}
-                  className="flex-1 sm:flex-initial px-6 py-3.5 rounded-xl bg-white/10 hover:bg-white/15 text-white font-bold text-xs sm:text-sm border border-white/15 active:scale-95 transition-all cursor-pointer flex items-center justify-center gap-1.5"
-                >
-                  <Upload className="w-4 h-4 text-slate-300" />
-                  <span>Upload Image</span>
-                </button>
+              <button
+                type="button"
+                onClick={() => fileInputBottomRef.current?.click()}
+                className="px-6 py-3.5 rounded-2xl bg-white/10 hover:bg-white/15 text-white font-bold text-xs sm:text-sm border border-white/15 active:scale-95 transition-all cursor-pointer flex items-center justify-center gap-2"
+              >
+                <Upload className="w-4 h-4 text-emerald-400" />
+                <span>Upload Image</span>
+              </button>
 
-                {/* Hidden native camera capture input for phones/tablets */}
-                <input
-                  type="file"
-                  ref={nativeCameraInputRef}
-                  accept="image/*"
-                  capture="environment"
-                  onChange={handleFileUpload}
-                  className="hidden"
-                />
+              {/* Hidden native camera capture input for phones/tablets */}
+              <input
+                type="file"
+                ref={nativeCameraInputRef}
+                accept="image/*"
+                capture="environment"
+                onChange={handleFileUpload}
+                className="hidden"
+              />
 
-                {/* Hidden photo file input */}
-                <input
-                  type="file"
-                  ref={fileInputBottomRef}
-                  accept="image/*"
-                  onChange={handleFileUpload}
-                  className="hidden"
-                />
-              </div>
-
-              <div className="text-xs text-slate-400 font-medium">
-                Tip: Hold the nutrition facts label or barcode steady for the best accuracy.
-              </div>
+              {/* Hidden photo file input */}
+              <input
+                type="file"
+                ref={fileInputBottomRef}
+                accept="image/*"
+                onChange={handleFileUpload}
+                className="hidden"
+              />
             </div>
           </div>
 

@@ -134,7 +134,7 @@ export const HomePage: React.FC<HomePageProps> = ({
       id: 'pediatric-consults',
       targetTab: 'pediatric',
       subTab: 'consults',
-      name: 'Pediatric Consults',
+      name: 'Pediatric Care',
       category: 'care',
       tag: 'Qualified pediatrician network',
       desc: 'Book 1:1 telehealth appointments and clinic visits with qualified pediatricians in our partner network.',
@@ -236,7 +236,7 @@ export const HomePage: React.FC<HomePageProps> = ({
     },
     {
       id: 'foodlens',
-      name: 'Food Lens Pro',
+      name: 'FoodLens Pro',
       category: 'care',
       tag: 'Vision Nutrition',
       desc: 'Instant camera plate scan checking food textures and allergens.',
@@ -482,7 +482,7 @@ export const HomePage: React.FC<HomePageProps> = ({
               onClick={() => playSound('pop')}
               className="p-2 sm:p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-amber-400/40 transition-all block group cursor-pointer"
             >
-              <div className="text-base sm:text-xl font-black text-amber-300 group-hover:text-amber-200 transition-colors">15-in-1</div>
+              <div className="text-base sm:text-xl font-black text-amber-300 group-hover:text-amber-200 transition-colors">16-in-1</div>
               <div className="text-[10px] sm:text-xs text-slate-300 font-medium">Parenting tools</div>
             </a>
             <a 
@@ -585,7 +585,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                   <Layers className="w-4 h-4" />
                 </div>
                 <div>
-                  <h4 className="text-sm sm:text-base font-bold text-white">15-in-1 Parenting Tools in One Ecosystem</h4>
+                  <h4 className="text-sm sm:text-base font-bold text-white">16-in-1 Parenting Tools in One Ecosystem</h4>
                   <p className="text-xs sm:text-sm text-slate-300 mt-0.5 leading-relaxed">
                     Nutrition, sleep telemetry, vaccine schedules, milestone checklists, and tantrum coaching connected together instead of split across multiple apps.
                   </p>
@@ -611,7 +611,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                 <div>
                   <h4 className="text-sm sm:text-base font-bold text-white">Fine-Tuned AI Specially Designed for Toddlers</h4>
                   <p className="text-xs sm:text-sm text-slate-300 mt-0.5 leading-relaxed">
-                    Tricky Toddlers is calibrated for parents of toddlers, using pediatric guidance and recognised health standards (WHO, Indian IAP and FSSAI).
+                    Tricky Toddlers is calibrated for parents of toddlers, using pediatric guidance and recognised health standards (IAP, FSSAI &amp; ICMR).
                   </p>
                 </div>
               </div>
@@ -658,7 +658,7 @@ export const HomePage: React.FC<HomePageProps> = ({
         <div className="border-b border-white/10 pb-5">
           <div className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-cyan-400 mb-1">
             <Layers className="w-3.5 h-3.5" />
-            <span>15-in-1 Feature Directory</span>
+            <span>16-in-1 Feature Directory</span>
           </div>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-white tracking-tight text-balance">
             All Features at a Glance
@@ -903,7 +903,7 @@ export const HomePage: React.FC<HomePageProps> = ({
               <div className="text-left lg:text-right">
                 <span className="text-3xl sm:text-4xl font-black text-amber-300">₹499 <span className="text-sm font-normal text-slate-300">/ month</span></span>
                 <p className="text-[10px] text-amber-300/80 mt-0.5">
-                  NutriBand hardware is a separate one-time purchase (XS to L large straps; not included in billing)
+                  NutriBand hardware is a separate one-time purchase (S, M, and L straps; not included in billing)
                 </p>
               </div>
 
@@ -933,11 +933,11 @@ export const HomePage: React.FC<HomePageProps> = ({
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-4 border-t border-amber-500/20 text-xs text-slate-200">
             <div className="flex items-center gap-2">
               <Check className="w-4 h-4 text-amber-400 shrink-0" />
-              <span>Unlimited Food Lens plate scans</span>
+              <span>Unlimited FoodLens plate scans</span>
             </div>
             <div className="flex items-center gap-2">
               <Check className="w-4 h-4 text-amber-400 shrink-0" />
-              <span>Allergic &amp; chemicals deduction</span>
+              <span>Allergen &amp; chemical detection</span>
             </div>
             <div className="flex items-center gap-2">
               <Check className="w-4 h-4 text-amber-400 shrink-0" />

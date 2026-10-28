@@ -2064,13 +2064,13 @@ Each object must have these exact keys:
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-black text-base sm:text-lg text-white">Food Lens AI Plate Scanner</span>
+                <span className="font-black text-base sm:text-lg text-white">FoodLens AI Plate Scanner</span>
                 <span className="px-2.5 py-0.5 rounded-full bg-gradient-to-r from-amber-400 to-yellow-400 text-black text-[10px] font-black uppercase tracking-wider">
                   PREMIUM
                 </span>
               </div>
               <p className="text-xs sm:text-sm text-white/70 mt-1 max-w-xl leading-relaxed">
-                Want to check real-time nutrients or texture safety of a prepared dish? Scan your child's plate with Food Lens AI camera.
+                Want to check real-time nutrients or texture safety of a prepared dish? Scan your child's plate with FoodLens AI camera.
               </p>
             </div>
           </div>
@@ -2085,7 +2085,7 @@ Each object must have these exact keys:
                 className="shrink-0 inline-flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-gradient-to-r from-amber-400 to-yellow-400 hover:from-amber-300 hover:to-yellow-300 text-black font-black text-xs uppercase tracking-wider shadow-lg transition-all active:scale-95 cursor-pointer"
               >
                 <Camera className="w-4 h-4" />
-                <span>Food Lens Scanner</span>
+                <span>FoodLens Scanner</span>
               </button>
             )}
           </div>

@@ -1,7 +1,7 @@
 /**
  * Pediatric Food Nutrition & Scoring Calculator
  * Formats comprehensive nutrients, ingredient classifications, allergens,
- * and transparent score calculation breakdowns according to WHO, IAP, and FSSAI guidelines.
+ * and transparent score calculation breakdowns according to IAP, FSSAI, and ICMR guidelines.
  */
 
 export interface DetailedNutrientItem {
@@ -111,134 +111,7 @@ export function getCompleteFoodAnalysis(food: {
   const estSaltG = Number((estSodiumMg * 2.5 / 1000).toFixed(2));
   const estSaltMg = Math.round(estSodiumMg * 2.5);
 
-  const nutrients: DetailedNutrientItem[] = [
-    {
-      id: 'overall_scope',
-      label: 'Overall Scope',
-      amount: `${safeScore} / 10`,
-      unit: 'Nutrition Safety Score',
-      rdaPercent: safeScore >= 8 ? 'Safe for Child' : safeScore >= 5 ? 'Moderate' : 'Caution',
-      status: safeScore >= 8 ? 'excellent' : safeScore >= 5 ? 'caution' : 'warning',
-      badge: safeScore >= 8 ? 'Pediatric Safety Cap Met ✓' : 'Caution Advised',
-      note: 'Overall composite nutrition rating factoring zero added sugar, safe salt and sodium ceiling, and wholesome ingredients.'
-    },
-    {
-      id: 'calories',
-      label: 'Calories',
-      amount: food.calories || `${cals || 145} kcal`,
-      unit: 'kcal / 100g',
-      rdaPercent: `${Math.min(100, Math.round(((cals || 145) / 1000) * 100))}% Daily Need`,
-      status: (cals || 145) > 350 && isCerelacOrSugar ? 'warning' : 'safe',
-      badge: (cals || 145) > 350 && isCerelacOrSugar ? 'High Calorie Density' : 'Optimal Energy',
-      note: 'Meets pediatric metabolic baseline for active cognitive growth.'
-    },
-    {
-      id: 'protein',
-      label: 'Protein',
-      amount: food.protein || `${prot || 5.8} g`,
-      unit: 'grams',
-      rdaPercent: `${Math.round(((prot || 5.8) / 13) * 100)}% RDA`,
-      status: (prot || 5.8) >= 4.0 ? 'excellent' : 'safe',
-      badge: (prot || 5.8) >= 4.0 ? 'High Growth Protein' : 'Gentle Protein',
-      note: 'Digestible amino acid profile supporting tissue development and muscle tone.'
-    },
-    {
-      id: 'carbs',
-      label: 'Carbohydrates',
-      amount: `${estCarbs} g`,
-      unit: 'grams',
-      rdaPercent: `${Math.round((estCarbs / 130) * 100)}% Daily Target`,
-      status: isCerelacOrSugar ? 'caution' : 'safe',
-      badge: isCerelacOrSugar ? 'Refined Carbs' : 'Complex Slow-Release',
-      note: isCerelacOrSugar ? 'Contains fast-absorbing refined starches.' : 'Unprocessed complex carbs providing sustained non-spike energy.'
-    },
-    {
-      id: 'added_sugar',
-      label: 'Added Sugar',
-      amount: estAddedSugar,
-      unit: 'grams',
-      rdaPercent: isCerelacOrSugar ? 'Exceeds Safe Limit' : '0% Added Sugars (Safe)',
-      status: isCerelacOrSugar ? 'warning' : 'excellent',
-      badge: isCerelacOrSugar ? 'High Alert Sugar' : 'Zero Added Sugar ✓',
-      note: isCerelacOrSugar 
-        ? 'Exceeds recommended safe added sugar limits.' 
-        : (isNaturalSugar ? '100% natural fructose from whole fruits with protective fiber.' : 'Pure whole grain recipe with zero refined sugar or syrups.')
-    },
-    {
-      id: 'fiber',
-      label: 'Dietary Fiber',
-      amount: `${estFiber} g`,
-      unit: 'grams',
-      rdaPercent: `${Math.round((estFiber / 15) * 100)}% Daily Target`,
-      status: estFiber >= 3.0 ? 'excellent' : 'safe',
-      badge: estFiber >= 3.0 ? 'Gut-Friendly Prebiotic' : 'Gentle Fiber',
-      note: 'Soluble and insoluble fiber encouraging healthy gut microbiome balance.'
-    },
-    {
-      id: 'fats',
-      label: 'Bad Fat Content',
-      amount: `${estFat} g (Sat: ${estSatFat} g)`,
-      unit: 'grams',
-      rdaPercent: `${Math.round((estFat / 30) * 100)}% Daily Target`,
-      status: isCerelacOrSugar ? 'caution' : 'safe',
-      badge: isDairyCurdPaneer || isKhichdiOrDal ? 'Desi Ghee / Milk Lipids' : 'Natural Plant Fats',
-      note: 'Monitors saturated fats, hydrogenated oils, and trans-fats to protect toddler metabolic health.'
-    },
-    {
-      id: 'salt',
-      label: 'Salt Content',
-      amount: `${estSaltG} g (${estSaltMg} mg)`,
-      unit: 'grams',
-      rdaPercent: `${Math.min(100, Math.round((estSaltMg / 2500) * 100))}% Daily Ceiling`,
-      status: estSaltMg > 625 ? 'warning' : 'safe',
-      badge: estSaltMg > 625 ? 'Exceeds Safe Limit' : '<1.0g/Day Safe Salt ✓',
-      note: 'Direct Salt = Sodium × 2.5 (WHO standard). Protects immature renal filtration systems.'
-    },
-    {
-      id: 'sodium',
-      label: 'Sodium',
-      amount: `${estSodiumMg} mg`,
-      unit: 'milligrams',
-      rdaPercent: `${Math.round((estSodiumMg / 1000) * 100)}% Max Safe Cap`,
-      status: estSodiumMg > 250 ? 'warning' : 'safe',
-      badge: estSodiumMg > 250 ? 'Exceeds Sodium Cap' : '<1000mg/Day Compliant ✓',
-      note: estSodiumMg > 250 
-        ? 'High sodium stresses undeveloped nephrons and kidneys.' 
-        : 'Safely within the <1000 mg/day safe sodium ceiling established by health standards.'
-    },
-    {
-      id: 'iron',
-      label: 'Iron',
-      amount: estIronMg,
-      unit: 'mg',
-      rdaPercent: 'Essential Micronutrient',
-      status: 'excellent',
-      badge: 'Cognitive & RBC Support',
-      note: 'Critical for hemoglobin synthesis and preventing pediatric nutritional anemia.'
-    },
-    {
-      id: 'calcium',
-      label: 'Calcium',
-      amount: estCalciumMg,
-      unit: 'mg',
-      rdaPercent: 'Skeletal Density',
-      status: isMilletOrRagi || isDairyCurdPaneer ? 'excellent' : 'safe',
-      badge: isMilletOrRagi ? 'Millet Super-Calcium' : 'Bone Fortification',
-      note: 'Supports rapid skeletal lengthening and early tooth enamel density.'
-    },
-    {
-      id: 'zinc',
-      label: 'Zinc & Minerals',
-      amount: estZincMg,
-      unit: 'mg',
-      rdaPercent: 'Immune & Growth Co-Factor',
-      status: 'excellent',
-      badge: 'Immune Resilience',
-      note: 'Essential trace mineral supporting enzymatic reactions, tissue repair, and immune defense.'
-    }
-  ];
-
-  // 2. INGREDIENTS & ALLERGENS CLASSIFICATION
+  // 1. INGREDIENTS & ALLERGENS CLASSIFICATION
   const rawIngs = food.ingredients && food.ingredients.length > 0
     ? food.ingredients
     : (name.includes('khichdi') 
@@ -294,7 +167,7 @@ export function getCompleteFoodAnalysis(food: {
           : 'Introduce single-ingredient first to monitor for rare mild sensitivity.')
   };
 
-  // 3. WHY THIS SCORE & SCORE CALCULATION BREAKDOWN
+  // 2. WHY THIS SCORE & SCORE CALCULATION BREAKDOWN
   // Rule: Base score is 10.0. All deductions strictly subtract from 10.0 to equal finalScore.
   const isChipsOrSavorySnack = name.includes('chip') || name.includes('crisp') || name.includes('kurkure') || name.includes('namkeen') || name.includes('wafer') || name.includes('lays');
   const isUnsafeFood = food.isSafeForBaby === false || isChipsOrSavorySnack || name.includes('chili') || name.includes('pepper') || name.includes('mirch');
@@ -432,6 +305,137 @@ export function getCompleteFoodAnalysis(food: {
   } else {
     whyThisScore = `Rated ${finalScore} / 10 with significant points deducted for high added sugar, excess salt, or industrial additives.`;
   }
+
+  // 3. ALL NUTRIENTS DETAILED LIST (12 STANDARDIZED SIGNALS)
+  // Overall Score is strictly synced to finalScore so card badge and scorecard match 100%
+  const nutrients: DetailedNutrientItem[] = [
+    {
+      id: 'overall_score',
+      label: 'Overall Score',
+      amount: `${finalScore.toFixed(1)} / 10`,
+      unit: 'Nutrition Safety Score',
+      rdaPercent: finalScore >= 8.5 ? 'Safe for Child' : finalScore >= 6.5 ? 'Moderate' : 'Caution Advised',
+      status: finalScore >= 8.5 ? 'excellent' : finalScore >= 6.5 ? 'caution' : 'warning',
+      badge: finalScore >= 8.5 ? 'Pediatric Safety Cap Met ✓' : finalScore >= 6.5 ? 'Measured Portion Advised' : 'Caution Advised ⚠️',
+      note: finalScore >= 8.5
+        ? 'Overall composite nutrition rating factoring zero added sugar, safe sodium ceiling, and wholesome ingredients.'
+        : 'Overall composite nutrition rating factoring sugar content, sodium, and processing level.'
+    },
+    {
+      id: 'calories',
+      label: 'Calories',
+      amount: food.calories || `${cals || 145} kcal`,
+      unit: 'kcal / 100g',
+      rdaPercent: `${Math.min(100, Math.round(((cals || 145) / 1000) * 100))}% Daily Need`,
+      status: (cals || 145) > 350 && isCerelacOrSugar ? 'warning' : 'safe',
+      badge: (cals || 145) > 350 && isCerelacOrSugar ? 'High Calorie Density' : 'Optimal Energy',
+      note: 'Meets pediatric metabolic baseline for active cognitive growth.'
+    },
+    {
+      id: 'protein',
+      label: 'Protein',
+      amount: food.protein || `${prot || 5.8} g`,
+      unit: 'grams',
+      rdaPercent: `${Math.round(((prot || 5.8) / 13) * 100)}% RDA`,
+      status: (prot || 5.8) >= 4.0 ? 'excellent' : 'safe',
+      badge: (prot || 5.8) >= 4.0 ? 'High Growth Protein' : 'Gentle Protein',
+      note: 'Digestible amino acid profile supporting tissue development and muscle tone.'
+    },
+    {
+      id: 'carbs',
+      label: 'Carbohydrates',
+      amount: `${estCarbs} g`,
+      unit: 'grams',
+      rdaPercent: `${Math.round((estCarbs / 130) * 100)}% Daily Target`,
+      status: isCerelacOrSugar ? 'caution' : 'safe',
+      badge: isCerelacOrSugar ? 'Refined Carbs' : 'Complex Slow-Release',
+      note: isCerelacOrSugar ? 'Contains fast-absorbing refined starches.' : 'Unprocessed complex carbs providing sustained non-spike energy.'
+    },
+    {
+      id: 'added_sugar',
+      label: 'Added Sugar',
+      amount: estAddedSugar,
+      unit: 'grams',
+      rdaPercent: isCerelacOrSugar ? 'Exceeds Safe Limit' : '0% Added Sugars (Safe)',
+      status: isCerelacOrSugar ? 'warning' : 'excellent',
+      badge: isCerelacOrSugar ? 'High Alert Sugar' : 'Zero Added Sugar ✓',
+      note: isCerelacOrSugar 
+        ? 'Exceeds recommended safe added sugar limits.' 
+        : (isNaturalSugar ? '100% natural fructose from whole fruits with protective fiber.' : 'Pure whole grain recipe with zero refined sugar or syrups.')
+    },
+    {
+      id: 'fiber',
+      label: 'Dietary Fiber',
+      amount: `${estFiber} g`,
+      unit: 'grams',
+      rdaPercent: `${Math.round((estFiber / 15) * 100)}% Daily Target`,
+      status: estFiber >= 3.0 ? 'excellent' : 'safe',
+      badge: estFiber >= 3.0 ? 'Gut-Friendly Prebiotic' : 'Gentle Fiber',
+      note: 'Soluble and insoluble fiber encouraging healthy gut microbiome balance.'
+    },
+    {
+      id: 'fats',
+      label: 'Bad Fat Content',
+      amount: `${estFat} g (Sat: ${estSatFat} g)`,
+      unit: 'grams',
+      rdaPercent: `${Math.round((estFat / 30) * 100)}% Daily Target`,
+      status: isCerelacOrSugar ? 'caution' : 'safe',
+      badge: isDairyCurdPaneer || isKhichdiOrDal ? 'Desi Ghee / Milk Lipids' : 'Natural Plant Fats',
+      note: 'Monitors saturated fats, hydrogenated oils, and trans-fats to protect toddler metabolic health.'
+    },
+    {
+      id: 'vitamin_b12',
+      label: 'Vitamin B12',
+      amount: isDairyCurdPaneer ? '0.6 mcg' : '0.4 mcg',
+      unit: 'mcg',
+      rdaPercent: '50% Toddler RDA',
+      status: 'excellent',
+      badge: 'Neuro & Cognitive Growth ✓',
+      note: 'Critical micronutrient for neural myelination, red blood cell synthesis, and brain growth.'
+    },
+    {
+      id: 'sodium',
+      label: 'Sodium',
+      amount: `${estSodiumMg} mg`,
+      unit: 'milligrams',
+      rdaPercent: `${Math.round((estSodiumMg / 1000) * 100)}% Max Safe Cap`,
+      status: estSodiumMg > 250 ? 'warning' : 'safe',
+      badge: estSodiumMg > 250 ? 'Exceeds Sodium Cap' : '<1000mg/Day Compliant ✓',
+      note: estSodiumMg > 250 
+        ? 'High sodium stresses undeveloped nephrons and kidneys.' 
+        : 'Safely within the <1000 mg/day safe sodium ceiling established by health standards.'
+    },
+    {
+      id: 'iron',
+      label: 'Iron',
+      amount: estIronMg,
+      unit: 'mg',
+      rdaPercent: 'Essential Micronutrient',
+      status: 'excellent',
+      badge: 'Cognitive & RBC Support',
+      note: 'Critical for hemoglobin synthesis and preventing pediatric nutritional anemia.'
+    },
+    {
+      id: 'calcium',
+      label: 'Calcium',
+      amount: estCalciumMg,
+      unit: 'mg',
+      rdaPercent: 'Skeletal Density',
+      status: isMilletOrRagi || isDairyCurdPaneer ? 'excellent' : 'safe',
+      badge: isMilletOrRagi ? 'Millet Super-Calcium' : 'Bone Fortification',
+      note: 'Supports rapid skeletal lengthening and early tooth enamel density.'
+    },
+    {
+      id: 'zinc',
+      label: 'Zinc & Minerals',
+      amount: estZincMg,
+      unit: 'mg',
+      rdaPercent: 'Immune & Growth Co-Factor',
+      status: 'excellent',
+      badge: 'Immune Resilience',
+      note: 'Essential trace mineral supporting enzymatic reactions, tissue repair, and immune defense.'
+    }
+  ];
 
   return {
     nutrients,

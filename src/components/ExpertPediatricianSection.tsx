@@ -203,11 +203,12 @@ import {
   getHospitalsForCity,
   getClinicsForCity,
   getDoctorsForCity,
+  getDoctorsForClinic,
   verifiedDoctors,
   cleanCityName
 } from '../data/hospitalsData';
 export type { Hospital, Doctor };
-export { getClinicsForCity, getDoctorsForCity, verifiedDoctors };
+export { getClinicsForCity, getDoctorsForCity, getDoctorsForClinic, verifiedDoctors };
 
 // 30-Minute Consultation Time Slots from 8:00 AM to 10:00 PM (28 Slots)
 export const CONSULTATION_TIME_SLOTS = [
@@ -321,7 +322,7 @@ const initialPastBookings: PastConsultation[] = [
     status: "Completed",
     topic: "6-Month Solid Weaning & Iron Fortification",
     summary: "Infant tolerating stewed apple and ragi porridge well. Prescribed 1 tsp cold-pressed ghee addition and continuation of Vit D drops (400 IU/day). Growth percentile tracked at 58th percentile.",
-    vitals: "Weight: 7.8 kg • Height: 68 cm • Temp: 98.4°F",
+    vitals: "Weight: 7.8 kg • Height: 68 cm • Temp: 36.9°C (98.4°F)",
     prescriptionRx: [
       "Vitamin D3 Oral Drops (400 IU daily morning)",
       "Iron-fortified ragi malt puree with cooked apple",
@@ -341,7 +342,7 @@ const initialPastBookings: PastConsultation[] = [
     status: "Completed",
     topic: "Toddler Sleep Regression & Teething Protocol",
     summary: "Evaluated 18-month sleep regression. Prescribed consistent 7:30 PM sleep hygiene routine and chilled silicon teether for lower canine eruption. Night waking reduced.",
-    vitals: "Weight: 11.2 kg • Height: 82 cm • Temp: 98.6°F",
+    vitals: "Weight: 11.2 kg • Height: 82 cm • Temp: 37.0°C (98.6°F)",
     prescriptionRx: [
       "Calibrated gum massage with chilled silicone teether",
       "Magnesium-rich evening snack (banana & oatmeal)",
@@ -361,7 +362,7 @@ const initialPastBookings: PastConsultation[] = [
     status: "Completed",
     topic: "Suspected Cow Milk Protein Allergy (CMPA)",
     summary: "Evaluated mild eczema flare after dairy introduction. Initiated 2-week dairy elimination trial with notable skin clearance. Prescribed ceramide barrier cream twice daily.",
-    vitals: "Weight: 6.9 kg • Height: 64 cm • Temp: 98.2°F",
+    vitals: "Weight: 6.9 kg • Height: 64 cm • Temp: 36.8°C (98.2°F)",
     prescriptionRx: [
       "Ceramide lipid barrier moisturizing cream twice daily",
       "Strict dairy elimination trial for next 14 days",
@@ -669,8 +670,51 @@ export const ExpertPediatricianSection: React.FC = () => {
     const defaultList = INDIAN_CITIES_BY_STATE[initialUserState] || INDIAN_CITIES_BY_STATE['Karnataka'] || [];
     return defaultList[0] || 'Bengaluru (Bangalore)';
   });
-  const [selectedClinic, setSelectedClinic] = useState("");
-  const [selectedDoc, setSelectedDoc] = useState<Doctor>(() => getDoctorsForCity('Bengaluru')[0] || verifiedDoctors[0]);
+
+  const availableClinics = React.useMemo(() => {
+    return getClinicsForCity(selectedCity, selectedState);
+  }, [selectedCity, selectedState]);
+
+  const [selectedClinic, setSelectedClinic] = useState<string>(() => {
+    const list = getClinicsForCity(
+      (profileCity && (INDIAN_CITIES_BY_STATE[initialUserState] || []).includes(profileCity))
+        ? profileCity
+        : ((INDIAN_CITIES_BY_STATE[initialUserState] || [])[0] || 'Bengaluru (Bangalore)'),
+      initialUserState
+    );
+    return list[0] || '';
+  });
+
+  const clinicDoctors = React.useMemo(() => {
+    return getDoctorsForClinic(selectedClinic, selectedCity, selectedState);
+  }, [selectedClinic, selectedCity, selectedState]);
+
+  const [selectedDoc, setSelectedDoc] = useState<Doctor>(() => {
+    const defaultCity = (profileCity && (INDIAN_CITIES_BY_STATE[initialUserState] || []).includes(profileCity))
+      ? profileCity
+      : ((INDIAN_CITIES_BY_STATE[initialUserState] || [])[0] || 'Bengaluru (Bangalore)');
+    const defaultClinics = getClinicsForCity(defaultCity, initialUserState);
+    const docs = getDoctorsForClinic(defaultClinics[0] || '', defaultCity, initialUserState);
+    return docs[0] || getDoctorsForCity('Bengaluru')[0] || verifiedDoctors[0];
+  });
+
+  // Ensure selectedClinic stays valid when availableClinics update
+  useEffect(() => {
+    if (availableClinics.length > 0 && !availableClinics.includes(selectedClinic)) {
+      setSelectedClinic(availableClinics[0]);
+    }
+  }, [availableClinics, selectedClinic]);
+
+  // Ensure selectedDoc stays valid for the chosen clinic
+  useEffect(() => {
+    if (clinicDoctors.length > 0) {
+      const match = clinicDoctors.find(d => d.name === selectedDoc?.name && d.hospital === selectedDoc?.hospital);
+      if (!match) {
+        setSelectedDoc(clinicDoctors[0]);
+      }
+    }
+  }, [clinicDoctors, selectedDoc]);
+
   const [hospitalSearch, setHospitalSearch] = useState("");
   const [bookingDate, setBookingDate] = useState("");
   const [bookingTime, setBookingTime] = useState("08:00 AM - 08:30 AM");
@@ -1457,6 +1501,12 @@ export const ExpertPediatricianSection: React.FC = () => {
                               setSelectedCity(newCity);
                               setChatCity(newCity);
                               localStorage.setItem('user_city', newCity);
+                              const newClinics = getClinicsForCity(newCity, newState);
+                              if (newClinics.length > 0) {
+                                setSelectedClinic(newClinics[0]);
+                                const docs = getDoctorsForClinic(newClinics[0], newCity, newState);
+                                if (docs.length > 0) setSelectedDoc(docs[0]);
+                              }
                             }
                             playSound('click'); 
                           }}
@@ -1484,6 +1534,12 @@ export const ExpertPediatricianSection: React.FC = () => {
                             setSelectedCity(newCity); 
                             setChatCity(newCity);
                             localStorage.setItem('user_city', newCity);
+                            const newClinics = getClinicsForCity(newCity, selectedState);
+                            if (newClinics.length > 0) {
+                              setSelectedClinic(newClinics[0]);
+                              const docs = getDoctorsForClinic(newClinics[0], newCity, selectedState);
+                              if (docs.length > 0) setSelectedDoc(docs[0]);
+                            }
                             playSound('click'); 
                           }}
                           className="w-full bg-white/5 border border-white/10 rounded-2xl px-4 py-3.5 text-base text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 appearance-none cursor-pointer font-bold"
@@ -1501,15 +1557,21 @@ export const ExpertPediatricianSection: React.FC = () => {
                   <div>
                     <div className="flex items-center justify-between mb-2">
                       <label className="block text-sm font-black text-white/60 uppercase tracking-widest">{gt('clinicLabel')}</label>
-                      <span className="text-xs text-indigo-300 font-bold">{cityHospitals.length} Verified in {selectedCity}</span>
+                      <span className="text-xs text-indigo-300 font-bold">{availableClinics.length} Verified in {cleanCityName(selectedCity)}</span>
                     </div>
                     <div className="relative">
                       <select
                         value={selectedClinic}
-                        onChange={(e) => { setSelectedClinic(e.target.value); playSound('click'); }}
+                        onChange={(e) => { 
+                          const newClinic = e.target.value;
+                          setSelectedClinic(newClinic); 
+                          const docs = getDoctorsForClinic(newClinic, selectedCity, selectedState);
+                          if (docs.length > 0) setSelectedDoc(docs[0]);
+                          playSound('click'); 
+                        }}
                         className="w-full bg-white/5 border border-white/10 rounded-2xl px-4 py-3.5 text-base text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 appearance-none cursor-pointer font-bold"
                       >
-                        {getClinicsForCity(selectedCity, selectedState).map(clinic => (
+                        {availableClinics.map(clinic => (
                           <option key={clinic} value={clinic} className="bg-neutral-900 text-white font-bold text-base">{clinic}</option>
                         ))}
                       </select>
@@ -1521,14 +1583,14 @@ export const ExpertPediatricianSection: React.FC = () => {
                   <div>
                     <div className="flex items-center justify-between mb-2">
                       <label className="block text-sm font-black text-white/60 uppercase tracking-widest">{gt('doctorLabel')}</label>
-                      <span className="text-xs text-indigo-300 font-bold">In {selectedCity}</span>
+                      <span className="text-xs text-indigo-300 font-bold">{clinicDoctors.length} Verified at {selectedClinic || cleanCityName(selectedCity)}</span>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      {getDoctorsForCity(selectedCity, selectedState).map(doc => {
-                        const isSelected = selectedDoc.name === doc.name;
+                      {clinicDoctors.map(doc => {
+                        const isSelected = selectedDoc.name === doc.name && selectedDoc.hospital === doc.hospital;
                         return (
                           <button
-                            key={doc.id || doc.name}
+                            key={doc.id || `${doc.name}-${doc.hospital}`}
                             type="button"
                             onClick={() => { setSelectedDoc(doc); playSound('click'); }}
                             className={`p-3.5 rounded-2xl border text-left flex items-start gap-3 transition-all duration-300 ${isSelected ? 'bg-indigo-500/15 border-indigo-500 shadow-lg shadow-indigo-500/10 scale-[1.01]' : 'bg-white/[0.02] border-white/5 hover:border-white/12 hover:bg-white/[0.04]'}`}

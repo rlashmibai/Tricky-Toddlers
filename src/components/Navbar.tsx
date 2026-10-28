@@ -183,7 +183,7 @@ export const Navbar: React.FC = () => {
     {
       id: 'foodlens',
       tab: 'foodlens',
-      label: t('foodLensPro') || 'Food Lens AI',
+      label: t('foodLensPro') || 'FoodLens AI',
       icon: Camera,
       iconColor: 'text-amber-300',
       badge: 'PREMIUM',

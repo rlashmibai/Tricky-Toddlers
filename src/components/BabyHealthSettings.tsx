@@ -556,17 +556,6 @@ export const BabyHealthSettings: React.FC = () => {
           type="button"
           onClick={() => {
             playSound('click');
-            document.getElementById('section-identification')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          }}
-          className="text-xs font-semibold px-3 py-1.5 rounded-xl bg-white/5 hover:bg-emerald-500/20 text-slate-200 hover:text-emerald-300 border border-white/10 transition-all flex items-center gap-1.5 cursor-pointer"
-        >
-          <Baby className="w-3.5 h-3.5 text-emerald-400" />
-          <span>Identification</span>
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            playSound('click');
             document.getElementById('section-diet-type')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
           }}
           className="text-xs font-semibold px-3 py-1.5 rounded-xl bg-white/5 hover:bg-emerald-500/20 text-slate-200 hover:text-emerald-300 border border-white/10 transition-all flex items-center gap-1.5 cursor-pointer"
@@ -652,87 +641,6 @@ export const BabyHealthSettings: React.FC = () => {
           <span>{error}</span>
         </div>
       )}
-
-      {/* Grid: Parent & Baby Identification */}
-      <div id="section-identification" className="p-6 sm:p-8 rounded-3xl bg-[#111c30]/90 border border-white/10 shadow-xl space-y-6">
-        <div className="flex items-center justify-between pb-4 border-b border-white/10 text-emerald-400">
-          <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center text-emerald-300 shrink-0 shadow-md">
-              <Baby className="w-7 h-7" />
-            </div>
-            <div>
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight">Parent &amp; Baby Identification</h2>
-              <p className="text-xs sm:text-sm text-slate-300 mt-1">Core identification details for Ashwath and primary caregiver</p>
-            </div>
-          </div>
-          {calculatedAge && (
-            <span className="text-xs sm:text-sm font-black px-4 py-2 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 shadow-sm">
-              Age: {calculatedAge}
-            </span>
-          )}
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          
-          {/* Parent Name */}
-          <div className="space-y-2">
-            <label className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
-              <User className="w-3.5 h-3.5 text-emerald-400" />
-              Parent Name <span className="text-emerald-400">*</span>
-            </label>
-            <input
-              type="text"
-              required
-              value={parentName}
-              onChange={(e) => setParentName(e.target.value)}
-              placeholder="e.g. Lashmi"
-              className="w-full bg-[#16223a] border border-white/15 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-400 focus:ring-4 focus:ring-emerald-500/10 placeholder:text-slate-500 font-medium"
-            />
-          </div>
-
-          {/* Baby Name */}
-          <div className="space-y-2">
-            <label className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
-              <Baby className="w-3.5 h-3.5 text-emerald-400" />
-              Baby Name <span className="text-emerald-400">*</span>
-            </label>
-            <input
-              type="text"
-              required
-              value={babyName}
-              onChange={(e) => setBabyName(e.target.value)}
-              placeholder="e.g. Ashwath"
-              className="w-full bg-[#16223a] border border-white/15 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-400 focus:ring-4 focus:ring-emerald-500/10 placeholder:text-slate-500 font-medium"
-            />
-          </div>
-
-          {/* Date of Birth (Mandatory) */}
-          <div className="space-y-2">
-            <label className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center justify-between">
-              <span className="flex items-center gap-1.5">
-                <Calendar className="w-3.5 h-3.5 text-emerald-400" />
-                Date of Birth (DOB) <span className="text-emerald-400">*</span>
-              </span>
-            </label>
-            <input
-              type="date"
-              required
-              value={babyBirthDate}
-              onChange={(e) => setBabyBirthDate(e.target.value)}
-              className="w-full bg-[#16223a] border border-emerald-400/40 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-400 focus:ring-4 focus:ring-emerald-500/10 font-medium"
-            />
-            {calculatedAge ? (
-              <p className="text-[11px] text-emerald-300 font-medium pt-0.5 flex items-center gap-1">
-                <span>✓ Automatically calculated age:</span>
-                <strong className="text-white font-bold">{calculatedAge}</strong>
-              </p>
-            ) : (
-              <p className="text-[11px] text-slate-400 pt-0.5">Select DOB to auto-calculate baby's age and milestones.</p>
-            )}
-          </div>
-
-        </div>
-      </div>
 
       {/* 1. Core Diet Type Section */}
       <div id="section-diet-type" className="p-6 sm:p-8 rounded-3xl bg-[#111c30]/90 border border-emerald-500/30 shadow-xl space-y-6 text-left">
@@ -980,7 +888,7 @@ export const BabyHealthSettings: React.FC = () => {
             <div>
               <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight">4. Allergies &amp; Intolerances</h2>
               <p className="text-xs sm:text-sm text-slate-300 mt-1">
-                Critical allergies flagged across all Food Lens scans, AI recipes, and pediatrician consults.
+                Critical allergies flagged across all FoodLens scans, AI recipes, and pediatrician consults.
               </p>
             </div>
           </div>
@@ -1122,7 +1030,7 @@ export const BabyHealthSettings: React.FC = () => {
                 </span>
               </div>
               <p className="text-xs sm:text-sm text-slate-300 mt-2 max-w-3xl leading-relaxed">
-                Complete childhood immunization schedule and developmental milestone records from birth to 18 years (WHO, Indian IAP and FSSAI standards). Track clinic dates, batch numbers, first steps, speech leaps, emotional growth, and print official reports.
+                Complete childhood immunization schedule and developmental milestone records from birth to 18 years (IAP, FSSAI &amp; ICMR standards). Track clinic dates, batch numbers, first steps, speech leaps, emotional growth, and print official reports.
               </p>
             </div>
           </div>
@@ -1273,7 +1181,7 @@ export const BabyHealthSettings: React.FC = () => {
       {/* Save Button at Bottom */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-4 border-t border-white/10">
         <p className="text-xs text-slate-400 text-center sm:text-left">
-          All settings immediately synchronize with Tricky Toddler AI, Food Lens, and your pediatric profile.
+          All settings immediately synchronize with Tricky Toddler AI, FoodLens, and your pediatric profile.
         </p>
         <button
           onClick={handleSaveAll}

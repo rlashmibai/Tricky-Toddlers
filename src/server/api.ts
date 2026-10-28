@@ -396,7 +396,7 @@ export function createApiRouter(): express.Router {
     });
   });
 
-  // Food Lens Vision & Analysis
+  // FoodLens Vision & Analysis
   router.post("/analyze-food", async (req, res) => {
     const { imageBase64, foodQuery, language } = req.body;
     if (!imageBase64 && !foodQuery) {
@@ -410,7 +410,7 @@ export function createApiRouter(): express.Router {
       if (nonFoodTerms.some(term => q.includes(term))) {
         return {
           isFood: false,
-          errorMessage: `Not a food item! Detected: "${queryText}". Food Lens is designed specifically for meals, fruits, snacks, and nutrition labels. Please point camera at an edible food item.`
+          errorMessage: `Not a food item! Detected: "${queryText}". FoodLens is designed specifically for meals, fruits, snacks, and nutrition labels. Please point camera at an edible food item.`
         };
       }
 
@@ -679,7 +679,7 @@ Return strictly valid JSON matching this schema:
     if (!Array.isArray(loggedMilestones) || loggedMilestones.length === 0) {
       return res.json({
         hasMilestones: false,
-        report: "No milestones logged yet! Please record at least one achievement in the list below to generate your personalized WHO, Indian IAP & FSSAI developmental assessment."
+        report: "No milestones logged yet! Please record at least one achievement in the list below to generate your personalized IAP, FSSAI & ICMR developmental assessment."
       });
     }
 
@@ -689,12 +689,12 @@ Return strictly valid JSON matching this schema:
         throw new Error("Gemini AI client unavailable");
       }
 
-      const prompt = `You are an expert pediatric nurse, developmental psychologist, and WHO, Indian IAP & FSSAI milestone specialist.
+      const prompt = `You are an expert pediatric nurse, developmental psychologist, and IAP, FSSAI & ICMR milestone specialist.
 Below are the logged child milestones:
 ${JSON.stringify(loggedMilestones, null, 2)}
 
 Provide an encouraging, expert developmental comparison:
-1. Milestone Progress: Which achievements are on track or early based on WHO/IAP windows.
+1. Milestone Progress: Which achievements are on track or early based on IAP & ICMR windows.
 2. Gentle Reassurance: Normal healthy variations in child development.
 3. Tailored Play & Enrichment Activities: Practical activities to stimulate upcoming milestones.
 4. Nutrition & Sleep Link: Brief note on pediatric nutrition supporting brain development.
@@ -731,7 +731,7 @@ ${languagePromptModifier ? `\n\nREMINDER: Entire response must be in the request
       const names = loggedMilestones.map((m: any) => m.name || m.milestoneId).join(", ");
       return res.json({
         hasMilestones: true,
-        report: `### 🌟 Developmental Milestone Assessment (WHO & Indian IAP Standards)\n\n**Logged Achievements:** ${names}\n\n* **Developmental Timing:** Your child’s recorded milestones align beautifully with typical World Health Organization (WHO) and Indian Academy of Pediatrics (IAP) developmental windows. Every milestone represents strong neural and motor progression.\n* **Encouraging Next Steps:** Continue engaging in daily interactive floor play, open-ended conversations, reading picture books together, and encouraging tummy-time or gross motor balance.\n* **Nutrition & Hydration:** Adequate bioavailable iron, healthy fats (like A2 ghee), and sound uninterrupted night sleep directly accelerate cognitive leap consolidation.\n\n*Note: Every child follows their own unique timeline. For specific clinical concerns, consult your primary pediatrician.*`
+        report: `### 🌟 Developmental Milestone Assessment (IAP & ICMR Standards)\n\n**Logged Achievements:** ${names}\n\n* **Developmental Timing:** Your child’s recorded milestones align beautifully with typical Indian Academy of Pediatrics (IAP) and ICMR developmental windows. Every milestone represents strong neural and motor progression.\n* **Encouraging Next Steps:** Continue engaging in daily interactive floor play, open-ended conversations, reading picture books together, and encouraging tummy-time or gross motor balance.\n* **Nutrition & Hydration:** Adequate bioavailable iron, healthy fats (like A2 ghee), and sound uninterrupted night sleep directly accelerate cognitive leap consolidation.\n\n*Note: Every child follows their own unique timeline. For specific clinical concerns, consult your primary pediatrician.*`
       });
     }
   });
@@ -979,7 +979,7 @@ Key Parameters:
 - Morning Wake-up Time: ${wakeTime || '07:00'}
 - Infant Temperament/Needs: ${temperament || 'Happy & Active'}
 
-Please construct a comprehensive, positive, and beautiful daily hour-by-hour schedule based strictly on standard WHO, Indian IAP and FSSAI pediatric wellness guidelines.
+Please construct a comprehensive, positive, and beautiful daily hour-by-hour schedule based strictly on standard IAP, FSSAI and ICMR pediatric wellness guidelines.
 - Detail the exact wake-windows suitable for ${ageLabel || 'Toddler'}.
 - Organize the day chronologically into clear blocks: Morning, Mid-day, Afternoon, and Bedtime.
 - For each block, provide 2 actionable play suggestions, feeding guidance (milk vs. solids), and sleep health indicators.
@@ -991,7 +991,7 @@ Please construct a comprehensive, positive, and beautiful daily hour-by-hour sch
       const ai = getAI();
       if (!ai) {
         return res.json({
-          routine: `### 🌅 WHO & Indian IAP Tailored Routine for ${ageLabel || 'Toddler'}\n\n* **Morning (${wakeTime || '07:00 AM'} - 11:30 AM):** Gentle wake-up, warm cuddle, breastmilk/formula or whole milk with finger-food breakfast (idli/cheela with ghee). Floor exploration and sensory songs.\n* **Mid-Day (11:30 AM - 02:30 PM):** Balanced lunch (moong dal khichdi with vegetables), followed by a restorative afternoon nap (1.5–2 hours in a dim, cool room).\n* **Afternoon (02:30 PM - 06:00 PM):** Light afternoon snack (stewed apple, mashed banana, or steamed carrot coins). Outdoor stroll, park exploration, and gross motor play.\n* **Bedtime (06:00 PM - 08:00 PM):** Calming dinner, warm bath, lullaby/story routine (no screens), and peaceful lights-out by 07:30–08:00 PM.`
+          routine: `### 🌅 IAP, FSSAI & ICMR Tailored Routine for ${ageLabel || 'Toddler'}\n\n* **Morning (${wakeTime || '07:00 AM'} - 11:30 AM):** Gentle wake-up, warm cuddle, breastmilk/formula or whole milk with finger-food breakfast (idli/cheela with ghee). Floor exploration and sensory songs.\n* **Mid-Day (11:30 AM - 02:30 PM):** Balanced lunch (moong dal khichdi with vegetables), followed by a restorative afternoon nap (1.5–2 hours in a dim, cool room).\n* **Afternoon (02:30 PM - 06:00 PM):** Light afternoon snack (stewed apple, mashed banana, or steamed carrot coins). Outdoor stroll, park exploration, and gross motor play.\n* **Bedtime (06:00 PM - 08:00 PM):** Calming dinner, warm bath, lullaby/story routine (no screens), and peaceful lights-out by 07:30–08:00 PM.`
         });
       }
 
@@ -1020,7 +1020,7 @@ Please construct a comprehensive, positive, and beautiful daily hour-by-hour sch
       }
 
       return res.json({
-        routine: `### 🌅 WHO & Indian IAP Tailored Daily Routine (${ageLabel || 'Toddler'})\n\n* **07:00 AM - Morning Awakening:** Loving morning cuddle, diaper change, and light breakfast with milk.\n* **09:30 AM - Active Sensory Play:** Block stacking, music, tummy/floor balance.\n* **12:00 PM - Wholesome Lunch:** Moong dal khichdi or soft roti with curd.\n* **01:00 PM - Afternoon Nap:** Restorative 90-minute sleep.\n* **04:00 PM - Snack & Fresh Air:** Sliced seasonal fruits and garden walk.\n* **07:00 PM - Relaxing Bedtime Ritual:** Warm bath, soothing story, sound sleep.`
+        routine: `### 🌅 IAP, FSSAI & ICMR Tailored Daily Routine (${ageLabel || 'Toddler'})\n\n* **07:00 AM - Morning Awakening:** Loving morning cuddle, diaper change, and light breakfast with milk.\n* **09:30 AM - Active Sensory Play:** Block stacking, music, tummy/floor balance.\n* **12:00 PM - Wholesome Lunch:** Moong dal khichdi or soft roti with curd.\n* **01:00 PM - Afternoon Nap:** Restorative 90-minute sleep.\n* **04:00 PM - Snack & Fresh Air:** Sliced seasonal fruits and garden walk.\n* **07:00 PM - Relaxing Bedtime Ritual:** Warm bath, soothing story, sound sleep.`
       });
     } catch (err) {
       console.warn("Routine generation error:", err);

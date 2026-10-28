@@ -23,7 +23,7 @@ export const NutriBandIntegratedEcosystem: React.FC = () => {
             <span>TrickyToddlers NutriBand Ecosystem</span>
           </div>
           <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black text-white tracking-tight leading-tight">
-            Food Lens AI + NutriBand + AI Assistant
+            FoodLens AI + NutriBand + AI Assistant
           </h2>
           <p className="text-slate-300 text-xs sm:text-sm md:text-base max-w-2xl leading-relaxed">
             Real-time integration flow connecting plate nutrition vision, wearable health vitals, and pediatric intelligence.
@@ -36,7 +36,7 @@ export const NutriBandIntegratedEcosystem: React.FC = () => {
         <div className="relative w-full rounded-xl sm:rounded-2xl overflow-hidden group">
           <img 
             src={ecosystemImage} 
-            alt="TrickyToddlers NutriBand Ecosystem - Integration between Food Lens AI, NutriBand Smartwatch, and AI Assistant"
+            alt="TrickyToddlers NutriBand Ecosystem - Integration between FoodLens AI, NutriBand Smartwatch, and AI Assistant"
             className="w-full h-auto object-contain block select-none rounded-xl"
             loading="lazy"
             decoding="async"

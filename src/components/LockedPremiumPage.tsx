@@ -49,13 +49,13 @@ export const LockedPremiumPage: React.FC<LockedPremiumPageProps> = ({
 
   const featureDetails = {
     foodlens: {
-      name: 'Food Lens Pro',
+      name: 'FoodLens Pro',
       subtitle: 'AI Camera Plate Scanner & Allergen Detector',
       badge: 'PREMIUM VISION AI',
       icon: Camera,
       iconColor: 'from-amber-400 to-yellow-500',
       description:
-        'Point your camera at your toddler’s meal to get instant ingredient breakdowns, WHO/IAP nutrient ratings, texture choking risk checks, and hidden allergen warnings.',
+        'Point your camera at your toddler’s meal to get instant ingredient breakdowns, IAP, FSSAI & ICMR nutrient ratings, texture choking risk checks, and hidden allergen warnings.',
       perks: [
         'Real-time photo plate analysis powered by Gemini Multimodal AI',
         'Automatic cross-referencing against child’s allergy profile',

@@ -124,12 +124,14 @@ if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
   };
 }
 
-// Global voice state for Toddler Academy and interactive lessons
-let isVoiceMutedState = false;
+// Global voice state for Toddler Academy and interactive lessons (Default: OFF / Muted)
+let isVoiceMutedState = true;
 if (typeof window !== 'undefined') {
   const saved = localStorage.getItem('toddler_academy_voice_muted');
   if (saved !== null) {
     isVoiceMutedState = saved === 'true';
+  } else {
+    isVoiceMutedState = true;
   }
 }
 
@@ -138,6 +140,8 @@ export const isVoiceMuted = (): boolean => {
     const saved = localStorage.getItem('toddler_academy_voice_muted');
     if (saved !== null) {
       isVoiceMutedState = saved === 'true';
+    } else {
+      isVoiceMutedState = true;
     }
   }
   return isVoiceMutedState;

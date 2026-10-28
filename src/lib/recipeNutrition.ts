@@ -214,7 +214,7 @@ export function getRecipeNutrientDetails(recipe: Recipe): RecipeNutrientDetails 
     isAlert: false,
     status: 'safe',
     badge: "Low Sodium (<25mg) ✓",
-    insight: "Complies with strict WHO & Indian Academy of Pediatrics (IAP) <1g/day salt cap. Naturally low in sodium to ensure zero stress on infant kidney filtration."
+    insight: "Complies with strict IAP, FSSAI & ICMR <1g/day salt cap. Naturally low in sodium to ensure zero stress on infant kidney filtration."
   };
 
   const saltInsight: DietaryHealthInsight = isHighSalt ? {
@@ -240,7 +240,7 @@ export function getRecipeNutrientDetails(recipe: Recipe): RecipeNutrientDetails 
     isAlert: true,
     status: 'warning',
     badge: "High Sugar Alert ⚠️",
-    insight: "Contains free sugars exceeding WHO safe limits. Refined sugars trigger glycemic spikes, habituate sweet cravings, and contribute to early pediatric tooth decay."
+    insight: "Contains free sugars exceeding IAP, FSSAI & ICMR safe limits. Refined sugars trigger glycemic spikes, habituate sweet cravings, and contribute to early pediatric tooth decay."
   } : {
     label: "Sugar & Sweetener",
     amount: isPureFruit ? "0g Added (Natural fruit fructose)" : "0 g Added Refined Sugar",
@@ -275,7 +275,7 @@ export function getRecipeNutrientDetails(recipe: Recipe): RecipeNutrientDetails 
   const gradeVal = isHighSalt || isHighSugar || isHighFat ? "Caution Required" : "Grade A+ Whole Food Meal";
   const verdictVal = isHighSalt || isHighSugar || isHighFat 
     ? "Nutrient adjustments needed for safe infant feeding"
-    : "Certified WHO & IAP Compliant Nutrient Density";
+    : "Certified IAP, FSSAI & ICMR Compliant Nutrient Density";
 
   const commentVal = isHighSalt || isHighSugar || isHighFat
     ? "Review highlighted sodium, sugar, or fat alerts before serving to infants or young toddlers."

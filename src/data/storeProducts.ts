@@ -590,25 +590,25 @@ export const PRODUCTS: Product[] = [
     reviewsCount: 140,
     image: designedCottonStrapImg,
     description: 'Ultra-soft woven cotton strap tailored for toddlers prone to sweat rashes or eczema. Breathable weave with secure velcro clasp.',
-    features: ['100% Sweat-absorbent cotton', 'Zero-pinch soft edge', 'Fully washable', 'Sizes from XS to L'],
+    features: ['100% Sweat-absorbent cotton', 'Zero-pinch soft edge', 'Fully washable', 'Sizes S, M, and L'],
     inStock: true
   },
 
   // 29. NUTRIBAND ACCESSORIES: Waterproof Silicone Strap
   {
     id: 'nb-silicone-strap',
-    name: 'NutriBand™ Silicone Smart Band (10+ Years)',
+    name: 'NutriBand™ Silicone Smart Band (10–18y)',
     category: 'Diapering & Bathing',
     ageRange: '3y+',
     supportedAges: ['3y+'],
-    ageLabel: '10+ Years',
+    ageLabel: '10–18y',
     price: 189,
     originalPrice: 280,
     rating: 4.8,
     reviewsCount: 110,
     image: siliconeWatchBandImg,
     description: 'Durable active-styled silicone band with secure snap-in dock for modular sensor pod, designed for big kids and active sports.',
-    features: ['IP67 Waterproof silicone', 'Sweat-channel ventilation', 'Tear-resistant durable core', 'Quick snap-in pod slot', 'Tailored for 10+ years'],
+    features: ['IP67 Waterproof silicone', 'Sweat-channel ventilation', 'Tear-resistant durable core', 'Quick snap-in pod slot', 'Tailored for 10–18y'],
     inStock: true
   },
 
@@ -626,7 +626,7 @@ export const PRODUCTS: Product[] = [
     reviewsCount: 205,
     image: twoSwappableStrapsImg,
     description: 'The complete day-to-night combo: soft breathable cotton strap for bedtime sleep tracking, plus durable silicone strap for daycare and outdoor playground.',
-    features: ['Includes both strap styles', 'Save 25% vs single straps', 'Instant snap-swap design', 'Fits XS to L wrists'],
+    features: ['Includes both strap styles', 'Save 25% vs single straps', 'Instant snap-swap design', 'Fits S, M, and L wrists'],
     inStock: true,
     isBestseller: true
   },

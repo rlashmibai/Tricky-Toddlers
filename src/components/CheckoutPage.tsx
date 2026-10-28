@@ -133,7 +133,7 @@ export const CheckoutPage: React.FC = () => {
                       {planName}
                     </h2>
                     <p className="text-slate-300 text-xs mt-1">
-                      Full access to Food Lens Pro AI scanner & NutriBand biometric sync.
+                      Full access to FoodLens Pro AI scanner & NutriBand biometric sync.
                     </p>
                   </div>
 
@@ -160,7 +160,7 @@ export const CheckoutPage: React.FC = () => {
                       <span>Hardware Note: NutriBand Smart Band Kit</span>
                     </div>
                     <p>
-                      NutriBand Smart Band hardware cost is not included in subscription billing. It is a separate one-time purchase. The complete kit includes: 1x Modular Sensor Pod, 1x Diaper Clip (0-12 Mo), 3x Cotton Cloth Smart Bands (Small, Medium, Large for 1-10 Years), and 1x Silicone Smart Band (10+ Years).
+                      NutriBand Smart Band hardware cost is not included in subscription billing. It is a separate one-time purchase. The complete kit includes: 1x Modular Sensor Pod, 1x Diaper Clip (0-12 Mo), 3x Cotton Cloth Smart Bands (Small, Medium, Large for 1-10 Years), and 1x Silicone Smart Band (10–18y).
                     </p>
                   </div>
 
@@ -171,9 +171,9 @@ export const CheckoutPage: React.FC = () => {
                     </span>
                     <ul className="space-y-2.5 text-xs text-slate-200">
                       {[
-                        { text: 'Food Lens Pro: Unlimited plate scans & 2-sec hazard AI', icon: Camera },
-                        { text: 'Food Lens Pro: Allergen risk & choking prevention', icon: Sparkles },
-                        { text: 'Food Lens Pro: Additives & E-numbers identification', icon: Camera },
+                        { text: 'FoodLens Pro: Unlimited plate scans & 2-sec hazard AI', icon: Camera },
+                        { text: 'FoodLens Pro: Allergen risk & choking prevention', icon: Sparkles },
+                        { text: 'FoodLens Pro: Additives & E-numbers identification', icon: Camera },
                         { text: 'NutriBand: Bluetooth sync & live vitals telemetry', icon: Activity },
                         { text: 'NutriBand: Smart fever detection & rollover alarm', icon: Activity },
                         { text: 'NutriBand: Clinical PDF export for pediatric visits', icon: ShieldCheck },
@@ -482,7 +482,7 @@ export const CheckoutPage: React.FC = () => {
                 className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-400 text-slate-950 font-black text-xs uppercase tracking-wider shadow-lg shadow-amber-500/20 hover:scale-[1.02] transition-transform cursor-pointer flex items-center justify-center gap-2"
               >
                 <Camera className="w-4 h-4" />
-                <span>Try Food Lens Pro Scanner</span>
+                <span>Try FoodLens Pro Scanner</span>
               </button>
 
               <button

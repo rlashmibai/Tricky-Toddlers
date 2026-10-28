@@ -12,7 +12,7 @@ export const FoodLensSection: React.FC = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
       className="max-w-7xl mx-auto px-4 pt-6 pb-2"
-      aria-label="Food Lens Premium Section"
+      aria-label="FoodLens Premium Section"
     >
       <div className="relative overflow-hidden rounded-[2rem] border border-amber-400/30 bg-gradient-to-r from-[#170e28] via-[#101935] to-[#0a1f2e] p-5 sm:p-7 shadow-[0_12px_40px_rgba(245,158,11,0.12)] backdrop-blur-2xl">
         {/* Glow & Ambient Background Effects */}
@@ -40,14 +40,14 @@ export const FoodLensSection: React.FC = () => {
             <div>
               <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-1.5">
                 <h2 className="text-xl sm:text-2xl font-black tracking-tight text-white flex items-center gap-2">
-                  Food Lens
+                  FoodLens
                 </h2>
                 <span className="px-2.5 py-0.5 rounded-full bg-gradient-to-r from-emerald-400 to-teal-400 text-black text-[10px] font-black tracking-widest uppercase shadow-md flex items-center gap-1">
                   <Sparkles className="w-2.5 h-2.5 fill-black text-black" />
                   FREE DEMO
                 </span>
                 <span className="text-[11px] font-bold text-amber-200/80 bg-amber-500/10 px-2.5 py-0.5 rounded-full border border-amber-400/20">
-                  AI Nutrition & Plate Scanner
+                  AI Nutrition &amp; Plate Scanner
                 </span>
               </div>
 
@@ -61,7 +61,7 @@ export const FoodLensSection: React.FC = () => {
                   <Camera className="w-3.5 h-3.5 text-amber-300" /> Instant Plate Scan
                 </span>
                 <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/5 border border-white/10">
-                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-300" /> Allergy & Choking Check
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-300" /> Allergy &amp; Choking Check
                 </span>
                 <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/5 border border-white/10">
                   <Apple className="w-3.5 h-3.5 text-rose-300" /> Micronutrient Breakdown
@@ -83,11 +83,11 @@ export const FoodLensSection: React.FC = () => {
               className="group relative inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-300 text-black font-black text-sm sm:text-base tracking-tight shadow-xl shadow-amber-500/25 hover:shadow-amber-500/40 hover:scale-[1.02] active:scale-95 transition-all duration-300 border border-amber-300/60"
             >
               <Sparkles className="w-4 h-4 text-black fill-black" />
-              <span>Launch Food Lens App</span>
+              <span>Launch FoodLens App</span>
               <ArrowUpRight className="w-4 h-4 text-black group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
             </a>
             <span className="text-[11px] text-center lg:text-right text-white/40 font-medium">
-              Opens full Food Lens AI suite in new tab
+              Opens full FoodLens AI suite in new tab
             </span>
           </div>
         </div>
