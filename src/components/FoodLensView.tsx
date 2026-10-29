@@ -667,14 +667,41 @@ export const FoodLensView: React.FC<FoodLensViewProps> = ({
           <div className="text-center max-w-5xl mx-auto space-y-4 mb-12" id="how-it-works-section">
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight">How it Works</h2>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div className="rounded-3xl overflow-hidden border border-white/10 bg-white/95 shadow-xl">
-                <img src="/assets/aistudio/Gemini_Generated_Image_2vihgd2vihgd2vih__1__7cdf258c.png" alt="Scan Label" className="w-full h-auto object-contain" />
+              <div className="rounded-3xl overflow-hidden border border-white/10 bg-slate-900/80 shadow-xl flex items-center justify-center">
+                <picture>
+                  <source srcSet="/assets/aistudio/Gemini_Generated_Image_2vihgd2vihgd2vih__1__7cdf258c.webp" type="image/webp" />
+                  <img 
+                    src="/assets/aistudio/Gemini_Generated_Image_2vihgd2vihgd2vih__1__7cdf258c.png" 
+                    alt="Scan Label" 
+                    className="w-full h-auto object-contain block" 
+                    loading="eager"
+                    decoding="async"
+                  />
+                </picture>
               </div>
-              <div className="rounded-3xl overflow-hidden border border-white/10 bg-white/95 shadow-xl">
-                <img src="/assets/aistudio/Gemini_Generated_Image_2c1rd52c1rd52c1r_872957ea.png" alt="Scan Barcode" className="w-full h-auto object-contain" />
+              <div className="rounded-3xl overflow-hidden border border-white/10 bg-slate-900/80 shadow-xl flex items-center justify-center">
+                <picture>
+                  <source srcSet="/assets/aistudio/Gemini_Generated_Image_2c1rd52c1rd52c1r_872957ea.webp" type="image/webp" />
+                  <img 
+                    src="/assets/aistudio/Gemini_Generated_Image_2c1rd52c1rd52c1r_872957ea.png" 
+                    alt="Scan Barcode" 
+                    className="w-full h-auto object-contain block" 
+                    loading="eager"
+                    decoding="async"
+                  />
+                </picture>
               </div>
-              <div className="rounded-3xl overflow-hidden border border-white/10 bg-white/95 shadow-xl">
-                <img src="/assets/aistudio/Gemini_Generated_Image_2vihgd2vihgd2vih_5acaf8ea.png" alt="Scan Meal" className="w-full h-auto object-contain" />
+              <div className="rounded-3xl overflow-hidden border border-white/10 bg-slate-900/80 shadow-xl flex items-center justify-center">
+                <picture>
+                  <source srcSet="/assets/aistudio/Gemini_Generated_Image_2vihgd2vihgd2vih_5acaf8ea.webp" type="image/webp" />
+                  <img 
+                    src="/assets/aistudio/Gemini_Generated_Image_2vihgd2vihgd2vih_5acaf8ea.png" 
+                    alt="Scan Meal" 
+                    className="w-full h-auto object-contain block" 
+                    loading="eager"
+                    decoding="async"
+                  />
+                </picture>
               </div>
             </div>
           </div>

@@ -38,7 +38,7 @@ export const NutriBandIntegratedEcosystem: React.FC = () => {
             src={ecosystemImage} 
             alt="TrickyToddlers NutriBand Ecosystem - Integration between FoodLens AI, NutriBand Smartwatch, and AI Assistant"
             className="w-full h-auto object-contain block select-none rounded-xl"
-            loading="lazy"
+            loading="eager"
             decoding="async"
           />
         </div>

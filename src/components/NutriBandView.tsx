@@ -351,33 +351,45 @@ export const NutriBandView: React.FC<NutriBandViewProps> = ({
         {/* 3 Images Grid: First diaper clip, then cotton strap, then silicone band */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-7 items-stretch relative z-10 max-w-7xl mx-auto">
           {/* 1. Diaper Clip Image */}
-          <div className="rounded-3xl overflow-hidden border border-sky-400/30 bg-slate-900/60 shadow-2xl hover:border-sky-400/60 transition-all hover:scale-[1.01] flex flex-col">
-            <img 
-              src="/assets/aistudio/Gemini_Generated_Image_a903hla903hla903_4e4f9611.png" 
-              alt="Way 1 · 0 to 12 Months: Clipped to Diaper or Onesie"
-              className="w-full h-auto object-contain rounded-3xl"
-              loading="lazy"
-            />
+          <div className="rounded-3xl overflow-hidden border border-sky-400/30 bg-slate-900/60 shadow-2xl hover:border-sky-400/60 transition-all hover:scale-[1.01] flex flex-col items-center justify-center">
+            <picture>
+              <source srcSet="/assets/aistudio/Gemini_Generated_Image_a903hla903hla903_4e4f9611.webp" type="image/webp" />
+              <img 
+                src="/assets/aistudio/Gemini_Generated_Image_a903hla903hla903_4e4f9611.png" 
+                alt="Way 1 · 0 to 12 Months: Clipped to Diaper or Onesie"
+                className="w-full h-auto object-contain rounded-3xl block"
+                loading="eager"
+                decoding="async"
+              />
+            </picture>
           </div>
 
           {/* 2. Cotton Strap Image */}
-          <div className="rounded-3xl overflow-hidden border border-pink-400/30 bg-slate-900/60 shadow-2xl hover:border-pink-400/60 transition-all hover:scale-[1.01] flex flex-col">
-            <img 
-              src="/assets/aistudio/Gemini_Generated_Image_g662xzg662xzg662_4311780f.png" 
-              alt="Way 2 · 1 to 10 Years: Inserted in Cotton Cloth Smart Band"
-              className="w-full h-auto object-contain rounded-3xl"
-              loading="lazy"
-            />
+          <div className="rounded-3xl overflow-hidden border border-pink-400/30 bg-slate-900/60 shadow-2xl hover:border-pink-400/60 transition-all hover:scale-[1.01] flex flex-col items-center justify-center">
+            <picture>
+              <source srcSet="/assets/aistudio/Gemini_Generated_Image_g662xzg662xzg662_4311780f.webp" type="image/webp" />
+              <img 
+                src="/assets/aistudio/Gemini_Generated_Image_g662xzg662xzg662_4311780f.png" 
+                alt="Way 2 · 1 to 10 Years: Inserted in Cotton Cloth Smart Band"
+                className="w-full h-auto object-contain rounded-3xl block"
+                loading="eager"
+                decoding="async"
+              />
+            </picture>
           </div>
 
           {/* 3. Silicone Band Image */}
-          <div className="rounded-3xl overflow-hidden border border-cyan-400/30 bg-slate-900/60 shadow-2xl hover:border-cyan-400/60 transition-all hover:scale-[1.01] flex flex-col">
-            <img 
-              src="/assets/aistudio/Gemini_Generated_Image_ar7fctar7fctar7f_81de696a.png" 
-              alt="Way 3 · 10+ Years: Silicone Smart Band"
-              className="w-full h-auto object-contain rounded-3xl"
-              loading="lazy"
-            />
+          <div className="rounded-3xl overflow-hidden border border-cyan-400/30 bg-slate-900/60 shadow-2xl hover:border-cyan-400/60 transition-all hover:scale-[1.01] flex flex-col items-center justify-center">
+            <picture>
+              <source srcSet="/assets/aistudio/Gemini_Generated_Image_ar7fctar7fctar7f_81de696a.webp" type="image/webp" />
+              <img 
+                src="/assets/aistudio/Gemini_Generated_Image_ar7fctar7fctar7f_81de696a.png" 
+                alt="Way 3 · 10+ Years: Silicone Smart Band"
+                className="w-full h-auto object-contain rounded-3xl block"
+                loading="eager"
+                decoding="async"
+              />
+            </picture>
           </div>
         </div>
       </section>
