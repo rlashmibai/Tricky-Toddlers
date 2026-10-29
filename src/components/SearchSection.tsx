@@ -113,14 +113,17 @@ function parseAIResponse(rawText: string): ParsedResponse {
   text = text.replace(/\|\s*\|\s*/g, '|\n| ');
   text = text.replace(/\|:(-+)/g, '| :$1');
 
-  // 2. Ensure double newline precedes any table header (a line starting with | followed by delimiter line)
-  text = text.replace(/([^\n])\s*\n*(\|(?:\s*[^|\n]+\s*\|)+)\n*(\|(?:\s*[:\-]+\s*\|)+)/g, '$1\n\n$2\n$3');
+  // 2. Ensure heading preceding a table is cleanly separated by double newlines
+  text = text.replace(/([^\n|])\s*\n*(\|(?:\s*[^|\n]+\s*\|)+)\n*(\|(?:\s*[:\-]+\s*\|)+)/g, '$1\n\n$2\n$3');
   text = text.replace(/([^\n|])\n+(\|(?:\s*[^|\n]+\s*\|)+)/g, '$1\n\n$2');
 
-  // 3. Ensure double newline follows the end of the table
+  // 3. Ensure heading immediately following a table row gets a blank line before it
+  text = text.replace(/\|\s*(#{1,6}\s+)/g, '|\n\n$1');
+
+  // 4. Ensure double newline follows the end of the table before regular text
   text = text.replace(/(\|(?:\s*[^|\n]+\s*\|)+)\n+([^\n|#\s])/g, '$1\n\n$2');
 
-  // 4. Clean up any trailing double pipe at end of lines
+  // 5. Clean up any trailing double pipe at end of lines
   text = text.replace(/\|\s*\|\s*$/gm, '|');
 
   return {
@@ -842,16 +845,19 @@ export const SearchSection: React.FC = () => {
                           <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
                           <span>Related questions parents ask:</span>
                         </span>
-                        <div className="flex flex-wrap gap-2">
+                        <div className="flex flex-col gap-2 w-full">
                           {parsed.relatedQuestions.map((qText, qIdx) => (
                             <button
                               key={qIdx}
                               onClick={() => handleExecuteQuery(qText, messages.slice(0, index + 1))}
                               disabled={loading}
-                              className="px-3.5 py-2 rounded-xl bg-white/5 hover:bg-indigo-500/20 border border-white/10 hover:border-indigo-400/40 text-slate-200 hover:text-white text-xs font-medium transition-all active:scale-95 cursor-pointer shadow-sm flex items-center gap-2 group text-left"
+                              className="w-full text-left p-3 rounded-xl bg-white/5 hover:bg-indigo-500/20 border border-white/10 hover:border-indigo-400/40 text-slate-200 hover:text-white text-xs font-medium transition-all active:scale-[0.99] cursor-pointer shadow-sm flex items-center justify-between gap-2.5 group"
                             >
-                              <HelpCircle className="w-3.5 h-3.5 text-indigo-400 shrink-0 group-hover:scale-110 transition-transform" />
-                              <span>{qText}</span>
+                              <div className="flex items-center gap-2 min-w-0">
+                                <HelpCircle className="w-3.5 h-3.5 text-indigo-400 shrink-0 group-hover:scale-110 transition-transform" />
+                                <span className="leading-snug">{qText}</span>
+                              </div>
+                              <ChevronRight className="w-3.5 h-3.5 text-indigo-400 shrink-0 group-hover:translate-x-1 transition-transform" />
                             </button>
                           ))}
                         </div>
