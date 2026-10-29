@@ -531,22 +531,18 @@ export const SearchSection: React.FC = () => {
             </div>
           </div>
 
-          <div className="flex items-center justify-center gap-2">
-            <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-white/5 border border-white/10 text-[11px] text-slate-300 font-medium">
-              <CheckCircle2 className="w-3 h-3 text-emerald-400" />
-              <span>Active across site: <strong>{childName}</strong> ({childAge}) · Personalized for <strong>{parentName}</strong></span>
-            </span>
-            {hasSearched && (
+          {hasSearched && (
+            <div className="flex items-center justify-center pt-1">
               <button
                 onClick={handleStartNewTopic}
-                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-500/20 hover:bg-indigo-500/30 border border-indigo-500/40 text-indigo-300 hover:text-white text-[11px] font-bold transition-all cursor-pointer active:scale-95"
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-indigo-500/20 hover:bg-indigo-500/30 border border-indigo-500/40 text-indigo-300 hover:text-white text-xs font-bold transition-all cursor-pointer active:scale-95 shadow-sm"
                 title="Start a new conversation topic and reset history"
               >
-                <RotateCcw className="w-3 h-3" />
+                <RotateCcw className="w-3.5 h-3.5" />
                 <span>New Topic</span>
               </button>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -626,7 +622,6 @@ export const SearchSection: React.FC = () => {
               <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
               <span>Explore Everyday Topics</span>
             </span>
-            <span className="text-xs text-slate-500">Tap to test real-time intelligence</span>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">

@@ -741,57 +741,59 @@ export const ProfilePage: React.FC = () => {
           </div>
         </div>
 
-        {/* Row 2: Parent & Baby Identification (Two Child Profiles) */}
+        {/* Row 2: Child Details (Two Child Profiles) */}
         <div id="section-identification" className="w-full">
           <div className="glass-card p-6 sm:p-8 lg:p-10 rounded-3xl bg-[#0e1626]/90 border border-emerald-500/30 shadow-2xl space-y-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/10 text-emerald-400">
-              <div className="flex items-center gap-4">
-                <div className="p-3.5 rounded-2xl bg-emerald-500/20 border border-emerald-400/40 shrink-0 shadow-md">
-                  <Baby className="w-7 h-7 text-emerald-300" />
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-5 pb-5 border-b border-white/10">
+              <div className="flex items-center gap-3.5 min-w-0">
+                <div className="p-3 rounded-2xl bg-emerald-500/15 border border-emerald-400/30 shrink-0 shadow-md">
+                  <Baby className="w-6 h-6 sm:w-7 sm:h-7 text-emerald-300" />
                 </div>
-                <div>
-                  <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight flex items-center gap-2.5">
-                    <span>Parent &amp; Baby Identification</span>
-                    <span className="text-xs font-bold px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                <div className="min-w-0">
+                  <div className="flex flex-wrap items-center gap-2.5">
+                    <h2 className="text-xl sm:text-2xl lg:text-3xl font-black text-white tracking-tight whitespace-nowrap">
+                      Child Details
+                    </h2>
+                    <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 shrink-0">
                       2 Child Profiles Supported
                     </span>
-                  </h2>
-                  <p className="text-xs sm:text-sm text-white/60 mt-1">
-                    Manage identification, date of birth, and health profiles for both children. Switch the active profile anytime.
+                  </div>
+                  <p className="text-xs sm:text-sm text-slate-400 mt-1">
+                    Manage date of birth, blood group, and health profiles for each child. Switch the active profile anytime.
                   </p>
                 </div>
               </div>
 
               {/* Child Switcher Tabs */}
-              <div className="flex items-center gap-2 bg-[#121d33] p-1.5 rounded-2xl border border-white/10 self-start sm:self-auto">
+              <div className="flex items-center gap-2 bg-[#121d33] p-1.5 rounded-2xl border border-white/10 shrink-0 self-start lg:self-auto">
                 <button
                   type="button"
                   onClick={() => { playSound('pop'); setSelectedChildTab(1); }}
-                  className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-black transition-all flex items-center gap-2 cursor-pointer ${
+                  className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-black transition-all flex items-center gap-2 cursor-pointer ${
                     selectedChildTab === 1 
                       ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 shadow-md' 
                       : 'text-slate-300 hover:text-white'
                   }`}
                 >
-                  <Baby className="w-4 h-4" />
-                  <span>Child 1: {child1Name || 'Ashwath'}</span>
+                  <Baby className="w-4 h-4 shrink-0" />
+                  <span className="whitespace-nowrap">Child 1: {child1Name || 'Ashwath'}</span>
                   {activeChildIndex === 1 && (
-                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-black/30 text-slate-950 font-extrabold uppercase">Active</span>
+                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-black/30 text-slate-950 font-extrabold uppercase shrink-0">Active</span>
                   )}
                 </button>
                 <button
                   type="button"
                   onClick={() => { playSound('pop'); setSelectedChildTab(2); }}
-                  className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-black transition-all flex items-center gap-2 cursor-pointer ${
+                  className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-black transition-all flex items-center gap-2 cursor-pointer ${
                     selectedChildTab === 2 
                       ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 shadow-md' 
                       : 'text-slate-300 hover:text-white'
                   }`}
                 >
-                  <Baby className="w-4 h-4" />
-                  <span>Child 2: {child2Name || 'Child 2'}</span>
+                  <Baby className="w-4 h-4 shrink-0" />
+                  <span className="whitespace-nowrap">Child 2: {child2Name || 'Child 2'}</span>
                   {activeChildIndex === 2 && (
-                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-black/30 text-slate-950 font-extrabold uppercase">Active</span>
+                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-black/30 text-slate-950 font-extrabold uppercase shrink-0">Active</span>
                   )}
                 </button>
               </div>
