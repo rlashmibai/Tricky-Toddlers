@@ -25,8 +25,8 @@ export const LoginForm: React.FC = () => {
     setError(null);
     try {
       localStorage.removeItem('user_logged_out');
-      localStorage.setItem('parent_name', 'Lashmi');
-      localStorage.setItem('baby_name', 'Ashwath');
+      if (!localStorage.getItem('parent_name')) localStorage.setItem('parent_name', 'Lashmi');
+      if (!localStorage.getItem('baby_name')) localStorage.setItem('baby_name', 'Ashwath');
       await loginAsGuest();
       navigate('/?tab=home');
       window.dispatchEvent(new CustomEvent('nav-reset-to-home'));

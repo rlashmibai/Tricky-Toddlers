@@ -1185,7 +1185,8 @@ interface LoggedMilestone {
 }
 
 export const MilestoneTracker: React.FC = () => {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
+  const childName = profile?.babyName || profile?.childName || localStorage.getItem('baby_name') || 'Ashwath';
   const [loggedMilestones, setLoggedMilestones] = useState<Record<string, LoggedMilestone>>({});
   const [loading, setLoading] = useState(true);
   const [expandedId, setExpandedId] = useState<string | null>(null);
@@ -1391,7 +1392,7 @@ export const MilestoneTracker: React.FC = () => {
           className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-white/50 mb-2.5"
         >
           <Baby className="w-4 h-4 text-cheerful-blue animate-pulse" />
-          <span className="text-[10px] sm:text-xs font-black uppercase tracking-[0.25em] text-white/80">World Health Organization Standards</span>
+          <span className="text-[10px] sm:text-xs font-black uppercase tracking-[0.25em] text-white/80">WHO Standards · Personalized for {childName}</span>
         </motion.div>
         <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-white mb-1.5 tracking-tight uppercase">
           {lt('heroTitle')}

@@ -335,14 +335,16 @@ export const NutriBandView: React.FC<NutriBandViewProps> = ({
         <div className="absolute top-0 right-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
 
         {/* Section Header */}
-        <div className="text-center space-y-3 max-w-4xl mx-auto relative z-10">
+        <div className="text-center space-y-3 max-w-6xl mx-auto relative z-10 px-2 sm:px-4">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-400/15 border border-cyan-400/30 text-cyan-300 text-xs font-black uppercase tracking-wider shadow-sm">
             <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
             <span>One Single Device · Three Ways to Wear</span>
           </div>
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight">
-            How to Wear NutriBand Across Every Childhood Stage
-          </h2>
+          <div className="w-full overflow-x-auto scrollbar-none py-1">
+            <h2 className="text-base xs:text-lg sm:text-2xl md:text-3xl lg:text-4xl font-black text-white tracking-tight whitespace-nowrap inline-block">
+              How to Wear NutriBand Across Every Childhood Stage
+            </h2>
+          </div>
           <p className="text-cyan-100/80 text-sm sm:text-base md:text-lg max-w-3xl mx-auto leading-relaxed">
             The same white pebble-shaped sensor pod docks seamlessly into 3 included wearing modes as your child grows from infant to big kid.
           </p>
@@ -1080,7 +1082,7 @@ export const NutriBandView: React.FC<NutriBandViewProps> = ({
                       <Sparkles className="w-4 h-4" /> Pediatric Sleep Assessment:
                     </div>
                     <p className="text-slate-300">
-                      Ashwath is meeting 97% of the American Academy of Pediatrics sleep volume for his age (2y 3 mo.). Sleep latency was 14 minutes, indicating optimal pre-bed wind-down.
+                      {childName} is meeting 97% of the American Academy of Pediatrics sleep volume for their age ({childAge}). Sleep latency was 14 minutes, indicating optimal pre-bed wind-down.
                     </p>
                   </div>
                 </motion.div>

@@ -15,8 +15,9 @@ import { playSound } from '../lib/sounds';
 import { AGE_GROUPS, RoutineItem, AgeGroupData } from '../data/routinesData';
 
 export const RoutineTracker: React.FC = () => {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const { t } = useLanguage();
+  const childName = profile?.babyName || profile?.childName || localStorage.getItem('baby_name') || 'Ashwath';
 
   const [selectedAgeGroup, setSelectedAgeGroup] = useState<string>('0_6m');
   const [selectedTimeType, setSelectedTimeType] = useState<'all' | 'morning' | 'evening' | 'bedtime'>('all');
@@ -171,7 +172,7 @@ export const RoutineTracker: React.FC = () => {
               <Clock className="w-4 h-4 text-cheerful-blue shrink-0" />
             </div>
             <span className="text-[10px] sm:text-xs font-black uppercase tracking-[0.2em] text-cheerful-blue bg-cheerful-blue/10 px-3 py-1 rounded-full border border-cheerful-blue/20">
-              Pediatric Milestone Assist
+              Pediatric Routine Coach · Personalized for {childName}
             </span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black text-white mb-1.5 tracking-tight uppercase">

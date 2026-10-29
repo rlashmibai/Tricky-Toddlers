@@ -135,7 +135,7 @@ function parseAIResponse(rawText: string): ParsedResponse {
 }
 
 export const SearchSection: React.FC = () => {
-  const { profile } = useAuth();
+  const { profile, activeChildIndex, childProfiles, switchActiveChild } = useAuth();
   const { t } = useLanguage();
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -482,22 +482,71 @@ export const SearchSection: React.FC = () => {
           </span>
         </h1>
 
-        {/* Persona Indicator & Session Controls */}
-        <div className="flex items-center justify-center gap-2 pt-1">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[11px] text-slate-300 font-semibold">
-            <Baby className="w-3 h-3 text-indigo-400" />
-            <span>Personalized for <strong>{parentName}</strong> &amp; <strong>{childName}</strong> ({childAge})</span>
-          </span>
-          {hasSearched && (
-            <button
-              onClick={handleStartNewTopic}
-              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-500/20 hover:bg-indigo-500/30 border border-indigo-500/40 text-indigo-300 hover:text-white text-[11px] font-bold transition-all cursor-pointer active:scale-95"
-              title="Start a new conversation topic and reset history"
-            >
-              <RotateCcw className="w-3 h-3" />
-              <span>New Topic</span>
-            </button>
-          )}
+        {/* Child Profile Checkbox Selector & Session Controls */}
+        <div className="flex flex-col items-center justify-center gap-2 pt-1 w-full max-w-2xl mx-auto">
+          <div className="flex flex-wrap items-center justify-center gap-2 bg-[#0a1224]/90 border border-indigo-500/30 rounded-2xl p-1.5 px-3 shadow-xl backdrop-blur-md">
+            <span className="text-[10px] sm:text-[11px] font-black uppercase tracking-wider text-indigo-300 flex items-center gap-1.5 px-1">
+              <Baby className="w-3.5 h-3.5 text-indigo-400" />
+              <span>Select Child Profile:</span>
+            </span>
+
+            <div className="flex items-center gap-2">
+              {childProfiles.map((cp) => {
+                const isSelected = activeChildIndex === cp.id;
+                return (
+                  <label
+                    key={cp.id}
+                    onClick={() => {
+                      if (!isSelected) {
+                        playSound('pop');
+                        switchActiveChild(cp.id);
+                      }
+                    }}
+                    className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-bold cursor-pointer transition-all border select-none ${
+                      isSelected
+                        ? 'bg-gradient-to-r from-indigo-600/40 to-purple-600/40 text-white border-indigo-400 shadow-[0_0_15px_rgba(99,102,241,0.4)] ring-1 ring-indigo-400'
+                        : 'bg-white/5 text-slate-300 border-white/10 hover:bg-white/10 hover:text-white hover:border-white/20'
+                    }`}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={isSelected}
+                      onChange={() => {
+                        playSound('pop');
+                        switchActiveChild(cp.id);
+                      }}
+                      className="w-4 h-4 rounded border-indigo-400 text-indigo-500 focus:ring-indigo-400 cursor-pointer accent-indigo-500"
+                    />
+                    <span className="flex items-center gap-1.5">
+                      <span className="font-extrabold">{cp.name}</span>
+                      <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded-md ${
+                        isSelected ? 'bg-indigo-400/25 text-indigo-200' : 'bg-white/10 text-slate-400'
+                      }`}>
+                        {cp.age}
+                      </span>
+                    </span>
+                  </label>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="flex items-center justify-center gap-2">
+            <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-white/5 border border-white/10 text-[11px] text-slate-300 font-medium">
+              <CheckCircle2 className="w-3 h-3 text-emerald-400" />
+              <span>Active across site: <strong>{childName}</strong> ({childAge}) · Personalized for <strong>{parentName}</strong></span>
+            </span>
+            {hasSearched && (
+              <button
+                onClick={handleStartNewTopic}
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-500/20 hover:bg-indigo-500/30 border border-indigo-500/40 text-indigo-300 hover:text-white text-[11px] font-bold transition-all cursor-pointer active:scale-95"
+                title="Start a new conversation topic and reset history"
+              >
+                <RotateCcw className="w-3 h-3" />
+                <span>New Topic</span>
+              </button>
+            )}
+          </div>
         </div>
       </div>
 

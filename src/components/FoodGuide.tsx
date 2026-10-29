@@ -505,10 +505,13 @@ export const FoodGuide: React.FC<FoodGuideProps> = ({ onNavigateToFoodLens }) =>
   const userRegion = getStateRegion(indianState);
   const childStageId = getStageFromProfileAge(profileAge);
 
-  // Default active stage strictly based on the child's profile
   const [activeStage, setActiveStage] = useState<string>(() => childStageId);
   const [selectedMealCategory, setSelectedMealCategory] = useState<'All' | MealCategory>('All');
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
+
+  useEffect(() => {
+    setActiveStage(childStageId);
+  }, [childStageId]);
   const selectedRecipeNutrients = useMemo(() => {
     return selectedRecipe ? getRecipeNutrientDetails(selectedRecipe) : null;
   }, [selectedRecipe]);

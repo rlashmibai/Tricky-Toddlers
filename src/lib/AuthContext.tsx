@@ -8,6 +8,33 @@ import {
 import { auth, db } from './firebase';
 import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
 
+export interface ChildProfile {
+  id: 1 | 2;
+  name: string;
+  age: string;
+  birthDate: string;
+  gender: string;
+  bloodGroup: string;
+  dietaryNotes?: string;
+}
+
+export const formatChildAge = (dobString?: string | null, fallback?: string): string => {
+  if (!dobString) return fallback || '14 Months';
+  const dob = new Date(dobString);
+  if (isNaN(dob.getTime())) return fallback || '14 Months';
+  const now = new Date();
+  let totalMonths = (now.getFullYear() - dob.getFullYear()) * 12 + (now.getMonth() - dob.getMonth());
+  if (now.getDate() < dob.getDate()) {
+    totalMonths--;
+  }
+  if (totalMonths <= 0) return 'Newborn (< 1 mo)';
+  if (totalMonths < 12) return `${totalMonths} Month${totalMonths > 1 ? 's' : ''}`;
+  const years = Math.floor(totalMonths / 12);
+  const remMonths = totalMonths % 12;
+  if (remMonths === 0) return `${years} Year${years > 1 ? 's' : ''}`;
+  return `${years} Year${years > 1 ? 's' : ''} ${remMonths} Month${remMonths > 1 ? 's' : ''}`;
+};
+
 interface AuthContextType {
   user: User | null;
   profile: any | null;
@@ -15,11 +42,23 @@ interface AuthContextType {
   needsProfileSetup: boolean;
   refreshProfile: () => Promise<void>;
   loginAsGuest: () => Promise<User | null>;
+  activeChildIndex: 1 | 2;
+  childProfiles: ChildProfile[];
+  activeChild: ChildProfile;
+  switchActiveChild: (index: 1 | 2) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [activeChildIndex, setActiveChildIndexState] = useState<1 | 2>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('active_child_index');
+      if (saved === '2') return 2;
+    }
+    return 1;
+  });
+
   const [user, setUser] = useState<User | null>(() => {
     if (typeof window !== 'undefined' && localStorage.getItem('user_logged_out') === 'true') {
       return null;
@@ -43,11 +82,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       parentName = 'Lashmi';
       localStorage.setItem('parent_name', 'Lashmi');
     }
-    let babyName = (typeof window !== 'undefined' && localStorage.getItem('baby_name')) || 'Ashwath';
+    const savedActiveIndex = (typeof window !== 'undefined' && localStorage.getItem('active_child_index')) === '2' ? 2 : 1;
+    let babyName = (typeof window !== 'undefined' && localStorage.getItem('baby_name')) || (savedActiveIndex === 2 ? 'Ananya' : 'Ashwath');
     if (babyName.toLowerCase() === 'aanya') {
       babyName = 'Ashwath';
       localStorage.setItem('baby_name', 'Ashwath');
     }
+    const babyAge = (typeof window !== 'undefined' && localStorage.getItem('baby_age')) || (savedActiveIndex === 2 ? '3 Months' : '2 Years 6 Months');
     return {
       username: parentName,
       name: parentName,
@@ -55,6 +96,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       parentName,
       babyName,
       childName: babyName,
+      toddlerName: babyName,
+      babyAge,
+      childAge: babyAge,
+      activeChildIndex: savedActiveIndex,
       language: (typeof window !== 'undefined' && localStorage.getItem('user_language')) || 'en',
     };
   });
@@ -318,6 +363,105 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  // Child Profiles computation
+  const child1Name = profile?.child1?.name || (profile?.activeChildIndex === 1 ? profile?.babyName : null) || (typeof window !== 'undefined' ? localStorage.getItem('child_1_name') : null) || (typeof window !== 'undefined' && localStorage.getItem('active_child_index') !== '2' ? localStorage.getItem('baby_name') : null) || 'Ashwath';
+  const child1DOB = profile?.child1?.birthDate || (typeof window !== 'undefined' ? localStorage.getItem('child_1_dob') : null) || '2024-04-12';
+  const child1Gender = profile?.child1?.gender || (typeof window !== 'undefined' ? localStorage.getItem('child_1_gender') : null) || 'Boy';
+  const child1Blood = profile?.child1?.bloodGroup || (typeof window !== 'undefined' ? localStorage.getItem('child_1_blood') : null) || 'O+';
+  const child1Age = formatChildAge(child1DOB, '2 Years 6 Months');
+
+  const child2Name = profile?.child2?.name || (profile?.activeChildIndex === 2 ? profile?.babyName : null) || (typeof window !== 'undefined' ? localStorage.getItem('child_2_name') : null) || (typeof window !== 'undefined' && localStorage.getItem('active_child_index') === '2' ? localStorage.getItem('baby_name') : null) || 'Ananya';
+  const child2DOB = profile?.child2?.birthDate || (typeof window !== 'undefined' ? localStorage.getItem('child_2_dob') : null) || '2026-01-15';
+  const child2Gender = profile?.child2?.gender || (typeof window !== 'undefined' ? localStorage.getItem('child_2_gender') : null) || 'Girl';
+  const child2Blood = profile?.child2?.bloodGroup || (typeof window !== 'undefined' ? localStorage.getItem('child_2_blood') : null) || 'B+';
+  const child2Age = formatChildAge(child2DOB, '3 Months');
+
+  const childProfiles: ChildProfile[] = [
+    {
+      id: 1,
+      name: child1Name,
+      age: child1Age,
+      birthDate: child1DOB,
+      gender: child1Gender,
+      bloodGroup: child1Blood,
+      dietaryNotes: profile?.child1?.dietaryNotes || 'Vegetarian, low salt, zero refined sugar',
+    },
+    {
+      id: 2,
+      name: child2Name,
+      age: child2Age,
+      birthDate: child2DOB,
+      gender: child2Gender,
+      bloodGroup: child2Blood,
+      dietaryNotes: profile?.child2?.dietaryNotes || 'Mild lactose sensitivity, puree weaning stage',
+    }
+  ];
+
+  const effectiveActiveIndex: 1 | 2 = (profile?.activeChildIndex === 2 || activeChildIndex === 2) ? 2 : 1;
+  const activeChild: ChildProfile = effectiveActiveIndex === 2 ? childProfiles[1] : childProfiles[0];
+
+  const switchActiveChild = async (newIndex: 1 | 2) => {
+    setActiveChildIndexState(newIndex);
+    const target = newIndex === 2 ? childProfiles[1] : childProfiles[0];
+
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('active_child_index', String(newIndex));
+      localStorage.setItem('baby_name', target.name);
+      localStorage.setItem('child_name', target.name);
+      localStorage.setItem('toddler_name', target.name);
+      localStorage.setItem('baby_birthdate', target.birthDate);
+      localStorage.setItem('baby_birth_date', target.birthDate);
+      localStorage.setItem('baby_age', target.age);
+      localStorage.setItem('toddler_age', target.age);
+      localStorage.setItem('baby_gender', target.gender);
+      localStorage.setItem('baby_blood_group', target.bloodGroup);
+
+      // Dispatch custom events for reactive UI updating across tabs and components
+      window.dispatchEvent(new CustomEvent('activeChildChanged', { detail: { index: newIndex, child: target } }));
+      window.dispatchEvent(new Event('storage'));
+    }
+
+    setProfile(prev => {
+      const base = prev || {
+        parentName: 'Lashmi',
+        username: 'Lashmi',
+        firstName: 'Lashmi',
+      };
+      return {
+        ...base,
+        activeChildIndex: newIndex,
+        babyName: target.name,
+        childName: target.name,
+        toddlerName: target.name,
+        babyBirthDate: target.birthDate,
+        babyAge: target.age,
+        childAge: target.age,
+        bloodGroup: target.bloodGroup,
+        childGender: target.gender,
+      };
+    });
+
+    if (user && db) {
+      try {
+        const docRef = doc(db, 'users', user.uid);
+        await setDoc(docRef, {
+          activeChildIndex: newIndex,
+          babyName: target.name,
+          childName: target.name,
+          toddlerName: target.name,
+          babyBirthDate: target.birthDate,
+          babyAge: target.age,
+          childAge: target.age,
+          bloodGroup: target.bloodGroup,
+          childGender: target.gender,
+          updatedAt: serverTimestamp(),
+        }, { merge: true });
+      } catch (err) {
+        console.warn("Could not sync activeChildIndex to Firestore:", err);
+      }
+    }
+  };
+
   const isDemoSession = user?.uid === 'guest_instant_user' || user?.email === 'lashmi@gmail.com' || user?.email === 'lashm@gmail.com' || profile?.username === 'Lashmi';
   
   const needsProfileSetup = Boolean(
@@ -331,7 +475,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   );
 
   return (
-    <AuthContext.Provider value={{ user, profile, loading, needsProfileSetup, refreshProfile, loginAsGuest }}>
+    <AuthContext.Provider value={{ 
+      user, 
+      profile, 
+      loading, 
+      needsProfileSetup, 
+      refreshProfile, 
+      loginAsGuest,
+      activeChildIndex: effectiveActiveIndex,
+      childProfiles,
+      activeChild,
+      switchActiveChild
+    }}>
       {children}
     </AuthContext.Provider>
   );

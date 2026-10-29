@@ -253,8 +253,8 @@ export const Navbar: React.FC = () => {
     localStorage.removeItem('user_logged_out');
 
     if (!user) {
-      localStorage.setItem('parent_name', 'Lashmi');
-      localStorage.setItem('baby_name', 'Ashwath');
+      if (!localStorage.getItem('parent_name')) localStorage.setItem('parent_name', 'Lashmi');
+      if (!localStorage.getItem('baby_name')) localStorage.setItem('baby_name', 'Ashwath');
       try {
         await loginAsGuest();
       } catch (err) {
