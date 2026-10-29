@@ -21,6 +21,7 @@ import {
   Filter
 } from 'lucide-react';
 import Markdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { playSound } from '../lib/sounds';
 import {
   AISearchRecord,
@@ -448,6 +449,7 @@ export const AIChatHistoryPage: React.FC = () => {
                   {/* AI Response Box */}
                   <div className="prose prose-invert max-w-none text-white/90 leading-relaxed font-sans text-left my-6 pr-1">
                     <Markdown
+                      remarkPlugins={[remarkGfm]}
                       components={{
                         h1: ({ children }) => (
                           <h1 className="text-xl sm:text-2xl font-black text-white mt-6 mb-3 border-b border-white/10 pb-2">
@@ -487,10 +489,45 @@ export const AIChatHistoryPage: React.FC = () => {
                         ),
                         em: ({ children }) => (
                           <em className="italic text-white/70">{children}</em>
+                        ),
+                        table: ({ children }) => (
+                          <div className="overflow-x-auto my-5 rounded-2xl border border-indigo-500/30 bg-[#090f1f]/95 shadow-xl shadow-black/40">
+                            <table className="w-full text-left text-xs sm:text-sm border-collapse min-w-[540px]">{children}</table>
+                          </div>
+                        ),
+                        thead: ({ children }) => (
+                          <thead className="bg-gradient-to-r from-indigo-950/90 via-purple-950/70 to-slate-900/90 border-b border-indigo-500/30">
+                            {children}
+                          </thead>
+                        ),
+                        th: ({ children }) => (
+                          <th className="p-3.5 sm:p-4 text-indigo-200 font-extrabold text-xs sm:text-sm tracking-wide border-r border-white/10 last:border-r-0">
+                            {children}
+                          </th>
+                        ),
+                        tbody: ({ children }) => (
+                          <tbody className="divide-y divide-white/10">
+                            {children}
+                          </tbody>
+                        ),
+                        tr: ({ children }) => (
+                          <tr className="hover:bg-white/[0.04] transition-colors">
+                            {children}
+                          </tr>
+                        ),
+                        td: ({ children }) => (
+                          <td className="p-3.5 sm:p-4 border-r border-white/10 last:border-r-0 text-slate-200 text-xs sm:text-sm leading-relaxed align-top">
+                            {children}
+                          </td>
                         )
                       }}
                     >
-                      {selectedRecord.answer}
+                      {selectedRecord.answer
+                        .replace(/([^\n|])\s*(\|(?:\s*[^|\n]+\s*\|)+\s*\|(?:\s*[:\-]+\s*\|)+)/g, '$1\n\n$2')
+                        .replace(/([^\n|])\n\s*(\|)/g, '$1\n\n$2')
+                        .replace(/\|\s*\|\s*(?=[^|\n\r])/g, '|\n| ')
+                        .replace(/\|\s*(#{1,6}\s+)/g, '|\n\n$1')
+                        .replace(/\|\s*\|\s*$/gm, '|')}
                     </Markdown>
                   </div>
 

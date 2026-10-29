@@ -1227,7 +1227,7 @@ export const ExpertPediatricianSection: React.FC = () => {
   };
 
   return (
-    <div className="glass-card border border-white/10 rounded-[2.5rem] p-6 md:p-10 bg-gradient-to-br from-indigo-500/5 via-transparent to-transparent relative overflow-hidden mb-12 text-left shadow-3xl">
+    <div className="max-w-5xl mx-auto glass-card border border-white/10 rounded-[2.5rem] p-6 sm:p-8 lg:p-10 bg-gradient-to-br from-indigo-500/5 via-transparent to-transparent relative overflow-hidden mb-12 text-left shadow-3xl">
       <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-500/5 blur-3xl rounded-full pointer-events-none" />
       
       {/* Header with Premium Tag */}
@@ -1709,14 +1709,16 @@ export const ExpertPediatricianSection: React.FC = () => {
                     </div>
                   </div>
 
-                  <button
-                    onClick={handleBookConsultation}
-                    disabled={isSubmitting}
-                    className="w-full py-4 px-4 bg-indigo-500 hover:bg-indigo-600 disabled:opacity-50 text-white font-black text-base rounded-2xl transition-all duration-300 shadow-xl flex items-center justify-center gap-2 cursor-pointer active:scale-98"
-                  >
-                    {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <CalendarDays className="w-5 h-5" />}
-                    {gt('bookBtn')}
-                  </button>
+                  <div className="flex justify-center pt-3">
+                    <button
+                      onClick={handleBookConsultation}
+                      disabled={isSubmitting}
+                      className="w-auto px-8 py-3.5 bg-indigo-500 hover:bg-indigo-600 disabled:opacity-50 text-white font-black text-sm sm:text-base rounded-2xl transition-all duration-300 shadow-xl shadow-indigo-500/20 flex items-center justify-center gap-2.5 cursor-pointer active:scale-98"
+                    >
+                      {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <CalendarDays className="w-5 h-5" />}
+                      <span>{gt('bookBtn')}</span>
+                    </button>
+                  </div>
               </div>
 
               {/* TOP 20 VERIFIED PEDIATRIC HOSPITALS & CLINICS DIRECTORY */}
@@ -2248,28 +2250,6 @@ export const ExpertPediatricianSection: React.FC = () => {
                   </div>
                 </div>
 
-                {/* City Quick Pills (Alphabetical A-Z) */}
-                <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
-                  {stateCities.map(city => (
-                    <button
-                      key={city}
-                      type="button"
-                      onClick={() => {
-                        setChatCity(city);
-                        setSelectedCity(city);
-                        localStorage.setItem('user_city', city);
-                        playSound('click');
-                        const cityDocs = getDoctorsForCity(city, selectedState);
-                        if (cityDocs.length > 0) {
-                          handleSelectChatDoctor(cityDocs[0]);
-                        }
-                      }}
-                      className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer ${chatCity === city ? 'bg-indigo-500 text-white shadow-md' : 'bg-white/5 hover:bg-white/10 text-white/60'}`}
-                    >
-                      {city}
-                    </button>
-                  ))}
-                </div>
 
                 {/* Doctors List for this City */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2">

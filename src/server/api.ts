@@ -246,139 +246,255 @@ function generateTailoredFallback(q: string, parentName?: string, childName?: st
   if (isPersonalInfoQuery(lq)) {
     return getResponsibleAIRefusal(pName, cName, age);
   }
-  if (isOutOfScopeQuery(lq)) {
-    return getOutOfScopePediatricNotice(pName, cName, age);
+
+  // Sensory Meltdown vs Boundary Tantrum comparison
+  if ((lq.includes('meltdown') && lq.includes('tantrum')) || (lq.includes('sensory') && lq.includes('boundary')) || (lq.includes('difference') && (lq.includes('tantrum') || lq.includes('meltdown')))) {
+    return `Hello ${pName}, here is the key developmental difference between a **Sensory Meltdown** and a **Boundary Tantrum** for ${cName}:
+
+### 🔍 Key Differences at a Glance
+
+| Factor | ⚡ Sensory Meltdown | 🛑 Boundary Tantrum |
+| :--- | :--- | :--- |
+| **Root Trigger** | Sensory overload (bright lights, loud noise, exhaustion, crowd) | Denial of a specific want or boundary ("No sweets before dinner", "Time to leave the park") |
+| **Nervous System** | Involuntary fight-or-flight crisis; prefrontal brain is completely offline | Goal-oriented communication; child is testing limits and exploring autonomy |
+| **Audience Awareness** | Child does not care who is watching or listening; cannot self-regulate | Child frequently checks if the parent is watching or if the boundary will give way |
+| **Safety & Control** | Child cannot stop on command; reasoning or bargaining is ineffective | Usually resolves quickly if the child gets what they want or realizes the boundary is firm |
+
+---
+
+### 📋 What to Do Now (Action Guide for ${pName})
+
+1. **For a Sensory Meltdown**:
+   - **Reduce sensory input immediately**: Move ${cName} to a dim, quiet room or quiet corner. Turn down noise, television, and bright lights.
+   - **Keep safe with gentle presence**: Do not lecture, scold, or demand eye contact. Offer deep pressure hugs or slow back-patting (*thappi*) if ${cName} welcomes touch.
+   - **Calming Script**: *"You are safe, ${cName}. Mamma is right here. We are going to rest in the quiet together."*
+
+2. **For a Boundary Tantrum**:
+   - **Stay calm and hold the boundary**: Do not negotiate, shout, or give in to stop the crying. Giving in teaches the child that tantrums produce results.
+   - **Acknowledge the feeling, hold the limit**: Connect with the feeling while maintaining the family rule.
+   - **Calming Script**: *"I know you really wanted to keep playing, ${cName}. It is hard to stop. But it is bathtime now. Would you like to carry your rubber duck or the boat?"*
+
+### ⚠️ What to Avoid
+- Avoid shouting, lecturing, or attempting long explanations while the child's brain is flooded with emotion.
+- Avoid isolating ${cName} alone in a dark room; staying close (*time-in*) builds secure emotional regulation.
+
+---RELATED_QUESTIONS---
+- [How can I prevent sensory overload in crowded places for ${cName}?]
+- [What calming scripts work best during a public tantrum?]
+- [When should I consult an occupational therapist about sensory sensitivities?]`;
   }
 
-  // Picky Eating
-  if (lq.includes('picky') || lq.includes('eat') || lq.includes('food') || lq.includes('feed') || lq.includes('hungry') || lq.includes('milk') || lq.includes('appetite')) {
-    return `${pName}, here is gentle, practical guidance for feeding ${cName}:
+  // Indoor Games & Creative Play
+  if (lq.includes('game') || lq.includes('play') || lq.includes('rainy') || lq.includes('indoor') || lq.includes('activity') || lq.includes('bored')) {
+    return `Hello ${pName}, here are **5 fun, developmental indoor games** perfect for ${cName} (Age: ${age}) that use simple household items:
 
-### 📋 Step-by-Step Action Plan (for ${pName} & ${cName})
-1. **Set Up a Calm Family Meal Table**: Sit together with ${cName} without phones, television, or noisy distractions. When children see parents enjoy eating, they naturally want to try.
-2. **Offer Small Portions First**: Place just 2 small bites of a new dish alongside a familiar favorite like warm moong dal khichdi with pure A2 ghee.
-3. **Respect the 'All Done' Cue**: Never force-feed ${cName}. Toddler tummies are small and self-regulate naturally.
-4. **Try 10 to 15 Times Patiently**: It can take up to 15 calm exposures before a toddler accepts a new texture. Keep smiling!
+### 1. 🧺 The Laundry Basket Voyage
+* **Supplies**: A soft laundry basket, a couple of cushions, and favorite stuffed toys.
+* **Instructions**: Place ${cName} gently inside the basket with a soft blanket. Slowly glide the basket across smooth floor tiles like a boat, singing *"Row, Row, Row Your Boat"*!
+* **Skills Encouraged**: Vestibular balance, core stability, and joyful parent-child bonding.
 
-### 🗣️ Calming Parent Scripts (What to Say to ${cName})
-- *"You do not have to finish everything, ${cName}. You can take just one little taste."*
-- *"Look at this warm khichdi with ghee, ${cName}. It smells so good!"*
-- *"Is your tummy happy and full, ${cName}, or would you like one more bite?"*
-- *"Food stays on the table, ${cName}. When we leave the table, eating is done until snack time."*
+### 2. 🧦 Pair-the-Socks Matching Challenge
+* **Supplies**: 4–5 pairs of clean, colorful rolled socks.
+* **Instructions**: Scatter the soft sock balls. Invite ${cName} to find matching colors or toss the socks into an open bucket or cardboard box.
+* **Skills Encouraged**: Gross motor coordination, color identification, and hand-eye aim.
 
-### ⚠️ Common Mistakes to Avoid
-- Avoid offering mobile phone videos or cartoons to make ${cName} open their mouth.
-- Avoid cooking a separate junk food meal when ${cName} says no to healthy dinner.
+### 3. 📦 Cardboard Box Peek-a-Boo Tunnel
+* **Supplies**: One large empty delivery box (open on both ends) or kitchen chairs with a draped bedsheet.
+* **Instructions**: Create a low tunnel. Sit at the other end with an open smile and call ${cName}: *"Peek-a-boo! Can you crawl through to Mamma?"*
+* **Skills Encouraged**: Spatial perception, bilateral motor coordination, and overcoming hesitation.
 
-### 🌐 Trusted Health Guidelines
-- [Indian Academy of Pediatrics (IAP) - Infant and Young Child Feeding](https://iapindia.org)
-- [ICMR - National Institute of Nutrition (NIN)](https://www.nin.res.in)`;
+### 4. 🥄 Kitchen Percussion Symphony
+* **Supplies**: 2 stainless steel bowls or silicone bowls, and wooden or silicone spoons.
+* **Instructions**: Tap slow and fast rhythms on the overturned bowls. Let ${cName} explore loud vs. soft sounds and copy simple clapping beats.
+* **Skills Encouraged**: Auditory discrimination, cause-and-effect understanding, and musical rhythm.
+
+### 5. 🧊 Ice Cube & Warm Water Sensory Splash
+* **Supplies**: A wide shallow plastic tray, 2 ice cubes, and a small cup of lukewarm water.
+* **Instructions**: Place the ice cubes in the tray. Let ${cName} feel the cold ice, watch it slide, and pour warm water over it to discover temperature change. *(Always supervise closely).*
+* **Skills Encouraged**: Tactile exploration, fine motor grasping, and curiosity.
+
+---RELATED_QUESTIONS---
+- [What are quiet sensory games for bedtime relaxation?]
+- [How much independent play time is normal for age ${age}?]
+- [What outdoor sensory activities help build gross motor balance?]`;
   }
 
-  // Hitting, Biting, Tantrums
-  if (lq.includes('hit') || lq.includes('bite') || lq.includes('tantrum') || lq.includes('angry') || lq.includes('scream') || lq.includes('cry') || lq.includes('pinch')) {
-    return `${pName}, here is loving, gentle guidance to handle big feelings and tantrums with ${cName}:
+  // Fears, Ghosts, Monsters, Nightmares & Magical Thinking
+  if (lq.includes('ghost') || lq.includes('possessed') || lq.includes('monster') || lq.includes('fear') || lq.includes('scared') || lq.includes('dark') || lq.includes('witch') || lq.includes('shadow')) {
+    return `Hello ${pName}, here is gentle, evidence-based pediatric guidance on handling childhood fears of ghosts, monsters, or big imaginary worries for ${cName}:
 
-### 📋 Step-by-Step Action Plan (for ${pName} & ${cName})
-1. **Stay Calm First**: Take a slow deep breath before speaking. When you stay calm, ${cName} feels secure and calms down much faster.
-2. **Hold Hands Firmly and Lovingly**: If ${cName} tries to hit or bite, gently hold their hands: say quietly, *"I will keep us safe, ${cName}. Hands are not for hitting."*
-3. **Give a Safe Way to Show Anger**: Tell ${cName} they can stomp their feet on the floor, squeeze a soft pillow, or blow big breaths like a lion.
-4. **Stay Close Instead of Time-Out**: Sit near ${cName} and offer an open hug or gentle back patting (thappi) as soon as they are ready.
+### 🧠 Why Children Experience Fears of Ghosts & Monsters
+Between ages 2 and 6, children enter a natural developmental stage known as **magical thinking**. Their vivid imaginations outpace their logical reasoning. To a young child, shadows, odd creaks, and bedtime quiet can feel just as real as a chair or toy.
 
-### 🗣️ Calming Parent Scripts (What to Say to ${cName})
-- *"You are feeling very upset right now, ${cName}. Mamma is right here with you."*
-- *"My hands are gentle, and your hands are gentle, ${cName}. We use hands for hugging."*
-- *"It is okay to feel angry, ${cName}, but it is not okay to hit."*
-- *"Whenever you want a big cuddle, ${cName}, my arms are wide open."*
+### 📋 What to Do Now (Safe Grounding Steps)
 
-### ⚠️ Common Mistakes to Avoid
-- Avoid shouting, lecturing, or hitting back to teach a lesson.
-- Avoid isolating ${cName} alone in a dark room when they are crying.
+1. **Take Their Feelings Seriously (Without Validating the Ghost)**:
+   - Avoid saying: *"Don't be silly, ghosts aren't real, go to sleep!"* (This makes the child feel dismissed and more anxious).
+   - Instead, say: *"I can see you feel scared right now, ${cName}. Mamma is right here, and our home is completely safe. Nothing can hurt you."*
 
-### 🌐 Trusted Health Guidelines
-- [Indian Academy of Pediatrics (IAP) - Parenting Guidelines](https://iapindia.org)
-- [World Health Organization (WHO) - Child Health](https://www.who.int/health-topics/child-health)`;
+2. **Physical Comfort & Grounding**:
+   - Kneel down, give a firm warm hug, and feel their breath together.
+   - Turn on a soft warm nightlight so the room feels cozy and familiar.
+   - Gently inspect the bedroom together: *"Let us look under the bed and in the closet together with our flashlight. Look, just your soft blankets and slippers!"*
+
+3. **Playful Daytime Mastery (Shift the Power)**:
+   - In daylight hours, draw funny friendly pictures of the "monster" wearing silly pink shoes or eating bananas. When children laugh at their fear, it loses its power.
+
+### ⚠️ What to Avoid
+- Avoid exposing ${cName} to scary TV shows, older sibling horror stories, or YouTube videos with jump scares.
+- Avoid using scary threats as discipline (*"If you don't eat your dinner, the monster will come"*).
+
+---RELATED_QUESTIONS---
+- [What gentle bedtime routines help soothe night fears for ${cName}?]
+- [What is the difference between a night terror and a nightmare?]
+- [How can a simple nightlight routine improve sleep confidence?]`;
   }
 
-  // Potty Training
-  if (lq.includes('potty') || lq.includes('toilet') || lq.includes('diaper') || lq.includes('poop') || lq.includes('pee')) {
-    return `${pName}, here is simple, low-stress potty training guidance for ${cName}:
+  // Picky Eating & Nutrition
+  if (lq.includes('picky') || lq.includes('eat') || lq.includes('food') || lq.includes('feed') || lq.includes('hungry') || lq.includes('milk') || lq.includes('ragi') || lq.includes('khichdi')) {
+    return `Hello ${pName}, here is practical, stress-free feeding guidance for ${cName}:
 
-### 📋 Step-by-Step Action Plan (for ${pName} & ${cName})
-1. **Place a Child Potty on the Floor**: Keep a small potty chair in the bathroom where ${cName}'s feet rest flat on the floor.
-2. **Invite to Sit for 3 Minutes After Meals**: Ask ${cName} to sit for just a few minutes after breakfast or lunch when digestion naturally moves.
-3. **Use Simple Cotton Underpants at Home**: Let ${cName} wear regular cotton pants so they can feel when they are wet.
-4. **Keep Tummy Happy with Water and Fruit**: Give plenty of water, ripe papaya, and curd so stool stays soft and easy to pass.
+### 🥦 Gentle Nutrition & Mealtime Steps for ${cName}
+1. **Division of Responsibility**:
+   - Your job as a parent: Decide *what* healthy wholesome food to offer and *when* at regular meal times.
+   - ${cName}'s job: Decide *how much* to eat from what is offered. Never force-feed or bribe with sweets.
+2. **Always Include a Safe Anchor Food**:
+   - Serve a tiny portion of a new dish next to a well-loved favorite (such as warm moong dal khichdi with pure A2 ghee, soft idli, or fresh curd rice).
+3. **Eat Together Screen-Free**:
+   - Sit together as a family. Toddlers model what they see adults eating with genuine appetite.
+4. **Patience with New Textures**:
+   - It often takes 10 to 15 relaxed exposures before a child willingly tastes a new vegetable or grain.
 
-### 🗣️ Calming Parent Scripts (What to Say to ${cName})
-- *"Accidents are totally okay, ${cName}. Pee goes in the potty. Let us change into dry clothes."*
-- *"It is potty time before we play with blocks, ${cName}. Would you like to sit on your potty?"*
-- *"Great job sitting so nicely, ${cName}! Even if no pee came, you tried so well."*
-- *"Your potty is right here whenever you need it, ${cName}."*
+### 🗣️ Calming Parent Script
+*"You don't have to finish everything on your plate, ${cName}. You can just take a tiny smell or one small bite whenever you are ready."*
 
-### ⚠️ Common Mistakes to Avoid
-- Avoid scolding, shaming, or getting upset when an accident happens.
-- Avoid forcing ${cName} to sit for more than 5 minutes on the potty.
-
-### 🌐 Trusted Health Guidelines
-- [Indian Academy of Pediatrics (IAP) - Child Health](https://iapindia.org)
-- [World Health Organization (WHO) - Child Care](https://www.who.int/health-topics/child-health)`;
+---RELATED_QUESTIONS---
+- [How do I prepare nutrient-rich sprouted ragi porridge for ${cName}?]
+- [What are easy iron-rich Indian finger foods for toddlers?]
+- [How much whole milk does a child need each day?]`;
   }
 
   // General Guidance
-  return `${pName}, here is simple, caring guidance for ${cName}:
+  return `Hello ${pName}, here is personalized, evidence-informed guidance for ${cName} (Age: ${age}):
 
-### 📋 Step-by-Step Action Plan (for ${pName} & ${cName})
-1. **Keep a Simple Daily Routine**: Children feel happiest when wake-up, meals, play, and bedtime happen at regular, predictable times.
-2. **Give Short, Clear Instructions**: Speak in short, warm sentences so ${cName} clearly understands what to do.
-3. **Offer Two Easy Choices**: Instead of asking yes/no questions, ask *"Would you like the red cup or the blue cup?"* to help ${cName} cooperate.
-4. **Comfort with Loving Touch**: A gentle hug or soft back patting (thappi) helps ${cName} feel safe and settled.
+### 💡 Understanding What ${cName} Needs
+Children thrive when their daily world feels predictable, warm, and secure. At age ${age}, rapid developmental leaps in motor skills, communication, and emotional awareness often create moments of both excitement and friction.
 
-### 🗣️ Calming Parent Scripts (What to Say to ${cName})
-- *"I hear you, my sweet ${cName}. Mamma is right here with you."*
-- *"Let us take a slow breath together, ${cName}. You are completely safe."*
-- *"You did such a wonderful job trying, ${cName}."*
-- *"Would you like to do this together with Mamma?"*
+### 📋 Practical Steps for ${pName}
+1. **Predictable Daily Anchors**: Maintain consistent wake-up, meal, outdoor play, and bedtime rituals.
+2. **Clear, Short Instructions**: Speak in calm, concise sentences at ${cName}'s eye level.
+3. **Offer Two Empowering Choices**: Prevent power struggles by asking: *"Would you like your green shoes or blue shoes?"*
+4. **Connection First**: When big feelings arise, stay calm and offer comforting physical presence (*thappi* or a cuddle).
 
-### ⚠️ Common Mistakes to Avoid
-- Avoid raising your voice or scolding when ${cName} is upset.
-- Avoid handing over mobile phones or screens to stop crying.
-
-### 🌐 Trusted Health Guidelines
-- [Indian Academy of Pediatrics (IAP) - Parenting Guidelines](https://iapindia.org)
-- [ICMR - National Institute of Nutrition (NIN)](https://www.nin.res.in)
-- [World Health Organization (WHO) - Child Health](https://www.who.int/health-topics/child-health)`;
+---RELATED_QUESTIONS---
+- [What are the most important developmental milestones for age ${age}?]
+- [How can I establish a smooth, tear-free bedtime routine?]
+- [What positive parenting scripts help when ${cName} says 'No'?]`;
 }
 
 function getSystemInstruction(parentName?: string, childName?: string, childAge?: string, languagePromptModifier?: string): string {
   const pName = parentName?.trim() || "Lashmi";
   const cName = childName?.trim() || "Ashwath";
   const age = childAge?.trim() || "14 Months";
+  const { bracket, label: ageBracketLabel } = parseChildAgeBracket(age);
 
   const langHeader = languagePromptModifier ? `
 ======================================================================
 🚨 CRITICAL LANGUAGE MANDATE (HIGHEST PRIORITY):
 ${languagePromptModifier}
 - You MUST write your ENTIRE response in the specified language using its authentic native script (e.g. Hindi in Devanagari, Tamil in Tamil script, Telugu in Telugu script, etc.).
-- Translate ALL section headings (Step-by-Step Action Plan, Calming Parent Scripts, Things to Avoid, Health Guidelines) into the specified language.
 - Do NOT output English when the parent has requested another language.
 ======================================================================
 ` : '';
 
   return `${langHeader}
-You are Tricky Toddler AI, an elite Pediatric Clinical Assistant, Child Safety Specialist, and Indian Academy of Pediatrics (IAP) & WHO expert advisor.
-Target parent: ${pName}
-Target child: ${cName} (Age: ${age})
+You are Tricky Toddler AI, an elite Pediatric Clinical Assistant, Child Safety Specialist, and Developmental Parenting Companion aligned with the Indian Academy of Pediatrics (IAP), ICMR-NIN, and WHO child health standards.
+Current Parent: ${pName}
+Current Child: ${cName} (Age: ${age} · ${ageBracketLabel})
 
-Rules:
-1. Always address parent ${pName} warmly and respectfully by name (e.g. "Namaste ${pName}," or "Hello ${pName},"). Never stutter, duplicate syllables, or append suffixes to the parent's name (never write "${pName}, mi!" or "${pName}, ${pName}!"). Always refer to the child as ${cName} (Age: ${age}).
-2. Provide clear, empathetic, culturally respectful Indian parenting and pediatric advice.
-3. Structure responses with:
-   - Step-by-Step Action Plan (for ${pName} & ${cName})
-   - Calming Parent Scripts (What to Say to ${cName})
-   - Common Mistakes to Avoid
-   - Trusted Health Guidelines (IAP, WHO, ICMR-NIN)
-4. For emergencies, recommend seeing a doctor immediately.`;
+### 1. DIRECT QUESTION UNDERSTANDING (ZERO KEYWORD HIJACKING)
+- Always answer the EXACT question asked by ${pName}. Never replace or derail the question with a generic or pre-canned response triggered by matching keywords.
+- Distinguish between requests for:
+  * Comparisons (e.g., "sensory meltdown vs boundary tantrum", "night terrors vs nightmares")
+  * Concrete practical activities or games (e.g., "5 indoor games for a rainy day")
+  * Real-time behavioral support (e.g., hitting, biting, screaming)
+  * Routine & sleep guidance (e.g., bedtime resistance, nap transitions)
+  * Pediatric nutrition & recipes (e.g., ragi porridge, picky eating)
+  * Emotional reassurance, fears, and imagination (e.g., fear of ghosts, monsters, separation anxiety)
+- If an essential detail is missing or ambiguous, ask a polite clarifying question. Never invent missing context or treat assumptions as facts.
+
+### 2. DEVELOPMENTAL INTELLIGENCE
+- Adapt all advice to ${cName}'s developmental stage (${age}):
+  * Infants (0–12 months): Motor foundation, responsive soothing, choking prevention, breast/formula/weaning cues.
+  * Toddlers (1–3 years): Sensory overload, emerging independence, emotional regulation, simple short phrases.
+  * Preschoolers (3–5 years): Magical thinking, imaginative play, peer interactions, boundary testing.
+  * School-age (6–12 years): Social dynamics, cognitive reasoning, homework balance, emotional resilience.
+  * Adolescents (13–18 years): Pubertal changes, autonomy, peer relationships, academic stress.
+- Never apply toddler discipline or management advice indiscriminately to older children.
+- Never label ${cName} as manipulative, lazy, stubborn, or intentionally defiant. Acknowledge that all behavior is communication.
+
+### 3. PEDIATRIC MEDICAL & CHILD SAFETY GUARDRAILS (CRITICAL)
+- **General Educational Guidance Only**: Never claim to diagnose a medical condition from a text description or photo.
+- **Red-Flag Warning Signs**: Proactively identify urgent symptoms (e.g. infant fever under 3 months, respiratory distress/stridor, sunken fontanelle/dehydration, lethargy, blue lips, severe allergic reaction) and communicate high clinical urgency immediately. Never minimize serious symptoms to offer false reassurance.
+- **No Medication Dosing**: Never calculate or recommend medication dosages without verified clinical evaluation.
+- **Indian Emergency Care**: For acute emergencies in India, instruct the parent to immediately call National Emergency **112**, Ambulance **108** / **102**, or proceed directly to the nearest pediatric emergency hospital.
+- **Contextual Medical Disclaimer**: When symptoms, illness, or medical concerns are discussed, append this single line at the very end:
+  ⚠️ *Medical Information Note: For educational guidance only. Please consult your pediatrician for individual clinical diagnosis.*
+  *(Do NOT include this medical disclaimer for non-medical topics like games, play, stories, toys, or daily crafts).*
+
+### 4. PRACTICAL & ACTIONABLE GUIDANCE (REAL-TIME PARENT FIRST)
+- Parents often ask questions while managing a difficult situation in real time. Prioritize actionable, immediate steps.
+- **Adaptive Structuring (Format Must Fit the Question)**:
+  * **For Games & Play Activities** (e.g., rainy day games):
+    - Title & Recommended Age Range
+    - Materials Needed (household items)
+    - Simple Step-by-Step Instructions
+    - Skills Encouraged (sensory, motor, cognitive)
+    *(No medical disclaimers or rigid behavioral sections).*
+  * **For Behavioral Challenges & Tantrums**:
+    1. **Direct Answer**: What is happening right now in plain terms.
+    2. **Why This May Happen**: Sensory, emotional, or developmental factors.
+    3. **What to Do Now**: Clear, immediate, safe physical steps for ${pName}.
+    4. **What to Say**: A natural, calming script to say to ${cName}.
+    5. **What to Avoid**: Reactions that escalate distress (shouting, isolating, bribing).
+    6. **When to Seek Help**: Warning signs warranting pediatric or specialist consult.
+  * **For Concept Comparisons** (e.g., Sensory Meltdown vs. Boundary Tantrum):
+    - Present a structured comparison as a clean GitHub-Flavored Markdown table with explicit line breaks between every single row:
+      | Factor | Concept A | Concept B |
+      | :--- | :--- | :--- |
+      | Core Trigger | ... | ... |
+      | Nervous System | ... | ... |
+      | Child's Control | ... | ... |
+      | What Parent Should Do | ... | ... |
+      *(CRITICAL: Each table row MUST be on its own line ending with newline; never merge rows with "||" or spaces).*
+    - Follow the table with concise "What to Do Now" bullet points and "What to Avoid".
+  * **For Simple or Quick Inquiries**:
+    - Provide a concise, clear answer directly without forced multi-section headings or artificial tables.
+
+### 5. CONVERSATIONAL CONTINUITY & MULTI-TURN MEMORY
+- You will receive previous messages in the conversation. Use earlier turns to understand context.
+- Accurately resolve pronouns ("he", "she", "they") and references ("that method didn't work", "we tried this yesterday").
+- When ${pName} reports that a suggested method failed, validate their experience and pivot to an adjusted next-stage approach. Never repeat the same rejected strategy.
+- Distinguish parent-supplied facts from assumptions.
+
+### 6. AMBIGUITY CLARIFICATION & FOLLOW-UP PROTOCOL
+- **If the question is unclear, misspelled, or ambiguous** (e.g., "bad tantrums" or "shot"):
+  Politely ask a 1-sentence clarifying question and list 2-3 clickable options using this exact delimiter:
+  ---CLARIFICATION_OPTIONS---
+  - [Option 1]
+  - [Option 2]
+  - [Option 3]
+- **At the end of every completed, informative response**:
+  Provide 2 to 3 directly relevant follow-up questions that ${pName} might want to explore next, using this exact delimiter:
+  ---RELATED_QUESTIONS---
+  - [Relevant follow-up question 1]
+  - [Relevant follow-up question 2]
+  - [Relevant follow-up question 3]
+
+### 7. TONE & EMPATHY
+- Warm, respectful, nonjudgmental, and culturally attuned to Indian and global families.
+- Address ${pName} respectfully by name (e.g., "Hello ${pName}," or "Namaste ${pName},") and mention ${cName} naturally where relevant. Do not robotically repeat ${cName}'s name in every single sentence.
+- Plain language: translate complex medical jargon into intuitive words (e.g., explain "sensory overload" in simple daily terms).`;
 }
 
 // In-memory fast cache for repeated pediatric responses
@@ -755,15 +871,9 @@ ${languagePromptModifier ? `\n\nREMINDER: Entire response must be in the request
       return res.end();
     }
 
-    if (isOutOfScopeQuery(userQueryText)) {
-      res.setHeader("Content-Type", "text/plain; charset=utf-8");
-      res.write(getOutOfScopePediatricNotice(pName, cName, age));
-      return res.end();
-    }
-
     const cacheKey = `${userQueryText.trim()}|${pName}|${cName}|${age}|${languagePromptModifier || ''}`;
     const cachedResponse = aiAssistantServerCache.get(cacheKey);
-    if (cachedResponse) {
+    if (cachedResponse && (!Array.isArray(messages) || messages.length <= 1)) {
       res.setHeader("Content-Type", "text/plain; charset=utf-8");
       res.write(cachedResponse);
       return res.end();
@@ -818,10 +928,10 @@ ${languagePromptModifier ? `\n\nREMINDER: Entire response must be in the request
             config: modelConfig
           });
 
-          // Wait at most 4.5 seconds for model connection and first stream handshake
-          const responseStream = await withTimeout(streamPromise, 4500);
+          // Wait at most 3.2 seconds for connection and first stream chunk
+          const responseStream = await withTimeout(streamPromise, 3200);
 
-          for await (const chunk of readStreamWithTimeout(responseStream, 3500)) {
+          for await (const chunk of readStreamWithTimeout(responseStream, 3000)) {
             if (chunk?.text) {
               const cleanedText = sanitizeAIOutput(chunk.text, parentName);
               if (cleanedText) {
@@ -837,7 +947,7 @@ ${languagePromptModifier ? `\n\nREMINDER: Entire response must be in the request
 
           if (streamedAny) {
             modelSucceeded = true;
-            if (accumulatedOutput.length > 50) {
+            if (accumulatedOutput.length > 50 && (!Array.isArray(messages) || messages.length <= 1)) {
               if (aiAssistantServerCache.size > 250) {
                 const firstKey = aiAssistantServerCache.keys().next().value;
                 if (firstKey) aiAssistantServerCache.delete(firstKey);
@@ -857,13 +967,12 @@ ${languagePromptModifier ? `\n\nREMINDER: Entire response must be in the request
 
       if (!streamedAny) {
         const fallbackText = generateTailoredFallback(
-          query || (Array.isArray(messages) && messages[0]?.parts?.[0]?.text) || (Array.isArray(messages) && messages[0]?.content) || '',
+          query || (Array.isArray(messages) && messages[messages.length - 1]?.parts?.[0]?.text) || (Array.isArray(messages) && messages[messages.length - 1]?.content) || '',
           parentName,
           childName,
           childAge
         );
         res.write(fallbackText);
-        aiAssistantServerCache.set(cacheKey, fallbackText);
       }
 
       res.end();
@@ -872,8 +981,7 @@ ${languagePromptModifier ? `\n\nREMINDER: Entire response must be in the request
         if (!res.headersSent) {
           res.setHeader("Content-Type", "text/plain; charset=utf-8");
         }
-        const fallbackText = generateTailoredFallback(req.body?.query || '', req.body?.parentName, req.body?.childName, req.body?.childAge);
-        res.write(fallbackText);
+        res.write(`Hello ${pName},\n\nWe encountered a momentary connection delay while generating guidance for ${cName}. Please tap below to retry.\n\n---RELATED_QUESTIONS---\n- [Retry this question]\n- [How can I calm ${cName} during big emotions?]\n- [What are gentle routine ideas for age ${age}?]`);
       } catch (e) {}
       res.end();
     }

@@ -783,15 +783,15 @@ export const NutriBandView: React.FC<NutriBandViewProps> = ({
         className="space-y-6 sm:space-y-8 scroll-mt-24 relative"
       >
         <span id="intelligence-comparison" className="absolute -top-24" />
-        <div className="text-center space-y-2.5 max-w-3xl mx-auto">
+        <div className="text-center space-y-2.5 max-w-6xl mx-auto px-4">
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-cyan-500/10 text-cyan-400 text-xs font-black uppercase tracking-wider border border-cyan-400/20">
             <Sparkles className="w-3.5 h-3.5" />
             <span>Product Comparison</span>
           </div>
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight">
+          <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black text-white tracking-tight whitespace-normal md:whitespace-nowrap">
             Conventional Wearables vs. NutriBand Health Ecosystem
           </h2>
-          <p className="text-slate-300 text-xs sm:text-sm md:text-base leading-relaxed">
+          <p className="text-slate-300 text-xs sm:text-sm md:text-base lg:text-lg leading-relaxed whitespace-normal md:whitespace-nowrap">
             Calibrated specifically for Indian childhood physiology with clinical sensors and FoodLens nutrition integration.
           </p>
         </div>

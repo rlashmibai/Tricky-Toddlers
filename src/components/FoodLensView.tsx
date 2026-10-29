@@ -500,7 +500,7 @@ export const FoodLensView: React.FC<FoodLensViewProps> = ({
         <div className="pointer-events-none absolute -top-32 -left-20 h-80 w-80 rounded-full bg-amber-500/15 blur-[100px]" />
         <div className="pointer-events-none absolute -bottom-32 -right-20 h-80 w-80 rounded-full bg-emerald-500/15 blur-[100px]" />
 
-        <div className="relative z-10 max-w-4xl mx-auto text-center space-y-4">
+        <div className="relative z-10 max-w-6xl mx-auto text-center space-y-4">
           
           {/* Eyebrow label */}
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-500/10 border border-amber-400/30 text-amber-300 text-xs font-black tracking-widest uppercase">
@@ -518,15 +518,15 @@ export const FoodLensView: React.FC<FoodLensViewProps> = ({
             </p>
           </div>
 
-          {/* Navigation Buttons Row - Wrap on small screens */}
-          <div className="flex flex-wrap items-center justify-center gap-2 pt-3 w-full py-1">
+          {/* Navigation Buttons Row - All on a single line with adjusted margins & spacing */}
+          <div className="flex flex-wrap lg:flex-nowrap items-center justify-center gap-1.5 sm:gap-2 pt-2 w-full px-1">
             {/* Why FoodLens */}
             <button
               type="button"
               onClick={() => scrollToSection('comparison-section')}
-              className="inline-flex items-center justify-center gap-1.5 sm:gap-2 px-3.5 sm:px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 hover:border-amber-400/40 text-white font-bold text-xs sm:text-sm tracking-tight transition-all active:scale-95 cursor-pointer shadow-md shrink-0 whitespace-nowrap"
+              className="inline-flex items-center justify-center gap-1.5 px-3 sm:px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 hover:border-amber-400/40 text-white font-bold text-xs sm:text-sm tracking-tight transition-all active:scale-95 cursor-pointer shadow-md shrink-0 whitespace-nowrap"
             >
-              <HelpCircle className="w-4 h-4 text-amber-300 shrink-0" />
+              <HelpCircle className="w-3.5 h-3.5 text-amber-300 shrink-0" />
               <span>Why FoodLens</span>
             </button>
 
@@ -534,9 +534,9 @@ export const FoodLensView: React.FC<FoodLensViewProps> = ({
             <button
               type="button"
               onClick={() => scrollToSection('how-it-works-section')}
-              className="inline-flex items-center justify-center gap-1.5 sm:gap-2 px-3.5 sm:px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 hover:border-blue-400/40 text-white font-bold text-xs sm:text-sm tracking-tight transition-all active:scale-95 cursor-pointer shadow-md shrink-0 whitespace-nowrap"
+              className="inline-flex items-center justify-center gap-1.5 px-3 sm:px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 hover:border-blue-400/40 text-white font-bold text-xs sm:text-sm tracking-tight transition-all active:scale-95 cursor-pointer shadow-md shrink-0 whitespace-nowrap"
             >
-              <Sparkles className="w-4 h-4 text-blue-300 shrink-0" />
+              <Sparkles className="w-3.5 h-3.5 text-blue-300 shrink-0" />
               <span>FoodLens in Action</span>
             </button>
 
@@ -544,34 +544,34 @@ export const FoodLensView: React.FC<FoodLensViewProps> = ({
             <button
               type="button"
               onClick={() => scrollToSection('interface-section')}
-              className="inline-flex items-center justify-center gap-1.5 sm:gap-2 px-3.5 sm:px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 hover:border-emerald-400/40 text-white font-bold text-xs sm:text-sm tracking-tight transition-all active:scale-95 cursor-pointer shadow-md shrink-0 whitespace-nowrap"
+              className="inline-flex items-center justify-center gap-1.5 px-3 sm:px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 hover:border-emerald-400/40 text-white font-bold text-xs sm:text-sm tracking-tight transition-all active:scale-95 cursor-pointer shadow-md shrink-0 whitespace-nowrap"
             >
-              <Sparkles className="w-4 h-4 text-emerald-400 shrink-0" />
+              <Sparkles className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
               <span>Nutrition Scorecard</span>
             </button>
 
-            {/* Scan Food */}
+            {/* Scan Food - Only this button in Yellow */}
             <button
               type="button"
               onClick={scrollToScanner}
-              className="inline-flex items-center justify-center gap-1.5 sm:gap-2 px-4 sm:px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-400 hover:from-amber-300 hover:to-yellow-300 text-slate-950 font-black text-xs sm:text-sm tracking-tight shadow-lg shadow-amber-500/25 active:scale-95 transition-all cursor-pointer shrink-0 whitespace-nowrap"
+              className="inline-flex items-center justify-center gap-1.5 px-3.5 sm:px-4 py-2 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-400 hover:from-amber-300 hover:to-yellow-300 text-slate-950 font-black text-xs sm:text-sm tracking-tight shadow-lg shadow-amber-500/25 active:scale-95 transition-all cursor-pointer shrink-0 whitespace-nowrap"
             >
-              <Camera className="w-4 h-4 text-slate-950 stroke-[2.5] shrink-0" />
+              <Camera className="w-3.5 h-3.5 text-slate-950 stroke-[2.5] shrink-0" />
               <span>Scan Food</span>
-              <ArrowDown className="w-3.5 h-3.5 text-slate-950 shrink-0" />
+              <ArrowDown className="w-3 h-3 text-slate-950 shrink-0" />
             </button>
 
             {/* Meal Diary */}
             <Link
               to="/dish-log"
               onClick={() => playSound('glass')}
-              className="inline-flex items-center justify-center gap-1.5 sm:gap-2 px-3.5 sm:px-4 py-2.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-400/30 hover:border-amber-400 text-amber-300 hover:text-white font-bold text-xs sm:text-sm tracking-tight transition-all active:scale-95 cursor-pointer shadow-md shrink-0 whitespace-nowrap"
+              className="inline-flex items-center justify-center gap-1.5 px-3 sm:px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 hover:border-amber-400/40 text-white font-bold text-xs sm:text-sm tracking-tight transition-all active:scale-95 cursor-pointer shadow-md shrink-0 whitespace-nowrap"
             >
-              <Calendar className="w-4 h-4 text-amber-400 shrink-0" />
+              <Calendar className="w-3.5 h-3.5 text-amber-300 shrink-0" />
               <span>Meal Diary</span>
             </Link>
 
-            {/* Sample Foods Page */}
+            {/* Sample Foods Page - Consistent in white */}
             <button
               id="top-sample-foods-btn"
               type="button"
@@ -583,10 +583,10 @@ export const FoodLensView: React.FC<FoodLensViewProps> = ({
                   navigate('/sample-foods');
                 }
               }}
-              className="inline-flex items-center justify-center gap-1.5 sm:gap-2 px-3.5 sm:px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-400 hover:from-amber-300 hover:to-yellow-300 text-slate-950 font-black text-xs sm:text-sm tracking-tight shadow-lg shadow-amber-500/20 active:scale-95 transition-all cursor-pointer shrink-0 whitespace-nowrap"
+              className="inline-flex items-center justify-center gap-1.5 px-3 sm:px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 hover:border-amber-400/40 text-white font-bold text-xs sm:text-sm tracking-tight transition-all active:scale-95 cursor-pointer shadow-md shrink-0 whitespace-nowrap"
               title="Browse Indian Baby Foods in Dedicated Food Page"
             >
-              <Sparkles className="w-4 h-4 text-slate-950 fill-slate-950 shrink-0" />
+              <Sparkles className="w-3.5 h-3.5 text-amber-300 shrink-0" />
               <span>Sample Foods Page</span>
             </button>
           </div>
@@ -889,7 +889,7 @@ export const FoodLensView: React.FC<FoodLensViewProps> = ({
               <div className="flex items-center gap-2.5">
                 <span className={`w-3 h-3 rounded-full ${isCameraActive ? 'bg-emerald-400 animate-ping' : 'bg-amber-400'}`} />
                 <span className="text-xs sm:text-sm font-black uppercase tracking-wider text-emerald-300">
-                  {isCameraActive ? 'Live Camera Vision Scanner Active' : 'AI Food & Nutrition Label Scanner Window'}
+                  AI Food & Nutrition Label Scanner Window
                 </span>
               </div>
               <div className="flex items-center gap-2">
@@ -1021,48 +1021,24 @@ export const FoodLensView: React.FC<FoodLensViewProps> = ({
               )}
             </div>
 
-            {/* Scanner Control Bar - Circular Capture & Analyse and Upload Image */}
-            <div className="mt-4 flex flex-wrap items-center justify-center gap-4 pt-2 border-t border-white/10">
-              <button
-                type="button"
-                onClick={handleCaptureAndAnalyze}
-                className="group flex items-center gap-3 px-6 sm:px-8 py-3 rounded-2xl bg-gradient-to-r from-emerald-500/20 to-teal-500/20 hover:from-emerald-500/30 hover:to-teal-500/30 border-2 border-emerald-400 text-white font-black text-xs sm:text-sm shadow-xl active:scale-95 transition-all cursor-pointer"
-              >
-                {/* Green circular shutter matching reference image */}
-                <div className="w-11 h-11 rounded-full border-4 border-emerald-400 p-0.5 flex items-center justify-center bg-black shrink-0 shadow-[0_0_15px_rgba(52,211,153,0.3)]">
-                  <div className="w-6 h-6 rounded-full bg-emerald-400 group-hover:scale-105 transition-transform" />
-                </div>
-                <span>{isCameraActive ? 'Capture and Analyse' : 'Turn On & Analyse'}</span>
-              </button>
+            {/* Hidden native camera capture input for phones/tablets */}
+            <input
+              type="file"
+              ref={nativeCameraInputRef}
+              accept="image/*"
+              capture="environment"
+              onChange={handleFileUpload}
+              className="hidden"
+            />
 
-              <button
-                type="button"
-                onClick={() => fileInputBottomRef.current?.click()}
-                className="px-6 py-3.5 rounded-2xl bg-white/10 hover:bg-white/15 text-white font-bold text-xs sm:text-sm border border-white/15 active:scale-95 transition-all cursor-pointer flex items-center justify-center gap-2"
-              >
-                <Upload className="w-4 h-4 text-emerald-400" />
-                <span>Upload Image</span>
-              </button>
-
-              {/* Hidden native camera capture input for phones/tablets */}
-              <input
-                type="file"
-                ref={nativeCameraInputRef}
-                accept="image/*"
-                capture="environment"
-                onChange={handleFileUpload}
-                className="hidden"
-              />
-
-              {/* Hidden photo file input */}
-              <input
-                type="file"
-                ref={fileInputBottomRef}
-                accept="image/*"
-                onChange={handleFileUpload}
-                className="hidden"
-              />
-            </div>
+            {/* Hidden photo file input */}
+            <input
+              type="file"
+              ref={fileInputBottomRef}
+              accept="image/*"
+              onChange={handleFileUpload}
+              className="hidden"
+            />
           </div>
 
           {/* Detailed Result Card */}

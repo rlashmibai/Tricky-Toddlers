@@ -424,17 +424,10 @@ ${getHowICanSupportYou(cName, childAge)}`;
 
 export function isOutOfScopeQuery(query: string): boolean {
   const q = query.toLowerCase().trim();
-  const outOfScopeKeywords = [
-    'song', 'songs', 'music', 'album', 'singer', 'released newly', 'new release', 'newly released', 'latest song', 'new song', 'spotify', 'lyrics',
-    'movie', 'movies', 'cinema', 'actor', 'actress', 'hollywood', 'bollywood', 'netflix series', 'box office', 'film', 'trailer',
-    'stock market', 'crypto', 'bitcoin', 'trading shares', 'stock price', 'mutual fund', 'forex', 'sensex', 'nifty', 'share market',
-    'programming', 'coding', 'python code', 'javascript code', 'write code', 'html css', 'debug code', 'software engineer', 'c++', 'java code',
-    'election', 'president', 'prime minister', 'politics', 'geopolitics', 'war news', 'parliament', 'political party',
-    'sports score', 'football match', 'cricket match', 'nba finals', 'ipl match', 'world cup score',
-    'car repair', 'real estate investment', 'crypto wallet',
-    'adult medical', 'viagra', 'erectile', 'adult surgery', 'cancer treatment for adult', 'adult dating', 'porn'
+  const strictlyAdultKeywords = [
+    'adult dating', 'porn', 'xxx', 'viagra', 'erectile dysfunction', 'cryptocurrency trading', 'forex trading bot'
   ];
-  return outOfScopeKeywords.some(kw => q.includes(kw));
+  return strictlyAdultKeywords.some(kw => q.includes(kw));
 }
 
 export function detectCategory(question: string): AISearchRecord['category'] {
