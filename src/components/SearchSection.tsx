@@ -294,7 +294,14 @@ export const SearchSection: React.FC = () => {
     // Build multi-turn conversational array for Gemini
     const conversationHistoryForApi = existingHistory
       .filter(m => !m.isError && m.content)
-      .map(m => ({ role: m.role, content: m.content }));
+      .map(m => {
+        if (m.role === 'assistant') {
+          // Keep summary/first 350 chars of previous assistant responses to avoid latency lag while preserving memory
+          const trimmed = m.content.length > 350 ? m.content.slice(0, 350) + '...' : m.content;
+          return { role: m.role, content: trimmed };
+        }
+        return { role: m.role, content: m.content };
+      });
     conversationHistoryForApi.push({ role: 'user', content: promptText });
 
     let accumulatedText = '';
