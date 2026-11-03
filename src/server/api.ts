@@ -247,6 +247,178 @@ function generateTailoredFallback(q: string, parentName?: string, childName?: st
     return getResponsibleAIRefusal(pName, cName, age);
   }
 
+  const { bracket } = parseChildAgeBracket(age);
+  const isInfant = bracket === 'infant';
+
+  // ==========================================
+  // INFANT BRACKET (0–12 MONTHS / e.g. 3 Months)
+  // ==========================================
+  if (isInfant) {
+    // A. Infant Crying, Colic, Witching Hour, Gas & Soothing Scripts
+    if (
+      lq.includes('colic') || lq.includes('gas') || lq.includes('cry') || lq.includes('crying') || 
+      lq.includes('sooth') || lq.includes('calm') || lq.includes('witching') || lq.includes('fuss') ||
+      lq.includes('tantrum') || lq.includes('meltdown') || lq.includes('script') || lq.includes('scream')
+    ) {
+      return `Hello ${pName}, here is gentle, evidence-based pediatric guidance on soothing ${cName} (Age: ${age}):
+
+### 💡 Understanding ${cName}'s Crying at 3 Months
+At 3 months, crying is an infant's primary voice—not defiance or behavioral tantrums. The peak of the "witching hour" and immature digestive peristalsis often coincide in the late afternoon and evening.
+
+### ⏱️ The 4-Step Infant Soothing Protocol (The 5 S's)
+1. **Side or Stomach Hold (While Awake & Supervised)**: Hold ${cName} across your forearm in the "reverse football hold" with gentle tummy pressure.
+2. **Shushing & Low Vocal Frequency**: Make a rhythmic, continuous "shhh-shhh" sound close to ${cName}'s ear, louder than her crying, mimicking arterial womb sounds.
+3. **Gentle Rhythmic Motion**: Sway side to side or bounce softly on a yoga ball with slow, steady 60-beats-per-minute rhythm.
+4. **Non-Nutritive Sucking & Patting**: Offer a clean pacifier, your clean finger, or soothe with rhythmic back-patting (*thappi*).
+
+### 💨 Rapid Relief for Trapped Gas
+* **Bicycle Legs**: Lay ${cName} on her back and gently cycle her legs toward her tummy in a circular pedaling motion for 60 seconds.
+* **Warm Coconut Oil Clockwise Circles**: Gently massage ${cName}'s lower abdomen clockwise (following the anatomical path of the colon).
+* **Mid-Feed Burping**: Burp ${cName} halfway through bottle or breast sessions to release air pockets before milk settles.
+
+### 🗣️ Calming Scripts & Lori for ${pName} to Speak
+* *"Mamma is right here, ${cName}. Your little tummy is safe and warm. We are resting together."*
+* Sing a low, gentle lullaby (*Jo Achyutananda* or *Lalla Lalla Lori*); the maternal vibratory frequency lowers cortisol in infants within 90 seconds.
+
+### 🛑 Urgent Pediatric Red Flags (Seek Immediate Medical Care)
+* Inconsolable high-pitched screeching lasting more than 3 consecutive hours.
+* Fever higher than 100.4°F (38°C) in an infant under 3 months.
+* Hard, distended, tender abdomen or projectile vomiting with bile (green tint).
+
+---CLARIFICATION_OPTIONS---
+- [${cName} cries inconsolably every evening around 5 PM–8 PM (colic / witching hour).]
+- [${cName} draws her knees to her chest, grunts, and passes trapped gas.]
+- [${cName} is crying from being overtired and fighting naps.]
+
+---RELATED_QUESTIONS---
+- [What is the difference between normal infant gas and milk protein intolerance?]
+- [When does infant colic naturally peak and resolve according to pediatricians?]
+- [How can I help ${cName} settle when she gets overtired in the evening?]`;
+    }
+
+    // B. Infant Sleep, Wake Windows, Naps & 4-Month Regression
+    if (lq.includes('sleep') || lq.includes('nap') || lq.includes('wake') || lq.includes('bedtime') || lq.includes('night') || lq.includes('regression')) {
+      return `Hello ${pName}, here is pediatric sleep and wake-window guidance for ${cName} (Age: ${age}):
+
+### 🌙 3-Month Wake Windows & Daily Rhythm
+* **Optimal Awake Window**: At 3 months, ${cName}'s sleep pressure builds quickly. Her ideal wake window is **60 to 90 minutes** between naps. Keeping her awake longer than 90 minutes leads to an overtired cortisol spike and frantic bedtime resistance.
+* **Daily Nap Count**: Most 3-month-olds thrive on **3 to 4 daytime naps** totaling 3.5 to 5 hours of daytime sleep, plus 9 to 10 hours at night.
+
+### 🔍 Subtle Drowsy Cues (Before the Crying Starts)
+* **Early Cues (Time to start winding down)**: Staring into the distance, slower limb movements, quiet disengagement.
+* **Mid Cues**: Rubbing eyes, yawning, pulling at ears, red eyebrows.
+* **Late Cues (Overtired)**: Arching back, frantic crying, pushing away comfort.
+
+### 🧸 The 4-Step 3-Month Bedtime & Nap Ritual
+1. **Dim the Room 15 Minutes Early**: Turn off bright overhead lights and switch on warm red or amber nightlights.
+2. **Swaddle Transition / Sleep Sack**: If ${cName} is starting to roll, transition to an arms-out sleep sack for safety.
+3. **White Noise at 50 dB**: Constant low-frequency rain or womb sound masks household noises.
+4. **Rhythmic Indian Patting (Thappi)**: Lay ${cName} drowsy but awake on a flat, firm mattress and pat her bottom or thigh in a slow heartbeat rhythm.
+
+### 🛡️ Preparing for the 4-Month Sleep Regression
+Around 14–18 weeks, infant sleep biology permanently matures from 2 stages into adult-like 4-stage sleep cycles. Start practicing putting ${cName} down slightly drowsy so she learns to connect sleep cycles independently.
+
+---CLARIFICATION_OPTIONS---
+- [${cName} takes short naps (only 20 to 30 minutes) and wakes up crying.]
+- [${cName} wakes up every 1 to 2 hours at night and needs soothing to resettle.]
+- [${cName} will only fall asleep while feeding or being bounced on an exercise ball.]
+
+---RELATED_QUESTIONS---
+- [How many hours of sleep does a 3-month-old infant need in 24 hours?]
+- [How do I gently transition ${cName} from swaddling to an arms-out sleep sack?]
+- [What should I do during the upcoming 4-month sleep regression?]`;
+    }
+
+    // C. Infant Feeding, Cluster Feeding & Milk
+    if (lq.includes('feed') || lq.includes('milk') || lq.includes('eat') || lq.includes('food') || lq.includes('formula') || lq.includes('breast') || lq.includes('bottle') || lq.includes('ragi') || lq.includes('solids') || lq.includes('wean')) {
+      return `Hello ${pName}, here is pediatric infant feeding guidance for ${cName} (Age: ${age}):
+
+### 🍼 Exclusive Milk Nutrition (0–6 Months Standards)
+* **WHO & IAP Gold Standard**: At age ${age}, ${cName} must be fed **exclusively on breast milk or infant formula**. No cow's milk, animal milk, solid food purees, honey, or water should be given before 6 months.
+* **Immature Digestive Barrier**: Before 6 months, an infant's gut lining is open and kidneys cannot filter high solute loads. Introducing ragi porridge or solid purees at 3 months increases allergy and gastrointestinal infection risks.
+
+### ⏱️ The 3-Month Growth Spurt & Cluster Feeding
+* Around 12 to 14 weeks, infants undergo a major developmental leap. ${cName} may suddenly nurse or demand a bottle every 60–90 minutes for 48 to 72 hours.
+* **This is completely normal**: It does not mean your milk supply has dried up; it is nature's way of recalibrating supply to meet her rapid growth.
+
+### 🔍 Reading Early Hunger Signs (Feed on Demand)
+1. **Early Signs (Best time to feed)**: Smacking lips, opening mouth, turning head toward chest (rooting reflex), sucking on hands or fingers.
+2. **Active Signs**: Squirming, stretching, breathing faster.
+3. **Late Signs (Calm before feeding)**: Crying and red face. If crying, soothe ${cName} first for 1 minute before latching to avoid swallowing excess air.
+
+### 🛑 Infant Feeding Mistakes to Avoid
+* ❌ Never add baby cereal, ragi flour, or sugar to a bottle to "make them sleep through the night" (proven choking hazard).
+* ❌ Never give honey to an infant under 12 months (severe infant botulism risk).
+
+---CLARIFICATION_OPTIONS---
+- [${cName} is cluster feeding every hour—is this a normal 3-month growth spurt?]
+- [${cName} spits up frequently after feeds—is this acid reflux or normal spit-up?]
+- [When can I start introducing first solid food purees or ragi to ${cName}?]
+
+---RELATED_QUESTIONS---
+- [How many ounces of formula/milk does a 3-month-old typically drink per feeding?]
+- [How do I know if ${cName} is getting enough wet diapers each day?]
+- [What are signs of cow's milk protein allergy (CMPA) in breastfed or formula-fed infants?]`;
+    }
+
+    // D. Infant Tummy Time, Milestones & Sensory Play
+    if (lq.includes('tummy') || lq.includes('play') || lq.includes('game') || lq.includes('toy') || lq.includes('milestone') || lq.includes('vision') || lq.includes('roll')) {
+      return `Hello ${pName}, here is developmental play and milestone guidance for ${cName} (Age: ${age}):
+
+### 🌟 3-Month Developmental Leap Highlights
+At 3 months, ${cName} is discovering her hands, smiling responsively at familiar faces, tracking moving objects with both eyes across 180 degrees, and pushing up on her forearms during tummy time.
+
+### 🧸 5 Simple Developmental 3-Month Activities
+1. **Chest-to-Chest Tummy Time**: Recline slightly on a sofa and place ${cName} tummy-down on your chest. Look into her eyes and talk—she will lift her head to see your face while feeling safe.
+2. **High-Contrast Visual Tracking**: Hold black-and-white geometric pattern cards or red toys 8 to 10 inches from her face and slowly glide them horizontally to stimulate ocular coordination.
+3. **Vocal Mimicry & Coo Duets**: When ${cName} makes a cooing sound ("ahhh", "ooh"), wait 2 seconds, then repeat the exact sound back to her with a warm smile. This builds proto-conversational brain circuits.
+4. **Bicycle Kicking with Sensory Socks**: Put soft patterned baby booties or wrist rattles on ${cName} so she discovers cause-and-effect as she kicks her legs.
+5. **Warm Coconut Oil Infant Massage (Abhyanga)**: A 5-minute gentle massage after bathtime stimulates vagal nerve tone, promotes digestion, and improves sleep.
+
+### ⏱️ Tummy Time Progression: What if She Cries?
+* Aim for **3 to 5 minutes at a time**, 3 to 4 times a day, immediately after a diaper change when she is alert and not hungry or overly full.
+* If she fusses, place a small rolled towel under her chest or place a baby-safe mirror in front of her.
+
+---CLARIFICATION_OPTIONS---
+- [${cName} cries after 1 or 2 minutes of tummy time—how do I make it easier?]
+- [What toys and high-contrast cards are best for a 3-month-old's brain?]
+- [When do 3-month-old infants usually start rolling from tummy to back?]
+
+---RELATED_QUESTIONS---
+- [What gross motor milestones should a 3-month-old reach this month?]
+- [How can I encourage ${cName} to reach and bat at hanging toys?]
+- [When should I consult a pediatrician if my infant does not hold her head steady?]`;
+    }
+
+    // E. General 3-Month Infant Guidance
+    return `Hello ${pName}, here is personalized, evidence-informed developmental guidance for ${cName} (Age: ${age}):
+
+### 💡 Developmental Insight for 3-Month-Old ${cName}
+At 3 months, infants undergo the "Fourth Trimester" transition. Their nervous system is consolidating circadian rhythms, smiling is intentional and social, and vocal cooing reflects early communicative intent.
+
+### 🎯 3 Daily Anchors for ${cName}
+1. **Respect the 60–90 Minute Wake Window**: Put ${cName} down for naps as soon as early yawns appear; avoiding overtiredness transforms nighttime sleep.
+2. **Responsive Soothing Always**: You cannot "spoil" a 3-month-old infant with too much holding or affection. Responsive comfort strengthens hippocampal security.
+3. **Daily Floor Tummy Time**: Practice short 3-minute tummy sessions throughout the day to build neck, back, and shoulder muscles for rolling.
+
+### 🛑 Pediatric Safety Essentials
+* Always place ${cName} on her back to sleep on a firm, flat mattress free of pillows, bumpers, or heavy quilts (SIDS prevention).
+* Keep all advice gentle, responsive, and age-appropriate.
+
+---CLARIFICATION_OPTIONS---
+- [${cName} is fussy and crying in the late afternoon/evening.]
+- [${cName} is waking up frequently throughout the night.]
+- [I want to know about 3-month tummy time and motor milestones.]
+
+---RELATED_QUESTIONS---
+- [What are typical 3-month wake windows between daily naps?]
+- [How can I soothe evening colic crying spells in ${cName}?]
+- [When does the 4-month sleep regression start and how do I prepare?]`;
+  }
+
+  // ==========================================
+  // TODDLER & OLDER BRACKETS
+  // ==========================================
   // 1. Calming Scripts, Public Tantrums & What to Say (HIGH PRIORITY)
   if (
     lq.includes('script') || 
@@ -486,7 +658,7 @@ Between ages 2 and 6, children enter a natural developmental stage known as **ma
 2. **Acknowledge the Frustration**: *"It is really hard to wait when you have a fun idea for that toy."*
 
 ### 🗣️ Turn-Taking Script (Instead of Forced Sharing)
-* *"Ashwath is playing with the truck right now. When his hands are all done, it will be your turn."*
+* *"${cName} is playing with the truck right now. When ${cName}'s hands are all done, it will be your turn."*
 * *"Would you like to play with the blue car or the wooden blocks while you wait?"*
 
 ### 🧸 Protected Special Toys Strategy

@@ -7,7 +7,8 @@ import {
   Send, Loader2, MessageCircle, 
   Bold, Italic, List, Search, 
   ShieldCheck, CheckCircle2, ChevronLeft,
-  X, Sparkles, MessageSquare, Paperclip
+  X, Sparkles, MessageSquare, Paperclip,
+  AlertCircle
 } from 'lucide-react';
 import { isPersonalInfoQuery } from '../lib/aiHistory';
 import { playSound } from '../lib/sounds';
@@ -159,7 +160,7 @@ const INITIAL_PARENT_ACCOUNTS: ParentAccount[] = [
 ];
 
 export const GlobalChat: React.FC = () => {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const [conversations, setConversations] = useState<ParentAccount[]>(INITIAL_PARENT_ACCOUNTS);
   const [selectedParentId, setSelectedParentId] = useState<string>('sarah');
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -169,6 +170,8 @@ export const GlobalChat: React.FC = () => {
   const [mobileView, setMobileView] = useState<'list' | 'chat'>('chat');
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  const isDirectMessagingAllowed = profile?.allowDirectMessages !== false && localStorage.getItem('allow_direct_messages') !== 'false';
 
   // Active parent object
   const activeParent = conversations.find(p => p.id === selectedParentId) || conversations[0];
@@ -233,6 +236,12 @@ export const GlobalChat: React.FC = () => {
   const handleSendMessage = async (e?: React.FormEvent) => {
     if (e?.preventDefault) e.preventDefault();
     if (!newMessage.trim()) return;
+
+    if (!isDirectMessagingAllowed) {
+      setPrivacyWarning("1:1 Direct messaging is turned off in your Profile Settings. Enable 'Allow other parents to send messages directly' to send and receive 1:1 messages, or use Community Help.");
+      setTimeout(() => setPrivacyWarning(null), 6000);
+      return;
+    }
 
     // Responsible AI: Protect family and child privacy
     if (isPersonalInfoQuery(newMessage)) {
@@ -556,13 +565,46 @@ export const GlobalChat: React.FC = () => {
               </div>
             )}
 
+            {!isDirectMessagingAllowed && (
+              <div className="p-4 rounded-2xl bg-amber-500/15 border border-amber-500/30 text-amber-200 text-xs sm:text-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-lg">
+                <div className="flex items-start gap-2.5 min-w-0">
+                  <AlertCircle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+                  <div>
+                    <strong className="text-amber-300 font-bold block">1:1 Direct Messaging Paused</strong>
+                    <span>
+                      You have unchecked &ldquo;Allow other parents to send messages directly&rdquo; in your Profile Settings. No one can send messages to you, and you cannot send 1:1 messages to any parent. However, <strong>Community Help</strong> is available for any conversations!
+                    </span>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 shrink-0 self-end sm:self-auto">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      playSound('pop');
+                      window.dispatchEvent(new CustomEvent('nav-change-tab', { detail: 'communityHelp' }));
+                    }}
+                    className="px-3 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-xs transition-all shadow cursor-pointer whitespace-nowrap"
+                  >
+                    Open Community Help
+                  </button>
+                  <a
+                    href="/profile#section-direct-messaging"
+                    className="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold text-xs transition-all border border-white/15 whitespace-nowrap"
+                  >
+                    Profile Settings
+                  </a>
+                </div>
+              </div>
+            )}
+
             {/* Toolbar */}
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1">
                 <button 
                   type="button" 
                   onClick={() => insertFormat('bold')} 
-                  className="p-1.5 hover:bg-white/10 rounded-lg text-slate-400 hover:text-white transition-colors"
+                  disabled={!isDirectMessagingAllowed}
+                  className="p-1.5 hover:bg-white/10 rounded-lg text-slate-400 hover:text-white transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                   title="Bold"
                 >
                   <Bold className="w-3.5 h-3.5" />
@@ -570,7 +612,8 @@ export const GlobalChat: React.FC = () => {
                 <button 
                   type="button" 
                   onClick={() => insertFormat('italic')} 
-                  className="p-1.5 hover:bg-white/10 rounded-lg text-slate-400 hover:text-white transition-colors"
+                  disabled={!isDirectMessagingAllowed}
+                  className="p-1.5 hover:bg-white/10 rounded-lg text-slate-400 hover:text-white transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                   title="Italic"
                 >
                   <Italic className="w-3.5 h-3.5" />
@@ -578,14 +621,15 @@ export const GlobalChat: React.FC = () => {
                 <button 
                   type="button" 
                   onClick={() => insertFormat('bullet')} 
-                  className="p-1.5 hover:bg-white/10 rounded-lg text-slate-400 hover:text-white transition-colors"
+                  disabled={!isDirectMessagingAllowed}
+                  className="p-1.5 hover:bg-white/10 rounded-lg text-slate-400 hover:text-white transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                   title="Bullet list"
                 >
                   <List className="w-3.5 h-3.5" />
                 </button>
-                <label className="p-1.5 hover:bg-white/10 rounded-lg text-slate-400 hover:text-white transition-colors cursor-pointer" title="Upload Image/File">
+                <label className={`p-1.5 hover:bg-white/10 rounded-lg text-slate-400 hover:text-white transition-colors ${!isDirectMessagingAllowed ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'}`} title="Upload Image/File">
                   <Paperclip className="w-3.5 h-3.5" />
-                  <input type="file" className="hidden" accept="image/*" onChange={(e) => {
+                  <input type="file" disabled={!isDirectMessagingAllowed} className="hidden" accept="image/*" onChange={(e) => {
                     if (e.target.files && e.target.files[0]) {
                       // Logic to upload
                     }
@@ -603,6 +647,7 @@ export const GlobalChat: React.FC = () => {
               <textarea
                 ref={inputRef}
                 rows={1}
+                disabled={!isDirectMessagingAllowed}
                 value={newMessage}
                 onChange={(e) => setNewMessage(e.target.value)}
                 onKeyDown={(e) => {
@@ -611,12 +656,16 @@ export const GlobalChat: React.FC = () => {
                     handleSendMessage();
                   }
                 }}
-                placeholder={`Message ${activeParent.name}... (Press Enter to send, Shift+Enter for line break)`}
-                className="flex-1 bg-white/[0.04] border border-white/10 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500 transition-all placeholder:text-slate-500 resize-none min-h-[44px] max-h-32 leading-relaxed"
+                placeholder={
+                  !isDirectMessagingAllowed 
+                    ? "Direct messaging is disabled in your Profile Settings. Enable it to message parents, or use Community Help." 
+                    : `Message ${activeParent.name}... (Press Enter to send, Shift+Enter for line break)`
+                }
+                className="flex-1 bg-white/[0.04] border border-white/10 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500 transition-all placeholder:text-slate-500 resize-none min-h-[44px] max-h-32 leading-relaxed disabled:opacity-50 disabled:cursor-not-allowed"
               />
               <button
                 type="submit"
-                disabled={loading || !newMessage.trim()}
+                disabled={loading || !newMessage.trim() || !isDirectMessagingAllowed}
                 className="px-5 py-2.5 h-[44px] bg-gradient-to-r from-indigo-500 to-indigo-600 hover:from-indigo-400 hover:to-indigo-500 text-white rounded-xl font-bold transition-all disabled:opacity-40 shadow-lg shadow-indigo-500/25 active:scale-95 shrink-0 flex items-center justify-center cursor-pointer"
               >
                 {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}

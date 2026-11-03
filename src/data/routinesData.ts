@@ -1304,5 +1304,518 @@ export const AGE_GROUPS: AgeGroupData[] = [
         whoReference: 'WHO Consolidated Sleep Health'
       }
     ]
+  },
+  // ==========================================
+  // 5. 3 - 4 YEARS (Preschool Independence)
+  // ==========================================
+  {
+    id: '3_4y',
+    label: '3 - 4 Years',
+    emoji: '🎨',
+    rangeDesc: 'Preschool Independence, language explosion & self-care agency.',
+    whoAesthetic: 'WHO Early Childhood Development standard for preschool motor coordination, emotional regulation, and autonomy.',
+    morning: [
+      {
+        id: '3_4_m_wake',
+        name: 'Morning Stretch & Sunshine Wake-up',
+        emoji: '☀️',
+        desc: 'Wake up with cheerful greeting, open curtains together, and do a big sky stretch to energize muscles.',
+        colorClass: 'from-amber-400/10 to-amber-400/5 border-amber-400/20 text-amber-300',
+        glowClass: 'shadow-amber-400/10',
+        indicatorColor: 'bg-amber-400',
+        whoReference: 'WHO Circadian & Motor Vitality'
+      },
+      {
+        id: '3_4_m_potty',
+        name: 'Independent Potty & Handwash',
+        emoji: '🚽',
+        desc: 'Preschooler visits the potty independently, flushes, and washes hands with soap for 20 seconds.',
+        colorClass: 'from-sky-400/10 to-sky-400/5 border-sky-400/20 text-sky-300',
+        glowClass: 'shadow-sky-400/10',
+        indicatorColor: 'bg-sky-400',
+        whoReference: 'WHO Pediatric Hygiene Standard'
+      },
+      {
+        id: '3_4_m_brush',
+        name: '2-Minute Fun Toothbrushing',
+        emoji: '🪥',
+        desc: 'Brush top, bottom, and back molars with pea-sized fluoride toothpaste, spitting foam into sink.',
+        colorClass: 'from-teal-400/10 to-teal-400/5 border-teal-400/20 text-teal-300',
+        glowClass: 'shadow-teal-400/10',
+        indicatorColor: 'bg-teal-400',
+        whoReference: 'WHO Oral Health Protocol'
+      },
+      {
+        id: '3_4_m_dress',
+        name: 'Choice Dressing ("Option A or B")',
+        emoji: '👕',
+        desc: 'Child chooses between two weather-appropriate outfits and puts on shirts, pants, and socks.',
+        colorClass: 'from-indigo-400/10 to-indigo-400/5 border-indigo-400/20 text-indigo-300',
+        glowClass: 'shadow-indigo-400/10',
+        indicatorColor: 'bg-indigo-400',
+        whoReference: 'WHO Autonomy & Executive Function'
+      },
+      {
+        id: '3_4_m_breakfast',
+        name: 'Nutritious High-Protein Breakfast',
+        emoji: '🥣',
+        desc: 'Warm breakfast (idli, paratha, or eggs/oats) with water or milk, seated with family at dining table.',
+        colorClass: 'from-emerald-400/10 to-emerald-400/5 border-emerald-400/20 text-emerald-300',
+        glowClass: 'shadow-emerald-400/10',
+        indicatorColor: 'bg-emerald-400',
+        whoReference: 'WHO Preschool Nutrition Guideline'
+      },
+      {
+        id: '3_4_m_bag',
+        name: 'Preschool Bag & Water Bottle Check',
+        emoji: '🎒',
+        desc: 'Child helps place lunchbox, water bottle, and spare clothes inside preschool backpack.',
+        colorClass: 'from-purple-400/10 to-purple-400/5 border-purple-400/20 text-purple-300',
+        glowClass: 'shadow-purple-400/10',
+        indicatorColor: 'bg-purple-400',
+        whoReference: 'WHO Early Responsibility Benchmark'
+      },
+      {
+        id: '3_4_m_feelings',
+        name: 'Morning Feelings Check-in',
+        emoji: '💬',
+        desc: 'Ask: "How are you feeling today?" with feeling wheel or emojis to build emotional vocabulary.',
+        colorClass: 'from-pink-400/10 to-pink-400/5 border-pink-400/20 text-pink-300',
+        glowClass: 'shadow-pink-400/10',
+        indicatorColor: 'bg-pink-400',
+        whoReference: 'WHO Socio-Emotional Framework'
+      },
+      {
+        id: '3_4_m_goodbye',
+        name: 'Warm Goodbye Ritual & Hug',
+        emoji: '🤗',
+        desc: 'Consistent parting ritual (secret handshake or double cuddle) to provide separation confidence.',
+        colorClass: 'from-rose-400/10 to-rose-400/5 border-rose-400/20 text-rose-300',
+        glowClass: 'shadow-rose-400/10',
+        indicatorColor: 'bg-rose-400',
+        whoReference: 'WHO Attachment & Security Standard'
+      }
+    ],
+    evening: [
+      {
+        id: '3_4_e_welcome',
+        name: 'Home Arrival & Wash Station',
+        emoji: '🧼',
+        desc: 'Remove shoes, place backpack in designated spot, and wash hands and face thoroughly.',
+        colorClass: 'from-cyan-400/10 to-cyan-400/5 border-cyan-400/20 text-cyan-300',
+        glowClass: 'shadow-cyan-400/10',
+        indicatorColor: 'bg-cyan-400',
+        whoReference: 'WHO Preventive Health Benchmark'
+      },
+      {
+        id: '3_4_e_snack',
+        name: 'Wholesome Afternoon Refuel',
+        emoji: '🍎',
+        desc: 'Fresh fruit slices, sprouts, or makhana with water to replenish glycogen after preschool.',
+        colorClass: 'from-amber-400/10 to-amber-400/5 border-amber-400/20 text-amber-300',
+        glowClass: 'shadow-amber-400/10',
+        indicatorColor: 'bg-amber-400',
+        whoReference: 'WHO Balanced Energy Standard'
+      },
+      {
+        id: '3_4_e_outdoor',
+        name: '60-Minute Outdoor Play & Playground',
+        emoji: '🏃',
+        desc: 'Vigorous gross-motor movement: climbing, running, tricycle, or sandbox play in fresh air.',
+        colorClass: 'from-emerald-400/10 to-emerald-400/5 border-emerald-400/20 text-emerald-300',
+        glowClass: 'shadow-emerald-400/10',
+        indicatorColor: 'bg-emerald-400',
+        whoReference: 'WHO Physical Activity Guidelines (Preschool)'
+      },
+      {
+        id: '3_4_e_creative',
+        name: 'Fine-Motor Creative Station',
+        emoji: '🖍️',
+        desc: 'Engage in 20-30 minutes of open-ended creation with crayons, playdough, puzzles, or big blocks.',
+        colorClass: 'from-indigo-400/10 to-indigo-400/5 border-indigo-400/20 text-indigo-300',
+        glowClass: 'shadow-indigo-400/10',
+        indicatorColor: 'bg-indigo-400',
+        whoReference: 'WHO Cognitive & Fine Motor Pathway'
+      },
+      {
+        id: '3_4_e_tidy',
+        name: '5-Minute Toy Tidy-Up Game',
+        emoji: '🧸',
+        desc: 'Play a cleanup song and collaborate on returning play items to labeled bins.',
+        colorClass: 'from-purple-400/10 to-purple-400/5 border-purple-400/20 text-purple-300',
+        glowClass: 'shadow-purple-400/10',
+        indicatorColor: 'bg-purple-400',
+        whoReference: 'WHO Executive Function Protocol'
+      },
+      {
+        id: '3_4_e_dinner_help',
+        name: 'Meal Prep Helper (Napkins & Cups)',
+        emoji: '🍽️',
+        desc: 'Child helps set spoons and napkins on the table, feeling contributing member of family.',
+        colorClass: 'from-teal-400/10 to-teal-400/5 border-teal-400/20 text-teal-300',
+        glowClass: 'shadow-teal-400/10',
+        indicatorColor: 'bg-teal-400',
+        whoReference: 'WHO Family Routine Engagement'
+      },
+      {
+        id: '3_4_e_dinner',
+        name: 'Mindful Family Dinner',
+        emoji: '🍲',
+        desc: 'Screen-free family dinner with colorful vegetables, pulses, and conversation about everyone’s day.',
+        colorClass: 'from-yellow-400/10 to-yellow-400/5 border-yellow-400/20 text-yellow-300',
+        glowClass: 'shadow-yellow-400/10',
+        indicatorColor: 'bg-yellow-400',
+        whoReference: 'WHO Pediatric Nutrition & Appetite Control'
+      },
+      {
+        id: '3_4_e_screen_free',
+        name: 'Screen Cutoff & Dim Lighting Reset',
+        emoji: '📵',
+        desc: 'Power down tablets and TVs 60 minutes before bedtime; switch to gentle ambient amber lighting.',
+        colorClass: 'from-rose-400/10 to-rose-400/5 border-rose-400/20 text-rose-300',
+        glowClass: 'shadow-rose-400/10',
+        indicatorColor: 'bg-rose-400',
+        whoReference: 'WHO Screen Time & Melatonin Protection'
+      }
+    ],
+    bedtime: [
+      {
+        id: '3_4_b_bath',
+        name: 'Warm Bath & Sensory Relaxation',
+        emoji: '🛁',
+        desc: 'Warm bath with calming lavender bubbles, gentle towel drying, and soothing massage.',
+        colorClass: 'from-blue-400/10 to-blue-400/5 border-blue-400/20 text-blue-300',
+        glowClass: 'shadow-blue-400/10',
+        indicatorColor: 'bg-blue-400',
+        whoReference: 'WHO Sleep Hygiene Protocol'
+      },
+      {
+        id: '3_4_b_pajamas',
+        name: 'Pajama Selection & Dressing',
+        emoji: '👚',
+        desc: 'Child puts on comfortable soft cotton sleepwear independently with minor guidance.',
+        colorClass: 'from-teal-400/10 to-teal-400/5 border-teal-400/20 text-teal-300',
+        glowClass: 'shadow-teal-400/10',
+        indicatorColor: 'bg-teal-400',
+        whoReference: 'WHO Autonomy & Self-Help'
+      },
+      {
+        id: '3_4_b_brush',
+        name: 'Evening Toothbrushing & Floss Check',
+        emoji: '🪥',
+        desc: 'Thorough 2-minute brushing with parent supervision to protect erupting primary molars.',
+        colorClass: 'from-emerald-400/10 to-emerald-400/5 border-emerald-400/20 text-emerald-300',
+        glowClass: 'shadow-emerald-400/10',
+        indicatorColor: 'bg-emerald-400',
+        whoReference: 'WHO Pediatric Dental Guideline'
+      },
+      {
+        id: '3_4_b_potty',
+        name: 'Final Pre-Bed Bathroom Visit',
+        emoji: '🚽',
+        desc: 'Encourage a relaxed bathroom visit before getting into bed to support overnight dry sleep.',
+        colorClass: 'from-sky-400/10 to-sky-400/5 border-sky-400/20 text-sky-300',
+        glowClass: 'shadow-sky-400/10',
+        indicatorColor: 'bg-sky-400',
+        whoReference: 'WHO Bladder Training Benchmark'
+      },
+      {
+        id: '3_4_b_books',
+        name: 'Interactive Bedtime Reading (2 Books)',
+        emoji: '📚',
+        desc: 'Read 2 favorite storybooks together, pointing at pictures and asking expressive character questions.',
+        colorClass: 'from-purple-400/10 to-purple-400/5 border-purple-400/20 text-purple-300',
+        glowClass: 'shadow-purple-400/10',
+        indicatorColor: 'bg-purple-400',
+        whoReference: 'WHO Literacy & Cognitive Readiness'
+      },
+      {
+        id: '3_4_b_gratitude',
+        name: 'Gratitude & Best Moment Sharing',
+        emoji: '🌟',
+        desc: 'Share: "What was your happiest memory today?" to cultivate bedtime calm and positive neuroplasticity.',
+        colorClass: 'from-amber-400/10 to-amber-400/5 border-amber-400/20 text-amber-300',
+        glowClass: 'shadow-amber-400/10',
+        indicatorColor: 'bg-amber-400',
+        whoReference: 'WHO Mental Well-being Framework'
+      },
+      {
+        id: '3_4_b_breathing',
+        name: 'Starfish Belly Breathing',
+        emoji: '🧘',
+        desc: 'Take 3 deep tummy breaths together: "Inhale the peaceful stars, blow out the sleepy clouds".',
+        colorClass: 'from-indigo-400/10 to-indigo-400/5 border-indigo-400/20 text-indigo-300',
+        glowClass: 'shadow-indigo-400/10',
+        indicatorColor: 'bg-indigo-400',
+        whoReference: 'WHO Pediatric Relaxation Standard'
+      },
+      {
+        id: '3_4_b_sleep',
+        name: 'Cuddle, Nightlight & 10-13h Sleep',
+        emoji: '😴',
+        desc: 'Tuck in with comforting hug and blanket; room dark and cool (18-21°C) for deep restorative sleep.',
+        colorClass: 'from-violet-500/10 to-violet-500/5 border-violet-500/20 text-violet-400',
+        glowClass: 'shadow-violet-500/10',
+        indicatorColor: 'bg-violet-500',
+        whoReference: 'WHO Sleep Duration Recommendation'
+      }
+    ]
+  },
+  // ==========================================
+  // 6. 4 - 5 YEARS (Kindergarten Mastery)
+  // ==========================================
+  {
+    id: '4_5y',
+    label: '4 - 5 Years',
+    emoji: '🎒',
+    rangeDesc: 'Kindergarten Mastery, peer cooperation & executive function.',
+    whoAesthetic: 'WHO & UNICEF school-readiness standard for physical endurance, self-help mastery, and restorative rest.',
+    morning: [
+      {
+        id: '4_5_m_wake',
+        name: 'Self-Wake & Bed Tidy-Up',
+        emoji: '🛏️',
+        desc: 'Wake up with gentle alarm or light, straighten sheet, and place pillow nicely at head of bed.',
+        colorClass: 'from-amber-400/10 to-amber-400/5 border-amber-400/20 text-amber-300',
+        glowClass: 'shadow-amber-400/10',
+        indicatorColor: 'bg-amber-400',
+        whoReference: 'WHO Executive Function & Responsibility'
+      },
+      {
+        id: '4_5_m_toilet',
+        name: 'Bathroom Hygiene & Towel Dry',
+        emoji: '🧼',
+        desc: 'Use toilet independently, wipe clean, wash hands thoroughly with soap, and dry with personal towel.',
+        colorClass: 'from-sky-400/10 to-sky-400/5 border-sky-400/20 text-sky-300',
+        glowClass: 'shadow-sky-400/10',
+        indicatorColor: 'bg-sky-400',
+        whoReference: 'WHO School-Readiness Hygiene Protocol'
+      },
+      {
+        id: '4_5_m_brush',
+        name: 'Timed 2-Minute Toothbrushing',
+        emoji: '🪥',
+        desc: 'Brush with timer or brushing song; clean chewing surfaces and tongue independently with check-up.',
+        colorClass: 'from-teal-400/10 to-teal-400/5 border-teal-400/20 text-teal-300',
+        glowClass: 'shadow-teal-400/10',
+        indicatorColor: 'bg-teal-400',
+        whoReference: 'WHO Pediatric Dental Independence'
+      },
+      {
+        id: '4_5_m_dress',
+        name: 'Full Dressing (Buttons, Zippers, Shoes)',
+        emoji: '👟',
+        desc: 'Put on kindergarten uniform/clothes, zip jacket, and fasten velcro shoes independently.',
+        colorClass: 'from-emerald-400/10 to-emerald-400/5 border-emerald-400/20 text-emerald-300',
+        glowClass: 'shadow-emerald-400/10',
+        indicatorColor: 'bg-emerald-400',
+        whoReference: 'WHO Motor Coordination Benchmark'
+      },
+      {
+        id: '4_5_m_breakfast',
+        name: 'Sustained Energy Breakfast',
+        emoji: '🥞',
+        desc: 'Whole grain breakfast (poha, paratha, ragi, or eggs) with warm milk/water for focused school attention.',
+        colorClass: 'from-yellow-400/10 to-yellow-400/5 border-yellow-400/20 text-yellow-300',
+        glowClass: 'shadow-yellow-400/10',
+        indicatorColor: 'bg-yellow-400',
+        whoReference: 'WHO Nutrition for Cognitive Focus'
+      },
+      {
+        id: '4_5_m_bag_check',
+        name: 'School Backpack & Water Pack',
+        emoji: '🎒',
+        desc: 'Check items: water bottle, snack container, homework folder, and hat inside backpack.',
+        colorClass: 'from-purple-400/10 to-purple-400/5 border-purple-400/20 text-purple-300',
+        glowClass: 'shadow-purple-400/10',
+        indicatorColor: 'bg-purple-400',
+        whoReference: 'UNICEF School Preparedness Standard'
+      },
+      {
+        id: '4_5_m_affirmation',
+        name: 'Daily Confidence Affirmation',
+        emoji: '⭐',
+        desc: 'Say aloud: "I am kind, brave, curious, and a helpful friend to others!"',
+        colorClass: 'from-pink-400/10 to-pink-400/5 border-pink-400/20 text-pink-300',
+        glowClass: 'shadow-pink-400/10',
+        indicatorColor: 'bg-pink-400',
+        whoReference: 'WHO Positive Self-Concept Standard'
+      },
+      {
+        id: '4_5_m_depart',
+        name: 'Punctual Departure & Hug',
+        emoji: '👋',
+        desc: 'Leave home calmly on schedule with warm family high-five and encouraging farewell.',
+        colorClass: 'from-rose-400/10 to-rose-400/5 border-rose-400/20 text-rose-300',
+        glowClass: 'shadow-rose-400/10',
+        indicatorColor: 'bg-rose-400',
+        whoReference: 'WHO Social Routine Benchmark'
+      }
+    ],
+    evening: [
+      {
+        id: '4_5_e_unpack',
+        name: 'School Unpack & Organization',
+        emoji: '🏷️',
+        desc: 'Place shoes on rack, hang coat, empty lunchbox in sink, and place drawings on table.',
+        colorClass: 'from-cyan-400/10 to-cyan-400/5 border-cyan-400/20 text-cyan-300',
+        glowClass: 'shadow-cyan-400/10',
+        indicatorColor: 'bg-cyan-400',
+        whoReference: 'WHO Self-Management Skill'
+      },
+      {
+        id: '4_5_e_snack',
+        name: 'Hydration & Wholesome Snack',
+        emoji: '🍌',
+        desc: 'Drink full glass of water and enjoy balanced afternoon snack (nuts, fruits, paneer/cheese).',
+        colorClass: 'from-amber-400/10 to-amber-400/5 border-amber-400/20 text-amber-300',
+        glowClass: 'shadow-amber-400/10',
+        indicatorColor: 'bg-amber-400',
+        whoReference: 'WHO Pediatric Energy Recovery'
+      },
+      {
+        id: '4_5_e_park',
+        name: '60+ Min Vigorous Outdoor Activity',
+        emoji: '🚴',
+        desc: 'Bicycle, scooter, jungle gym climbing, soccer, or neighborhood tag with peers.',
+        colorClass: 'from-emerald-400/10 to-emerald-400/5 border-emerald-400/20 text-emerald-300',
+        glowClass: 'shadow-emerald-400/10',
+        indicatorColor: 'bg-emerald-400',
+        whoReference: 'WHO Physical Activity Guidelines (5-Year Milestone)'
+      },
+      {
+        id: '4_5_e_stem',
+        name: 'STEM, Lego or Creative Drawing',
+        emoji: '🧩',
+        desc: 'Engage in 25 minutes of deep focus building complex Lego structures, drawing, or origami.',
+        colorClass: 'from-indigo-400/10 to-indigo-400/5 border-indigo-400/20 text-indigo-300',
+        glowClass: 'shadow-indigo-400/10',
+        indicatorColor: 'bg-indigo-400',
+        whoReference: 'WHO Cognitive Spatial Development'
+      },
+      {
+        id: '4_5_e_tidy',
+        name: 'Clean Workspace & Study Desk',
+        emoji: '📦',
+        desc: 'Put markers in cup, store blocks in bins, and keep bedroom floor completely clear.',
+        colorClass: 'from-purple-400/10 to-purple-400/5 border-purple-400/20 text-purple-300',
+        glowClass: 'shadow-purple-400/10',
+        indicatorColor: 'bg-purple-400',
+        whoReference: 'WHO Executive Functioning Standard'
+      },
+      {
+        id: '4_5_e_dinner_prep',
+        name: 'Family Dinner Chores & Table Set',
+        emoji: '🥗',
+        desc: 'Help wash salad leaves, distribute plates, or fill water tumblers for the family.',
+        colorClass: 'from-teal-400/10 to-teal-400/5 border-teal-400/20 text-teal-300',
+        glowClass: 'shadow-teal-400/10',
+        indicatorColor: 'bg-teal-400',
+        whoReference: 'WHO Social Contribution & Empathy'
+      },
+      {
+        id: '4_5_e_dinner',
+        name: 'Nutritious Dinner & Table Talk',
+        emoji: '🍛',
+        desc: 'Balanced dinner with dal, roti, sabzi, and curd; engage in "Rose, Thorn, and Bud" dinner talk.',
+        colorClass: 'from-yellow-400/10 to-yellow-400/5 border-yellow-400/20 text-yellow-300',
+        glowClass: 'shadow-yellow-400/10',
+        indicatorColor: 'bg-yellow-400',
+        whoReference: 'WHO Family Health & Nutrition Standard'
+      },
+      {
+        id: '4_5_e_screens_off',
+        name: 'Complete Screen Blackout (1h Pre-bed)',
+        emoji: '📵',
+        desc: 'Zero tablets, phones, or television; switch lights to warm low lumens to cue melatonin.',
+        colorClass: 'from-rose-400/10 to-rose-400/5 border-rose-400/20 text-rose-300',
+        glowClass: 'shadow-rose-400/10',
+        indicatorColor: 'bg-rose-400',
+        whoReference: 'WHO Melatonin Preservation Benchmark'
+      }
+    ],
+    bedtime: [
+      {
+        id: '4_5_b_shower',
+        name: 'Warm Shower & Fresh Nightwear',
+        emoji: '🚿',
+        desc: 'Warm bath or shower, dry off completely, apply lotion, and change into clean pajamas.',
+        colorClass: 'from-blue-400/10 to-blue-400/5 border-blue-400/20 text-blue-300',
+        glowClass: 'shadow-blue-400/10',
+        indicatorColor: 'bg-blue-400',
+        whoReference: 'WHO Pediatric Hygiene & Relaxation'
+      },
+      {
+        id: '4_5_b_prep_clothes',
+        name: 'Tomorrow’s Clothes Selection',
+        emoji: '👕',
+        desc: 'Together, check tomorrow’s schedule and lay out fresh clothes, socks, and shoes for morning.',
+        colorClass: 'from-teal-400/10 to-teal-400/5 border-teal-400/20 text-teal-300',
+        glowClass: 'shadow-teal-400/10',
+        indicatorColor: 'bg-teal-400',
+        whoReference: 'WHO Proactive Planning Skill'
+      },
+      {
+        id: '4_5_b_brush',
+        name: 'Nightly 2-Minute Brush & Rinse',
+        emoji: '🪥',
+        desc: 'Brush all teeth carefully with fluoride toothpaste and rinse thoroughly with clear water.',
+        colorClass: 'from-emerald-400/10 to-emerald-400/5 border-emerald-400/20 text-emerald-300',
+        glowClass: 'shadow-emerald-400/10',
+        indicatorColor: 'bg-emerald-400',
+        whoReference: 'WHO Dental Health Guideline'
+      },
+      {
+        id: '4_5_b_toilet',
+        name: 'Last Toilet Visit & Hydration Sip',
+        emoji: '🚽',
+        desc: 'Visit toilet for final voiding; take one small sip of water to stay comfortable through night.',
+        colorClass: 'from-sky-400/10 to-sky-400/5 border-sky-400/20 text-sky-300',
+        glowClass: 'shadow-sky-400/10',
+        indicatorColor: 'bg-sky-400',
+        whoReference: 'WHO Nocturnal Bladder Comfort'
+      },
+      {
+        id: '4_5_b_chapter_book',
+        name: 'Bedtime Chapter or Rich Storybook',
+        emoji: '📖',
+        desc: 'Read a rich illustrated chapter book; discuss story plot, character choices, and vocabulary.',
+        colorClass: 'from-purple-400/10 to-purple-400/5 border-purple-400/20 text-purple-300',
+        glowClass: 'shadow-purple-400/10',
+        indicatorColor: 'bg-purple-400',
+        whoReference: 'WHO Advanced Pre-Literacy Benchmark'
+      },
+      {
+        id: '4_5_b_reflection',
+        name: 'Bedtime Reflection & Empathy Check',
+        emoji: '💬',
+        desc: 'Ask: "Who did you help today?" and "What are you excited for tomorrow?" in quiet whisper.',
+        colorClass: 'from-pink-400/10 to-pink-400/5 border-pink-400/20 text-pink-300',
+        glowClass: 'shadow-pink-400/10',
+        indicatorColor: 'bg-pink-400',
+        whoReference: 'WHO Socio-Emotional Reflection'
+      },
+      {
+        id: '4_5_b_breath',
+        name: '4-7-8 Child Mindful Relaxation',
+        emoji: '🌬️',
+        desc: 'Gentle calming breaths: smell flowers for 4 seconds, hold gently for 4, blow dandelion for 6.',
+        colorClass: 'from-indigo-400/10 to-indigo-400/5 border-indigo-400/20 text-indigo-300',
+        glowClass: 'shadow-indigo-400/10',
+        indicatorColor: 'bg-indigo-400',
+        whoReference: 'WHO Pediatric Nervous System Balance'
+      },
+      {
+        id: '4_5_b_sleep',
+        name: 'Goodnight Hug & 10-12h Unbroken Rest',
+        emoji: '🌙',
+        desc: 'Warm kiss and tuck-in; room quiet, dark, and cool for restorative kindergarten growth hormone release.',
+        colorClass: 'from-violet-500/10 to-violet-500/5 border-violet-500/20 text-violet-400',
+        glowClass: 'shadow-violet-500/10',
+        indicatorColor: 'bg-violet-500',
+        whoReference: 'WHO Child Sleep Duration Standard'
+      }
+    ]
   }
 ];
+

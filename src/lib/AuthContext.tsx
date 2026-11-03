@@ -46,13 +46,24 @@ interface AuthContextType {
   childProfiles: ChildProfile[];
   activeChild: ChildProfile;
   switchActiveChild: (index: 1 | 2) => Promise<void>;
+  child2NotApplicable: boolean;
+  setChild2NotApplicable: (notApplicable: boolean) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [child2NotApplicable, setChild2NotApplicableState] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('child_2_not_applicable') === 'true';
+    }
+    return false;
+  });
+
   const [activeChildIndex, setActiveChildIndexState] = useState<1 | 2>(() => {
     if (typeof window !== 'undefined') {
+      const isNA = localStorage.getItem('child_2_not_applicable') === 'true';
+      if (isNA) return 1;
       const saved = localStorage.getItem('active_child_index');
       if (saved === '2') return 2;
     }
@@ -144,6 +155,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           data.parentName = 'Lashmi';
           data.firstName = 'Lashmi';
           data.name = 'Lashmi';
+        }
+        if (data.child2NotApplicable !== undefined) {
+          const isNA = Boolean(data.child2NotApplicable);
+          setChild2NotApplicableState(isNA);
+          if (typeof window !== 'undefined') localStorage.setItem('child_2_not_applicable', String(isNA));
         }
         setProfile(data);
       } else {
@@ -386,26 +402,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       bloodGroup: child1Blood,
       dietaryNotes: profile?.child1?.dietaryNotes || 'Vegetarian, low salt, zero refined sugar',
     },
-    {
-      id: 2,
+    ...(!child2NotApplicable ? [{
+      id: 2 as const,
       name: child2Name,
       age: child2Age,
       birthDate: child2DOB,
       gender: child2Gender,
       bloodGroup: child2Blood,
       dietaryNotes: profile?.child2?.dietaryNotes || 'Mild lactose sensitivity, puree weaning stage',
-    }
+    }] : [])
   ];
 
-  const effectiveActiveIndex: 1 | 2 = (profile?.activeChildIndex === 2 || activeChildIndex === 2) ? 2 : 1;
-  const activeChild: ChildProfile = effectiveActiveIndex === 2 ? childProfiles[1] : childProfiles[0];
+  const effectiveActiveIndex: 1 | 2 = (!child2NotApplicable && (profile?.activeChildIndex === 2 || activeChildIndex === 2)) ? 2 : 1;
+  const activeChild: ChildProfile = childProfiles.find(cp => cp.id === effectiveActiveIndex) || childProfiles[0];
 
   const switchActiveChild = async (newIndex: 1 | 2) => {
-    setActiveChildIndexState(newIndex);
-    const target = newIndex === 2 ? childProfiles[1] : childProfiles[0];
+    const safeIndex: 1 | 2 = (child2NotApplicable && newIndex === 2) ? 1 : newIndex;
+    setActiveChildIndexState(safeIndex);
+    const target = safeIndex === 2 && childProfiles.length > 1 ? childProfiles[1] : childProfiles[0];
 
     if (typeof window !== 'undefined') {
-      localStorage.setItem('active_child_index', String(newIndex));
+      localStorage.setItem('active_child_index', String(safeIndex));
       localStorage.setItem('baby_name', target.name);
       localStorage.setItem('child_name', target.name);
       localStorage.setItem('toddler_name', target.name);
@@ -417,7 +434,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       localStorage.setItem('baby_blood_group', target.bloodGroup);
 
       // Dispatch custom events for reactive UI updating across tabs and components
-      window.dispatchEvent(new CustomEvent('activeChildChanged', { detail: { index: newIndex, child: target } }));
+      window.dispatchEvent(new CustomEvent('activeChildChanged', { detail: { index: safeIndex, child: target } }));
       window.dispatchEvent(new Event('storage'));
     }
 
@@ -429,7 +446,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       };
       return {
         ...base,
-        activeChildIndex: newIndex,
+        activeChildIndex: safeIndex,
         babyName: target.name,
         childName: target.name,
         toddlerName: target.name,
@@ -445,7 +462,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       try {
         const docRef = doc(db, 'users', user.uid);
         await setDoc(docRef, {
-          activeChildIndex: newIndex,
+          activeChildIndex: safeIndex,
           babyName: target.name,
           childName: target.name,
           toddlerName: target.name,
@@ -458,6 +475,70 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }, { merge: true });
       } catch (err) {
         console.warn("Could not sync activeChildIndex to Firestore:", err);
+      }
+    }
+  };
+
+  const setChild2NotApplicable = async (notApplicable: boolean) => {
+    setChild2NotApplicableState(notApplicable);
+    const targetChild = childProfiles[0];
+
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('child_2_not_applicable', String(notApplicable));
+      if (notApplicable) {
+        localStorage.setItem('active_child_index', '1');
+        setActiveChildIndexState(1);
+        localStorage.setItem('baby_name', targetChild.name);
+        localStorage.setItem('child_name', targetChild.name);
+        localStorage.setItem('toddler_name', targetChild.name);
+        localStorage.setItem('baby_birthdate', targetChild.birthDate);
+        localStorage.setItem('baby_birth_date', targetChild.birthDate);
+        localStorage.setItem('baby_age', targetChild.age);
+        localStorage.setItem('toddler_age', targetChild.age);
+        localStorage.setItem('baby_gender', targetChild.gender);
+        localStorage.setItem('baby_blood_group', targetChild.bloodGroup);
+      }
+      window.dispatchEvent(new CustomEvent('activeChildChanged', { detail: { child2NotApplicable: notApplicable, child: targetChild } }));
+      window.dispatchEvent(new Event('storage'));
+    }
+
+    setProfile(prev => ({
+      ...prev,
+      child2NotApplicable: notApplicable,
+      ...(notApplicable ? {
+        activeChildIndex: 1,
+        babyName: targetChild.name,
+        childName: targetChild.name,
+        toddlerName: targetChild.name,
+        babyBirthDate: targetChild.birthDate,
+        babyAge: targetChild.age,
+        childAge: targetChild.age,
+        bloodGroup: targetChild.bloodGroup,
+        childGender: targetChild.gender,
+      } : {})
+    }));
+
+    if (user && db) {
+      try {
+        const docRef = doc(db, 'users', user.uid);
+        await setDoc(docRef, {
+          child2NotApplicable: notApplicable,
+          hasSecondChild: !notApplicable,
+          ...(notApplicable ? {
+            activeChildIndex: 1,
+            babyName: targetChild.name,
+            childName: targetChild.name,
+            toddlerName: targetChild.name,
+            babyBirthDate: targetChild.birthDate,
+            babyAge: targetChild.age,
+            childAge: targetChild.age,
+            bloodGroup: targetChild.bloodGroup,
+            childGender: targetChild.gender,
+          } : {}),
+          updatedAt: serverTimestamp(),
+        }, { merge: true });
+      } catch (e) {
+        console.warn("Could not sync child2NotApplicable to Firestore:", e);
       }
     }
   };
@@ -485,7 +566,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       activeChildIndex: effectiveActiveIndex,
       childProfiles,
       activeChild,
-      switchActiveChild
+      switchActiveChild,
+      child2NotApplicable,
+      setChild2NotApplicable
     }}>
       {children}
     </AuthContext.Provider>

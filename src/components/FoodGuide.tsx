@@ -47,6 +47,7 @@ import { Recipe, AgeGroupData, ageStagesData, MealCategory, getRecipeCategory } 
 import { getRecipeNutrientDetails } from '../lib/recipeNutrition';
 import { GeneratedRecipe, AIRecipeBatchRecord, getSavedRecipeHistory, saveRecipeBatch } from '../lib/aiRecipeHistory';
 import { AIRecipeResultsView } from './AIRecipeResultsView';
+import { ChildProfileSelector } from './ChildProfileSelector';
 
 // Regional affinity mapper based on Indian State selected in Profile settings
 export const getStateRegion = (stateName: string): 'South' | 'North' | 'West' | 'East' => {
@@ -490,7 +491,7 @@ export interface FoodGuideProps {
 
 export const FoodGuide: React.FC<FoodGuideProps> = ({ onNavigateToFoodLens }) => {
   const { language } = useLanguage();
-  const { user, profile } = useAuth();
+  const { user, profile, childProfiles } = useAuth();
   const navigate = useNavigate();
   const currentT = localT[language] || localT['en'];
 
@@ -499,8 +500,11 @@ export const FoodGuide: React.FC<FoodGuideProps> = ({ onNavigateToFoodLens }) =>
     return currentT[key] || localT['en'][key] || key;
   };
 
-  const childName = profile?.childName || profile?.babyName || profile?.toddlerName || (typeof window !== 'undefined' ? localStorage.getItem('baby_name') : null) || 'Ashwath';
-  const profileAge = profile?.toddlerAge || profile?.babyAge || profile?.childAge || (typeof window !== 'undefined' ? (localStorage.getItem('baby_age') || localStorage.getItem('toddler_age') || localStorage.getItem('child_age')) : null) || '1 - 2 Years';
+  // Scoped child selection for AI Recipe Maker
+  const [pageChildId, setPageChildId] = useState<1 | 2>(1);
+  const currentChild = childProfiles?.find(cp => cp.id === pageChildId) || childProfiles?.[0];
+  const childName = currentChild?.name || profile?.childName || profile?.babyName || profile?.toddlerName || 'Ashwath';
+  const profileAge = currentChild?.age || profile?.toddlerAge || profile?.babyAge || profile?.childAge || '1 - 2 Years';
   const indianState = profile?.indianState || (typeof window !== 'undefined' ? localStorage.getItem('user_indian_state') : null) || 'Karnataka';
   const userRegion = getStateRegion(indianState);
   const childStageId = getStageFromProfileAge(profileAge);
@@ -1047,22 +1051,38 @@ Each object must have these exact keys:
           <div className="absolute top-0 right-0 w-72 h-72 bg-emerald-500/5 blur-3xl rounded-full pointer-events-none" />
           
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 pb-4 border-b border-white/10">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 min-w-0 flex-1">
               <div className="w-12 h-12 rounded-2xl bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center text-emerald-300 shrink-0 shadow-inner">
                 <Sparkles className="w-6 h-6" />
               </div>
-              <div>
+              <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
-                  <span className="font-black text-lg sm:text-xl text-white">{gt('aiCustomizerTitle')}</span>
-                  <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-[9px] font-black uppercase tracking-wider">
+                  <span className="font-black text-lg sm:text-xl text-white shrink-0">{gt('aiCustomizerTitle')}</span>
+                  <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-[9px] font-black uppercase tracking-wider shrink-0">
                     Free AI Assistant
                   </span>
                 </div>
-                <p className="text-xs text-white/60 mt-0.5 max-w-2xl leading-relaxed">
+                <p className="text-xs text-white/60 mt-0.5 whitespace-nowrap overflow-hidden text-ellipsis">
                   {gt('aiCustomizerDesc')}
                 </p>
               </div>
             </div>
+          </div>
+
+          {/* Child Profile Selector (Scoped to AI Recipe Maker) */}
+          <div className="flex justify-center mb-6 max-w-2xl mx-auto">
+            <ChildProfileSelector
+              selectedChildId={pageChildId}
+              onSelectChild={(id) => {
+                setPageChildId(id);
+                if (id === 2) {
+                  setCustomAgeYears('0.3');
+                } else {
+                  setCustomAgeYears('2.5');
+                }
+              }}
+              sectionContextName="AI Recipe Maker"
+            />
           </div>
 
           {/* Generator Inputs */}
@@ -1070,39 +1090,18 @@ Each object must have these exact keys:
             <div>
               <label className="block text-xs font-bold text-white/70 uppercase tracking-wider mb-1.5 flex items-center justify-between">
                 <span>{gt('childAgeLabel')}</span>
-                <span className="text-[10px] font-mono text-emerald-400 lowercase">write in years (e.g. 1.5)</span>
+                <span className="text-[10px] font-mono text-emerald-400 font-semibold">Enter child age in years</span>
               </label>
               <input
                 type="text"
                 value={customAgeYears}
                 onChange={(e) => setCustomAgeYears(e.target.value)}
-                placeholder="e.g. 1.5 years or 2 years"
+                placeholder="Enter child age in yrs (e.g. 2.5)"
                 className="w-full bg-white/5 border border-white/10 rounded-2xl px-4 py-3 text-white focus:outline-none focus:border-emerald-400 font-bold text-sm placeholder:text-white/30"
               />
-              {/* Quick Age Presets in Years */}
-              <div className="flex flex-wrap items-center gap-1.5 mt-2">
-                {[
-                  { label: '0.5 yr (6m)', val: '0.5' },
-                  { label: '1.0 yr', val: '1.0' },
-                  { label: '1.5 yrs', val: '1.5' },
-                  { label: '2.0 yrs', val: '2.0' },
-                  { label: '3.0 yrs', val: '3.0' },
-                  { label: '5.0 yrs', val: '5.0' },
-                ].map((p) => (
-                  <button
-                    key={p.val}
-                    type="button"
-                    onClick={() => { playSound('click'); setCustomAgeYears(p.val); }}
-                    className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
-                      customAgeYears === p.val
-                        ? 'bg-emerald-400 text-slate-950 font-black shadow-sm'
-                        : 'bg-white/5 hover:bg-white/10 text-white/70 hover:text-white border border-white/10'
-                    }`}
-                  >
-                    {p.label}
-                  </button>
-                ))}
-              </div>
+              <p className="text-[11px] text-white/50 mt-1.5 font-medium">
+                Enter child age in yrs (e.g. 0.5 for 6 months, 1.5 for 18 months, or 2.5 for toddlers).
+              </p>
             </div>
 
             <div>

@@ -30,6 +30,7 @@ import { useAuth } from '../lib/AuthContext';
 import { db, handleFirestoreError } from '../lib/firebase';
 import { doc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { playSound } from '../lib/sounds';
+import { ChildProfileSelector } from './ChildProfileSelector';
 
 export interface ComprehensiveVaccine {
   id: string;
@@ -638,7 +639,10 @@ export const ALL_VACCINES: ComprehensiveVaccine[] = [
 ];
 
 export const VaccineTracker: React.FC = () => {
-  const { user, profile } = useAuth();
+  const { user, profile, childProfiles } = useAuth();
+  const [pageChildId, setPageChildId] = useState<1 | 2>(1);
+  const currentChild = childProfiles.find(cp => cp.id === pageChildId) || childProfiles[0];
+  const childName = currentChild?.name || profile?.babyName || 'Ashwath';
 
   // Load vaccines from localStorage or profile or defaults - strictly 0% by default (all upcoming)
   const [vaccines, setVaccines] = useState<ComprehensiveVaccine[]>(() => {
@@ -950,8 +954,23 @@ export const VaccineTracker: React.FC = () => {
   }, [vaccines, activeStatusFilter, activeAgeFilter, searchQuery]);
 
   return (
-    <div className="space-y-8 py-6 max-w-7xl mx-auto">
-      
+    <div className="space-y-6 py-6 max-w-7xl mx-auto">
+      {/* Child Profile Selector (Scoped to Vaccine Tracker) */}
+      <div className="flex justify-center max-w-2xl mx-auto">
+        <ChildProfileSelector
+          selectedChildId={pageChildId}
+          onSelectChild={(id) => {
+            setPageChildId(id);
+            if (id === 2) {
+              setActiveAgeFilter('infant');
+            } else {
+              setActiveAgeFilter('All');
+            }
+          }}
+          sectionContextName="Vaccine Tracker"
+        />
+      </div>
+
       {/* =========================================================
           HERO BANNER: COMPREHENSIVE PEDIATRIC VACCINE TRACKER
       ========================================================== */}

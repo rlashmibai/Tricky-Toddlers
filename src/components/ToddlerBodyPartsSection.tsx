@@ -21,6 +21,7 @@ export interface BodyPartItem {
   id: string;
   name: string;
   emoji: string;
+  imageUrl: string;
   pronunciation: string;
   color: string;
   borderColor: string;
@@ -36,6 +37,7 @@ export const BODY_PARTS_DATA: BodyPartItem[] = [
     id: 'eyes',
     name: 'Eyes',
     emoji: '👀',
+    imageUrl: '/assets/body-parts/eyes.png',
     pronunciation: 'Eye-z',
     color: 'text-sky-300',
     borderColor: 'border-sky-400/40',
@@ -49,6 +51,7 @@ export const BODY_PARTS_DATA: BodyPartItem[] = [
     id: 'ears',
     name: 'Ears',
     emoji: '👂',
+    imageUrl: '/assets/body-parts/ears.jpg',
     pronunciation: 'Ear-z',
     color: 'text-amber-300',
     borderColor: 'border-amber-400/40',
@@ -62,6 +65,7 @@ export const BODY_PARTS_DATA: BodyPartItem[] = [
     id: 'nose',
     name: 'Nose',
     emoji: '👃',
+    imageUrl: '/assets/body-parts/nose.jpg',
     pronunciation: 'Noh-z',
     color: 'text-rose-300',
     borderColor: 'border-rose-400/40',
@@ -75,6 +79,7 @@ export const BODY_PARTS_DATA: BodyPartItem[] = [
     id: 'mouth',
     name: 'Mouth & Smile',
     emoji: '👄',
+    imageUrl: '/assets/body-parts/mouth.jpg',
     pronunciation: 'Mow-th',
     color: 'text-pink-300',
     borderColor: 'border-pink-400/40',
@@ -88,6 +93,7 @@ export const BODY_PARTS_DATA: BodyPartItem[] = [
     id: 'teeth',
     name: 'Teeth',
     emoji: '🦷',
+    imageUrl: '/assets/body-parts/teeth.jpg',
     pronunciation: 'Teeth',
     color: 'text-teal-300',
     borderColor: 'border-teal-400/40',
@@ -101,6 +107,7 @@ export const BODY_PARTS_DATA: BodyPartItem[] = [
     id: 'hands',
     name: 'Hands & Fingers',
     emoji: '🖐️',
+    imageUrl: '/assets/body-parts/hands.png',
     pronunciation: 'Hand-z',
     color: 'text-emerald-300',
     borderColor: 'border-emerald-400/40',
@@ -114,6 +121,7 @@ export const BODY_PARTS_DATA: BodyPartItem[] = [
     id: 'tummy',
     name: 'Tummy / Belly',
     emoji: '🧸',
+    imageUrl: '/assets/body-parts/tummy.jpg',
     pronunciation: 'Tum-mee',
     color: 'text-yellow-300',
     borderColor: 'border-yellow-400/40',
@@ -127,6 +135,7 @@ export const BODY_PARTS_DATA: BodyPartItem[] = [
     id: 'knees',
     name: 'Knees',
     emoji: '🦵',
+    imageUrl: '/assets/body-parts/knees.jpg',
     pronunciation: 'Nee-z',
     color: 'text-indigo-300',
     borderColor: 'border-indigo-400/40',
@@ -140,6 +149,7 @@ export const BODY_PARTS_DATA: BodyPartItem[] = [
     id: 'feet',
     name: 'Feet & Toes',
     emoji: '🦶',
+    imageUrl: '/assets/body-parts/feet.jpg',
     pronunciation: 'Feet',
     color: 'text-cyan-300',
     borderColor: 'border-cyan-400/40',
@@ -153,6 +163,7 @@ export const BODY_PARTS_DATA: BodyPartItem[] = [
     id: 'hair',
     name: 'Hair & Head',
     emoji: '💇',
+    imageUrl: '/assets/body-parts/hair.jpg',
     pronunciation: 'Hair and Hed',
     color: 'text-purple-300',
     borderColor: 'border-purple-400/40',
@@ -166,6 +177,7 @@ export const BODY_PARTS_DATA: BodyPartItem[] = [
     id: 'shoulders',
     name: 'Shoulders',
     emoji: '👕',
+    imageUrl: '/assets/body-parts/shoulders.jpg',
     pronunciation: 'Shohl-der-z',
     color: 'text-orange-300',
     borderColor: 'border-orange-400/40',
@@ -179,6 +191,7 @@ export const BODY_PARTS_DATA: BodyPartItem[] = [
     id: 'heart',
     name: 'Kind Heart',
     emoji: '❤️',
+    imageUrl: '/assets/body-parts/heart.jpg',
     pronunciation: 'Hart',
     color: 'text-rose-400',
     borderColor: 'border-rose-400/40',
@@ -327,35 +340,49 @@ export const ToddlerBodyPartsSection: React.FC = () => {
 
       {activeTab === 'explore' && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 items-start">
-          {/* Left Column: Interactive Grid of 12 Body Parts */}
+          {/* Left Column: Interactive Grid of 12 Body Parts (2 Images in One Row) */}
           <div className="lg:col-span-2 space-y-4">
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4">
+            <div className="grid grid-cols-2 gap-3.5 sm:gap-5">
               {BODY_PARTS_DATA.map((part) => {
                 const isSelected = selectedPart.id === part.id;
                 return (
                   <motion.button
                     key={part.id}
                     type="button"
-                    whileHover={{ scale: 1.03, y: -2 }}
-                    whileTap={{ scale: 0.96 }}
+                    whileHover={{ scale: 1.02, y: -2 }}
+                    whileTap={{ scale: 0.97 }}
                     onClick={() => handleSelectPart(part)}
-                    className={`relative p-4 rounded-2xl border text-center transition-all cursor-pointer flex flex-col items-center justify-between min-h-[120px] ${
+                    className={`relative p-3.5 sm:p-4 rounded-3xl border text-center transition-all cursor-pointer flex flex-col items-center justify-between group overflow-hidden ${
                       isSelected
                         ? `bg-white/15 ${part.borderColor} ring-2 ring-sky-400 shadow-xl shadow-sky-500/10`
                         : `${part.bgColor} border-white/10 hover:border-white/20 hover:bg-white/10`
                     }`}
                   >
-                    <div className="text-3xl sm:text-4xl mb-2 filter drop-shadow-md">
-                      {part.emoji}
+                    {/* Real Toddler Body Part Picture Thumbnail - Large & Clear (2 in One Row) */}
+                    <div className="w-full aspect-[4/3] rounded-2xl overflow-hidden mb-3 relative shadow-md border border-white/20 bg-slate-900 flex-shrink-0">
+                      <img
+                        src={part.imageUrl}
+                        alt={`${part.name} close-up`}
+                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        loading="eager"
+                        onError={(e) => {
+                          (e.target as HTMLElement).style.display = 'none';
+                        }}
+                      />
+                      <span className="absolute bottom-1.5 right-1.5 text-xs bg-black/75 backdrop-blur-xs rounded-full px-2 py-0.5 border border-white/15 shadow">
+                        {part.emoji}
+                      </span>
                     </div>
-                    <div className="font-black text-sm text-white tracking-wide">
-                      {part.name}
-                    </div>
-                    <div className="text-[10px] font-semibold text-white/50 uppercase tracking-wider mt-0.5">
-                      {part.count}
+                    <div className="w-full text-center">
+                      <div className="font-black text-sm sm:text-base text-white tracking-wide">
+                        {part.name}
+                      </div>
+                      <div className="text-[11px] font-bold text-white/60 uppercase tracking-wider mt-0.5">
+                        {part.count}
+                      </div>
                     </div>
                     {isSelected && (
-                      <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-sky-400 animate-ping" />
+                      <span className="absolute top-3 right-3 w-3 h-3 rounded-full bg-sky-400 animate-ping" />
                     )}
                   </motion.button>
                 );
@@ -363,27 +390,44 @@ export const ToddlerBodyPartsSection: React.FC = () => {
             </div>
           </div>
 
-          {/* Right Column: Active Body Part Spotlight Card */}
-          <div className="lg:col-span-1">
+          {/* Right Column: Active Body Part Spotlight Card (Sticky on Desktop) */}
+          <div className="lg:col-span-1 lg:sticky lg:top-6">
             <motion.div
               key={selectedPart.id}
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               className={`p-6 sm:p-7 rounded-3xl border-2 ${selectedPart.borderColor} bg-gradient-to-br from-[#121c2e] via-[#0d1624] to-[#070c16] shadow-2xl text-left space-y-5`}
             >
-              <div className="flex items-center justify-between">
-                <div className="w-16 h-16 rounded-2xl bg-white/10 border border-white/15 flex items-center justify-center text-4xl shadow-inner">
-                  {selectedPart.emoji}
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 text-white text-xs font-bold border border-white/15">
+                    <span>{selectedPart.emoji}</span>
+                    <span>{selectedPart.name}</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => speakText(`${selectedPart.name}! ${selectedPart.whatItDoes} Fun action: ${selectedPart.funAction}`)}
+                    className="p-2.5 px-3.5 rounded-2xl bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 border border-sky-400/40 transition-all cursor-pointer flex items-center gap-1.5 active:scale-95 shadow-md"
+                    title="Pronounce again"
+                  >
+                    <Volume2 className="w-4 h-4" />
+                    <span className="text-xs font-bold">Hear Voice</span>
+                  </button>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => speakText(`${selectedPart.name}! ${selectedPart.whatItDoes} Fun action: ${selectedPart.funAction}`)}
-                  className="p-3 rounded-2xl bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 border border-sky-400/40 transition-all cursor-pointer flex items-center gap-1.5 active:scale-95 shadow-md"
-                  title="Pronounce again"
-                >
-                  <Volume2 className="w-4 h-4" />
-                  <span className="text-xs font-bold">Hear Voice</span>
-                </button>
+
+                {/* Big Close-Up Photo in Spotlight Card */}
+                <div className="relative w-full aspect-[16/11] rounded-2xl overflow-hidden border-2 border-white/25 shadow-2xl bg-slate-900">
+                  <img
+                    src={selectedPart.imageUrl}
+                    alt={selectedPart.name}
+                    className="w-full h-full object-cover"
+                    loading="eager"
+                  />
+                  <div className="absolute bottom-2 left-2 px-2.5 py-1 rounded-full bg-black/75 backdrop-blur-md text-xs font-bold text-white flex items-center gap-1.5 shadow border border-white/15">
+                    <span>{selectedPart.emoji}</span>
+                    <span>{selectedPart.count}</span>
+                  </div>
+                </div>
               </div>
 
               <div>
@@ -483,9 +527,16 @@ export const ToddlerBodyPartsSection: React.FC = () => {
                 key={part.id}
                 type="button"
                 onClick={() => handleQuizAnswer(part)}
-                className="p-4 rounded-2xl bg-white/5 hover:bg-white/15 border border-white/10 hover:border-amber-400/60 transition-all cursor-pointer flex flex-col items-center justify-center gap-2 active:scale-95 shadow-md"
+                className="p-3 rounded-2xl bg-white/5 hover:bg-white/15 border border-white/10 hover:border-amber-400/60 transition-all cursor-pointer flex flex-col items-center justify-center gap-2 active:scale-95 shadow-md group"
               >
-                <span className="text-3xl sm:text-4xl">{part.emoji}</span>
+                <div className="w-14 h-14 rounded-xl overflow-hidden border border-white/15 bg-slate-800">
+                  <img
+                    src={part.imageUrl}
+                    alt={part.name}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                    loading="eager"
+                  />
+                </div>
                 <span className="text-xs sm:text-sm font-bold text-white">{part.name}</span>
               </button>
             ))}

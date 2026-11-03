@@ -21,7 +21,8 @@ import {
   Sparkles,
   Mail,
   Heart,
-  Check
+  Check,
+  MessageCircle
 } from 'lucide-react';
 import { playSound } from '../lib/sounds';
 import { INDIAN_CITIES_BY_STATE } from '../data/indianCitiesData';
@@ -80,12 +81,16 @@ export const TODDLER_AGE_OPTIONS = [
 ];
 
 export const ProfilePage: React.FC = () => {
-  const { user, profile, refreshProfile, needsProfileSetup } = useAuth();
+  const { user, profile, refreshProfile, needsProfileSetup, child2NotApplicable, setChild2NotApplicable } = useAuth();
   const { language, setLanguage, t } = useLanguage();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
   const isMandatorySetup = Boolean(searchParams.get('mandatory') === 'true' || needsProfileSetup);
+
+  const [isChild2NotApplicable, setIsChild2NotApplicable] = useState<boolean>(() => {
+    return child2NotApplicable || profile?.child2NotApplicable || (typeof window !== 'undefined' && localStorage.getItem('child_2_not_applicable') === 'true') || false;
+  });
 
   // Redirect old tabs cleanly to their dedicated top-level pages
   const tabParam = searchParams.get('tab');
@@ -247,6 +252,9 @@ export const ProfilePage: React.FC = () => {
         if (profile.child2.bloodGroup) setChild2BloodGroup(profile.child2.bloodGroup);
         if (profile.child2.dietaryNotes) setChild2DietaryNotes(profile.child2.dietaryNotes);
       }
+      if (profile.child2NotApplicable !== undefined) {
+        setIsChild2NotApplicable(Boolean(profile.child2NotApplicable));
+      }
       if (profile.activeChildIndex) {
         setActiveChildIndex(profile.activeChildIndex as 1 | 2);
       }
@@ -352,7 +360,9 @@ export const ProfilePage: React.FC = () => {
           bloodGroup: child2BloodGroup,
           dietaryNotes: child2DietaryNotes.trim(),
         },
-        activeChildIndex,
+        child2NotApplicable: isChild2NotApplicable,
+        hasSecondChild: !isChild2NotApplicable,
+        activeChildIndex: isChild2NotApplicable ? 1 : activeChildIndex,
         childName: activeName,
         babyName: activeName,
         toddlerName: activeName,
@@ -390,7 +400,8 @@ export const ProfilePage: React.FC = () => {
       localStorage.setItem('child_2_blood', child2BloodGroup);
       localStorage.setItem('child_2_dietary_notes', child2DietaryNotes.trim());
 
-      localStorage.setItem('active_child_index', String(activeChildIndex));
+      localStorage.setItem('child_2_not_applicable', String(isChild2NotApplicable));
+      localStorage.setItem('active_child_index', String(isChild2NotApplicable ? 1 : activeChildIndex));
       localStorage.setItem('baby_name', activeName);
       localStorage.setItem('child_name', activeName);
       localStorage.setItem('toddler_name', activeName);
@@ -588,47 +599,11 @@ export const ProfilePage: React.FC = () => {
               </div>
 
               <form onSubmit={handleUpdateProfile} className="space-y-6">
-                {/* Parent Name Fields */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between ml-1">
-                      <label className="text-xs font-semibold text-white/70 uppercase tracking-wider">
-                        {t('firstName') || 'Parent / First Name'} <span className="text-rose-400">*</span>
-                      </label>
-                    </div>
-                    <input
-                      type="text"
-                      required
-                      value={firstName}
-                      onChange={(e) => setFirstName(e.target.value)}
-                      placeholder="Enter parent first name"
-                      className={`w-full bg-[#16223a] border rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:ring-4 transition-all placeholder:text-white/20 ${
-                        !isNameValid ? 'border-rose-500/40 focus:border-rose-400 focus:ring-rose-500/10' : 'border-white/15 focus:border-indigo-400 focus:ring-indigo-500/10'
-                      }`}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between ml-1">
-                      <label className="text-xs font-semibold text-white/70 uppercase tracking-wider">
-                        {t('lastName') || 'Last Name'}
-                      </label>
-                      <span className="text-[10px] text-white/40">Optional</span>
-                    </div>
-                    <input
-                      type="text"
-                      value={lastName}
-                      onChange={(e) => setLastName(e.target.value)}
-                      placeholder="e.g. Ashwath"
-                      className="w-full bg-[#16223a] border border-white/15 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-400 transition-all placeholder:text-white/20"
-                    />
-                  </div>
-                </div>
-
                 {/* Parent Name */}
                 <div className="space-y-2">
                   <div className="flex items-center justify-between ml-1">
                     <label className="text-xs font-semibold text-white/70 uppercase tracking-wider">
-                      Parent Name
+                      Parent Name <span className="text-rose-400">*</span>
                     </label>
                   </div>
                   <input
@@ -637,10 +612,13 @@ export const ProfilePage: React.FC = () => {
                     value={parentName}
                     onChange={(e) => {
                       setParentName(e.target.value);
+                      setFirstName(e.target.value);
                       localStorage.setItem('parent_name', e.target.value);
                     }}
-                    placeholder="Enter parent name"
-                    className="w-full bg-[#16223a] border border-white/15 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-400 transition-all placeholder:text-white/20"
+                    placeholder="Enter parent name (e.g. Lashmi)"
+                    className={`w-full bg-[#16223a] border rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:ring-4 transition-all placeholder:text-white/20 ${
+                      !parentName.trim() ? 'border-rose-500/40 focus:border-rose-400 focus:ring-rose-500/10' : 'border-white/15 focus:border-indigo-400 focus:ring-indigo-500/10'
+                    }`}
                   />
                 </div>
 
@@ -717,20 +695,11 @@ export const ProfilePage: React.FC = () => {
                   />
                 </div>
 
-                <div className="pt-4 border-t border-white/5 space-y-4">
-                  <label className="flex items-center gap-3 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={allowDirectMessages}
-                      onChange={(e) => setAllowDirectMessages(e.target.checked)}
-                      className="w-5 h-5 rounded border-indigo-500/30 bg-indigo-500/10 text-indigo-500 focus:ring-indigo-500/20"
-                    />
-                    <span className="text-sm font-medium text-white">Allow other parents to send messages directly</span>
-                  </label>
+                <div className="pt-4 border-t border-white/5">
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-white/5 text-white/80 border border-white/15 rounded-xl font-bold hover:bg-white/10 hover:text-white transition-all active:scale-95 disabled:opacity-50 mt-2 cursor-pointer"
+                    className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-white/5 text-white/80 border border-white/15 rounded-xl font-bold hover:bg-white/10 hover:text-white transition-all active:scale-95 disabled:opacity-50 cursor-pointer"
                   >
                     {loading && <Loader2 className="w-4 h-4 animate-spin" />}
                     <span>{t('changePassword') || 'Change Password'}</span>
@@ -755,11 +724,13 @@ export const ProfilePage: React.FC = () => {
                       Child Details
                     </h2>
                     <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 shrink-0">
-                      2 Child Profiles Supported
+                      {isChild2NotApplicable ? 'Single Child Profile Active' : '2 Child Profiles Supported'}
                     </span>
                   </div>
                   <p className="text-xs sm:text-sm text-slate-400 mt-1">
-                    Manage date of birth, blood group, and health profiles for each child. Switch the active profile anytime.
+                    {isChild2NotApplicable 
+                      ? `Managing profile for ${child1Name}. Child 2 is currently marked as Not Applicable.` 
+                      : 'Manage date of birth, gender, and blood group for each child. Select a child tab below to edit.'}
                   </p>
                 </div>
               </div>
@@ -777,57 +748,63 @@ export const ProfilePage: React.FC = () => {
                 >
                   <Baby className="w-4 h-4 shrink-0" />
                   <span className="whitespace-nowrap">Child 1: {child1Name || 'Ashwath'}</span>
-                  {activeChildIndex === 1 && (
-                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-black/30 text-slate-950 font-extrabold uppercase shrink-0">Active</span>
-                  )}
                 </button>
-                <button
-                  type="button"
-                  onClick={() => { playSound('pop'); setSelectedChildTab(2); }}
-                  className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-black transition-all flex items-center gap-2 cursor-pointer ${
-                    selectedChildTab === 2 
-                      ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 shadow-md' 
-                      : 'text-slate-300 hover:text-white'
-                  }`}
-                >
-                  <Baby className="w-4 h-4 shrink-0" />
-                  <span className="whitespace-nowrap">Child 2: {child2Name || 'Child 2'}</span>
-                  {activeChildIndex === 2 && (
-                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-black/30 text-slate-950 font-extrabold uppercase shrink-0">Active</span>
-                  )}
-                </button>
+                {!isChild2NotApplicable && (
+                  <button
+                    type="button"
+                    onClick={() => { playSound('pop'); setSelectedChildTab(2); }}
+                    className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-black transition-all flex items-center gap-2 cursor-pointer ${
+                      selectedChildTab === 2 
+                        ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 shadow-md' 
+                        : 'text-slate-300 hover:text-white'
+                    }`}
+                  >
+                    <Baby className="w-4 h-4 shrink-0" />
+                    <span className="whitespace-nowrap">Child 2: {child2Name || 'Child 2'}</span>
+                  </button>
+                )}
               </div>
             </div>
 
-            {/* Active Status & Switcher Banner */}
-            <div className="p-4 rounded-2xl bg-emerald-950/30 border border-emerald-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-              <div className="flex items-center gap-3">
-                <div className={`w-3.5 h-3.5 rounded-full ${activeChildIndex === selectedChildTab ? 'bg-emerald-400' : 'bg-slate-500'}`} />
-                <span className="text-xs sm:text-sm font-medium text-slate-200">
-                  Currently editing: <strong className="text-white font-bold">Child {selectedChildTab} ({selectedChildTab === 1 ? child1Name : child2Name})</strong>
-                  {activeChildIndex === selectedChildTab ? ' (Currently Active in FoodLens & Health Tools ✓)' : ' (Inactive)'}
-                </span>
-              </div>
-              {activeChildIndex !== selectedChildTab && (
-                <button
-                  type="button"
-                  onClick={() => {
+            {/* Child Profile 2 Not Applicable Checkbox / Option */}
+            <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <label className="flex items-start sm:items-center gap-3 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={isChild2NotApplicable}
+                  onChange={async (e) => {
+                    const checked = e.target.checked;
                     playSound('pop');
-                    setActiveChildIndex(selectedChildTab);
-                    const chosenName = selectedChildTab === 1 ? child1Name : child2Name;
-                    const chosenDOB = selectedChildTab === 1 ? child1DOB : child2DOB;
-                    localStorage.setItem('active_child_index', String(selectedChildTab));
-                    localStorage.setItem('baby_name', chosenName);
-                    localStorage.setItem('child_name', chosenName);
-                    localStorage.setItem('toddler_name', chosenName);
-                    localStorage.setItem('baby_birth_date', chosenDOB);
-                    setSuccess(`Set ${chosenName} as the active child profile!`);
+                    setIsChild2NotApplicable(checked);
+                    if (checked) {
+                      setSelectedChildTab(1);
+                    }
+                    await setChild2NotApplicable(checked);
+                    setSuccess(checked 
+                      ? "Child Profile 2 marked as Not Applicable." 
+                      : "Child Profile 2 enabled.");
                     setTimeout(() => setSuccess(null), 3000);
                   }}
-                  className="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-black transition-all shadow-md active:scale-95 cursor-pointer self-start sm:self-auto"
-                >
-                  Set as Active Child Profile
-                </button>
+                  className="w-5 h-5 mt-0.5 sm:mt-0 rounded border-emerald-400 text-emerald-500 focus:ring-emerald-400 cursor-pointer accent-emerald-500 shrink-0"
+                />
+                <div>
+                  <span className="text-sm font-black text-white block">
+                    Mark Child Profile 2 as Not Applicable
+                  </span>
+                  <span className="text-xs text-slate-400 block">
+                    Check this box if you have only 1 child. Child 2 will be removed from child selection across the tools.
+                  </span>
+                </div>
+              </label>
+
+              {isChild2NotApplicable ? (
+                <span className="px-3 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-bold whitespace-nowrap self-start sm:self-auto">
+                  Only Child 1
+                </span>
+              ) : (
+                <span className="px-3 py-1 rounded-full bg-indigo-500/15 border border-indigo-500/30 text-indigo-300 text-xs font-bold whitespace-nowrap self-start sm:self-auto">
+                  2 Children
+                </span>
               )}
             </div>
 
@@ -896,19 +873,6 @@ export const ProfilePage: React.FC = () => {
                       <option key={bg} value={bg}>{bg}</option>
                     ))}
                   </select>
-                </div>
-
-                <div className="sm:col-span-2 space-y-2">
-                  <label className="text-xs font-bold text-slate-300 uppercase tracking-wider">
-                    Dietary Sensitivities &amp; Allergies
-                  </label>
-                  <input
-                    type="text"
-                    value={child1DietaryNotes}
-                    onChange={(e) => setChild1DietaryNotes(e.target.value)}
-                    placeholder="e.g. Vegetarian, low salt, zero refined sugar"
-                    className="w-full bg-[#16223a] border border-white/15 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-400 focus:ring-4 focus:ring-emerald-500/10 placeholder:text-slate-500 font-medium"
-                  />
                 </div>
               </div>
             )}
@@ -979,21 +943,83 @@ export const ProfilePage: React.FC = () => {
                     ))}
                   </select>
                 </div>
-
-                <div className="sm:col-span-2 space-y-2">
-                  <label className="text-xs font-bold text-slate-300 uppercase tracking-wider">
-                    Dietary Sensitivities &amp; Allergies
-                  </label>
-                  <input
-                    type="text"
-                    value={child2DietaryNotes}
-                    onChange={(e) => setChild2DietaryNotes(e.target.value)}
-                    placeholder="e.g. Mild lactose sensitivity, puree weaning stage"
-                    className="w-full bg-[#16223a] border border-white/15 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-400 focus:ring-4 focus:ring-emerald-500/10 placeholder:text-slate-500 font-medium"
-                  />
-                </div>
               </div>
             )}
+          </div>
+        </div>
+
+        {/* Direct Messaging & Communication Privacy Section */}
+        <div id="section-direct-messaging" className="w-full">
+          <div className="glass-card p-6 sm:p-8 lg:p-10 rounded-3xl bg-[#0e1626]/90 border border-indigo-500/30 shadow-2xl space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-white/10">
+              <div className="flex items-center gap-3.5 min-w-0">
+                <div className="p-3.5 rounded-2xl bg-indigo-500/20 border border-indigo-400/40 shrink-0 shadow-md">
+                  <MessageCircle className="w-6 h-6 sm:w-7 sm:h-7 text-indigo-300" />
+                </div>
+                <div>
+                  <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+                    Direct Messaging &amp; Communication Privacy
+                  </h2>
+                  <p className="text-xs sm:text-sm text-white/60 mt-1">
+                    Control 1:1 direct messaging access with other parents across Tricky Toddlers
+                  </p>
+                </div>
+              </div>
+
+              <span className={`px-3 py-1 rounded-full text-xs font-bold shrink-0 self-start sm:self-auto border ${
+                allowDirectMessages 
+                  ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-300' 
+                  : 'bg-rose-500/15 border-rose-500/30 text-rose-300'
+              }`}>
+                {allowDirectMessages ? 'Direct 1:1 Messaging Active' : 'Direct 1:1 Messaging Disabled'}
+              </span>
+            </div>
+
+            <div className="p-5 sm:p-6 rounded-2xl bg-white/[0.03] border border-white/10 space-y-5">
+              <label className="flex items-start sm:items-center gap-3.5 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={allowDirectMessages}
+                  onChange={async (e) => {
+                    const checked = e.target.checked;
+                    playSound('pop');
+                    setAllowDirectMessages(checked);
+                    localStorage.setItem('allow_direct_messages', String(checked));
+                    if (user && db) {
+                      try {
+                        const userRef = doc(db, 'users', user.uid);
+                        await setDoc(userRef, { allowDirectMessages: checked }, { merge: true });
+                        await refreshProfile();
+                      } catch (err) {
+                        console.warn("Direct messaging sync:", err);
+                      }
+                    }
+                    setSuccess(checked 
+                      ? "Direct messaging enabled! You can now send and receive 1:1 messages with other parents." 
+                      : "Direct messaging disabled. 1:1 messages paused; Community Help remains available.");
+                    setTimeout(() => setSuccess(null), 3500);
+                  }}
+                  className="w-5 h-5 sm:w-6 sm:h-6 mt-0.5 sm:mt-0 rounded border-indigo-400 text-indigo-500 focus:ring-indigo-400 cursor-pointer accent-indigo-500 shrink-0"
+                />
+                <div>
+                  <span className="text-base sm:text-lg font-black text-white block">
+                    Allow other parents to send messages directly
+                  </span>
+                  <span className="text-xs sm:text-sm text-slate-300 block mt-0.5">
+                    Permit other parents in Parent Connect to initiate private 1:1 direct messages with you.
+                  </span>
+                </div>
+              </label>
+
+              {/* Informative Note required by user */}
+              <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/25 flex items-start gap-3">
+                <AlertCircle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+                <div className="text-xs sm:text-sm text-amber-200/95 leading-relaxed">
+                  <strong className="text-amber-300 font-bold block mb-1">Please Note:</strong>
+                  If unchecked, no one will be able to send messages to you, and you will not be able to send 1:1 messages to any parent. However, <strong>Community Help</strong> will be available for any conversations.
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -1167,14 +1193,7 @@ export const ProfilePage: React.FC = () => {
           </div>
         </div>
 
-        {/* Row 4: Bottom Save Changes & Dietary Preferences Card (Full Width) */}
-        <div className="w-full">
-          <div className="glass-card p-6 sm:p-8 rounded-3xl bg-[#0e1626]/90 border border-white/10 shadow-xl flex flex-col xl:flex-row xl:items-center justify-between gap-5">
-            {/* Right side: Validation Status & Save Changes button */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 shrink-0">
-            </div>
-          </div>
-        </div>
+
 
         {/* Row 5: Notification Settings (Full Width) */}
         <div className="w-full">

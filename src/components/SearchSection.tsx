@@ -4,7 +4,7 @@ import {
   Search, Sparkles, Loader2, Baby, MessageCircle, 
   HelpCircle, ChevronRight, RotateCcw, Send, User, 
   Mic, MicOff, RefreshCw, AlertTriangle, ShieldCheck,
-  CheckCircle2, Info, ArrowRight, BookOpen
+  CheckCircle2, Info, ArrowRight, BookOpen, Check
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import Markdown from 'react-markdown';
@@ -12,6 +12,7 @@ import remarkGfm from 'remark-gfm';
 import { useAuth } from '../lib/AuthContext';
 import { useLanguage } from '../lib/LanguageContext';
 import { playSound } from '../lib/sounds';
+import { ChildProfileSelector } from './ChildProfileSelector';
 import { 
   saveAISearchRecord, 
   isPersonalInfoQuery, 
@@ -135,9 +136,12 @@ function parseAIResponse(rawText: string): ParsedResponse {
 }
 
 export const SearchSection: React.FC = () => {
-  const { profile, activeChildIndex, childProfiles, switchActiveChild } = useAuth();
+  const { profile, childProfiles } = useAuth();
   const { t } = useLanguage();
   const [searchParams, setSearchParams] = useSearchParams();
+
+  // Scoped to AI Assistant page only (does not overwrite other site features)
+  const [pageChildId, setPageChildId] = useState<1 | 2>(1);
 
   const [query, setQuery] = useState('');
   const [followUpText, setFollowUpText] = useState('');
@@ -153,10 +157,17 @@ export const SearchSection: React.FC = () => {
   const responseContainerRef = useRef<HTMLDivElement>(null);
   const recognitionRef = useRef<any>(null);
 
-  // Dynamic Parent & Child names from profile or demo defaults
-  const parentName = profile?.parentName || profile?.firstName || profile?.name || localStorage.getItem('parent_name') || 'Lashmi';
-  const childName = profile?.babyName || profile?.childName || localStorage.getItem('baby_name') || 'Ashwath';
-  const childAge = profile?.babyAge || localStorage.getItem('baby_age') || '14 Months';
+  // Dynamic Child Profile for AI Assistant
+  const activeChild = childProfiles.find(cp => cp.id === pageChildId) || childProfiles[0];
+  const parentName = profile?.parentName || profile?.firstName || profile?.name || (typeof window !== 'undefined' ? localStorage.getItem('parent_name') : null) || 'Lashmi';
+  const childName = activeChild?.name || profile?.babyName || profile?.childName || 'Ashwath';
+  const childAge = activeChild?.age || profile?.babyAge || '14 Months';
+
+  // Check if current active child is in infant stage (0–12 months, e.g. 3 Months for Ananya)
+  const isInfant = Boolean(
+    (childAge && childAge.toLowerCase().includes('month') && !childAge.toLowerCase().includes('yr')) ||
+    (activeChild?.birthDate && (Date.now() - new Date(activeChild.birthDate).getTime()) < 365 * 24 * 60 * 60 * 1000)
+  );
 
   // Voice speech-to-text integration
   useEffect(() => {
@@ -427,7 +438,44 @@ export const SearchSection: React.FC = () => {
     handleExecuteQuery(failedQuery, cleanHistory);
   };
 
-  const starterTopics = [
+  const starterTopics = isInfant ? [
+    {
+      title: "3-Month Wake Windows & Daily Naps",
+      query: `What is the ideal wake window and nap routine for 3-month-old ${childName}?`,
+      badge: "Sleep & Routine",
+      color: "border-purple-500/30 bg-purple-500/10 text-purple-200 hover:border-purple-400",
+    },
+    {
+      title: "Soothing Evening Colic & Trapped Gas",
+      query: `How can I soothe evening colic crying spells and relieve trapped gas in ${childName}?`,
+      badge: "Soothing & Gas Relief",
+      color: "border-amber-500/30 bg-amber-500/10 text-amber-200 hover:border-amber-400",
+    },
+    {
+      title: "Tummy Time & Head Control Milestones",
+      query: `How much daily tummy time should a 3-month-old do, and what if ${childName} gets fussy after 2 minutes?`,
+      badge: "Physical Milestones",
+      color: "border-emerald-500/30 bg-emerald-500/10 text-emerald-200 hover:border-emerald-400",
+    },
+    {
+      title: "High-Contrast Visual & Sensory Play",
+      query: `What high-contrast visual toys and sensory play best stimulate a 3-month-old's developing brain?`,
+      badge: "Sensory Development",
+      color: "border-cyan-500/30 bg-cyan-500/10 text-cyan-200 hover:border-cyan-400",
+    },
+    {
+      title: "3-Month Growth Spurt & Cluster Feeding",
+      query: `How do I tell if ${childName} is having a 3-month growth spurt cluster feeding versus regular hunger?`,
+      badge: "Infant Feeding",
+      color: "border-rose-500/30 bg-rose-500/10 text-rose-200 hover:border-rose-400",
+    },
+    {
+      title: "Gentle 4-Month Sleep Regression Prep",
+      query: `What gentle sleep cues and bedtime habits can I start at 3 months to ease the upcoming 4-month sleep regression?`,
+      badge: "Sleep Progression",
+      color: "border-indigo-500/30 bg-indigo-500/10 text-indigo-200 hover:border-indigo-400",
+    },
+  ] : [
     {
       title: "Sensory Meltdown vs. Boundary Tantrum",
       query: "What is the difference between a sensory meltdown and a boundary tantrum?",
@@ -436,31 +484,31 @@ export const SearchSection: React.FC = () => {
     },
     {
       title: "5 Indoor Games for a Rainy Day",
-      query: "Give me five fun indoor games to play with my child on a rainy day using simple household items.",
+      query: `Give me five fun indoor games to play with ${childName} on a rainy day using simple household items.`,
       badge: "Creative Play",
       color: "border-amber-500/30 bg-amber-500/10 text-amber-200 hover:border-amber-400",
     },
     {
       title: "Refusing to Sleep Alone at Night",
-      query: "My child refuses to sleep alone and cries when I leave the room. How do I transition peacefully?",
+      query: `My child ${childName} refuses to sleep alone and cries when I leave the room. How do I transition peacefully?`,
       badge: "Bedtime & Sleep",
       color: "border-indigo-500/30 bg-indigo-500/10 text-indigo-200 hover:border-indigo-400",
     },
     {
       title: "Handling Fear of Ghosts or Monsters",
-      query: "My child says they saw a ghost and are scared of shadows under their bed. How should I talk to them?",
+      query: `My child ${childName} says they saw a ghost and are scared of shadows under their bed. How should I talk to them?`,
       badge: "Childhood Fears",
       color: "border-emerald-500/30 bg-emerald-500/10 text-emerald-200 hover:border-emerald-400",
     },
     {
       title: "Picky Eating & First Ragi Porridge",
-      query: "How do I introduce sprouted ragi porridge to a picky toddler without mealtime battles?",
+      query: `How do I introduce sprouted ragi porridge to a picky toddler like ${childName} without mealtime battles?`,
       badge: "Indian Nutrition",
       color: "border-rose-500/30 bg-rose-500/10 text-rose-200 hover:border-rose-400",
     },
     {
       title: "Tackling Hitting & Biting Calmly",
-      query: "My toddler hits and pinches when angry. What immediate calming script and action steps should I take?",
+      query: `My toddler ${childName} hits and pinches when angry. What immediate calming script and action steps should I take?`,
       badge: "Big Feelings",
       color: "border-cyan-500/30 bg-cyan-500/10 text-cyan-200 hover:border-cyan-400",
     },
@@ -468,11 +516,11 @@ export const SearchSection: React.FC = () => {
 
   return (
     <div className="w-full max-w-full mx-auto py-2 sm:py-4 px-2 sm:px-4 lg:px-6 text-center">
-      {/* Google AI Mode Header */}
+      {/* AI Powered Parenting Header */}
       <div className="flex flex-col items-center justify-center text-center space-y-2 mb-6">
         <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-gradient-to-r from-indigo-500/15 via-purple-500/15 to-pink-500/15 border border-indigo-500/30 text-indigo-300 text-xs font-black uppercase tracking-wider shadow-sm">
           <Sparkles className="w-3.5 h-3.5 text-indigo-400 animate-pulse" />
-          <span>Google AI Mode · Direct Child Intelligence</span>
+          <span>AI Powered Parenting</span>
         </div>
 
         <h1 className="text-2xl sm:text-4xl md:text-5xl font-sans font-black tracking-tight leading-tight px-2">
@@ -482,54 +530,13 @@ export const SearchSection: React.FC = () => {
           </span>
         </h1>
 
-        {/* Child Profile Checkbox Selector & Session Controls */}
-        <div className="flex flex-col items-center justify-center gap-2 pt-1 w-full max-w-2xl mx-auto">
-          <div className="flex flex-wrap items-center justify-center gap-2 bg-[#0a1224]/90 border border-indigo-500/30 rounded-2xl p-1.5 px-3 shadow-xl backdrop-blur-md">
-            <span className="text-[10px] sm:text-[11px] font-black uppercase tracking-wider text-indigo-300 flex items-center gap-1.5 px-1">
-              <Baby className="w-3.5 h-3.5 text-indigo-400" />
-              <span>Select Child Profile:</span>
-            </span>
-
-            <div className="flex items-center gap-2">
-              {childProfiles.map((cp) => {
-                const isSelected = activeChildIndex === cp.id;
-                return (
-                  <label
-                    key={cp.id}
-                    onClick={() => {
-                      if (!isSelected) {
-                        playSound('pop');
-                        switchActiveChild(cp.id);
-                      }
-                    }}
-                    className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-bold cursor-pointer transition-all border select-none ${
-                      isSelected
-                        ? 'bg-gradient-to-r from-indigo-600/40 to-purple-600/40 text-white border-indigo-400 shadow-[0_0_15px_rgba(99,102,241,0.4)] ring-1 ring-indigo-400'
-                        : 'bg-white/5 text-slate-300 border-white/10 hover:bg-white/10 hover:text-white hover:border-white/20'
-                    }`}
-                  >
-                    <input
-                      type="checkbox"
-                      checked={isSelected}
-                      onChange={() => {
-                        playSound('pop');
-                        switchActiveChild(cp.id);
-                      }}
-                      className="w-4 h-4 rounded border-indigo-400 text-indigo-500 focus:ring-indigo-400 cursor-pointer accent-indigo-500"
-                    />
-                    <span className="flex items-center gap-1.5">
-                      <span className="font-extrabold">{cp.name}</span>
-                      <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded-md ${
-                        isSelected ? 'bg-indigo-400/25 text-indigo-200' : 'bg-white/10 text-slate-400'
-                      }`}>
-                        {cp.age}
-                      </span>
-                    </span>
-                  </label>
-                );
-              })}
-            </div>
-          </div>
+        {/* Child Profile Selector & Session Controls (Scoped to AI Assistant) */}
+        <div className="flex flex-col items-center justify-center gap-3 pt-2 w-full max-w-2xl mx-auto">
+          <ChildProfileSelector
+            selectedChildId={pageChildId}
+            onSelectChild={(id) => setPageChildId(id)}
+            sectionContextName="AI Assistant"
+          />
 
           {hasSearched && (
             <div className="flex items-center justify-center pt-1">
@@ -567,7 +574,11 @@ export const SearchSection: React.FC = () => {
                     }
                   }
                 }}
-                placeholder={`Ask any question about ${childName}... (e.g. "What is the difference between a sensory meltdown and a boundary tantrum?" or "5 games for a rainy day")`}
+                placeholder={
+                  isInfant
+                    ? `Ask any question about ${childName} (${childAge || '3 Months'}) - e.g. "What is an ideal wake window for a 3-month-old?" or "How to soothe evening colic & trapped gas?"`
+                    : `Ask any question about ${childName} (${childAge || '2 yrs 6 mos'}) - e.g. "What calming scripts work best during a public tantrum?" or "Sensory meltdown vs boundary tantrum"`
+                }
                 className="w-full bg-transparent border-none text-sm sm:text-base md:text-lg text-white focus:outline-none resize-none placeholder:text-slate-500 leading-relaxed min-h-[56px]"
               />
             </div>
@@ -603,7 +614,7 @@ export const SearchSection: React.FC = () => {
                     </>
                   ) : (
                     <>
-                      <span>Ask AI</span>
+                      <span>Ask Tricky Toddlers</span>
                       <ArrowRight className="w-4 h-4" />
                     </>
                   )}

@@ -17,6 +17,7 @@ export interface AnimalItem {
   id: string;
   name: string;
   emoji: string;
+  imageUrl: string;
   soundName: string;
   soundPhonetic: string;
   babyName: string;
@@ -37,6 +38,7 @@ export const ANIMALS_DATA: AnimalItem[] = [
     id: 'lion',
     name: 'Lion',
     emoji: '🦁',
+    imageUrl: 'https://images.unsplash.com/photo-1546182990-dffeafbe841d?auto=format&fit=crop&w=400&q=80',
     soundName: 'Mighty Roar',
     soundPhonetic: 'ROOOAAAR!',
     babyName: 'Lion Cub',
@@ -54,6 +56,7 @@ export const ANIMALS_DATA: AnimalItem[] = [
     id: 'elephant',
     name: 'Elephant',
     emoji: '🐘',
+    imageUrl: 'https://images.unsplash.com/photo-1557050543-4d5f4e07ef46?auto=format&fit=crop&w=400&q=80',
     soundName: 'Trumpet',
     soundPhonetic: 'PAWOOOOO!',
     babyName: 'Baby Calf',
@@ -71,6 +74,7 @@ export const ANIMALS_DATA: AnimalItem[] = [
     id: 'cow',
     name: 'Cow',
     emoji: '🐮',
+    imageUrl: 'https://images.unsplash.com/photo-1546445317-29f4545e9d53?auto=format&fit=crop&w=400&q=80',
     soundName: 'Gentle Moo',
     soundPhonetic: 'MOOOOO!',
     babyName: 'Calf',
@@ -88,6 +92,7 @@ export const ANIMALS_DATA: AnimalItem[] = [
     id: 'dog',
     name: 'Puppy Dog',
     emoji: '🐶',
+    imageUrl: 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=400&q=80',
     soundName: 'Happy Bark',
     soundPhonetic: 'WOOF WOOF!',
     babyName: 'Puppy',
@@ -105,6 +110,7 @@ export const ANIMALS_DATA: AnimalItem[] = [
     id: 'cat',
     name: 'Kitten Cat',
     emoji: '🐱',
+    imageUrl: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=400&q=80',
     soundName: 'Sweet Meow',
     soundPhonetic: 'MEEE-OWWW!',
     babyName: 'Kitten',
@@ -122,6 +128,7 @@ export const ANIMALS_DATA: AnimalItem[] = [
     id: 'duck',
     name: 'Duck',
     emoji: '🦆',
+    imageUrl: 'https://images.unsplash.com/photo-1516467508483-a7212febe31a?auto=format&fit=crop&w=400&q=80',
     soundName: 'Splashing Quack',
     soundPhonetic: 'QUACK QUACK!',
     babyName: 'Duckling',
@@ -139,6 +146,7 @@ export const ANIMALS_DATA: AnimalItem[] = [
     id: 'monkey',
     name: 'Monkey',
     emoji: '🐵',
+    imageUrl: 'https://images.unsplash.com/photo-1540573133985-87b6da6d54a9?auto=format&fit=crop&w=400&q=80',
     soundName: 'Playful Chatter',
     soundPhonetic: 'OOH OOH AAH AAH!',
     babyName: 'Infant Monkey',
@@ -156,6 +164,7 @@ export const ANIMALS_DATA: AnimalItem[] = [
     id: 'sheep',
     name: 'Sheep',
     emoji: '🐑',
+    imageUrl: 'https://images.unsplash.com/photo-1484557052118-f32bd25b45b5?auto=format&fit=crop&w=400&q=80',
     soundName: 'Woolly Bleat',
     soundPhonetic: 'BAAA BAAA!',
     babyName: 'Little Lamb',
@@ -173,6 +182,7 @@ export const ANIMALS_DATA: AnimalItem[] = [
     id: 'rooster',
     name: 'Rooster',
     emoji: '🐓',
+    imageUrl: 'https://images.unsplash.com/photo-1548550023-2bdb3c5beed7?auto=format&fit=crop&w=400&q=80',
     soundName: 'Morning Crow',
     soundPhonetic: 'COCK-A-DOODLE-DOO!',
     babyName: 'Chick',
@@ -190,6 +200,7 @@ export const ANIMALS_DATA: AnimalItem[] = [
     id: 'peacock',
     name: 'Peacock',
     emoji: '🦚',
+    imageUrl: 'https://images.unsplash.com/photo-1534188753412-3e26d0d618d6?auto=format&fit=crop&w=400&q=80',
     soundName: 'Joyful Call',
     soundPhonetic: 'MAYUR / KEH-O!',
     babyName: 'Peachick',
@@ -207,6 +218,7 @@ export const ANIMALS_DATA: AnimalItem[] = [
     id: 'frog',
     name: 'Frog',
     emoji: '🐸',
+    imageUrl: 'https://images.unsplash.com/photo-1534361960057-19889db9621e?auto=format&fit=crop&w=400&q=80',
     soundName: 'Ribbit Croak',
     soundPhonetic: 'RIBBIT RIBBIT!',
     babyName: 'Little Tadpole',
@@ -224,6 +236,7 @@ export const ANIMALS_DATA: AnimalItem[] = [
     id: 'horse',
     name: 'Horse',
     emoji: '🐴',
+    imageUrl: 'https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?auto=format&fit=crop&w=400&q=80',
     soundName: 'Cheerful Neigh',
     soundPhonetic: 'WHINNY NEIGH!',
     babyName: 'Foal',
@@ -389,14 +402,23 @@ export const ToddlerAnimalSoundsSection: React.FC = () => {
                     whileHover={{ scale: 1.04, y: -2 }}
                     whileTap={{ scale: 0.96 }}
                     onClick={() => handleSelectAnimal(animal)}
-                    className={`relative p-4 rounded-2xl border text-center transition-all cursor-pointer flex flex-col items-center justify-between min-h-[135px] ${
+                    className={`relative p-3 sm:p-4 rounded-2xl border text-center transition-all cursor-pointer flex flex-col items-center justify-between min-h-[145px] group ${
                       isSelected
                         ? `bg-white/15 ${animal.borderColor} ring-2 ring-amber-400 shadow-xl shadow-amber-500/10`
                         : `${animal.bgColor} border-white/10 hover:border-white/20 hover:bg-white/10`
                     }`}
                   >
-                    <div className="text-4xl mb-2 filter drop-shadow-md">
-                      {animal.emoji}
+                    {/* Real Animal Photo Thumbnail */}
+                    <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden mb-2 relative shadow-md border border-white/20 bg-slate-800 flex-shrink-0">
+                      <img
+                        src={animal.imageUrl}
+                        alt={animal.name}
+                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        loading="eager"
+                      />
+                      <span className="absolute bottom-1 right-1 text-xs bg-black/60 backdrop-blur-xs rounded-full px-1">
+                        {animal.emoji}
+                      </span>
                     </div>
                     <div className="font-black text-sm text-white tracking-wide">
                       {animal.name}
@@ -421,9 +443,18 @@ export const ToddlerAnimalSoundsSection: React.FC = () => {
               animate={{ opacity: 1, scale: 1 }}
               className={`p-6 sm:p-7 rounded-3xl border-2 ${selectedAnimal.borderColor} bg-gradient-to-br from-[#1d1b28] via-[#14121d] to-[#0a0910] shadow-2xl text-left space-y-5`}
             >
-              <div className="flex items-center justify-between">
-                <div className="w-16 h-16 rounded-2xl bg-white/10 border border-white/15 flex items-center justify-center text-4xl shadow-inner">
-                  {selectedAnimal.emoji}
+              <div className="flex items-center justify-between gap-4">
+                {/* Real Animal Photo Preview */}
+                <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden border-2 border-white/25 shadow-xl bg-slate-800 flex-shrink-0">
+                  <img
+                    src={selectedAnimal.imageUrl}
+                    alt={selectedAnimal.name}
+                    className="w-full h-full object-cover"
+                    loading="eager"
+                  />
+                  <div className="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded-full bg-black/70 backdrop-blur-xs text-xs font-bold text-white flex items-center gap-1">
+                    <span>{selectedAnimal.emoji}</span>
+                  </div>
                 </div>
                 <button
                   type="button"
@@ -431,7 +462,7 @@ export const ToddlerAnimalSoundsSection: React.FC = () => {
                     playAnimalSynth(selectedAnimal);
                     speakText(`${selectedAnimal.soundPhonetic}! The ${selectedAnimal.name} says ${selectedAnimal.soundName}`);
                   }}
-                  className="p-3 rounded-2xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-400/40 transition-all cursor-pointer flex items-center gap-1.5 active:scale-95 shadow-md"
+                  className="p-3 rounded-2xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-400/40 transition-all cursor-pointer flex items-center gap-1.5 active:scale-95 shadow-md self-start"
                   title="Play Animal Sound"
                 >
                   <Volume2 className="w-4 h-4" />
@@ -547,9 +578,16 @@ export const ToddlerAnimalSoundsSection: React.FC = () => {
                 key={animal.id}
                 type="button"
                 onClick={() => handleQuizAnswer(animal)}
-                className="p-4 rounded-2xl bg-white/5 hover:bg-white/15 border border-white/10 hover:border-emerald-400/60 transition-all cursor-pointer flex flex-col items-center justify-center gap-2 active:scale-95 shadow-md"
+                className="p-3 rounded-2xl bg-white/5 hover:bg-white/15 border border-white/10 hover:border-emerald-400/60 transition-all cursor-pointer flex flex-col items-center justify-center gap-2 active:scale-95 shadow-md group"
               >
-                <span className="text-4xl">{animal.emoji}</span>
+                <div className="w-14 h-14 rounded-xl overflow-hidden border border-white/15 bg-slate-800">
+                  <img
+                    src={animal.imageUrl}
+                    alt={animal.name}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                    loading="eager"
+                  />
+                </div>
                 <span className="text-xs sm:text-sm font-bold text-white">{animal.name}</span>
                 <span className="text-[10px] text-amber-300/80">{animal.soundName}</span>
               </button>

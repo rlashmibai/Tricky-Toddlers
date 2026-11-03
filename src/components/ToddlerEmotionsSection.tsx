@@ -20,6 +20,7 @@ export interface EmotionItem {
   id: string;
   name: string;
   pronunciation: string;
+  imageUrl: string;
   gender: GenderType;
   genderLabel: string;
   colorName: string;
@@ -62,6 +63,7 @@ export const TODDLER_EMOTIONS: EmotionItem[] = [
     id: 'happy',
     name: 'HAPPY',
     pronunciation: 'HAP-ee',
+    imageUrl: 'https://images.unsplash.com/photo-1519689680058-324335c77eba?auto=format&fit=crop&w=400&q=80',
     gender: 'boy',
     genderLabel: '👦 Toddler Boy',
     colorName: 'amber',
@@ -77,6 +79,7 @@ export const TODDLER_EMOTIONS: EmotionItem[] = [
     id: 'sad',
     name: 'SAD',
     pronunciation: 'SAD',
+    imageUrl: 'https://images.unsplash.com/photo-1533518463841-d62e1fc91373?auto=format&fit=crop&w=400&q=80',
     gender: 'girl',
     genderLabel: '👧 Toddler Girl',
     colorName: 'sky',
@@ -92,6 +95,7 @@ export const TODDLER_EMOTIONS: EmotionItem[] = [
     id: 'angry',
     name: 'ANGRY',
     pronunciation: 'ANG-gree',
+    imageUrl: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=400&q=80',
     gender: 'boy',
     genderLabel: '👦 Toddler Boy',
     colorName: 'red',
@@ -107,6 +111,7 @@ export const TODDLER_EMOTIONS: EmotionItem[] = [
     id: 'scared',
     name: 'SCARED',
     pronunciation: 'SKAIR-d',
+    imageUrl: 'https://images.unsplash.com/photo-1544717302-de2939b7ef71?auto=format&fit=crop&w=400&q=80',
     gender: 'girl',
     genderLabel: '👧 Toddler Girl',
     colorName: 'emerald',
@@ -122,6 +127,7 @@ export const TODDLER_EMOTIONS: EmotionItem[] = [
     id: 'surprised',
     name: 'SURPRISED',
     pronunciation: 'ser-PRYZD',
+    imageUrl: 'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&w=400&q=80',
     gender: 'boy',
     genderLabel: '👦 Toddler Boy',
     colorName: 'orange',
@@ -137,6 +143,7 @@ export const TODDLER_EMOTIONS: EmotionItem[] = [
     id: 'shy',
     name: 'SHY',
     pronunciation: 'SHY',
+    imageUrl: 'https://images.unsplash.com/photo-1502086223501-7ea6ecd79368?auto=format&fit=crop&w=400&q=80',
     gender: 'girl',
     genderLabel: '👧 Toddler Girl',
     colorName: 'pink',
@@ -152,6 +159,7 @@ export const TODDLER_EMOTIONS: EmotionItem[] = [
     id: 'tired',
     name: 'TIRED',
     pronunciation: 'TY-erd',
+    imageUrl: 'https://images.unsplash.com/photo-1555252333-9f8e92e65df9?auto=format&fit=crop&w=400&q=80',
     gender: 'boy',
     genderLabel: '👦 Toddler Boy',
     colorName: 'purple',
@@ -167,6 +175,7 @@ export const TODDLER_EMOTIONS: EmotionItem[] = [
     id: 'excited',
     name: 'EXCITED',
     pronunciation: 'ek-SY-ted',
+    imageUrl: 'https://images.unsplash.com/photo-1485546246426-74dc88dec4d9?auto=format&fit=crop&w=400&q=80',
     gender: 'girl',
     genderLabel: '👧 Toddler Girl',
     colorName: 'yellow',
@@ -182,6 +191,7 @@ export const TODDLER_EMOTIONS: EmotionItem[] = [
     id: 'confused',
     name: 'CONFUSED',
     pronunciation: 'kuhn-FYOOZD',
+    imageUrl: 'https://images.unsplash.com/photo-1491013516836-7db643ee125a?auto=format&fit=crop&w=400&q=80',
     gender: 'boy',
     genderLabel: '👦 Toddler Boy',
     colorName: 'violet',
@@ -197,6 +207,7 @@ export const TODDLER_EMOTIONS: EmotionItem[] = [
     id: 'proud',
     name: 'PROUD',
     pronunciation: 'PROWD',
+    imageUrl: 'https://images.unsplash.com/photo-1543332164-6e82f355badc?auto=format&fit=crop&w=400&q=80',
     gender: 'boy',
     genderLabel: '👦 Toddler Boy',
     colorName: 'teal',
@@ -212,6 +223,7 @@ export const TODDLER_EMOTIONS: EmotionItem[] = [
     id: 'jealous',
     name: 'JEALOUS',
     pronunciation: 'JEL-us',
+    imageUrl: 'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&w=400&q=80',
     gender: 'girl',
     genderLabel: '👧 Toddler Girl',
     colorName: 'lime',
@@ -227,6 +239,7 @@ export const TODDLER_EMOTIONS: EmotionItem[] = [
     id: 'calm',
     name: 'CALM',
     pronunciation: 'KAHM',
+    imageUrl: 'https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?auto=format&fit=crop&w=400&q=80',
     gender: 'girl',
     genderLabel: '👧 Toddler Girl',
     colorName: 'indigo',
@@ -242,6 +255,7 @@ export const TODDLER_EMOTIONS: EmotionItem[] = [
     id: 'silly',
     name: 'SILLY',
     pronunciation: 'SIL-ee',
+    imageUrl: 'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&w=400&q=80',
     gender: 'boy',
     genderLabel: '👦 Toddler Boy',
     colorName: 'amber',
@@ -257,6 +271,7 @@ export const TODDLER_EMOTIONS: EmotionItem[] = [
     id: 'nervous',
     name: 'NERVOUS',
     pronunciation: 'NER-vus',
+    imageUrl: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=400&q=80',
     gender: 'girl',
     genderLabel: '👧 Toddler Girl',
     colorName: 'rose',
@@ -272,6 +287,7 @@ export const TODDLER_EMOTIONS: EmotionItem[] = [
     id: 'bored',
     name: 'BORED',
     pronunciation: 'BORD',
+    imageUrl: 'https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=400&q=80',
     gender: 'boy',
     genderLabel: '👦 Toddler Boy',
     colorName: 'slate',
@@ -287,6 +303,7 @@ export const TODDLER_EMOTIONS: EmotionItem[] = [
     id: 'loved',
     name: 'LOVED',
     pronunciation: 'LUVD',
+    imageUrl: 'https://images.unsplash.com/photo-1522771930-78848d9293e8?auto=format&fit=crop&w=400&q=80',
     gender: 'girl',
     genderLabel: '👧 Toddler Girl',
     colorName: 'pink',
@@ -302,6 +319,7 @@ export const TODDLER_EMOTIONS: EmotionItem[] = [
     id: 'frustrated',
     name: 'FRUSTRATED',
     pronunciation: 'FRUHS-tray-ted',
+    imageUrl: 'https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?auto=format&fit=crop&w=400&q=80',
     gender: 'boy',
     genderLabel: '👦 Toddler Boy',
     colorName: 'orange',
@@ -317,6 +335,7 @@ export const TODDLER_EMOTIONS: EmotionItem[] = [
     id: 'curious',
     name: 'CURIOUS',
     pronunciation: 'KYUR-ee-us',
+    imageUrl: 'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=400&q=80',
     gender: 'girl',
     genderLabel: '👧 Toddler Girl',
     colorName: 'cyan',
@@ -332,6 +351,7 @@ export const TODDLER_EMOTIONS: EmotionItem[] = [
     id: 'disgusted',
     name: 'DISGUSTED',
     pronunciation: 'dis-GUHS-ted',
+    imageUrl: 'https://images.unsplash.com/photo-1476703993599-0035a21b17a9?auto=format&fit=crop&w=400&q=80',
     gender: 'boy',
     genderLabel: '👦 Toddler Boy',
     colorName: 'emerald',
@@ -347,6 +367,7 @@ export const TODDLER_EMOTIONS: EmotionItem[] = [
     id: 'brave',
     name: 'BRAVE',
     pronunciation: 'BRAYV',
+    imageUrl: 'https://images.unsplash.com/photo-1543332164-6e82f355badc?auto=format&fit=crop&w=400&q=80',
     gender: 'girl',
     genderLabel: '👧 Toddler Girl',
     colorName: 'amber',
@@ -362,6 +383,7 @@ export const TODDLER_EMOTIONS: EmotionItem[] = [
     id: 'impatient',
     name: 'IMPATIENT',
     pronunciation: 'im-PAY-shent',
+    imageUrl: 'https://images.unsplash.com/photo-1491013516836-7db643ee125a?auto=format&fit=crop&w=400&q=80',
     gender: 'boy',
     genderLabel: '👦 Toddler Boy',
     colorName: 'yellow',
@@ -377,6 +399,7 @@ export const TODDLER_EMOTIONS: EmotionItem[] = [
     id: 'embarrassed',
     name: 'EMBARRASSED',
     pronunciation: 'em-BAIR-ust',
+    imageUrl: 'https://images.unsplash.com/photo-1502086223501-7ea6ecd79368?auto=format&fit=crop&w=400&q=80',
     gender: 'girl',
     genderLabel: '👧 Toddler Girl',
     colorName: 'rose',
@@ -392,6 +415,7 @@ export const TODDLER_EMOTIONS: EmotionItem[] = [
     id: 'grateful',
     name: 'GRATEFUL',
     pronunciation: 'GRAYT-ful',
+    imageUrl: 'https://images.unsplash.com/photo-1519689680058-324335c77eba?auto=format&fit=crop&w=400&q=80',
     gender: 'boy',
     genderLabel: '👦 Toddler Boy',
     colorName: 'emerald',
@@ -407,6 +431,7 @@ export const TODDLER_EMOTIONS: EmotionItem[] = [
     id: 'hopeful',
     name: 'HOPEFUL',
     pronunciation: 'HOHP-ful',
+    imageUrl: 'https://images.unsplash.com/photo-1485546246426-74dc88dec4d9?auto=format&fit=crop&w=400&q=80',
     gender: 'girl',
     genderLabel: '👧 Toddler Girl',
     colorName: 'sky',
@@ -422,6 +447,7 @@ export const TODDLER_EMOTIONS: EmotionItem[] = [
     id: 'playful',
     name: 'PLAYFUL',
     pronunciation: 'PLAY-ful',
+    imageUrl: 'https://images.unsplash.com/photo-1595454223600-91fbdd93444a?auto=format&fit=crop&w=400&q=80',
     gender: 'boy',
     genderLabel: '👦 Toddler Boy',
     colorName: 'violet',
@@ -436,699 +462,34 @@ export const TODDLER_EMOTIONS: EmotionItem[] = [
 ];
 
 /**
- * High-Fidelity Toddler Character Avatar Component
- * Accurately models cute toddler boy and toddler girl characters with hairstyles,
- * clothing, and facial expressions matching preschool emotion flashcards.
+ * Real Baby Emotion Thumbnail Component
+ * Displays authentic photography of real babies expressing emotions (smiling, crying, surprised, pouting, etc.)
  */
 export const ToddlerCharacterAvatar: React.FC<{
   item: EmotionItem;
-  size?: 'sm' | 'md' | 'lg';
-}> = ({ item, size = 'md' }) => {
-  const isBoy = item.gender === 'boy';
-  const expr = item.expressionType;
-
-  // Pixel dimensions based on size
-  const svgSize = size === 'sm' ? 120 : size === 'lg' ? 220 : 150;
+  size?: "sm" | "md" | "lg";
+}> = ({ item, size = "md" }) => {
+  const sizeClasses = {
+    sm: "w-24 h-24 sm:w-28 sm:h-28",
+    md: "w-36 h-36 sm:w-40 sm:h-40",
+    lg: "w-48 h-48 sm:w-56 sm:h-56"
+  }[size];
 
   return (
-    <div className="relative flex items-center justify-center select-none">
-      <svg
-        width={svgSize}
-        height={svgSize}
-        viewBox="0 0 160 160"
-        className="overflow-visible transition-transform duration-300 group-hover:scale-105"
-      >
-        <defs>
-          <radialGradient id={`glow-${item.id}`} cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#ffffff" stopOpacity="0.25" />
-            <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
-          </radialGradient>
-          <filter id={`shadow-${item.id}`} x="-20%" y="-20%" width="140%" height="140%">
-            <feDropShadow dx="0" dy="4" stdDeviation="4" floodOpacity="0.2" />
-          </filter>
-        </defs>
-
-        {/* Soft radial background aura */}
-        <circle cx="80" cy="80" r="72" fill={`url(#glow-${item.id})`} />
-
-        {/* --- GIRL BACK HAIR (Pigtails / Ponytails) --- */}
-        {!isBoy && (
-          <g id="girl-back-hair">
-            {expr === 'jealous' ? (
-              // Twin high braids/pigtails with red ties
-              <>
-                <ellipse cx="28" cy="70" rx="14" ry="24" fill="#3b2314" transform="rotate(-15 28 70)" />
-                <ellipse cx="132" cy="70" rx="14" ry="24" fill="#3b2314" transform="rotate(15 132 70)" />
-                <circle cx="34" cy="55" r="5" fill="#f43f5e" />
-                <circle cx="126" cy="55" r="5" fill="#f43f5e" />
-              </>
-            ) : expr === 'shy' ? (
-              // Twin low cute buns/pigtails with pink ribbons
-              <>
-                <ellipse cx="30" cy="76" rx="15" ry="20" fill="#4a2e1b" transform="rotate(-10 30 76)" />
-                <ellipse cx="130" cy="76" rx="15" ry="20" fill="#4a2e1b" transform="rotate(10 130 76)" />
-                <circle cx="36" cy="64" r="5" fill="#ec4899" />
-                <circle cx="124" cy="64" r="5" fill="#ec4899" />
-              </>
-            ) : expr === 'scared' ? (
-              // Shivering hair with big purple bow
-              <>
-                <ellipse cx="28" cy="72" rx="15" ry="22" fill="#3b2314" />
-                <ellipse cx="132" cy="72" rx="15" ry="22" fill="#3b2314" />
-                <path d="M 120 32 L 140 24 L 132 40 Z" fill="#8b5cf6" />
-                <path d="M 120 32 L 140 40 L 132 24 Z" fill="#8b5cf6" />
-                <circle cx="126" cy="32" r="4" fill="#c084fc" />
-              </>
-            ) : (
-              // Classic soft shoulder-length girl hair
-              <>
-                <ellipse cx="32" cy="78" rx="14" ry="26" fill="#3b2314" />
-                <ellipse cx="128" cy="78" rx="14" ry="26" fill="#3b2314" />
-              </>
-            )}
-          </g>
-        )}
-
-        {/* --- TODDLER BODY / SHIRT --- */}
-        <g id="toddler-torso">
-          {isBoy ? (
-            // Boy Shirt
-            <>
-              <path
-                d="M 40 160 Q 44 122 80 122 Q 116 122 120 160 Z"
-                fill={
-                  expr === 'happy' ? '#22c55e' : // Green
-                  expr === 'angry' ? '#ef4444' : // Red
-                  expr === 'surprised' ? '#3b82f6' : // Blue
-                  expr === 'tired' ? '#6366f1' : // Indigo
-                  expr === 'confused' ? '#0ea5e9' : // Cyan
-                  expr === 'proud' ? '#16a34a' : // Emerald
-                  expr === 'silly' ? '#f59e0b' : // Amber
-                  expr === 'bored' ? '#64748b' : // Slate
-                  expr === 'frustrated' ? '#f97316' : // Orange
-                  expr === 'disgusted' ? '#84cc16' : // Lime
-                  expr === 'impatient' ? '#eab308' : // Yellow
-                  expr === 'grateful' ? '#10b981' : // Teal
-                  '#8b5cf6' // Violet
-                }
-              />
-              {/* Crew neck collar */}
-              <path d="M 68 122 Q 80 134 92 122" stroke="#ffffff" strokeWidth="3" fill="none" strokeLinecap="round" />
-            </>
-          ) : (
-            // Girl Top / Dress
-            <>
-              <path
-                d="M 38 160 Q 42 122 80 122 Q 118 122 122 160 Z"
-                fill={
-                  expr === 'sad' ? '#8b5cf6' : // Purple
-                  expr === 'scared' ? '#facc15' : // Yellow
-                  expr === 'excited' ? '#fbbf24' : // Amber
-                  expr === 'calm' ? '#a855f7' : // Lavender
-                  expr === 'shy' ? '#f472b6' : // Pink
-                  expr === 'jealous' ? '#ec4899' : // Rose
-                  expr === 'nervous' ? '#fb7185' : // Peach
-                  expr === 'loved' ? '#f43f5e' : // Crimson Rose
-                  expr === 'curious' ? '#06b6d4' : // Cyan
-                  expr === 'brave' ? '#ef4444' : // Hero Red
-                  expr === 'embarrassed' ? '#fb7185' : // Coral
-                  '#38bdf8' // Sky
-                }
-              />
-              {/* Girl collar / white heart emblem */}
-              {expr === 'sad' ? (
-                // Heart emblem on purple shirt like sample
-                <path d="M 80 138 Q 74 130 70 135 Q 66 142 80 152 Q 94 142 90 135 Q 86 130 80 138 Z" fill="#ffffff" />
-              ) : expr === 'scared' ? (
-                // Peter Pan collar on yellow shirt
-                <path d="M 64 122 Q 80 132 96 122" stroke="#ffffff" strokeWidth="4" fill="none" />
-              ) : (
-                <path d="M 66 122 Q 80 134 94 122" stroke="#ffffff" strokeWidth="3" fill="none" strokeLinecap="round" />
-              )}
-            </>
-          )}
-
-          {/* Neck */}
-          <rect x="72" y="112" width="16" height="14" fill="#fcd3b2" rx="4" />
-        </g>
-
-        {/* --- TODDLER ARMS & HAND GESTURES (Matching Sample) --- */}
-        <g id="toddler-arms">
-          {expr === 'happy' && (
-            // Raised hands celebration
-            <>
-              <path d="M 46 132 Q 24 100 24 82" stroke="#22c55e" strokeWidth="12" strokeLinecap="round" fill="none" />
-              <circle cx="24" cy="80" r="8" fill="#fcd3b2" />
-              <path d="M 114 132 Q 136 100 136 82" stroke="#22c55e" strokeWidth="12" strokeLinecap="round" fill="none" />
-              <circle cx="136" cy="80" r="8" fill="#fcd3b2" />
-            </>
-          )}
-
-          {(expr === 'angry' || expr === 'jealous') && (
-            // Crossed arms
-            <>
-              <path 
-                d="M 44 142 Q 80 156 116 142" 
-                stroke={expr === 'angry' ? '#dc2626' : '#db2777'} 
-                strokeWidth="14" 
-                strokeLinecap="round" 
-                fill="none" 
-              />
-              <circle cx="56" cy="148" r="7" fill="#fcd3b2" />
-              <circle cx="104" cy="148" r="7" fill="#fcd3b2" />
-            </>
-          )}
-
-          {expr === 'scared' && (
-            // Hands to mouth trembling
-            <>
-              <path d="M 48 140 Q 64 116 72 108" stroke="#eab308" strokeWidth="10" strokeLinecap="round" fill="none" />
-              <circle cx="70" cy="106" r="7" fill="#fcd3b2" />
-              <path d="M 112 140 Q 96 116 88 108" stroke="#eab308" strokeWidth="10" strokeLinecap="round" fill="none" />
-              <circle cx="90" cy="106" r="7" fill="#fcd3b2" />
-            </>
-          )}
-
-          {expr === 'surprised' && (
-            // Hands on cheeks
-            <>
-              <path d="M 48 138 Q 44 106 52 86" stroke="#2563eb" strokeWidth="10" strokeLinecap="round" fill="none" />
-              <circle cx="52" cy="84" r="7" fill="#fcd3b2" />
-              <path d="M 112 138 Q 116 106 108 86" stroke="#2563eb" strokeWidth="10" strokeLinecap="round" fill="none" />
-              <circle cx="108" cy="84" r="7" fill="#fcd3b2" />
-            </>
-          )}
-
-          {expr === 'tired' && (
-            // Hand over yawning mouth
-            <>
-              <path d="M 112 140 Q 106 114 92 102" stroke="#4f46e5" strokeWidth="10" strokeLinecap="round" fill="none" />
-              <ellipse cx="90" cy="100" rx="8" ry="7" fill="#fcd3b2" />
-            </>
-          )}
-
-          {expr === 'confused' && (
-            // Finger scratching chin
-            <>
-              <path d="M 112 140 Q 106 116 94 106" stroke="#0284c7" strokeWidth="10" strokeLinecap="round" fill="none" />
-              <circle cx="94" cy="104" r="7" fill="#fcd3b2" />
-            </>
-          )}
-
-          {expr === 'proud' && (
-            // Hand on chest
-            <>
-              <path d="M 112 140 Q 98 128 82 128" stroke="#15803d" strokeWidth="10" strokeLinecap="round" fill="none" />
-              <ellipse cx="80" cy="128" rx="8" ry="7" fill="#fcd3b2" />
-            </>
-          )}
-
-          {expr === 'calm' && (
-            // Hands over heart
-            <>
-              <path d="M 52 140 Q 72 130 80 130" stroke="#9333ea" strokeWidth="8" strokeLinecap="round" fill="none" />
-              <path d="M 108 140 Q 88 130 80 130" stroke="#9333ea" strokeWidth="8" strokeLinecap="round" fill="none" />
-              <ellipse cx="80" cy="130" rx="9" ry="6" fill="#fcd3b2" />
-            </>
-          )}
-
-          {expr === 'grateful' && (
-            // Prayer thank you hands
-            <>
-              <path d="M 60 142 Q 74 132 80 126" stroke="#059669" strokeWidth="9" strokeLinecap="round" fill="none" />
-              <path d="M 100 142 Q 86 132 80 126" stroke="#059669" strokeWidth="9" strokeLinecap="round" fill="none" />
-              <ellipse cx="80" cy="124" rx="6" ry="9" fill="#fcd3b2" />
-            </>
-          )}
-
-          {expr === 'playful' && (
-            // Peek-a-boo hands near eyes
-            <>
-              <path d="M 48 138 Q 46 96 56 76" stroke="#7c3aed" strokeWidth="10" strokeLinecap="round" fill="none" />
-              <circle cx="56" cy="74" r="8" fill="#fcd3b2" />
-              <path d="M 112 138 Q 114 96 104 76" stroke="#7c3aed" strokeWidth="10" strokeLinecap="round" fill="none" />
-              <circle cx="104" cy="74" r="8" fill="#fcd3b2" />
-            </>
-          )}
-        </g>
-
-        {/* --- TODDLER FACE (Chubby cheeks & soft skin tone) --- */}
-        <g id="toddler-head">
-          {/* Ears */}
-          <circle cx="44" cy="78" r="9" fill="#fcd3b2" />
-          <circle cx="44" cy="78" r="5" fill="#f8b688" />
-          <circle cx="116" cy="78" r="9" fill="#fcd3b2" />
-          <circle cx="116" cy="78" r="5" fill="#f8b688" />
-
-          {/* Chubby Round Face Base */}
-          <ellipse cx="80" cy="78" rx="38" ry="40" fill="#fde0c8" />
-          {/* Lower cheek curve */}
-          <path d="M 44 80 Q 42 108 80 114 Q 118 108 116 80 Z" fill="#fde0c8" />
-
-          {/* Rosy Cheeks */}
-          <ellipse cx="56" cy="88" rx="7" ry="5" fill="#fca5a5" opacity="0.65" />
-          <ellipse cx="104" cy="88" rx="7" ry="5" fill="#fca5a5" opacity="0.65" />
-          {/* Extra blush for shy or embarrassed */}
-          {(expr === 'shy' || expr === 'embarrassed') && (
-            <>
-              <ellipse cx="56" cy="88" rx="10" ry="7" fill="#f43f5e" opacity="0.5" />
-              <ellipse cx="104" cy="88" rx="10" ry="7" fill="#f43f5e" opacity="0.5" />
-            </>
-          )}
-        </g>
-
-        {/* --- TODDLER HAIR (Front / Bangs) --- */}
-        <g id="toddler-front-hair">
-          {isBoy ? (
-            // Boy Short Hair / Spikes / Bangs
-            <path
-              d="M 42 74 Q 38 42 72 36 Q 84 34 100 38 Q 118 44 118 74 Q 110 58 98 62 Q 88 52 74 62 Q 60 52 48 64 Q 44 68 42 74 Z"
-              fill="#3a2212"
-            />
-          ) : (
-            // Girl Bangs with headband or clips
-            <>
-              <path
-                d="M 40 76 Q 38 40 74 36 Q 88 34 104 38 Q 120 44 120 76 Q 114 62 102 66 Q 92 56 80 64 Q 68 56 56 64 Q 46 66 40 76 Z"
-                fill="#3a2212"
-              />
-              {/* Girl Headband (Excited) */}
-              {expr === 'excited' && (
-                <path d="M 42 62 Q 80 42 118 62" stroke="#facc15" strokeWidth="6" fill="none" strokeLinecap="round" />
-              )}
-              {/* Pink Hair Clips (Shy) */}
-              {expr === 'shy' && (
-                <>
-                  <rect x="48" y="52" width="10" height="4" rx="2" fill="#ec4899" transform="rotate(-15 48 52)" />
-                  <rect x="50" y="58" width="10" height="4" rx="2" fill="#ec4899" transform="rotate(-15 50 58)" />
-                </>
-              )}
-            </>
-          )}
-        </g>
-
-        {/* --- NOSE --- */}
-        <circle cx="80" cy="85" r="2.5" fill="#f8a773" />
-
-        {/* --- EYEBROWS & EYES (Emotion Specific Expressions) --- */}
-        <g id="toddler-expression">
-          {/* 1. HAPPY */}
-          {expr === 'happy' && (
-            <>
-              {/* Curved happy eyebrows */}
-              <path d="M 58 66 Q 66 61 74 66" stroke="#3a2212" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-              <path d="M 86 66 Q 94 61 102 66" stroke="#3a2212" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-              {/* Beaming big eyes */}
-              <ellipse cx="66" cy="76" rx="5.5" ry="6" fill="#1e293b" />
-              <circle cx="68" cy="74" r="2" fill="#ffffff" />
-              <ellipse cx="94" cy="76" rx="5.5" ry="6" fill="#1e293b" />
-              <circle cx="96" cy="74" r="2" fill="#ffffff" />
-              {/* Big cheerful open smile */}
-              <path d="M 64 92 Q 80 110 96 92 Z" fill="#ef4444" />
-              <path d="M 68 93 Q 80 97 92 93" stroke="#ffffff" strokeWidth="2" fill="none" />
-            </>
-          )}
-
-          {/* 2. SAD */}
-          {expr === 'sad' && (
-            <>
-              {/* Drooping sad eyebrows slanted down */}
-              <path d="M 58 64 Q 66 68 74 69" stroke="#3a2212" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-              <path d="M 86 69 Q 94 68 102 64" stroke="#3a2212" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-              {/* Sad drooping teary eyes */}
-              <ellipse cx="66" cy="77" rx="5" ry="5.5" fill="#1e293b" />
-              <ellipse cx="94" cy="77" rx="5" ry="5.5" fill="#1e293b" />
-              {/* Teardrops flowing down both cheeks! */}
-              <path d="M 62 82 Q 58 92 60 96 Q 62 100 65 98 Q 68 94 62 82 Z" fill="#38bdf8" />
-              <path d="M 98 82 Q 102 92 100 96 Q 98 100 95 98 Q 92 94 98 82 Z" fill="#38bdf8" />
-              {/* Downturned crying mouth */}
-              <path d="M 68 98 Q 80 91 92 98" stroke="#881337" strokeWidth="3" fill="none" strokeLinecap="round" />
-            </>
-          )}
-
-          {/* 3. ANGRY */}
-          {expr === 'angry' && (
-            <>
-              {/* Sharp angry V eyebrows */}
-              <path d="M 58 68 L 74 72" stroke="#3a2212" strokeWidth="3.5" strokeLinecap="round" />
-              <path d="M 102 68 L 86 72" stroke="#3a2212" strokeWidth="3.5" strokeLinecap="round" />
-              {/* Glaring focused eyes */}
-              <ellipse cx="66" cy="78" rx="5" ry="4.5" fill="#1e293b" />
-              <circle cx="68" cy="77" r="1.5" fill="#ffffff" />
-              <ellipse cx="94" cy="78" rx="5" ry="4.5" fill="#1e293b" />
-              <circle cx="92" cy="77" r="1.5" fill="#ffffff" />
-              {/* Frowning angry mouth */}
-              <path d="M 68 97 Q 80 90 92 97" stroke="#991b1b" strokeWidth="3" fill="none" strokeLinecap="round" />
-              {/* Anger steam sparks on sides */}
-              <path d="M 36 60 L 26 56 M 34 68 L 24 72" stroke="#ef4444" strokeWidth="2.5" strokeLinecap="round" />
-              <path d="M 124 60 L 134 56 M 126 68 L 136 72" stroke="#ef4444" strokeWidth="2.5" strokeLinecap="round" />
-            </>
-          )}
-
-          {/* 4. SCARED */}
-          {expr === 'scared' && (
-            <>
-              {/* High trembling eyebrows */}
-              <path d="M 58 64 Q 66 61 74 65" stroke="#3a2212" strokeWidth="2" fill="none" strokeLinecap="round" />
-              <path d="M 86 65 Q 94 61 102 64" stroke="#3a2212" strokeWidth="2" fill="none" strokeLinecap="round" />
-              {/* Wide frightened eyes with tiny pupils */}
-              <circle cx="66" cy="76" r="6" fill="#ffffff" stroke="#1e293b" strokeWidth="2" />
-              <circle cx="66" cy="76" r="2.5" fill="#1e293b" />
-              <circle cx="94" cy="76" r="6" fill="#ffffff" stroke="#1e293b" strokeWidth="2" />
-              <circle cx="94" cy="76" r="2.5" fill="#1e293b" />
-              {/* Trembling wavy mouth */}
-              <path d="M 72 96 Q 76 93 80 96 Q 84 99 88 96" stroke="#881337" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-              {/* Shiver squiggles around head */}
-              <path d="M 32 74 Q 28 78 32 82" stroke="#38bdf8" strokeWidth="2" fill="none" />
-              <path d="M 128 74 Q 132 78 128 82" stroke="#38bdf8" strokeWidth="2" fill="none" />
-            </>
-          )}
-
-          {/* 5. SURPRISED */}
-          {expr === 'surprised' && (
-            <>
-              {/* High arched brows */}
-              <path d="M 58 61 Q 66 54 74 61" stroke="#3a2212" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-              <path d="M 86 61 Q 94 54 102 61" stroke="#3a2212" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-              {/* Big round circular shocked eyes */}
-              <circle cx="66" cy="74" r="7" fill="#1e293b" />
-              <circle cx="68" cy="72" r="2.5" fill="#ffffff" />
-              <circle cx="94" cy="74" r="7" fill="#1e293b" />
-              <circle cx="96" cy="72" r="2.5" fill="#ffffff" />
-              {/* Round "O" mouth */}
-              <ellipse cx="80" cy="96" rx="6" ry="8" fill="#1e293b" />
-              {/* Shock sparkle lines */}
-              <path d="M 34 50 L 26 44 M 126 50 L 134 44" stroke="#f97316" strokeWidth="2" strokeLinecap="round" />
-            </>
-          )}
-
-          {/* 6. SHY */}
-          {expr === 'shy' && (
-            <>
-              {/* Gentle bashful brows */}
-              <path d="M 58 67 Q 66 65 74 68" stroke="#3a2212" strokeWidth="2" fill="none" strokeLinecap="round" />
-              <path d="M 86 68 Q 94 65 102 67" stroke="#3a2212" strokeWidth="2" fill="none" strokeLinecap="round" />
-              {/* Looking down and sideways */}
-              <ellipse cx="64" cy="78" rx="4.5" ry="5" fill="#1e293b" />
-              <circle cx="63" cy="76" r="1.5" fill="#ffffff" />
-              <ellipse cx="92" cy="78" rx="4.5" ry="5" fill="#1e293b" />
-              <circle cx="91" cy="76" r="1.5" fill="#ffffff" />
-              {/* Soft bashful little smile */}
-              <path d="M 72 93 Q 78 97 86 94" stroke="#be185d" strokeWidth="2" fill="none" strokeLinecap="round" />
-            </>
-          )}
-
-          {/* 7. TIRED / SLEEPY */}
-          {expr === 'tired' && (
-            <>
-              {/* Droopy sleepy curved eyes */}
-              <path d="M 60 76 Q 66 82 72 76" stroke="#1e293b" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-              <path d="M 88 76 Q 94 82 100 76" stroke="#1e293b" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-              {/* Yawning wide open mouth */}
-              <ellipse cx="80" cy="95" rx="8" ry="10" fill="#991b1b" />
-              {/* Floating blue Z z z */}
-              <text x="116" y="54" fill="#60a5fa" fontSize="16" fontWeight="bold">Z</text>
-              <text x="126" y="42" fill="#93c5fd" fontSize="13" fontWeight="bold">z</text>
-              <text x="134" y="32" fill="#bfdbfe" fontSize="10" fontWeight="bold">z</text>
-            </>
-          )}
-
-          {/* 8. EXCITED */}
-          {expr === 'excited' && (
-            <>
-              {/* High cheerful brows */}
-              <path d="M 58 64 Q 66 58 74 64" stroke="#3a2212" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-              <path d="M 86 64 Q 94 58 102 64" stroke="#3a2212" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-              {/* Star Eyes! */}
-              <g transform="translate(66, 75)">
-                <path d="M 0 -6 L 2 -2 L 6 0 L 2 2 L 0 6 L -2 2 L -6 0 L -2 -2 Z" fill="#eab308" />
-              </g>
-              <g transform="translate(94, 75)">
-                <path d="M 0 -6 L 2 -2 L 6 0 L 2 2 L 0 6 L -2 2 L -6 0 L -2 -2 Z" fill="#eab308" />
-              </g>
-              {/* Beaming open laugh */}
-              <path d="M 65 92 Q 80 110 95 92 Z" fill="#ef4444" />
-              <path d="M 70 93 Q 80 97 90 93" stroke="#ffffff" strokeWidth="2" fill="none" />
-              {/* Star sparkles */}
-              <circle cx="28" cy="50" r="3" fill="#facc15" />
-              <circle cx="132" cy="50" r="3" fill="#facc15" />
-            </>
-          )}
-
-          {/* 9. CONFUSED */}
-          {expr === 'confused' && (
-            <>
-              {/* One brow raised, one lowered */}
-              <path d="M 58 68 Q 66 70 74 68" stroke="#3a2212" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-              <path d="M 86 62 Q 94 54 102 62" stroke="#3a2212" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-              {/* Puzzled eyes */}
-              <ellipse cx="66" cy="76" rx="4.5" ry="5.5" fill="#1e293b" />
-              <circle cx="67" cy="75" r="1.5" fill="#ffffff" />
-              <circle cx="94" cy="74" r="6" fill="#1e293b" />
-              <circle cx="95" cy="73" r="2" fill="#ffffff" />
-              {/* Tilted squiggly mouth */}
-              <path d="M 70 94 Q 78 98 88 93" stroke="#1e293b" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-              {/* Purple question mark */}
-              <text x="114" y="52" fill="#a855f7" fontSize="22" fontWeight="bold">?</text>
-            </>
-          )}
-
-          {/* 10. PROUD */}
-          {expr === 'proud' && (
-            <>
-              <path d="M 58 64 Q 66 60 74 64" stroke="#3a2212" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-              <path d="M 86 64 Q 94 60 102 64" stroke="#3a2212" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-              {/* Confident eyes */}
-              <ellipse cx="66" cy="75" rx="5" ry="5.5" fill="#1e293b" />
-              <circle cx="68" cy="73" r="2" fill="#ffffff" />
-              <ellipse cx="94" cy="75" rx="5" ry="5.5" fill="#1e293b" />
-              <circle cx="96" cy="73" r="2" fill="#ffffff" />
-              {/* Confident smile */}
-              <path d="M 68 93 Q 80 103 92 93" stroke="#15803d" strokeWidth="3" fill="none" strokeLinecap="round" />
-            </>
-          )}
-
-          {/* 11. JEALOUS */}
-          {expr === 'jealous' && (
-            <>
-              <path d="M 58 69 L 74 66" stroke="#3a2212" strokeWidth="2.5" strokeLinecap="round" />
-              <path d="M 86 66 L 102 69" stroke="#3a2212" strokeWidth="2.5" strokeLinecap="round" />
-              {/* Eyes glaring to the side */}
-              <ellipse cx="63" cy="77" rx="4.5" ry="4.5" fill="#1e293b" />
-              <circle cx="61" cy="76" r="1.5" fill="#ffffff" />
-              <ellipse cx="91" cy="77" rx="4.5" ry="4.5" fill="#1e293b" />
-              <circle cx="89" cy="76" r="1.5" fill="#ffffff" />
-              {/* Pouting mouth */}
-              <path d="M 70 96 Q 78 92 88 96" stroke="#831843" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-            </>
-          )}
-
-          {/* 12. CALM */}
-          {expr === 'calm' && (
-            <>
-              {/* Soft serene brows */}
-              <path d="M 58 66 Q 66 63 74 66" stroke="#3a2212" strokeWidth="2" fill="none" strokeLinecap="round" />
-              <path d="M 86 66 Q 94 63 102 66" stroke="#3a2212" strokeWidth="2" fill="none" strokeLinecap="round" />
-              {/* Peaceful closed curved eyes with lashes */}
-              <path d="M 60 76 Q 66 82 72 76" stroke="#3a2212" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-              <path d="M 88 76 Q 94 82 100 76" stroke="#3a2212" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-              {/* Peaceful gentle smile */}
-              <path d="M 72 94 Q 80 99 88 94" stroke="#7e22ce" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-              {/* Floating pink peaceful hearts */}
-              <path d="M 120 45 Q 116 40 112 43 Q 109 47 120 54 Q 131 47 128 43 Q 124 40 120 45 Z" fill="#ec4899" />
-              <path d="M 38 48 Q 35 44 32 46 Q 29 50 38 56 Q 47 50 44 46 Q 41 44 38 48 Z" fill="#ec4899" />
-            </>
-          )}
-
-          {/* 13. SILLY */}
-          {expr === 'silly' && (
-            <>
-              {/* One winking eye, one open eye */}
-              <path d="M 60 76 L 72 76" stroke="#1e293b" strokeWidth="3" strokeLinecap="round" />
-              <circle cx="94" cy="74" r="6" fill="#1e293b" />
-              <circle cx="96" cy="72" r="2" fill="#ffffff" />
-              {/* Open smile with tongue sticking out */}
-              <path d="M 68 92 Q 80 102 92 92" stroke="#1e293b" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-              <path d="M 76 96 Q 80 108 84 96 Z" fill="#f43f5e" />
-            </>
-          )}
-
-          {/* 14. NERVOUS */}
-          {expr === 'nervous' && (
-            <>
-              <path d="M 58 66 Q 66 63 74 67" stroke="#3a2212" strokeWidth="2" fill="none" strokeLinecap="round" />
-              <path d="M 86 67 Q 94 63 102 66" stroke="#3a2212" strokeWidth="2" fill="none" strokeLinecap="round" />
-              <ellipse cx="66" cy="76" rx="5" ry="5.5" fill="#1e293b" />
-              <ellipse cx="94" cy="76" rx="5" ry="5.5" fill="#1e293b" />
-              {/* Sweat drop on brow */}
-              <path d="M 104 56 Q 106 60 104 62 Q 102 64 100 62 Q 98 60 104 56 Z" fill="#38bdf8" />
-              {/* Biting lip / squiggly mouth */}
-              <path d="M 72 95 Q 76 92 80 95 Q 84 98 88 95" stroke="#9f1239" strokeWidth="2" fill="none" />
-            </>
-          )}
-
-          {/* 15. BORED */}
-          {expr === 'bored' && (
-            <>
-              {/* Flat eyebrows */}
-              <line x1="58" y1="67" x2="74" y2="67" stroke="#3a2212" strokeWidth="2.5" strokeLinecap="round" />
-              <line x1="86" y1="67" x2="102" y2="67" stroke="#3a2212" strokeWidth="2.5" strokeLinecap="round" />
-              {/* Half-closed heavy eyelids */}
-              <path d="M 60 76 Q 66 79 72 76" stroke="#1e293b" strokeWidth="2.5" fill="none" />
-              <path d="M 88 76 Q 94 79 100 76" stroke="#1e293b" strokeWidth="2.5" fill="none" />
-              {/* Straight flat mouth */}
-              <line x1="72" y1="95" x2="88" y2="95" stroke="#475569" strokeWidth="2.5" strokeLinecap="round" />
-            </>
-          )}
-
-          {/* 16. LOVED */}
-          {expr === 'loved' && (
-            <>
-              {/* Heart Eyes */}
-              <path d="M 66 75 Q 63 70 60 72 Q 57 76 66 82 Q 75 76 72 72 Q 69 70 66 75 Z" fill="#f43f5e" />
-              <path d="M 94 75 Q 91 70 88 72 Q 85 76 94 82 Q 103 76 100 72 Q 97 70 94 75 Z" fill="#f43f5e" />
-              {/* Sweet warm smile */}
-              <path d="M 70 93 Q 80 102 90 93" stroke="#be123c" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-            </>
-          )}
-
-          {/* 17. FRUSTRATED */}
-          {expr === 'frustrated' && (
-            <>
-              {/* Tight crinkled eyebrows */}
-              <path d="M 58 70 L 74 74" stroke="#3a2212" strokeWidth="3" strokeLinecap="round" />
-              <path d="M 102 70 L 86 74" stroke="#3a2212" strokeWidth="3" strokeLinecap="round" />
-              {/* Clenched squinting eyes */}
-              <path d="M 60 78 L 72 78" stroke="#1e293b" strokeWidth="2.5" strokeLinecap="round" />
-              <path d="M 88 78 L 100 78" stroke="#1e293b" strokeWidth="2.5" strokeLinecap="round" />
-              {/* Gritted teeth with zigzag mouth */}
-              <path d="M 70 95 L 74 92 L 78 96 L 82 92 L 86 96 L 90 93" stroke="#9a3412" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-              {/* Frustration squiggle scribble cloud */}
-              <path d="M 72 40 Q 76 34 82 40 Q 88 34 92 40 Q 86 46 80 44 Z" stroke="#ea580c" strokeWidth="2" fill="none" />
-            </>
-          )}
-
-          {/* 18. CURIOUS */}
-          {expr === 'curious' && (
-            <>
-              {/* Inquisitive eyebrow */}
-              <path d="M 58 66 Q 66 61 74 66" stroke="#3a2212" strokeWidth="2" fill="none" />
-              <path d="M 86 62 Q 94 55 102 62" stroke="#3a2212" strokeWidth="2.5" fill="none" />
-              {/* Big curious eyes */}
-              <circle cx="66" cy="75" r="5" fill="#1e293b" />
-              <circle cx="68" cy="73" r="1.5" fill="#ffffff" />
-              <circle cx="94" cy="74" r="6" fill="#1e293b" />
-              <circle cx="96" cy="72" r="2" fill="#ffffff" />
-              {/* Little curious "o" mouth */}
-              <ellipse cx="80" cy="94" rx="4" ry="4.5" fill="#0891b2" />
-            </>
-          )}
-
-          {/* 19. DISGUSTED */}
-          {expr === 'disgusted' && (
-            <>
-              {/* Furrowed brows */}
-              <path d="M 58 68 L 72 71" stroke="#3a2212" strokeWidth="2.5" strokeLinecap="round" />
-              <path d="M 102 68 L 88 71" stroke="#3a2212" strokeWidth="2.5" strokeLinecap="round" />
-              {/* Squinted crinkled eyes */}
-              <path d="M 62 76 L 70 76" stroke="#1e293b" strokeWidth="2.5" strokeLinecap="round" />
-              <path d="M 90 76 L 98 76" stroke="#1e293b" strokeWidth="2.5" strokeLinecap="round" />
-              {/* Scrunched nose lines */}
-              <path d="M 76 83 L 84 83" stroke="#f97316" strokeWidth="1.5" strokeLinecap="round" />
-              {/* Tongue sticking out at yucky food */}
-              <path d="M 72 94 Q 80 97 88 94" stroke="#1e293b" strokeWidth="2" fill="none" />
-              <path d="M 77 95 Q 80 104 83 95 Z" fill="#84cc16" />
-            </>
-          )}
-
-          {/* 20. BRAVE */}
-          {expr === 'brave' && (
-            <>
-              {/* Confident angled brows */}
-              <path d="M 58 65 L 74 63" stroke="#3a2212" strokeWidth="2.5" strokeLinecap="round" />
-              <path d="M 102 65 L 86 63" stroke="#3a2212" strokeWidth="2.5" strokeLinecap="round" />
-              {/* Determined bright eyes */}
-              <ellipse cx="66" cy="74" rx="5.5" ry="6" fill="#1e293b" />
-              <circle cx="68" cy="72" r="2" fill="#ffffff" />
-              <ellipse cx="94" cy="74" rx="5.5" ry="6" fill="#1e293b" />
-              <circle cx="96" cy="72" r="2" fill="#ffffff" />
-              {/* Confident strong smile */}
-              <path d="M 68 93 Q 80 102 92 93" stroke="#dc2626" strokeWidth="3" fill="none" strokeLinecap="round" />
-            </>
-          )}
-
-          {/* 21. IMPATIENT */}
-          {expr === 'impatient' && (
-            <>
-              <path d="M 58 68 L 74 65" stroke="#3a2212" strokeWidth="2.5" strokeLinecap="round" />
-              <path d="M 86 65 L 102 68" stroke="#3a2212" strokeWidth="2.5" strokeLinecap="round" />
-              <ellipse cx="66" cy="76" rx="4.5" ry="4.5" fill="#1e293b" />
-              <ellipse cx="94" cy="76" rx="4.5" ry="4.5" fill="#1e293b" />
-              {/* Pouted tight mouth */}
-              <line x1="72" y1="94" x2="88" y2="94" stroke="#854d0e" strokeWidth="2.5" strokeLinecap="round" />
-            </>
-          )}
-
-          {/* 22. EMBARRASSED */}
-          {expr === 'embarrassed' && (
-            <>
-              <path d="M 58 67 Q 66 64 74 67" stroke="#3a2212" strokeWidth="2" fill="none" />
-              <path d="M 86 67 Q 94 64 102 67" stroke="#3a2212" strokeWidth="2" fill="none" />
-              <ellipse cx="66" cy="77" rx="4.5" ry="5" fill="#1e293b" />
-              <circle cx="67" cy="76" r="1.5" fill="#ffffff" />
-              <ellipse cx="94" cy="77" rx="4.5" ry="5" fill="#1e293b" />
-              <circle cx="95" cy="76" r="1.5" fill="#ffffff" />
-              {/* Awkward bashful grin */}
-              <path d="M 72 94 Q 80 98 88 94" stroke="#9f1239" strokeWidth="2" fill="none" strokeLinecap="round" />
-            </>
-          )}
-
-          {/* 23. GRATEFUL */}
-          {expr === 'grateful' && (
-            <>
-              <path d="M 58 66 Q 66 62 74 66" stroke="#3a2212" strokeWidth="2" fill="none" />
-              <path d="M 86 66 Q 94 62 102 66" stroke="#3a2212" strokeWidth="2" fill="none" />
-              {/* Gentle curved closed eyes */}
-              <path d="M 60 76 Q 66 81 72 76" stroke="#1e293b" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-              <path d="M 88 76 Q 94 81 100 76" stroke="#1e293b" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-              {/* Serene grateful smile */}
-              <path d="M 70 93 Q 80 101 90 93" stroke="#047857" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-            </>
-          )}
-
-          {/* 24. HOPEFUL */}
-          {expr === 'hopeful' && (
-            <>
-              <path d="M 58 64 Q 66 59 74 64" stroke="#3a2212" strokeWidth="2.5" fill="none" />
-              <path d="M 86 64 Q 94 59 102 64" stroke="#3a2212" strokeWidth="2.5" fill="none" />
-              {/* Big starry glossy eyes looking up */}
-              <circle cx="66" cy="73" r="6" fill="#1e293b" />
-              <circle cx="68" cy="71" r="2.5" fill="#ffffff" />
-              <circle cx="94" cy="73" r="6" fill="#1e293b" />
-              <circle cx="96" cy="71" r="2.5" fill="#ffffff" />
-              {/* Sweet expectant smile */}
-              <path d="M 71 93 Q 80 100 89 93" stroke="#0284c7" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-            </>
-          )}
-
-          {/* 25. PLAYFUL */}
-          {expr === 'playful' && (
-            <>
-              <path d="M 58 64 Q 66 58 74 64" stroke="#3a2212" strokeWidth="2.5" fill="none" />
-              <path d="M 86 64 Q 94 58 102 64" stroke="#3a2212" strokeWidth="2.5" fill="none" />
-              {/* Winking playful eye */}
-              <path d="M 60 75 L 72 75" stroke="#1e293b" strokeWidth="3" strokeLinecap="round" />
-              <circle cx="94" cy="74" r="6" fill="#1e293b" />
-              <circle cx="96" cy="72" r="2" fill="#ffffff" />
-              {/* Mischievous grin */}
-              <path d="M 68 92 Q 80 104 92 92" stroke="#6d28d9" strokeWidth="3" fill="none" strokeLinecap="round" />
-            </>
-          )}
-        </g>
-      </svg>
+    <div className={`relative ${sizeClasses} rounded-2xl overflow-hidden border-2 ${item.cardBorder} shadow-lg bg-slate-900 group flex items-center justify-center`}>
+      <img
+        src={item.imageUrl}
+        alt={`${item.name} real baby expression`}
+        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+        loading="eager"
+      />
+      <div className="absolute bottom-1.5 left-1.5 px-2 py-0.5 rounded-full bg-black/75 backdrop-blur-xs text-[10px] font-bold text-white shadow flex items-center gap-1">
+        <span>{item.gender === "boy" ? "👦" : "👧"}</span>
+        <span>{item.name}</span>
+      </div>
     </div>
   );
-};
+}
 
 /**
  * Little circular emotion face badge matching the sample flashcards

@@ -30,6 +30,7 @@ import { db, handleFirestoreError } from '../lib/firebase';
 import { doc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { playSound } from '../lib/sounds';
 import { ALL_VACCINES } from './VaccineTracker';
+import { ChildProfileSelector } from './ChildProfileSelector';
 
 export interface VaccineRecord {
   id: string;
@@ -106,9 +107,55 @@ export const FEEDING_STYLE_OPTIONS = [
 
 export const ASHWATH_DEFAULT_PROMPT = "Ashwath is a healthy, active toddler who loves sensory play and outdoor exploration. Prefers nutritious, home-cooked vegetarian meals (khichdi, curd rice, steamed vegetables, and fruit slices) with low salt, zero refined sugar, and no artificial additives. Sensitive to loud noises, experiences teething discomfort, and thrives on a consistent afternoon nap and soothing bedtime routine. Please keep all advice gentle, actionable, and age-appropriate.";
 
+export interface ChildDietaryConfig {
+  babyName: string;
+  babyBirthDate: string;
+  dietType: string;
+  religiousCultural: string[];
+  otherReligiousPreference: string;
+  customRestrictions: string;
+  foodsToAvoid: string[];
+  otherFoodsToAvoid: string;
+  allergiesIntolerances: string[];
+  otherAllergyIntolerance: string;
+  feedingStyles: string[];
+  aiInstructions: string;
+}
+
+export const CHILD_1_DEMO: ChildDietaryConfig = {
+  babyName: 'Ashwath',
+  babyBirthDate: '2023-04-12',
+  dietType: 'Vegetarian',
+  religiousCultural: ['No specific restrictions'],
+  otherReligiousPreference: '',
+  customRestrictions: '',
+  foodsToAvoid: ['No artificial sweeteners', 'No food coloring / artificial colors'],
+  otherFoodsToAvoid: 'No packaged junk food',
+  allergiesIntolerances: ['Peanut'],
+  otherAllergyIntolerance: '',
+  feedingStyles: ['Baby-led weaning (BLW)', 'Finger foods'],
+  aiInstructions: ASHWATH_DEFAULT_PROMPT,
+};
+
+export const CHILD_2_DEMO: ChildDietaryConfig = {
+  babyName: 'Ananya',
+  babyBirthDate: '2024-11-20',
+  dietType: 'Vegetarian + Eggs',
+  religiousCultural: ['Sattvic'],
+  otherReligiousPreference: '',
+  customRestrictions: 'Ayurvedic principles',
+  foodsToAvoid: ['No onion', 'No garlic', 'No chemicals'],
+  otherFoodsToAvoid: 'No refined sugar',
+  allergiesIntolerances: ['Lactose', 'Milk / dairy'],
+  otherAllergyIntolerance: 'Mild dairy sensitivity',
+  feedingStyles: ['Mashed / soft foods', 'Spoon feeding'],
+  aiInstructions: "Ananya is gentle and prefers pureed fruits, mashed dal/khichdi, and lactose-free soft foods. Avoid whole nuts, dairy, and strong spices.",
+};
+
 export const BabyHealthSettings: React.FC = () => {
-  const { user, profile, refreshProfile } = useAuth();
+  const { user, profile, childProfiles, refreshProfile } = useAuth();
   const navigate = useNavigate();
+  const [selectedChildId, setSelectedChildId] = useState<1 | 2>(1);
 
   // Basic Info
   const [parentName, setParentName] = useState(() => {
@@ -299,6 +346,63 @@ export const BabyHealthSettings: React.FC = () => {
     return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
+  // Handle switching child profile for dietary preferences
+  const handleSwitchChild = (targetId: 1 | 2) => {
+    playSound('pop');
+    
+    // 1. Cache current selections for current child
+    const currentConfig: ChildDietaryConfig = {
+      babyName,
+      babyBirthDate,
+      dietType,
+      religiousCultural,
+      otherReligiousPreference,
+      customRestrictions,
+      foodsToAvoid,
+      otherFoodsToAvoid,
+      allergiesIntolerances,
+      otherAllergyIntolerance,
+      feedingStyles,
+      aiInstructions,
+    };
+    try {
+      localStorage.setItem(`child_${selectedChildId}_dietary_config`, JSON.stringify(currentConfig));
+    } catch {}
+
+    // 2. Switch to target child and load distinct config
+    setSelectedChildId(targetId);
+    let targetConfig: ChildDietaryConfig = targetId === 1 ? { ...CHILD_1_DEMO } : { ...CHILD_2_DEMO };
+    try {
+      const saved = localStorage.getItem(`child_${targetId}_dietary_config`);
+      if (saved) {
+        targetConfig = { ...targetConfig, ...JSON.parse(saved) };
+      }
+    } catch {}
+
+    // Match real names from registered childProfiles if present
+    const matchedProfile = childProfiles.find(cp => cp.id === targetId);
+    if (matchedProfile) {
+      if (matchedProfile.name) targetConfig.babyName = matchedProfile.name;
+      if (matchedProfile.birthDate) targetConfig.babyBirthDate = matchedProfile.birthDate;
+    }
+
+    setBabyName(targetConfig.babyName);
+    setBabyBirthDate(targetConfig.babyBirthDate);
+    setDietType(targetConfig.dietType);
+    setReligiousCultural(targetConfig.religiousCultural);
+    setOtherReligiousPreference(targetConfig.otherReligiousPreference);
+    setCustomRestrictions(targetConfig.customRestrictions);
+    setFoodsToAvoid(targetConfig.foodsToAvoid);
+    setOtherFoodsToAvoid(targetConfig.otherFoodsToAvoid);
+    setAllergiesIntolerances(targetConfig.allergiesIntolerances);
+    setOtherAllergyIntolerance(targetConfig.otherAllergyIntolerance);
+    setFeedingStyles(targetConfig.feedingStyles);
+    setAiInstructions(targetConfig.aiInstructions);
+
+    setSuccess(`Loaded ${targetConfig.babyName}'s personalized dietary profile!`);
+    setTimeout(() => setSuccess(null), 2500);
+  };
+
   // Toggle Religious / Cultural
   const toggleReligiousCultural = (item: string) => {
     playSound('pop');
@@ -420,6 +524,25 @@ export const BabyHealthSettings: React.FC = () => {
       localStorage.setItem('baby_birthdate', babyBirthDate);
       localStorage.setItem('baby_ai_instructions', aiInstructions.trim());
 
+      // Save active child config into dedicated child slot
+      const currentConfig: ChildDietaryConfig = {
+        babyName: babyName.trim(),
+        babyBirthDate,
+        dietType,
+        religiousCultural,
+        otherReligiousPreference: otherReligiousPreference.trim(),
+        customRestrictions: customRestrictions.trim(),
+        foodsToAvoid,
+        otherFoodsToAvoid: otherFoodsToAvoid.trim(),
+        allergiesIntolerances,
+        otherAllergyIntolerance: otherAllergyIntolerance.trim(),
+        feedingStyles,
+        aiInstructions: aiInstructions.trim(),
+      };
+      try {
+        localStorage.setItem(`child_${selectedChildId}_dietary_config`, JSON.stringify(currentConfig));
+      } catch {}
+
       // Save all dietary, religious, foods to avoid, allergies, and feeding preferences
       localStorage.setItem('baby_diet_type', dietType);
       localStorage.setItem('baby_religious_cultural', JSON.stringify(religiousCultural));
@@ -484,7 +607,7 @@ export const BabyHealthSettings: React.FC = () => {
       }
 
       playSound('glass');
-      setSuccess("Baby profile & health settings saved! Redirecting to Home AI Assistant...");
+      setSuccess(`${babyName.trim()}'s dietary preferences & health settings saved! Redirecting to Home AI Assistant...`);
 
       // Scroll window to top
       window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
@@ -515,6 +638,15 @@ export const BabyHealthSettings: React.FC = () => {
   return (
     <div className="space-y-8 text-left">
       
+      {/* Child Profile Selector at Beginning of Dietary Preferences Settings */}
+      <div className="flex justify-center max-w-2xl mx-auto pt-2">
+        <ChildProfileSelector
+          selectedChildId={selectedChildId}
+          onSelectChild={(id) => handleSwitchChild(id)}
+          sectionContextName="Dietary Preferences"
+        />
+      </div>
+
       {/* Header Banner */}
       <div className="p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-emerald-950/40 via-teal-950/30 to-[#0e1626] border border-emerald-400/30 shadow-2xl space-y-4">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">

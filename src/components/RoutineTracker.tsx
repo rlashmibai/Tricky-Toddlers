@@ -13,17 +13,53 @@ import { withRetry } from '../lib/firebaseUtils';
 import { playSound } from '../lib/sounds';
 
 import { AGE_GROUPS, RoutineItem, AgeGroupData } from '../data/routinesData';
+import { ChildProfileSelector } from './ChildProfileSelector';
+
+const getAgeBracketForChild = (child?: { age?: string; birthDate?: string }): string => {
+  if (!child) return '0_6m';
+  if (child.birthDate) {
+    const dob = new Date(child.birthDate);
+    if (!isNaN(dob.getTime())) {
+      const now = new Date();
+      let totalMonths = (now.getFullYear() - dob.getFullYear()) * 12 + (now.getMonth() - dob.getMonth());
+      if (now.getDate() < dob.getDate()) totalMonths--;
+      if (totalMonths < 6) return '0_6m';
+      if (totalMonths < 12) return '6_12m';
+      if (totalMonths < 24) return '1_2y';
+      if (totalMonths < 36) return '2_3y';
+      if (totalMonths < 48) return '3_4y';
+      return '4_5y';
+    }
+  }
+  const ageStr = (child.age || '').toLowerCase();
+  if (ageStr.includes('4') || ageStr.includes('5')) return '4_5y';
+  if (ageStr.includes('3')) return '3_4y';
+  if (ageStr.includes('2')) return '2_3y';
+  if (ageStr.includes('1')) return '1_2y';
+  if (ageStr.includes('6') && (ageStr.includes('m') || ageStr.includes('mo'))) return '6_12m';
+  if (ageStr.includes('m') || ageStr.includes('mo') || ageStr.includes('newborn')) return '0_6m';
+  return '2_3y';
+};
 
 export const RoutineTracker: React.FC = () => {
-  const { user, profile } = useAuth();
+  const { user, profile, childProfiles } = useAuth();
   const { t } = useLanguage();
-  const childName = profile?.babyName || profile?.childName || localStorage.getItem('baby_name') || 'Ashwath';
+  const [pageChildId, setPageChildId] = useState<1 | 2>(1);
+  const currentChild = childProfiles.find(cp => cp.id === pageChildId) || childProfiles[0];
+  const childName = currentChild?.name || profile?.babyName || profile?.childName || 'Ashwath';
 
-  const [selectedAgeGroup, setSelectedAgeGroup] = useState<string>('0_6m');
+  const [selectedAgeGroup, setSelectedAgeGroup] = useState<string>(() => getAgeBracketForChild(currentChild));
   const [selectedTimeType, setSelectedTimeType] = useState<'all' | 'morning' | 'evening' | 'bedtime'>('all');
   const [checkedRoutines, setCheckedRoutines] = useState<string[]>([]);
   const [showCelebration, setShowCelebration] = useState(false);
   const [dbLoading, setDbLoading] = useState(false);
+
+  // Automatically update age group when selected child profile changes
+  useEffect(() => {
+    if (currentChild) {
+      setSelectedAgeGroup(getAgeBracketForChild(currentChild));
+    }
+  }, [pageChildId, currentChild]);
 
 
   const currentAgeGroupData = AGE_GROUPS.find(g => g.id === selectedAgeGroup) || AGE_GROUPS[0];
@@ -184,12 +220,25 @@ export const RoutineTracker: React.FC = () => {
         </div>
       </div>
 
+      {/* Child Profile Selector (Scoped to Routine Coach) */}
+      <div className="flex justify-center mb-6 max-w-2xl mx-auto">
+        <ChildProfileSelector
+          selectedChildId={pageChildId}
+          onSelectChild={(id) => {
+            setPageChildId(id);
+            const targetChild = childProfiles.find(cp => cp.id === id);
+            setSelectedAgeGroup(getAgeBracketForChild(targetChild));
+          }}
+          sectionContextName="Routine Coach"
+        />
+      </div>
+
       {/* Age Group Switcher */}
       <div className="mb-8 bg-white/[0.03] p-2.5 rounded-[2rem] border border-white/10 shadow-lg">
         <div className="text-xs font-black uppercase tracking-wider text-white/40 mb-2 px-3 text-left">
           Select Child Age Bracket
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
           {AGE_GROUPS.map((g) => {
             const isActive = selectedAgeGroup === g.id;
             return (

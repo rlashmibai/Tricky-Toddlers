@@ -39,6 +39,7 @@ import { collection, query, where, getDocs, doc, setDoc, deleteDoc } from 'fireb
 import { useAuth } from '../lib/AuthContext';
 import { playSound } from '../lib/sounds';
 import { useLanguage } from '../lib/LanguageContext';
+import { ChildProfileSelector } from './ChildProfileSelector';
 
 const milestoneTranslations: Record<string, Record<string, { name: string; desc: string; tips: string }>> = {
   en: {
@@ -1185,8 +1186,10 @@ interface LoggedMilestone {
 }
 
 export const MilestoneTracker: React.FC = () => {
-  const { user, profile } = useAuth();
-  const childName = profile?.babyName || profile?.childName || localStorage.getItem('baby_name') || 'Ashwath';
+  const { user, profile, childProfiles } = useAuth();
+  const [pageChildId, setPageChildId] = useState<1 | 2>(1);
+  const currentChild = childProfiles.find(cp => cp.id === pageChildId) || childProfiles[0];
+  const childName = currentChild?.name || profile?.babyName || profile?.childName || 'Ashwath';
   const [loggedMilestones, setLoggedMilestones] = useState<Record<string, LoggedMilestone>>({});
   const [loading, setLoading] = useState(true);
   const [expandedId, setExpandedId] = useState<string | null>(null);
@@ -1401,6 +1404,15 @@ export const MilestoneTracker: React.FC = () => {
           {lt('heroDesc')}
         </p>
       </header>
+
+      {/* Child Profile Selector (Scoped to Milestone Tracker) */}
+      <div className="flex justify-center mb-6 max-w-2xl mx-auto">
+        <ChildProfileSelector
+          selectedChildId={pageChildId}
+          onSelectChild={(id) => setPageChildId(id)}
+          sectionContextName="Milestone Tracker"
+        />
+      </div>
 
       {/* AI Milestone Insights Box */}
       <motion.div 
