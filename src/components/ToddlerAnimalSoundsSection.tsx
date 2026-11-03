@@ -1,21 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   Volume2, 
   Sparkles, 
-  RotateCcw, 
   CheckCircle2, 
   Star, 
-  HelpCircle,
+  ChevronLeft,
+  ChevronRight,
   Music,
-  Play
+  MapPin,
+  Heart
 } from 'lucide-react';
 import { playSound } from '../lib/sounds';
 import { speakIndianEnglish, isVoiceMuted } from '../lib/indianSpeech';
 
+export type AnimalCategory = 'all' | 'forest' | 'village' | 'birds_pets';
+
 export interface AnimalItem {
   id: string;
   name: string;
+  hindiName: string;
+  category: AnimalCategory;
+  categoryLabel: string;
   emoji: string;
   imageUrl: string;
   soundName: string;
@@ -26,24 +32,183 @@ export interface AnimalItem {
   colorName: string;
   borderColor: string;
   bgColor: string;
-  // Audio synthesis parameters
   freqStart: number;
   freqEnd: number;
   soundType: OscillatorType;
   duration: number;
 }
 
+export const CATEGORIES_CONFIG: { id: AnimalCategory; label: string; icon: string }[] = [
+  { id: 'all', label: 'All Indian Animals', icon: '🇮🇳' },
+  { id: 'forest', label: 'Forest & Safari', icon: '🌲' },
+  { id: 'village', label: 'Village & Farm', icon: '🌾' },
+  { id: 'birds_pets', label: 'Birds & Gentle Friends', icon: '🦚' }
+];
+
 export const ANIMALS_DATA: AnimalItem[] = [
+  // 🌾 Village & Farm (Authentic Indian Domestic Animals)
+  {
+    id: 'cow',
+    name: 'Indian Desi Cow',
+    hindiName: 'Gau Mata / Gai',
+    category: 'village',
+    categoryLabel: 'Village & Farm',
+    emoji: '🐮',
+    imageUrl: '/assets/animals/cow.jpg',
+    soundName: 'Sweet Village Moo',
+    soundPhonetic: 'MOOOOO!',
+    babyName: 'Calf (Bachhda)',
+    habitat: 'Indian Village & Gaushala',
+    funFact: 'Desi cows have a prominent hump, curved horns, and give nourishing milk for growing toddlers.',
+    colorName: 'text-emerald-400',
+    borderColor: 'border-emerald-400/50',
+    bgColor: 'bg-emerald-500/10',
+    freqStart: 160,
+    freqEnd: 130,
+    soundType: 'triangle',
+    duration: 1.2
+  },
+  {
+    id: 'buffalo',
+    name: 'Indian Water Buffalo',
+    hindiName: 'Bhains',
+    category: 'village',
+    categoryLabel: 'Village & Farm',
+    emoji: '🐃',
+    imageUrl: '/assets/animals/buffalo.jpg',
+    soundName: 'Deep Village Grunt',
+    soundPhonetic: 'BOOOF-MOO!',
+    babyName: 'Buffalo Calf (Katta)',
+    habitat: 'Paddy Fields & Village Ponds',
+    funFact: 'Water buffaloes love wallowing in cool village ponds during hot sunny afternoons.',
+    colorName: 'text-slate-300',
+    borderColor: 'border-slate-400/50',
+    bgColor: 'bg-slate-500/10',
+    freqStart: 130,
+    freqEnd: 100,
+    soundType: 'sawtooth',
+    duration: 1.0
+  },
+  {
+    id: 'goat',
+    name: 'Indian Village Goat',
+    hindiName: 'Bakri',
+    category: 'village',
+    categoryLabel: 'Village & Farm',
+    emoji: '🐐',
+    imageUrl: '/assets/animals/goat.jpg',
+    soundName: 'Playful Bleat',
+    soundPhonetic: 'MEEEH-MAAA!',
+    babyName: 'Kid (Memna)',
+    habitat: 'Sunny Farm & Green Hillside',
+    funFact: 'Baby goats are nimble jumpers that love skipping across rocks and munching green grass.',
+    colorName: 'text-teal-300',
+    borderColor: 'border-teal-400/50',
+    bgColor: 'bg-teal-500/10',
+    freqStart: 320,
+    freqEnd: 280,
+    soundType: 'sawtooth',
+    duration: 0.7
+  },
+  {
+    id: 'sheep',
+    name: 'Fluffy Sheep',
+    hindiName: 'Bhed',
+    category: 'village',
+    categoryLabel: 'Village & Farm',
+    emoji: '🐑',
+    imageUrl: '/assets/animals/sheep.jpg',
+    soundName: 'Woolly Bleat',
+    soundPhonetic: 'BAAA BAAA!',
+    babyName: 'Little Lamb',
+    habitat: 'Green Meadow & Rolling Hills',
+    funFact: 'Sheep grow warm fluffy wool that is spun into soft winter blankets and cozy sweaters.',
+    colorName: 'text-sky-300',
+    borderColor: 'border-sky-400/50',
+    bgColor: 'bg-sky-500/10',
+    freqStart: 250,
+    freqEnd: 210,
+    soundType: 'sawtooth',
+    duration: 0.8
+  },
+  {
+    id: 'horse',
+    name: 'Marwari Horse',
+    hindiName: 'Ghoda',
+    category: 'village',
+    categoryLabel: 'Village & Farm',
+    emoji: '🐴',
+    imageUrl: '/assets/animals/horse.jpg',
+    soundName: 'Proud Whinny',
+    soundPhonetic: 'WHINNY NEIGH!',
+    babyName: 'Foal (Bacheda)',
+    habitat: 'Royal Meadows & Pastures',
+    funFact: 'Famous Indian Marwari horses have distinctive inward-curving ears and can gallop fast like the wind.',
+    colorName: 'text-amber-300',
+    borderColor: 'border-amber-400/50',
+    bgColor: 'bg-amber-500/10',
+    freqStart: 350,
+    freqEnd: 550,
+    soundType: 'sawtooth',
+    duration: 0.9
+  },
+  {
+    id: 'camel',
+    name: 'Thar Desert Camel',
+    hindiName: 'Oont',
+    category: 'village',
+    categoryLabel: 'Village & Farm',
+    emoji: '🐪',
+    imageUrl: '/assets/animals/camel.jpg',
+    soundName: 'Desert Grunt',
+    soundPhonetic: 'GRRR-HUMPH!',
+    babyName: 'Camel Calf (Todia)',
+    habitat: 'Golden Thar Desert, Rajasthan',
+    funFact: 'Known as the "Ship of the Desert", camels have padded feet that glide effortlessly across golden sand.',
+    colorName: 'text-yellow-400',
+    borderColor: 'border-yellow-400/50',
+    bgColor: 'bg-yellow-500/10',
+    freqStart: 180,
+    freqEnd: 120,
+    soundType: 'sawtooth',
+    duration: 0.8
+  },
+
+  // 🌲 Forest & Safari (Indian Wildlife in Natural Habitat)
+  {
+    id: 'tiger',
+    name: 'Royal Bengal Tiger',
+    hindiName: 'Bagh',
+    category: 'forest',
+    categoryLabel: 'Forest & Safari',
+    emoji: '🐯',
+    imageUrl: '/assets/animals/tiger.jpg',
+    soundName: 'Mighty Jungle Roar',
+    soundPhonetic: 'GRRR-ROAAAR!',
+    babyName: 'Tiger Cub',
+    habitat: 'Ranthambore & Corbett Forests',
+    funFact: 'The national animal of India, Bengal tigers love cooling off in forest streams and have gorgeous stripes.',
+    colorName: 'text-orange-400',
+    borderColor: 'border-orange-400/50',
+    bgColor: 'bg-orange-500/10',
+    freqStart: 140,
+    freqEnd: 90,
+    soundType: 'sawtooth',
+    duration: 1.0
+  },
   {
     id: 'lion',
-    name: 'Lion',
+    name: 'Asiatic Lion',
+    hindiName: 'Sher / Babar Sher',
+    category: 'forest',
+    categoryLabel: 'Forest & Safari',
     emoji: '🦁',
-    imageUrl: 'https://images.unsplash.com/photo-1546182990-dffeafbe841d?auto=format&fit=crop&w=400&q=80',
-    soundName: 'Mighty Roar',
+    imageUrl: '/assets/animals/lion.jpg',
+    soundName: 'Majestic Roar',
     soundPhonetic: 'ROOOAAAR!',
     babyName: 'Lion Cub',
-    habitat: 'Jungle & Savanna',
-    funFact: 'Lions have majestic manes and sleep under shady acacia trees.',
+    habitat: 'Gir Forest National Park, Gujarat',
+    funFact: 'Gir Forest is the only natural home of Asiatic lions in the world, living peacefully in family prides.',
     colorName: 'text-amber-400',
     borderColor: 'border-amber-400/50',
     bgColor: 'bg-amber-500/10',
@@ -54,16 +219,19 @@ export const ANIMALS_DATA: AnimalItem[] = [
   },
   {
     id: 'elephant',
-    name: 'Elephant',
+    name: 'Asian Elephant',
+    hindiName: 'Haathi',
+    category: 'forest',
+    categoryLabel: 'Forest & Safari',
     emoji: '🐘',
-    imageUrl: 'https://images.unsplash.com/photo-1557050543-4d5f4e07ef46?auto=format&fit=crop&w=400&q=80',
-    soundName: 'Trumpet',
+    imageUrl: '/assets/animals/elephant.jpg',
+    soundName: 'Loud Trumpet',
     soundPhonetic: 'PAWOOOOO!',
-    babyName: 'Baby Calf',
-    habitat: 'Indian Forest & Grasslands',
-    funFact: 'Elephants use their long trunks to drink water and give gentle shower hugs!',
-    colorName: 'text-slate-300',
-    borderColor: 'border-slate-400/50',
+    babyName: 'Elephant Calf (Haathi ka Bachha)',
+    habitat: 'Wayanad, Bandipur & Kaziranga',
+    funFact: 'Elephants have gentle trunks with over 40,000 muscles used to pick sweet sugarcane and spray water.',
+    colorName: 'text-slate-200',
+    borderColor: 'border-slate-300/50',
     bgColor: 'bg-slate-500/10',
     freqStart: 280,
     freqEnd: 520,
@@ -71,33 +239,146 @@ export const ANIMALS_DATA: AnimalItem[] = [
     duration: 1.1
   },
   {
-    id: 'cow',
-    name: 'Cow',
-    emoji: '🐮',
-    imageUrl: 'https://images.unsplash.com/photo-1546445317-29f4545e9d53?auto=format&fit=crop&w=400&q=80',
-    soundName: 'Gentle Moo',
-    soundPhonetic: 'MOOOOO!',
-    babyName: 'Calf',
-    habitat: 'Farm & Village Meadow',
-    funFact: 'Cows munch green grass and give healthy calcium-rich milk for growing toddlers.',
+    id: 'deer',
+    name: 'Spotted Chital Deer',
+    hindiName: 'Chital / Hiran',
+    category: 'forest',
+    categoryLabel: 'Forest & Safari',
+    emoji: '🦌',
+    imageUrl: '/assets/animals/deer.jpg',
+    soundName: 'Gentle Whistle Call',
+    soundPhonetic: 'PEEP-WHEEE!',
+    babyName: 'Fawn (Hiran ka Bachha)',
+    habitat: 'Sal Forests & Nagarhole Meadows',
+    funFact: 'Spotted deer keep their bright white spots their entire lives and leap gracefully over high bushes.',
+    colorName: 'text-amber-300',
+    borderColor: 'border-amber-400/50',
+    bgColor: 'bg-amber-500/10',
+    freqStart: 440,
+    freqEnd: 600,
+    soundType: 'sine',
+    duration: 0.5
+  },
+  {
+    id: 'monkey',
+    name: 'Gray Langur Monkey',
+    hindiName: 'Langur / Bandar',
+    category: 'forest',
+    categoryLabel: 'Forest & Safari',
+    emoji: '🐵',
+    imageUrl: '/assets/animals/monkey.jpg',
+    soundName: 'Playful Whoop',
+    soundPhonetic: 'WHOOP WHOOP-AAH!',
+    babyName: 'Infant Monkey',
+    habitat: 'Ancient Banyan Trees & Temples',
+    funFact: 'Gray langurs have long balancing tails and make cheerful alarm calls to warn deer when a tiger is near.',
+    colorName: 'text-amber-400',
+    borderColor: 'border-amber-400/50',
+    bgColor: 'bg-amber-500/10',
+    freqStart: 450,
+    freqEnd: 750,
+    soundType: 'triangle',
+    duration: 0.6
+  },
+
+  // 🦚 Birds & Friendly Friends
+  {
+    id: 'peacock',
+    name: 'Indian Blue Peacock',
+    hindiName: 'Mayur / Mor',
+    category: 'birds_pets',
+    categoryLabel: 'Birds & Gentle Friends',
+    emoji: '🦚',
+    imageUrl: '/assets/animals/peacock.jpg',
+    soundName: 'Monsoon Call',
+    soundPhonetic: 'MAYUR / KEH-O!',
+    babyName: 'Peachick',
+    habitat: 'National Bird of India',
+    funFact: 'Peacocks spread out their iridescent fan of shimmering emerald feathers to celebrate monsoon rain clouds.',
+    colorName: 'text-indigo-400',
+    borderColor: 'border-indigo-400/50',
+    bgColor: 'bg-indigo-500/10',
+    freqStart: 500,
+    freqEnd: 350,
+    soundType: 'sine',
+    duration: 0.8
+  },
+  {
+    id: 'parrot',
+    name: 'Rose-Ringed Parakeet',
+    hindiName: 'Tota',
+    category: 'birds_pets',
+    categoryLabel: 'Birds & Gentle Friends',
+    emoji: '🦜',
+    imageUrl: '/assets/animals/parrot.jpg',
+    soundName: 'Sweet Chirp-Squawk',
+    soundPhonetic: 'MEETHOO-KEE-KEE!',
+    babyName: 'Parrot Chick',
+    habitat: 'Mango & Neem Trees across India',
+    funFact: 'Indian parrots love juicy red chillies and sweet mangoes, and can learn to say "Meethoo"!',
     colorName: 'text-emerald-400',
     borderColor: 'border-emerald-400/50',
     bgColor: 'bg-emerald-500/10',
-    freqStart: 160,
-    freqEnd: 130,
+    freqStart: 580,
+    freqEnd: 760,
     soundType: 'triangle',
-    duration: 1.2
+    duration: 0.5
+  },
+  {
+    id: 'rooster',
+    name: 'Desi Country Rooster',
+    hindiName: 'Kukdu-Koo Murga',
+    category: 'birds_pets',
+    categoryLabel: 'Birds & Gentle Friends',
+    emoji: '🐓',
+    imageUrl: '/assets/animals/rooster.jpg',
+    soundName: 'Morning Crow',
+    soundPhonetic: 'KUKDU-KOOO!',
+    babyName: 'Chick (Chooza)',
+    habitat: 'Indian Village Farmyard',
+    funFact: 'Roosters crow bright and early at dawn to wake up village farmers and singing birds.',
+    colorName: 'text-rose-400',
+    borderColor: 'border-rose-400/50',
+    bgColor: 'bg-rose-500/10',
+    freqStart: 420,
+    freqEnd: 680,
+    soundType: 'triangle',
+    duration: 1.0
+  },
+  {
+    id: 'duck',
+    name: 'Indian Pond Duck',
+    hindiName: 'Batakh',
+    category: 'birds_pets',
+    categoryLabel: 'Birds & Gentle Friends',
+    emoji: '🦆',
+    imageUrl: '/assets/animals/duck.jpg',
+    soundName: 'Splashing Quack',
+    soundPhonetic: 'QUACK QUACK!',
+    babyName: 'Duckling',
+    habitat: 'Village Lotus Ponds',
+    funFact: 'Ducks have waterproof feathers and webbed orange feet that paddle smoothly across lotus ponds.',
+    colorName: 'text-teal-400',
+    borderColor: 'border-teal-400/50',
+    bgColor: 'bg-teal-500/10',
+    freqStart: 320,
+    freqEnd: 280,
+    soundType: 'sawtooth',
+    duration: 0.5
   },
   {
     id: 'dog',
-    name: 'Puppy Dog',
+    name: 'Friendly Desi Dog',
+    hindiName: 'Kutta / Tommy',
+    category: 'birds_pets',
+    categoryLabel: 'Birds & Gentle Friends',
     emoji: '🐶',
-    imageUrl: 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=400&q=80',
+    imageUrl: '/assets/animals/dog.jpg',
     soundName: 'Happy Bark',
-    soundPhonetic: 'WOOF WOOF!',
-    babyName: 'Puppy',
-    habitat: 'Cozy Home & Garden',
-    funFact: 'Dogs wag their tails excitedly whenever their favorite little human comes home!',
+    soundPhonetic: 'BHO-BHO / WOOF!',
+    babyName: 'Puppy (Pilla)',
+    habitat: 'Cozy Courtyard & Garden',
+    funFact: 'Desi Indian dogs are exceptionally loyal, intelligent, and wag their tails warmly to greet children.',
     colorName: 'text-yellow-400',
     borderColor: 'border-yellow-400/50',
     bgColor: 'bg-yellow-500/10',
@@ -108,14 +389,17 @@ export const ANIMALS_DATA: AnimalItem[] = [
   },
   {
     id: 'cat',
-    name: 'Kitten Cat',
+    name: 'Gentle Indian Cat',
+    hindiName: 'Billi',
+    category: 'birds_pets',
+    categoryLabel: 'Birds & Gentle Friends',
     emoji: '🐱',
-    imageUrl: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=400&q=80',
+    imageUrl: '/assets/animals/cat.jpg',
     soundName: 'Sweet Meow',
-    soundPhonetic: 'MEEE-OWWW!',
-    babyName: 'Kitten',
-    habitat: 'Sunny Windowsill',
-    funFact: 'Cats purr like a gentle motor when they feel super cozy and happy.',
+    soundPhonetic: 'MYAA-OOWW!',
+    babyName: 'Kitten (Billi ka Bachha)',
+    habitat: 'Warm Verandah & Windowsill',
+    funFact: 'Cats purr gently when stroked softly behind the ears and love curling up in warm sunshine.',
     colorName: 'text-pink-400',
     borderColor: 'border-pink-400/50',
     bgColor: 'bg-pink-500/10',
@@ -123,147 +407,46 @@ export const ANIMALS_DATA: AnimalItem[] = [
     freqEnd: 320,
     soundType: 'sine',
     duration: 0.7
-  },
-  {
-    id: 'duck',
-    name: 'Duck',
-    emoji: '🦆',
-    imageUrl: 'https://images.unsplash.com/photo-1516467508483-a7212febe31a?auto=format&fit=crop&w=400&q=80',
-    soundName: 'Splashing Quack',
-    soundPhonetic: 'QUACK QUACK!',
-    babyName: 'Duckling',
-    habitat: 'Sparkling Pond',
-    funFact: 'Ducks have waterproof feathers and webbed feet that paddle like little oars.',
-    colorName: 'text-teal-400',
-    borderColor: 'border-teal-400/50',
-    bgColor: 'bg-teal-500/10',
-    freqStart: 320,
-    freqEnd: 280,
-    soundType: 'sawtooth',
-    duration: 0.5
-  },
-  {
-    id: 'monkey',
-    name: 'Monkey',
-    emoji: '🐵',
-    imageUrl: 'https://images.unsplash.com/photo-1540573133985-87b6da6d54a9?auto=format&fit=crop&w=400&q=80',
-    soundName: 'Playful Chatter',
-    soundPhonetic: 'OOH OOH AAH AAH!',
-    babyName: 'Infant Monkey',
-    habitat: 'High Tree Canopy',
-    funFact: 'Monkeys swing from branch to branch with their strong tail and love sweet bananas.',
-    colorName: 'text-orange-400',
-    borderColor: 'border-orange-400/50',
-    bgColor: 'bg-orange-500/10',
-    freqStart: 450,
-    freqEnd: 750,
-    soundType: 'triangle',
-    duration: 0.6
-  },
-  {
-    id: 'sheep',
-    name: 'Sheep',
-    emoji: '🐑',
-    imageUrl: 'https://images.unsplash.com/photo-1484557052118-f32bd25b45b5?auto=format&fit=crop&w=400&q=80',
-    soundName: 'Woolly Bleat',
-    soundPhonetic: 'BAAA BAAA!',
-    babyName: 'Little Lamb',
-    habitat: 'Green Rolling Hills',
-    funFact: 'Sheep grow fluffy warm wool that makes soft winter sweaters and blankets.',
-    colorName: 'text-sky-300',
-    borderColor: 'border-sky-400/50',
-    bgColor: 'bg-sky-500/10',
-    freqStart: 250,
-    freqEnd: 210,
-    soundType: 'sawtooth',
-    duration: 0.8
-  },
-  {
-    id: 'rooster',
-    name: 'Rooster',
-    emoji: '🐓',
-    imageUrl: 'https://images.unsplash.com/photo-1548550023-2bdb3c5beed7?auto=format&fit=crop&w=400&q=80',
-    soundName: 'Morning Crow',
-    soundPhonetic: 'COCK-A-DOODLE-DOO!',
-    babyName: 'Chick',
-    habitat: 'Sunrise Farmyard',
-    funFact: 'Roosters crow bright and early when the sun peeks over the morning horizon.',
-    colorName: 'text-rose-400',
-    borderColor: 'border-rose-400/50',
-    bgColor: 'bg-rose-500/10',
-    freqStart: 400,
-    freqEnd: 650,
-    soundType: 'triangle',
-    duration: 1.0
-  },
-  {
-    id: 'peacock',
-    name: 'Peacock',
-    emoji: '🦚',
-    imageUrl: 'https://images.unsplash.com/photo-1534188753412-3e26d0d618d6?auto=format&fit=crop&w=400&q=80',
-    soundName: 'Joyful Call',
-    soundPhonetic: 'MAYUR / KEH-O!',
-    babyName: 'Peachick',
-    habitat: 'National Bird of India',
-    funFact: 'Peacocks spread out their iridescent emerald feathers and dance when rain clouds arrive!',
-    colorName: 'text-indigo-400',
-    borderColor: 'border-indigo-400/50',
-    bgColor: 'bg-indigo-500/10',
-    freqStart: 500,
-    freqEnd: 350,
-    soundType: 'sine',
-    duration: 0.8
-  },
-  {
-    id: 'frog',
-    name: 'Frog',
-    emoji: '🐸',
-    imageUrl: 'https://images.unsplash.com/photo-1534361960057-19889db9621e?auto=format&fit=crop&w=400&q=80',
-    soundName: 'Ribbit Croak',
-    soundPhonetic: 'RIBBIT RIBBIT!',
-    babyName: 'Little Tadpole',
-    habitat: 'Lily Pad Pond',
-    funFact: 'Frogs start life as tiny swimming tadpoles before growing strong jumping legs.',
-    colorName: 'text-lime-400',
-    borderColor: 'border-lime-400/50',
-    bgColor: 'bg-lime-500/10',
-    freqStart: 180,
-    freqEnd: 140,
-    soundType: 'square',
-    duration: 0.4
-  },
-  {
-    id: 'horse',
-    name: 'Horse',
-    emoji: '🐴',
-    imageUrl: 'https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?auto=format&fit=crop&w=400&q=80',
-    soundName: 'Cheerful Neigh',
-    soundPhonetic: 'WHINNY NEIGH!',
-    babyName: 'Foal',
-    habitat: 'Green Pasture',
-    funFact: 'Horses can run fast like the wind and sleep both lying down and standing up!',
-    colorName: 'text-amber-300',
-    borderColor: 'border-amber-400/50',
-    bgColor: 'bg-amber-500/10',
-    freqStart: 350,
-    freqEnd: 550,
-    soundType: 'sawtooth',
-    duration: 0.9
   }
 ];
 
 export const ToddlerAnimalSoundsSection: React.FC = () => {
   const [selectedAnimal, setSelectedAnimal] = useState<AnimalItem>(ANIMALS_DATA[0]);
   const [activeTab, setActiveTab] = useState<'soundboard' | 'quiz'>('soundboard');
+  const [activeCategory, setActiveCategory] = useState<AnimalCategory>('all');
+  const [currentPage, setCurrentPage] = useState<number>(1);
+
+  // 4 items per page = 2 rows of 2 big cards, matching the height of the right compact spotlight card!
+  const ITEMS_PER_PAGE = 4;
+
+  // Filter animals by category
+  const filteredAnimals = useMemo(() => {
+    if (activeCategory === 'all') return ANIMALS_DATA;
+    return ANIMALS_DATA.filter((a) => a.category === activeCategory);
+  }, [activeCategory]);
+
+  const totalPages = Math.ceil(filteredAnimals.length / ITEMS_PER_PAGE);
+
+  // Paginated animals for current page
+  const paginatedAnimals = useMemo(() => {
+    const start = (currentPage - 1) * ITEMS_PER_PAGE;
+    return filteredAnimals.slice(start, start + ITEMS_PER_PAGE);
+  }, [filteredAnimals, currentPage]);
 
   // Quiz State
   const [quizAnimal, setQuizAnimal] = useState<AnimalItem>(() => {
     return ANIMALS_DATA[Math.floor(Math.random() * ANIMALS_DATA.length)];
   });
+  const [quizChoices, setQuizChoices] = useState<AnimalItem[]>([]);
   const [quizScore, setQuizScore] = useState<number>(0);
   const [quizFeedback, setQuizFeedback] = useState<'correct' | 'wrong' | null>(null);
 
-  // Play synthetic tone using Web Audio API
+  const handleSelectCategory = (catId: AnimalCategory) => {
+    playSound('click');
+    setActiveCategory(catId);
+    setCurrentPage(1);
+  };
+
   const playAnimalSynth = (item: AnimalItem) => {
     if (isVoiceMuted()) return;
     try {
@@ -299,8 +482,17 @@ export const ToddlerAnimalSoundsSection: React.FC = () => {
     setSelectedAnimal(animal);
     playAnimalSynth(animal);
     setTimeout(() => {
-      speakText(`${animal.name} says ${animal.soundPhonetic}! Baby is called a ${animal.babyName}.`);
+      speakText(`${animal.name}, in Hindi called ${animal.hindiName}. It says ${animal.soundPhonetic}! Baby is called ${animal.babyName}.`);
     }, 350);
+  };
+
+  const generateQuizRound = (target: AnimalItem) => {
+    const decoys = ANIMALS_DATA.filter((a) => a.id !== target.id)
+      .sort(() => 0.5 - Math.random())
+      .slice(0, 3);
+    const roundChoices = [target, ...decoys].sort(() => 0.5 - Math.random());
+    setQuizAnimal(target);
+    setQuizChoices(roundChoices);
   };
 
   const handleQuizAnswer = (animal: AnimalItem) => {
@@ -308,19 +500,19 @@ export const ToddlerAnimalSoundsSection: React.FC = () => {
       playSound('glass');
       setQuizFeedback('correct');
       setQuizScore((prev) => prev + 1);
-      speakText(`Hooray! The ${animal.name} says ${animal.soundPhonetic}! You got it right!`);
+      speakText(`Shabash! The ${animal.name} says ${animal.soundPhonetic}! You got it right!`);
       setTimeout(() => {
         setQuizFeedback(null);
         const remaining = ANIMALS_DATA.filter((a) => a.id !== animal.id);
         const next = remaining[Math.floor(Math.random() * remaining.length)];
-        setQuizAnimal(next);
+        generateQuizRound(next);
         playAnimalSynth(next);
-        speakText(`Who makes this sound? ${next.soundPhonetic}?`);
+        speakText(`Who makes this sound: ${next.soundPhonetic}?`);
       }, 1800);
     } else {
       playSound('click');
       setQuizFeedback('wrong');
-      speakText(`That is a ${animal.name}. Listen again!`);
+      speakText(`That is a ${animal.name}. Listen again carefully!`);
       setTimeout(() => setQuizFeedback(null), 1400);
     }
   };
@@ -330,9 +522,9 @@ export const ToddlerAnimalSoundsSection: React.FC = () => {
     setActiveTab('quiz');
     setQuizScore(0);
     const first = ANIMALS_DATA[Math.floor(Math.random() * ANIMALS_DATA.length)];
-    setQuizAnimal(first);
+    generateQuizRound(first);
     playAnimalSynth(first);
-    speakText(`Let us play Who Said That! Listen: ${first.soundPhonetic}! Who made this sound?`);
+    speakText(`Let us play Who Said That! Listen: ${first.soundPhonetic}! Which Indian animal makes this sound?`);
   };
 
   return (
@@ -341,17 +533,17 @@ export const ToddlerAnimalSoundsSection: React.FC = () => {
       <div className="flex flex-wrap items-center justify-between gap-3 bg-white/[0.03] border border-white/10 p-3 sm:p-4 rounded-3xl backdrop-blur-xl">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-br from-amber-400 to-emerald-500 flex items-center justify-center text-slate-950 font-black text-xl shadow-lg">
-            🦁
+            🐮
           </div>
           <div className="text-left">
             <h2 className="text-base sm:text-xl font-black text-white flex items-center gap-2">
-              <span>Animal Kingdom & Sounds</span>
+              <span>Indian Animal Kingdom & Sounds</span>
               <span className="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-[10px] font-black uppercase tracking-wider border border-amber-400/30">
-                Auditory & Wildlife
+                17 Desi & Wildlife Species
               </span>
             </h2>
             <p className="text-xs text-white/50">
-              Tap any animal to hear its cheerful sound, baby animal names, and fun nature facts!
+              Clear whole-view Indian animals, authentic calls, Hindi names, baby names, and curious nature facts!
             </p>
           </div>
         </div>
@@ -362,7 +554,7 @@ export const ToddlerAnimalSoundsSection: React.FC = () => {
             onClick={() => {
               playSound('click');
               setActiveTab('soundboard');
-              speakText('Let us listen to wonderful animal sounds!');
+              speakText('Let us explore wonderful Indian animals!');
             }}
             className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
               activeTab === 'soundboard'
@@ -389,132 +581,245 @@ export const ToddlerAnimalSoundsSection: React.FC = () => {
 
       {/* Mode 1: Soundboard Explorer */}
       {activeTab === 'soundboard' && (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 items-start">
-          {/* Left Column: 12 Animal Tiles */}
-          <div className="lg:col-span-2 space-y-4">
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4">
-              {ANIMALS_DATA.map((animal) => {
-                const isSelected = selectedAnimal.id === animal.id;
-                return (
-                  <motion.button
-                    key={animal.id}
-                    type="button"
-                    whileHover={{ scale: 1.04, y: -2 }}
-                    whileTap={{ scale: 0.96 }}
-                    onClick={() => handleSelectAnimal(animal)}
-                    className={`relative p-3 sm:p-4 rounded-2xl border text-center transition-all cursor-pointer flex flex-col items-center justify-between min-h-[145px] group ${
-                      isSelected
-                        ? `bg-white/15 ${animal.borderColor} ring-2 ring-amber-400 shadow-xl shadow-amber-500/10`
-                        : `${animal.bgColor} border-white/10 hover:border-white/20 hover:bg-white/10`
-                    }`}
-                  >
-                    {/* Real Animal Photo Thumbnail */}
-                    <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden mb-2 relative shadow-md border border-white/20 bg-slate-800 flex-shrink-0">
-                      <img
-                        src={animal.imageUrl}
-                        alt={animal.name}
-                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                        loading="eager"
-                      />
-                      <span className="absolute bottom-1 right-1 text-xs bg-black/60 backdrop-blur-xs rounded-full px-1">
-                        {animal.emoji}
-                      </span>
-                    </div>
-                    <div className="font-black text-sm text-white tracking-wide">
-                      {animal.name}
-                    </div>
-                    <div className="text-[10px] font-bold text-amber-300 uppercase tracking-wider mt-0.5">
-                      {animal.soundPhonetic}
-                    </div>
-                    {isSelected && (
-                      <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-amber-400 animate-ping" />
-                    )}
-                  </motion.button>
-                );
-              })}
-            </div>
+        <div className="space-y-6">
+          {/* Category Filter Chips */}
+          <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+            {CATEGORIES_CONFIG.map((cat) => {
+              const count = cat.id === 'all' 
+                ? ANIMALS_DATA.length 
+                : ANIMALS_DATA.filter((a) => a.category === cat.id).length;
+              const isSelected = activeCategory === cat.id;
+
+              return (
+                <button
+                  key={cat.id}
+                  type="button"
+                  onClick={() => handleSelectCategory(cat.id)}
+                  className={`px-3.5 py-2 rounded-2xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer flex items-center gap-2 border ${
+                    isSelected
+                      ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 border-amber-300 shadow-lg shadow-amber-500/20 font-black scale-102'
+                      : 'bg-white/5 text-slate-300 border-white/10 hover:border-white/25 hover:bg-white/10'
+                  }`}
+                >
+                  <span className="text-sm">{cat.icon}</span>
+                  <span>{cat.label}</span>
+                  <span className={`px-1.5 py-0.5 rounded-full text-[10px] ${
+                    isSelected ? 'bg-slate-950/20 text-slate-950 font-black' : 'bg-white/10 text-white/60'
+                  }`}>
+                    {count}
+                  </span>
+                </button>
+              );
+            })}
           </div>
 
-          {/* Right Column: Active Animal Spotlight Card */}
-          <div className="lg:col-span-1">
-            <motion.div
-              key={selectedAnimal.id}
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className={`p-6 sm:p-7 rounded-3xl border-2 ${selectedAnimal.borderColor} bg-gradient-to-br from-[#1d1b28] via-[#14121d] to-[#0a0910] shadow-2xl text-left space-y-5`}
-            >
-              <div className="flex items-center justify-between gap-4">
-                {/* Real Animal Photo Preview */}
-                <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden border-2 border-white/25 shadow-xl bg-slate-800 flex-shrink-0">
-                  <img
-                    src={selectedAnimal.imageUrl}
-                    alt={selectedAnimal.name}
-                    className="w-full h-full object-cover"
-                    loading="eager"
-                  />
-                  <div className="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded-full bg-black/70 backdrop-blur-xs text-xs font-bold text-white flex items-center gap-1">
-                    <span>{selectedAnimal.emoji}</span>
+          {/* 2-Column Responsive Layout: Left 2-in-a-row Cards + Right Compact Spotlight (No Image, No Scroll Needed) */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 items-start relative">
+            {/* Left Column (Span 2): 2 Images in a Row, Large Clear Whole-View Photos (No 3D Overlay), with Bottom-Matching Pagination */}
+            <div className="lg:col-span-2 flex flex-col justify-between space-y-4">
+              {/* 2-in-a-Row Big Cards Grid */}
+              <div className="grid grid-cols-2 gap-3.5 sm:gap-5">
+                {paginatedAnimals.map((animal) => {
+                  const isSelected = selectedAnimal.id === animal.id;
+                  return (
+                    <motion.button
+                      key={animal.id}
+                      type="button"
+                      whileHover={{ scale: 1.02, y: -2 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => handleSelectAnimal(animal)}
+                      className={`relative p-3.5 sm:p-4 rounded-3xl border text-center transition-all cursor-pointer flex flex-col items-center justify-between group overflow-hidden ${
+                        isSelected
+                          ? `bg-white/15 ${animal.borderColor} ring-2 ring-amber-400 shadow-xl shadow-amber-500/15`
+                          : `${animal.bgColor} border-white/10 hover:border-white/20 hover:bg-white/10`
+                      }`}
+                    >
+                      {/* Real Indian Animal Photo - Clear Full Body View, NO 3D Overlay on top */}
+                      <div className="w-full aspect-[4/3] rounded-2xl overflow-hidden mb-3 border border-white/20 bg-slate-900 flex-shrink-0 relative shadow-md">
+                        <img
+                          src={animal.imageUrl}
+                          alt={animal.name}
+                          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                          loading="eager"
+                          onError={(e) => {
+                            (e.target as HTMLElement).style.display = 'none';
+                          }}
+                        />
+                      </div>
+
+                      {/* Animal Details Below Photo */}
+                      <div className="w-full text-center space-y-1">
+                        <div className="font-black text-sm sm:text-base text-white tracking-wide">
+                          {animal.name}
+                        </div>
+                        <div className="text-[11px] font-bold text-emerald-300/90">
+                          {animal.hindiName}
+                        </div>
+                        <div className="text-xs font-black text-amber-300 tracking-wider">
+                          "{animal.soundPhonetic}"
+                        </div>
+                        <div className="text-[11px] font-bold text-white/50 uppercase tracking-wider">
+                          Baby: {animal.babyName}
+                        </div>
+                      </div>
+
+                      {isSelected && (
+                        <span className="absolute top-3 right-3 w-3 h-3 rounded-full bg-amber-400 animate-ping" />
+                      )}
+                    </motion.button>
+                  );
+                })}
+              </div>
+
+              {/* Pagination Controls - Aligns the bottom of left and right columns */}
+              {totalPages > 1 && (
+                <div className="flex flex-wrap items-center justify-between gap-3 pt-3 p-3.5 rounded-2xl bg-white/[0.03] border border-white/10">
+                  <div className="text-xs text-white/60 font-medium">
+                    Showing <strong className="text-white font-bold">{((currentPage - 1) * ITEMS_PER_PAGE) + 1}–{Math.min(currentPage * ITEMS_PER_PAGE, filteredAnimals.length)}</strong> of <strong className="text-amber-300 font-bold">{filteredAnimals.length}</strong> Indian animals
+                  </div>
+
+                  <div className="flex items-center gap-1.5">
+                    <button
+                      type="button"
+                      disabled={currentPage === 1}
+                      onClick={() => {
+                        playSound('click');
+                        setCurrentPage((p) => Math.max(1, p - 1));
+                      }}
+                      className="p-2 rounded-xl bg-white/5 hover:bg-white/15 border border-white/10 disabled:opacity-30 disabled:cursor-not-allowed text-white cursor-pointer transition-all"
+                      title="Previous Page"
+                    >
+                      <ChevronLeft className="w-4 h-4" />
+                    </button>
+
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+                      <button
+                        key={pageNum}
+                        type="button"
+                        onClick={() => {
+                          playSound('click');
+                          setCurrentPage(pageNum);
+                        }}
+                        className={`w-8 h-8 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                          currentPage === pageNum
+                            ? 'bg-amber-400 text-slate-950 font-black shadow-md'
+                            : 'bg-white/5 text-white/70 hover:bg-white/15 hover:text-white border border-white/10'
+                        }`}
+                      >
+                        {pageNum}
+                      </button>
+                    ))}
+
+                    <button
+                      type="button"
+                      disabled={currentPage === totalPages}
+                      onClick={() => {
+                        playSound('click');
+                        setCurrentPage((p) => Math.min(totalPages, p + 1));
+                      }}
+                      className="p-2 rounded-xl bg-white/5 hover:bg-white/15 border border-white/10 disabled:opacity-30 disabled:cursor-not-allowed text-white cursor-pointer transition-all"
+                      title="Next Page"
+                    >
+                      <ChevronRight className="w-4 h-4" />
+                    </button>
                   </div>
                 </div>
-                <button
-                  type="button"
+              )}
+            </div>
+
+            {/* Right Column (Span 1): Active Spotlight Card WITHOUT IMAGE (Fits 100% On Screen Without Scrolling) */}
+            <div className="lg:col-span-1 lg:sticky lg:top-6 self-start transition-all duration-300">
+              <motion.div
+                key={selectedAnimal.id}
+                initial={{ opacity: 0, scale: 0.97 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className={`p-5 sm:p-6 rounded-3xl border-2 ${selectedAnimal.borderColor} bg-gradient-to-br from-[#1d1b28] via-[#14121d] to-[#0a0910] shadow-2xl text-left space-y-4`}
+              >
+                {/* Header: Category Badge & Hear Sound Voice Button */}
+                <div className="flex items-center justify-between gap-2">
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 text-white text-xs font-bold border border-white/15">
+                    <span>{selectedAnimal.emoji}</span>
+                    <span>{selectedAnimal.categoryLabel}</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      playAnimalSynth(selectedAnimal);
+                      speakText(`${selectedAnimal.soundPhonetic}! The ${selectedAnimal.name}, in Hindi called ${selectedAnimal.hindiName}, makes the sound ${selectedAnimal.soundName}`);
+                    }}
+                    className="p-2 px-3 rounded-2xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-400/40 transition-all cursor-pointer flex items-center gap-1.5 active:scale-95 shadow-md"
+                    title="Play Animal Sound"
+                  >
+                    <Volume2 className="w-4 h-4" />
+                    <span className="text-xs font-bold">Hear Voice</span>
+                  </button>
+                </div>
+
+                {/* Animal Title & Hindi Name */}
+                <div>
+                  <div className="flex items-baseline justify-between">
+                    <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-amber-400">
+                      {selectedAnimal.soundName}
+                    </span>
+                    <span className="text-xs font-bold text-emerald-300 bg-emerald-500/10 px-2 py-0.5 rounded-md border border-emerald-400/20">
+                      {selectedAnimal.hindiName}
+                    </span>
+                  </div>
+                  <h3 className="text-2xl sm:text-3xl font-black text-white tracking-tight mt-1">
+                    {selectedAnimal.name}
+                  </h3>
+                </div>
+
+                {/* Big Sound Callout Box */}
+                <div 
                   onClick={() => {
                     playAnimalSynth(selectedAnimal);
-                    speakText(`${selectedAnimal.soundPhonetic}! The ${selectedAnimal.name} says ${selectedAnimal.soundName}`);
+                    speakText(selectedAnimal.soundPhonetic);
                   }}
-                  className="p-3 rounded-2xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-400/40 transition-all cursor-pointer flex items-center gap-1.5 active:scale-95 shadow-md self-start"
-                  title="Play Animal Sound"
+                  className="p-4 rounded-2xl bg-gradient-to-r from-amber-500/15 via-amber-500/10 to-amber-500/5 border border-amber-400/30 text-center cursor-pointer hover:border-amber-400/60 transition-all group"
+                  title="Click to replay sound"
                 >
-                  <Volume2 className="w-4 h-4" />
-                  <span className="text-xs font-bold">Hear Sound</span>
-                </button>
-              </div>
-
-              <div>
-                <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-amber-400">
-                  {selectedAnimal.soundName}
-                </span>
-                <h3 className="text-2xl sm:text-3xl font-black text-white tracking-tight mt-0.5">
-                  {selectedAnimal.name}
-                </h3>
-              </div>
-
-              {/* Sound Bubble Callout */}
-              <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-400/30 space-y-1 text-center">
-                <div className="text-[10px] uppercase font-bold text-amber-300">Animal Sound</div>
-                <div className="text-2xl font-black text-amber-300 tracking-wider">
-                  "{selectedAnimal.soundPhonetic}"
+                  <div className="text-[10px] uppercase font-bold text-amber-300/80 tracking-wider">
+                    Animal Sound Call
+                  </div>
+                  <div className="text-2xl sm:text-3xl font-black text-amber-300 tracking-wider mt-0.5 group-hover:scale-105 transition-transform">
+                    "{selectedAnimal.soundPhonetic}"
+                  </div>
                 </div>
-              </div>
 
-              {/* Baby Animal & Habitat */}
-              <div className="grid grid-cols-2 gap-2 text-center text-xs">
-                <div className="p-3 rounded-xl bg-white/5 border border-white/10">
-                  <div className="text-[10px] text-white/40 uppercase font-bold">Baby Name</div>
-                  <div className="font-bold text-white mt-0.5">{selectedAnimal.babyName}</div>
+                {/* Baby Animal & Habitat Quick Cards */}
+                <div className="grid grid-cols-2 gap-2 text-center text-xs">
+                  <div className="p-3 rounded-xl bg-white/5 border border-white/10">
+                    <div className="text-[10px] text-white/40 uppercase font-bold">Baby Name</div>
+                    <div className="font-bold text-white mt-0.5 text-xs truncate" title={selectedAnimal.babyName}>
+                      {selectedAnimal.babyName}
+                    </div>
+                  </div>
+                  <div className="p-3 rounded-xl bg-white/5 border border-white/10">
+                    <div className="text-[10px] text-white/40 uppercase font-bold">Native Habitat</div>
+                    <div className="font-bold text-white mt-0.5 text-xs truncate" title={selectedAnimal.habitat}>
+                      {selectedAnimal.habitat}
+                    </div>
+                  </div>
                 </div>
-                <div className="p-3 rounded-xl bg-white/5 border border-white/10">
-                  <div className="text-[10px] text-white/40 uppercase font-bold">Home Habitat</div>
-                  <div className="font-bold text-white mt-0.5">{selectedAnimal.habitat}</div>
-                </div>
-              </div>
 
-              {/* Fun Nature Fact */}
-              <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-400/30 space-y-1">
-                <div className="text-[11px] font-black text-emerald-300 uppercase tracking-wider flex items-center gap-1.5">
-                  <Sparkles className="w-3.5 h-3.5" />
-                  <span>Fun Nature Fact</span>
+                {/* Fun Nature Fact */}
+                <div className="p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-400/30 space-y-1">
+                  <div className="text-[11px] font-black text-emerald-300 uppercase tracking-wider flex items-center gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5" />
+                    <span>Fun Toddler Fact</span>
+                  </div>
+                  <p className="text-xs text-emerald-100 font-medium leading-relaxed">
+                    {selectedAnimal.funFact}
+                  </p>
                 </div>
-                <p className="text-xs sm:text-sm text-emerald-100 font-medium leading-relaxed">
-                  {selectedAnimal.funFact}
-                </p>
-              </div>
-            </motion.div>
+              </motion.div>
+            </div>
           </div>
         </div>
       )}
 
-      {/* Mode 2: "Who Said That?" Quiz */}
+      {/* Mode 2: "Who Said That?" Mystery Quiz */}
       {activeTab === 'quiz' && (
         <div className="max-w-3xl mx-auto p-6 sm:p-10 rounded-3xl border-2 border-emerald-400/40 bg-gradient-to-br from-[#122421] via-[#0d1a18] to-[#07100e] shadow-2xl text-center space-y-6">
           <div className="flex items-center justify-between">
@@ -542,7 +847,7 @@ export const ToddlerAnimalSoundsSection: React.FC = () => {
               Who says <span className="text-amber-300">"{quizAnimal.soundPhonetic}"</span>?
             </h3>
             <p className="text-xs sm:text-sm text-slate-300">
-              Listen carefully to the sound! Tap the animal that made it.
+              Listen carefully to the sound! Tap the Indian animal that made it.
             </p>
           </div>
 
@@ -571,25 +876,31 @@ export const ToddlerAnimalSoundsSection: React.FC = () => {
             )}
           </AnimatePresence>
 
-          {/* Choice Tiles */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 pt-4">
-            {ANIMALS_DATA.map((animal) => (
+          {/* 4 Choice Tiles (2 in a Row, Large & Clean Full Views) */}
+          <div className="grid grid-cols-2 gap-3.5 sm:gap-5 pt-4">
+            {(quizChoices.length > 0 ? quizChoices : ANIMALS_DATA.slice(0, 4)).map((animal) => (
               <button
                 key={animal.id}
                 type="button"
                 onClick={() => handleQuizAnswer(animal)}
-                className="p-3 rounded-2xl bg-white/5 hover:bg-white/15 border border-white/10 hover:border-emerald-400/60 transition-all cursor-pointer flex flex-col items-center justify-center gap-2 active:scale-95 shadow-md group"
+                className="p-3.5 sm:p-4 rounded-3xl bg-white/5 hover:bg-white/15 border border-white/10 hover:border-emerald-400/60 transition-all cursor-pointer flex flex-col items-center justify-center gap-3 active:scale-95 shadow-md group"
               >
-                <div className="w-14 h-14 rounded-xl overflow-hidden border border-white/15 bg-slate-800">
+                <div className="w-full aspect-[4/3] rounded-2xl overflow-hidden border border-white/15 bg-slate-800">
                   <img
                     src={animal.imageUrl}
                     alt={animal.name}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                     loading="eager"
+                    onError={(e) => {
+                      (e.target as HTMLElement).style.display = 'none';
+                    }}
                   />
                 </div>
-                <span className="text-xs sm:text-sm font-bold text-white">{animal.name}</span>
-                <span className="text-[10px] text-amber-300/80">{animal.soundName}</span>
+                <div className="text-center">
+                  <div className="text-sm sm:text-base font-black text-white">{animal.name}</div>
+                  <div className="text-xs text-emerald-300 font-bold">{animal.hindiName}</div>
+                  <div className="text-xs text-amber-300 font-bold mt-0.5">"{animal.soundPhonetic}"</div>
+                </div>
               </button>
             ))}
           </div>

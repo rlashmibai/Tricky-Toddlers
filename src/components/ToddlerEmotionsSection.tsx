@@ -447,7 +447,7 @@ export const TODDLER_EMOTIONS: EmotionItem[] = [
     id: 'playful',
     name: 'PLAYFUL',
     pronunciation: 'PLAY-ful',
-    imageUrl: 'https://images.unsplash.com/photo-1595454223600-91fbdd93444a?auto=format&fit=crop&w=400&q=80',
+    imageUrl: 'https://images.unsplash.com/photo-1519689680058-324335c77eba?auto=format&fit=crop&w=400&q=80',
     gender: 'boy',
     genderLabel: '👦 Toddler Boy',
     colorName: 'violet',
@@ -482,6 +482,9 @@ export const ToddlerCharacterAvatar: React.FC<{
         alt={`${item.name} real baby expression`}
         className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
         loading="eager"
+        onError={(e) => {
+          (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1519689680058-324335c77eba?auto=format&fit=crop&w=400&q=80';
+        }}
       />
       <div className="absolute bottom-1.5 left-1.5 px-2 py-0.5 rounded-full bg-black/75 backdrop-blur-xs text-[10px] font-bold text-white shadow flex items-center gap-1">
         <span>{item.gender === "boy" ? "👦" : "👧"}</span>

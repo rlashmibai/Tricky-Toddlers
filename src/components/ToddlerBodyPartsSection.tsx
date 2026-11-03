@@ -422,6 +422,9 @@ export const ToddlerBodyPartsSection: React.FC = () => {
                     alt={selectedPart.name}
                     className="w-full h-full object-cover"
                     loading="eager"
+                    onError={(e) => {
+                      (e.target as HTMLElement).style.display = 'none';
+                    }}
                   />
                   <div className="absolute bottom-2 left-2 px-2.5 py-1 rounded-full bg-black/75 backdrop-blur-md text-xs font-bold text-white flex items-center gap-1.5 shadow border border-white/15">
                     <span>{selectedPart.emoji}</span>
@@ -535,6 +538,9 @@ export const ToddlerBodyPartsSection: React.FC = () => {
                     alt={part.name}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                     loading="eager"
+                    onError={(e) => {
+                      (e.target as HTMLElement).style.display = 'none';
+                    }}
                   />
                 </div>
                 <span className="text-xs sm:text-sm font-bold text-white">{part.name}</span>
