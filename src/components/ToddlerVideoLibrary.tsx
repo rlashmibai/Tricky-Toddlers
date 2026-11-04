@@ -817,7 +817,7 @@ export const ToddlerVideoLibrary: React.FC<ToddlerVideoLibraryProps> = ({ onGoHo
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                       loading="lazy"
                       onError={(e) => {
-                        e.currentTarget.src = 'https://images.unsplash.com/photo-1519689680058-324335c77eba?auto=format&fit=crop&w=1000&q=80';
+                        e.currentTarget.src = '/assets/emotions/happy.jpg';
                       }}
                     />
 

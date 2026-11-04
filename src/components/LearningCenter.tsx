@@ -109,32 +109,127 @@ const COLOR_QUESTS = [
   { id: 6, color1: 'Black', color2: 'White', target: 'Gray', text: 'Mix Gray! 🐨', desc: 'Can you mix Black and White together?' },
 ];
 
-const FIRST_WORDS = [
-  { word: 'CAT', emoji: '🐱', color: 'bg-orange-500/10 border-orange-500/20 text-orange-400 font-black' },
-  { word: 'DOG', emoji: '🐶', color: 'bg-yellow-500/10 border-yellow-500/20 text-yellow-500 font-black' },
-  { word: 'DINO', emoji: '🦖', color: 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400 font-black' },
-  { word: 'SUN', emoji: '☀️', color: 'bg-amber-400/10 border-amber-400/20 text-amber-400 font-black' },
-  { word: 'BALLOON', emoji: '🎈', color: 'bg-rose-500/10 border-rose-500/20 text-rose-500 font-black' },
-  { word: 'CAR', emoji: '🚗', color: 'bg-red-500/10 border-red-500/20 text-red-500 font-black' },
-  { word: 'COOKIE', emoji: '🍪', color: 'bg-amber-600/10 border-amber-600/20 text-amber-600 font-black' },
-  { word: 'APPLE', emoji: '🍎', color: 'bg-red-400/10 border-red-400/20 text-red-400 font-black' },
-  { word: 'CROWN', emoji: '👑', color: 'bg-yellow-400/10 border-yellow-400/20 text-[#FFD700] font-black' },
-  { word: 'HOME', emoji: '🏠', color: 'bg-indigo-400/10 border-indigo-400/20 text-indigo-400 font-black' },
-  { word: 'DUCK', emoji: '🦆', color: 'bg-yellow-300/10 border-yellow-300/20 text-yellow-300 font-black' },
-  { word: 'FROG', emoji: '🐸', color: 'bg-green-400/10 border-green-400/20 text-green-400 font-black' },
-  { word: 'FISH', emoji: '🐟', color: 'bg-blue-400/10 border-blue-400/20 text-blue-400 font-black' },
-  { word: 'BIRD', emoji: '🐦', color: 'bg-sky-450/10 border-sky-450/20 text-sky-450 font-black' },
-  { word: 'CAKE', emoji: '🍰', color: 'bg-pink-400/10 border-pink-400/20 text-pink-400 font-black' },
-  { word: 'FLOWER', emoji: '🌸', color: 'bg-pink-300/10 border-pink-300/20 text-pink-300 font-black' },
-  { word: 'STAR', emoji: '⭐', color: 'bg-yellow-500/15 border-yellow-500/30 text-yellow-500 font-black' },
-  { word: 'MOON', emoji: '🌙', color: 'bg-indigo-300/10 border-indigo-300/20 text-indigo-300 font-black' },
-  { word: 'TREE', emoji: '🌳', color: 'bg-emerald-600/10 border-emerald-600/20 text-emerald-600 font-black' },
-  { word: 'TRAIN', emoji: '🚂', color: 'bg-zinc-400/10 border-zinc-400/20 text-zinc-400 font-black' },
-  { word: 'BOAT', emoji: '⛵', color: 'bg-cyan-500/10 border-cyan-500/20 text-cyan-400 font-black' },
-  { word: 'BABY', emoji: '👶', color: 'bg-orange-300/10 border-orange-300/20 text-orange-300 font-black' },
-  { word: 'MILK', emoji: '🥛', color: 'bg-slate-300/10 border-slate-300/20 text-slate-300 font-black' },
-  { word: 'BALL', emoji: '⚽', color: 'bg-neutral-300/10 border-neutral-300/20 text-neutral-300 font-black' },
-  { word: 'BOOK', emoji: '📖', color: 'bg-teal-400/10 border-teal-400/20 text-teal-400 font-black' },
+export interface FirstWordItem {
+  word: string;
+  hindi: string;
+  meaning: string;
+  category: 'family' | 'food' | 'animals' | 'nature' | 'home' | 'actions';
+  emoji: string;
+  color: string;
+}
+
+const FIRST_WORDS: FirstWordItem[] = [
+  // 👨‍👩‍👧 Family & Dear Ones (1-9)
+  { word: 'AMMA', hindi: 'अम्मा / माँ', meaning: 'Mummy / Mother', category: 'family', emoji: '👩‍🍼', color: 'bg-rose-500/10 border-rose-500/20 text-rose-400 font-black' },
+  { word: 'APPA', hindi: 'अप्पा / पापा', meaning: 'Daddy / Father', category: 'family', emoji: '👨‍🍼', color: 'bg-sky-500/10 border-sky-500/20 text-sky-400 font-black' },
+  { word: 'DADI', hindi: 'दादी', meaning: 'Paternal Grandma', category: 'family', emoji: '👵', color: 'bg-amber-500/10 border-amber-500/20 text-amber-400 font-black' },
+  { word: 'DADU', hindi: 'दादू', meaning: 'Paternal Grandpa', category: 'family', emoji: '👴', color: 'bg-indigo-500/10 border-indigo-500/20 text-indigo-400 font-black' },
+  { word: 'NANI', hindi: 'नानी', meaning: 'Maternal Grandma', category: 'family', emoji: '👵', color: 'bg-pink-500/10 border-pink-500/20 text-pink-400 font-black' },
+  { word: 'NANA', hindi: 'नाना', meaning: 'Maternal Grandpa', category: 'family', emoji: '👴', color: 'bg-purple-500/10 border-purple-500/20 text-purple-400 font-black' },
+  { word: 'DIDI', hindi: 'दीदी', meaning: 'Elder Sister', category: 'family', emoji: '👧', color: 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400 font-black' },
+  { word: 'BHAIYA', hindi: 'भैया', meaning: 'Elder Brother', category: 'family', emoji: '👦', color: 'bg-blue-500/10 border-blue-500/20 text-blue-400 font-black' },
+  { word: 'BABY', hindi: 'बच्चा', meaning: 'Little Toddler / Infant', category: 'family', emoji: '👶', color: 'bg-orange-500/10 border-orange-500/20 text-orange-400 font-black' },
+
+  // 🍛 Food & Drinks (10-26)
+  { word: 'PAANI', hindi: 'पानी', meaning: 'Water / Water Sip', category: 'food', emoji: '💧', color: 'bg-cyan-500/10 border-cyan-500/20 text-cyan-400 font-black' },
+  { word: 'DOODH', hindi: 'दूध', meaning: 'Warm Milk', category: 'food', emoji: '🥛', color: 'bg-slate-300/10 border-slate-300/20 text-slate-200 font-black' },
+  { word: 'ROTI', hindi: 'रोटी', meaning: 'Fresh Chapati Bread', category: 'food', emoji: '🫓', color: 'bg-amber-600/10 border-amber-600/20 text-amber-500 font-black' },
+  { word: 'CHAWAL', hindi: 'चावल', meaning: 'Steamed Rice', category: 'food', emoji: '🍚', color: 'bg-zinc-300/10 border-zinc-300/20 text-zinc-300 font-black' },
+  { word: 'DAL', hindi: 'दाल', meaning: 'Yummy Lentil Soup', category: 'food', emoji: '🍲', color: 'bg-yellow-500/10 border-yellow-500/20 text-yellow-400 font-black' },
+  { word: 'KELA', hindi: 'केला', meaning: 'Sweet Banana', category: 'food', emoji: '🍌', color: 'bg-yellow-400/10 border-yellow-400/20 text-yellow-300 font-black' },
+  { word: 'SEB', hindi: 'सेब', meaning: 'Crunchy Apple', category: 'food', emoji: '🍎', color: 'bg-red-500/10 border-red-500/20 text-red-400 font-black' },
+  { word: 'AAM', hindi: 'आम', meaning: 'King of Fruits Mango', category: 'food', emoji: '🥭', color: 'bg-amber-500/10 border-amber-500/20 text-amber-400 font-black' },
+  { word: 'DAHI', hindi: 'दही', meaning: 'Cool Curd / Yogurt', category: 'food', emoji: '🥣', color: 'bg-teal-500/10 border-teal-500/20 text-teal-300 font-black' },
+  { word: 'IDLI', hindi: 'इडली', meaning: 'Soft Steamed Idli', category: 'food', emoji: '⚪', color: 'bg-stone-300/10 border-stone-300/20 text-stone-200 font-black' },
+  { word: 'DOSA', hindi: 'डोसा', meaning: 'Crispy Warm Dosa', category: 'food', emoji: '🥞', color: 'bg-amber-600/10 border-amber-600/20 text-amber-400 font-black' },
+  { word: 'KHICHDI', hindi: 'खिचड़ी', meaning: 'Healthy Comfort Porridge', category: 'food', emoji: '🍲', color: 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400 font-black' },
+  { word: 'BISCUIT', hindi: 'बिस्कुट', meaning: 'Crunchy Cookie', category: 'food', emoji: '🍪', color: 'bg-amber-700/10 border-amber-700/20 text-amber-500 font-black' },
+  { word: 'HALWA', hindi: 'हलवा', meaning: 'Sweet Sooji Halwa', category: 'food', emoji: '🍮', color: 'bg-rose-500/10 border-rose-500/20 text-rose-400 font-black' },
+  { word: 'GHEE', hindi: 'घी', meaning: 'Desi Pure Ghee', category: 'food', emoji: '🧈', color: 'bg-yellow-500/10 border-yellow-500/20 text-yellow-400 font-black' },
+  { word: 'LADDU', hindi: 'लड्डू', meaning: 'Festive Sweet Laddu', category: 'food', emoji: '🟡', color: 'bg-amber-400/10 border-amber-400/20 text-amber-400 font-black' },
+  { word: 'CHAI', hindi: 'चाय', meaning: 'Morning Tea (For Parents)', category: 'food', emoji: '☕', color: 'bg-amber-600/10 border-amber-600/20 text-amber-600 font-black' },
+
+  // 🌿 Nature & Wonders (27-34)
+  { word: 'PHOOL', hindi: 'फूल', meaning: 'Beautiful Flower', category: 'nature', emoji: '🌸', color: 'bg-pink-400/10 border-pink-400/20 text-pink-300 font-black' },
+  { word: 'SURAJ', hindi: 'सूरज', meaning: 'Bright Warm Sun', category: 'nature', emoji: '☀️', color: 'bg-yellow-400/10 border-yellow-400/20 text-yellow-400 font-black' },
+  { word: 'CHANDA', hindi: 'चाँद', meaning: 'Shining Moon Mama', category: 'nature', emoji: '🌙', color: 'bg-indigo-300/10 border-indigo-300/20 text-indigo-300 font-black' },
+  { word: 'TAARA', hindi: 'तारा', meaning: 'Twinkling Little Star', category: 'nature', emoji: '⭐', color: 'bg-yellow-500/10 border-yellow-500/20 text-yellow-400 font-black' },
+  { word: 'BAARISH', hindi: 'बारिश', meaning: 'Refreshing Monsoon Rain', category: 'nature', emoji: '🌧️', color: 'bg-sky-400/10 border-sky-400/20 text-sky-400 font-black' },
+  { word: 'BAADAL', hindi: 'बादल', meaning: 'Fluffy Sky Cloud', category: 'nature', emoji: '☁️', color: 'bg-blue-300/10 border-blue-300/20 text-blue-300 font-black' },
+  { word: 'PED', hindi: 'पेड़', meaning: 'Tall Shady Tree', category: 'nature', emoji: '🌳', color: 'bg-emerald-600/10 border-emerald-600/20 text-emerald-400 font-black' },
+  { word: 'PATTA', hindi: 'पत्ता', meaning: 'Green Leaf', category: 'nature', emoji: '🍃', color: 'bg-green-500/10 border-green-500/20 text-green-400 font-black' },
+
+  // 🐾 Animals & Birds (35-52)
+  { word: 'GAAY', hindi: 'गाय', meaning: 'Gentle Desi Cow', category: 'animals', emoji: '🐮', color: 'bg-amber-500/10 border-amber-500/20 text-amber-400 font-black' },
+  { word: 'KUTTA', hindi: 'कुत्ता', meaning: 'Loyal Doggy / Puppy', category: 'animals', emoji: '🐶', color: 'bg-yellow-500/10 border-yellow-500/20 text-yellow-400 font-black' },
+  { word: 'BILLI', hindi: 'बिल्ली', meaning: 'Soft Cat / Meow', category: 'animals', emoji: '🐱', color: 'bg-orange-400/10 border-orange-400/20 text-orange-400 font-black' },
+  { word: 'HAATHI', hindi: 'हाथी', meaning: 'Grand Indian Elephant', category: 'animals', emoji: '🐘', color: 'bg-slate-400/10 border-slate-400/20 text-slate-300 font-black' },
+  { word: 'BANDAR', hindi: 'बंदर', meaning: 'Playful Monkey', category: 'animals', emoji: '🐒', color: 'bg-amber-600/10 border-amber-600/20 text-amber-500 font-black' },
+  { word: 'TOTA', hindi: 'तोता', meaning: 'Talking Green Parrot', category: 'animals', emoji: '🦜', color: 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400 font-black' },
+  { word: 'MOR', hindi: 'मोर', meaning: 'National Dancing Peacock', category: 'animals', emoji: '🦚', color: 'bg-teal-500/10 border-teal-500/20 text-teal-400 font-black' },
+  { word: 'CHIDIYA', hindi: 'चिड़िया', meaning: 'Chirping Little Sparrow', category: 'animals', emoji: '🐦', color: 'bg-sky-400/10 border-sky-400/20 text-sky-400 font-black' },
+  { word: 'BAKRI', hindi: 'बकरी', meaning: 'Playful Baby Goat', category: 'animals', emoji: '🐐', color: 'bg-stone-400/10 border-stone-400/20 text-stone-300 font-black' },
+  { word: 'GHODA', hindi: 'घोड़ा', meaning: 'Galloping Horse', category: 'animals', emoji: '🐴', color: 'bg-amber-700/10 border-amber-700/20 text-amber-500 font-black' },
+  { word: 'SHER', hindi: 'शेर', meaning: 'Royal Majestic Lion', category: 'animals', emoji: '🦁', color: 'bg-yellow-500/10 border-yellow-500/20 text-yellow-500 font-black' },
+  { word: 'TITLI', hindi: 'तितली', meaning: 'Colorful Butterfly', category: 'animals', emoji: '🦋', color: 'bg-pink-500/10 border-pink-500/20 text-pink-400 font-black' },
+  { word: 'MACHLI', hindi: 'मछली', meaning: 'Swimming Fish', category: 'animals', emoji: '🐟', color: 'bg-blue-400/10 border-blue-400/20 text-blue-400 font-black' },
+  { word: 'KAUWA', hindi: 'कौआ', meaning: 'Clever Black Crow', category: 'animals', emoji: '🐦‍⬛', color: 'bg-zinc-500/10 border-zinc-500/20 text-zinc-300 font-black' },
+  { word: 'OONT', hindi: 'ऊँट', meaning: 'Desert Camel', category: 'animals', emoji: '🐪', color: 'bg-amber-500/10 border-amber-500/20 text-amber-400 font-black' },
+  { word: 'BHALU', hindi: 'भालू', meaning: 'Friendly Brown Bear', category: 'animals', emoji: '🐻', color: 'bg-amber-800/10 border-amber-800/20 text-amber-600 font-black' },
+  { word: 'KHARGOSH', hindi: 'खरगोश', meaning: 'Fluffy White Bunny', category: 'animals', emoji: '🐰', color: 'bg-rose-300/10 border-rose-300/20 text-rose-300 font-black' },
+  { word: 'BATAKH', hindi: 'बत्तख', meaning: 'Quacking Pond Duck', category: 'animals', emoji: '🦆', color: 'bg-yellow-400/10 border-yellow-400/20 text-yellow-400 font-black' },
+
+  // 🏠 Home, Vehicles & Everyday Toys (53-88)
+  { word: 'GADI', hindi: 'गाड़ी', meaning: 'Family Toy Car', category: 'home', emoji: '🚗', color: 'bg-red-500/10 border-red-500/20 text-red-500 font-black' },
+  { word: 'AUTO', hindi: 'ऑटो', meaning: 'Indian Auto Rickshaw', category: 'home', emoji: '🛺', color: 'bg-yellow-500/10 border-yellow-500/20 text-yellow-400 font-black' },
+  { word: 'BUS', hindi: 'बस', meaning: 'Yellow School Bus', category: 'home', emoji: '🚌', color: 'bg-amber-500/10 border-amber-500/20 text-amber-400 font-black' },
+  { word: 'TRAIN', hindi: 'रेलगाड़ी', meaning: 'Chhuk Chhuk Train', category: 'home', emoji: '🚂', color: 'bg-zinc-400/10 border-zinc-400/20 text-zinc-300 font-black' },
+  { word: 'CYCLE', hindi: 'साइकिल', meaning: 'Toddler Tricycle', category: 'home', emoji: '🚲', color: 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400 font-black' },
+  { word: 'PLANE', hindi: 'हवाई जहाज़', meaning: 'Flying Aeroplane', category: 'home', emoji: '✈️', color: 'bg-sky-500/10 border-sky-500/20 text-sky-400 font-black' },
+  { word: 'BOAT', hindi: 'नाव', meaning: 'Paper Sailing Boat', category: 'home', emoji: '⛵', color: 'bg-cyan-500/10 border-cyan-500/20 text-cyan-400 font-black' },
+  { word: 'BALL', hindi: 'गेंद', meaning: 'Bouncy Playing Ball', category: 'home', emoji: '⚽', color: 'bg-indigo-500/10 border-indigo-500/20 text-indigo-400 font-black' },
+  { word: 'GUDIYA', hindi: 'गुड़िया', meaning: 'Cute Baby Doll', category: 'home', emoji: '🪆', color: 'bg-pink-500/10 border-pink-500/20 text-pink-400 font-black' },
+  { word: 'GUBBARA', hindi: 'गुब्बारा', meaning: 'Flying Red Balloon', category: 'home', emoji: '🎈', color: 'bg-rose-500/10 border-rose-500/20 text-rose-500 font-black' },
+  { word: 'KHILONA', hindi: 'खिलौना', meaning: 'Soft Cuddly Toy', category: 'home', emoji: '🧸', color: 'bg-amber-600/10 border-amber-600/20 text-amber-400 font-black' },
+  { word: 'JHOOLA', hindi: 'झूला', meaning: 'Park Baby Swing', category: 'home', emoji: '🎠', color: 'bg-purple-500/10 border-purple-500/20 text-purple-400 font-black' },
+  { word: 'GHAR', hindi: 'घर', meaning: 'Sweet Cozy Home', category: 'home', emoji: '🏠', color: 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400 font-black' },
+  { word: 'DARWAZA', hindi: 'दरवाज़ा', meaning: 'Main Front Door', category: 'home', emoji: '🚪', color: 'bg-amber-700/10 border-amber-700/20 text-amber-500 font-black' },
+  { word: 'KHIDKI', hindi: 'खिड़की', meaning: 'Sunny Window', category: 'home', emoji: '🪟', color: 'bg-sky-400/10 border-sky-400/20 text-sky-400 font-black' },
+  { word: 'PANKHA', hindi: 'पंखा', meaning: 'Cool Ceiling Fan', category: 'home', emoji: '🪭', color: 'bg-teal-400/10 border-teal-400/20 text-teal-300 font-black' },
+  { word: 'GHADI', hindi: 'घड़ी', meaning: 'Tick-Tock Wall Clock', category: 'home', emoji: '⏰', color: 'bg-rose-400/10 border-rose-400/20 text-rose-400 font-black' },
+  { word: 'LIGHT', hindi: 'बत्ती', meaning: 'Bright Room Light', category: 'home', emoji: '💡', color: 'bg-yellow-400/10 border-yellow-400/20 text-yellow-300 font-black' },
+  { word: 'CHABI', hindi: 'चाबी', meaning: 'Shiny Golden Key', category: 'home', emoji: '🔑', color: 'bg-yellow-500/10 border-yellow-500/20 text-yellow-400 font-black' },
+  { word: 'BISTAR', hindi: 'बिस्तर', meaning: 'Soft Sleeping Bed', category: 'home', emoji: '🛏️', color: 'bg-indigo-400/10 border-indigo-400/20 text-indigo-400 font-black' },
+  { word: 'KAMBAL', hindi: 'कंबल', meaning: 'Warm Baby Blanket', category: 'home', emoji: '🛋️', color: 'bg-purple-400/10 border-purple-400/20 text-purple-400 font-black' },
+  { word: 'THALI', hindi: 'थाली', meaning: 'Dinner Steel Plate', category: 'home', emoji: '🍽️', color: 'bg-slate-300/10 border-slate-300/20 text-slate-200 font-black' },
+  { word: 'GLASS', hindi: 'ग्लास', meaning: 'Steel Water Glass', category: 'home', emoji: '🥛', color: 'bg-cyan-400/10 border-cyan-400/20 text-cyan-300 font-black' },
+  { word: 'CHAMACH', hindi: 'चम्मच', meaning: 'Baby Feeding Spoon', category: 'home', emoji: '🥄', color: 'bg-zinc-400/10 border-zinc-400/20 text-zinc-300 font-black' },
+  { word: 'KATORI', hindi: 'कटोरी', meaning: 'Small Dal Bowl', category: 'home', emoji: '🥣', color: 'bg-amber-400/10 border-amber-400/20 text-amber-400 font-black' },
+  { word: 'BOTTLE', hindi: 'बोतल', meaning: 'Milk Feeding Bottle', category: 'home', emoji: '🍼', color: 'bg-sky-400/10 border-sky-400/20 text-sky-400 font-black' },
+  { word: 'JOOTA', hindi: 'जूता', meaning: 'Walking Shoes', category: 'home', emoji: '👟', color: 'bg-blue-500/10 border-blue-500/20 text-blue-400 font-black' },
+  { word: 'CHAPPAL', hindi: 'चप्पल', meaning: 'Comfy Slippers', category: 'home', emoji: '🩴', color: 'bg-teal-500/10 border-teal-500/20 text-teal-400 font-black' },
+  { word: 'MOJA', hindi: 'मोज़ा', meaning: 'Warm Soft Socks', category: 'home', emoji: '🧦', color: 'bg-rose-400/10 border-rose-400/20 text-rose-400 font-black' },
+  { word: 'TOPI', hindi: 'टोपी', meaning: 'Cute Baby Cap', category: 'home', emoji: '🧢', color: 'bg-amber-500/10 border-amber-500/20 text-amber-400 font-black' },
+  { word: 'KURTA', hindi: 'कुर्ता / फ्रॉक', meaning: 'Pretty Dress / Kurta', category: 'home', emoji: '👗', color: 'bg-pink-500/10 border-pink-500/20 text-pink-400 font-black' },
+  { word: 'BAG', hindi: 'बस्ता', meaning: 'Toddler Little Backpack', category: 'home', emoji: '🎒', color: 'bg-indigo-500/10 border-indigo-500/20 text-indigo-400 font-black' },
+  { word: 'KANGHI', hindi: 'कंघी', meaning: 'Gentle Hair Comb', category: 'home', emoji: '🪮', color: 'bg-yellow-600/10 border-yellow-600/20 text-yellow-500 font-black' },
+  { word: 'SABUN', hindi: 'साबुन', meaning: 'Bubbly Bath Soap', category: 'home', emoji: '🧼', color: 'bg-emerald-400/10 border-emerald-400/20 text-emerald-300 font-black' },
+  { word: 'TAULIYA', hindi: 'तौलिया', meaning: 'Fluffy Soft Towel', category: 'home', emoji: '🧖', color: 'bg-cyan-500/10 border-cyan-500/20 text-cyan-400 font-black' },
+  { word: 'BRUSH', hindi: 'ब्रश', meaning: 'Morning Toothbrush', category: 'home', emoji: '🪥', color: 'bg-teal-500/10 border-teal-500/20 text-teal-400 font-black' },
+
+  // 🎨 Learning & Daily Actions (89-100)
+  { word: 'KITAB', hindi: 'किताब', meaning: 'Bedtime Story Book', category: 'actions', emoji: '📖', color: 'bg-teal-500/10 border-teal-500/20 text-teal-400 font-black' },
+  { word: 'PENCIL', hindi: 'पेंसिल', meaning: 'Doodling Crayon', category: 'actions', emoji: '✏️', color: 'bg-yellow-500/10 border-yellow-500/20 text-yellow-400 font-black' },
+  { word: 'RANG', hindi: 'रंग', meaning: 'Bright Painting Color', category: 'actions', emoji: '🎨', color: 'bg-purple-500/10 border-purple-500/20 text-purple-400 font-black' },
+  { word: 'GAANA', hindi: 'गाना', meaning: 'Nursery Rhyme & Music', category: 'actions', emoji: '🎵', color: 'bg-rose-500/10 border-rose-500/20 text-rose-400 font-black' },
+  { word: 'TAALI', hindi: 'ताली', meaning: 'Happy Clapping Hands', category: 'actions', emoji: '👏', color: 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400 font-black' },
+  { word: 'NAMASTE', hindi: 'नमस्ते', meaning: 'Folded Hands Greeting', category: 'actions', emoji: '🙏', color: 'bg-amber-400/10 border-amber-400/20 text-amber-300 font-black' },
+  { word: 'BYEBYE', hindi: 'बाय-बाय', meaning: 'Wave Hand Goodbye', category: 'actions', emoji: '👋', color: 'bg-yellow-400/10 border-yellow-400/20 text-yellow-400 font-black' },
+  { word: 'SONA', hindi: 'सोना', meaning: 'Sweet Dreams Sleep', category: 'actions', emoji: '😴', color: 'bg-indigo-400/10 border-indigo-400/20 text-indigo-300 font-black' },
+  { word: 'NAHANA', hindi: 'नहाना', meaning: 'Splash Water Bath', category: 'actions', emoji: '🛁', color: 'bg-cyan-400/10 border-cyan-400/20 text-cyan-300 font-black' },
+  { word: 'HASNA', hindi: 'हँसना', meaning: 'Giggle & Big Smile', category: 'actions', emoji: '😄', color: 'bg-yellow-500/10 border-yellow-500/20 text-yellow-400 font-black' },
+  { word: 'PYAAR', hindi: 'प्यार', meaning: 'Love & Warm Hugs', category: 'actions', emoji: '❤️', color: 'bg-rose-500/10 border-rose-500/20 text-rose-400 font-black' },
+  { word: 'SHABASH', hindi: 'शाबाश', meaning: 'Well Done Little Star!', category: 'actions', emoji: '🌟', color: 'bg-amber-300/10 border-amber-300/20 text-amber-300 font-black' }
 ];
 
 const ROUTINES: any[] = [];
@@ -512,6 +607,7 @@ export const LearningCenter: React.FC = () => {
   const [sentence, setSentence] = useState('');
   const [keyColorIndex, setKeyColorIndex] = useState(0);
   const [selectedWord, setSelectedWord] = useState<string | null>(null);
+  const [activeWordCategory, setActiveWordCategory] = useState<string>('all');
 
   // Calculator State
   const [calcDisplay, setCalcDisplay] = useState('0');
@@ -902,104 +998,153 @@ export const LearningCenter: React.FC = () => {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.3 }}
+            className="w-full max-w-5xl mx-auto"
           >
-            <header className="text-center mb-12">
+            {/* Header with interesting numbers title */}
+            <header className="text-center mb-6">
               <motion.div
-                initial={{ y: -10, opacity: 0 }}
+                initial={{ y: -8, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                className="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-white/5 border border-white/10 text-white/40 mb-4"
+                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-400/10 border border-amber-400/25 text-amber-300 mb-2"
               >
-                <Hash className="w-5 h-5" />
-                <span className="text-sm font-black uppercase tracking-widest text-white/60">Arithmetics Discovery</span>
+                <Hash className="w-4 h-4 text-amber-300" />
+                <span className="text-xs font-black uppercase tracking-widest">Little Math Explorer</span>
               </motion.div>
-              <h1 className="text-5xl font-black text-white mb-2 tracking-tighter uppercase">Toddler Academy</h1>
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-white tracking-tight">
+                ✨ Magic Numbers & Talking Calculator ✨
+              </h1>
+              <p className="text-white/60 text-xs sm:text-sm font-medium mt-1">
+                Tap numbers to hear them spoken aloud, see magic colors glow, and calculate together!
+              </p>
             </header>
 
-            {/* Calculator Interface */}
-            <div className="max-w-xl mx-auto mb-10">
-              <div className="glass-card p-6 border-4 border-white/10 flex flex-col items-center gap-4 relative overflow-hidden">
-                <div className={`absolute inset-0 opacity-5 bg-cheerful-yellow`} />
+            {/* Unified No-Scroll Screen: Side-by-Side on Desktop, stacked compact on Mobile */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+              {/* Left Column: Calculator Screen & Operators */}
+              <div className="lg:col-span-5 flex flex-col justify-between glass-card p-5 sm:p-6 border-3 border-white/10 rounded-3xl relative overflow-hidden shadow-2xl">
+                <div className="absolute inset-0 bg-gradient-to-br from-amber-400/5 via-pink-500/5 to-transparent pointer-events-none" />
                 
-                <div className="w-full bg-black/20 rounded-2xl p-6 text-right relative z-10 border border-white/5">
-                  <AnimatePresence mode="wait">
-                    <motion.span 
-                      key={calcDisplay}
-                      initial={{ scale: 1.2, opacity: 0 }}
-                      animate={{ scale: 1, opacity: 1 }}
-                      className="text-6xl md:text-7xl font-black text-white tracking-widest block"
+                <div>
+                  <div className="flex items-center justify-between mb-3 text-xs font-black uppercase tracking-wider text-white/50">
+                    <span className="flex items-center gap-1.5 text-amber-300">
+                      <Sparkles className="w-3.5 h-3.5" />
+                      Math Screen
+                    </span>
+                    <button
+                      onClick={() => {
+                        playSound('glass');
+                        speakIndianEnglish(calcDisplay);
+                      }}
+                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-all text-[11px] cursor-pointer"
+                      title="Speak number"
                     >
-                      {calcDisplay}
-                    </motion.span>
-                  </AnimatePresence>
-                  {operator && (
-                     <div className="absolute top-2 left-4 text-cheerful-yellow font-black text-2xl">
-                       {operator}
-                     </div>
-                  )}
+                      <Volume2 className="w-3.5 h-3.5 text-emerald-300" />
+                      <span>Speak</span>
+                    </button>
+                  </div>
+
+                  {/* Calculator Big Number Display */}
+                  <div className="w-full bg-black/40 rounded-2xl p-5 text-right relative border border-white/10 shadow-inner min-h-[96px] flex items-center justify-end overflow-hidden">
+                    {operator && (
+                      <div className="absolute top-2 left-3 px-2 py-0.5 rounded-md bg-amber-400/20 text-amber-300 font-black text-xl border border-amber-400/30">
+                        {operator}
+                      </div>
+                    )}
+                    <AnimatePresence mode="wait">
+                      <motion.span 
+                        key={calcDisplay}
+                        initial={{ scale: 1.15, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        className="text-5xl sm:text-6xl font-black text-white tracking-widest block truncate"
+                      >
+                        {calcDisplay}
+                      </motion.span>
+                    </AnimatePresence>
+                  </div>
                 </div>
 
-                <div className="flex flex-wrap gap-4 w-full relative z-10">
-                  <button 
-                    onClick={() => handleOperator('+')}
-                    className="flex-1 min-w-[60px] glass-card py-4 flex items-center justify-center border-2 border-white/10 hover:border-cheerful-pink/40 text-white transition-all active:scale-95"
-                  >
-                    <Plus className="w-6 h-6" />
-                  </button>
-                  <button 
-                    onClick={() => handleOperator('-')}
-                    className="flex-1 min-w-[60px] glass-card py-4 flex items-center justify-center border-2 border-white/10 hover:border-cheerful-blue/40 text-white transition-all active:scale-95"
-                  >
-                    <Minus className="w-6 h-6" />
-                  </button>
-                  <button 
-                    onClick={() => handleOperator('×')}
-                    className="flex-1 min-w-[60px] glass-card py-4 flex items-center justify-center border-2 border-white/10 hover:border-cheerful-yellow/40 text-white transition-all active:scale-95 font-black text-2xl"
-                  >
-                    ×
-                  </button>
-                  <button 
-                    onClick={() => handleOperator('÷')}
-                    className="flex-1 min-w-[60px] glass-card py-4 flex items-center justify-center border-2 border-white/10 hover:border-emerald-400/40 text-white transition-all active:scale-95 font-black text-2xl"
-                  >
-                    ÷
-                  </button>
-                  <button 
-                    onClick={calculateResults}
-                    className="flex-1 min-w-[60px] glass-card py-4 flex items-center justify-center border-2 border-white/10 hover:border-cheerful-green/40 text-cheerful-green transition-all active:scale-95"
-                  >
-                    <Equal className="w-6 h-6" />
-                  </button>
-                  <button 
-                    onClick={clearCalc}
-                    className="px-6 glass-card py-4 flex items-center justify-center border-2 border-white/10 hover:border-white/40 text-white/40 transition-all active:scale-95"
-                  >
-                    <Eraser className="w-6 h-6" />
-                  </button>
+                {/* Arithmetic Operators Row */}
+                <div className="mt-4 pt-3 border-t border-white/10">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-white/40 block mb-2">Math Actions</span>
+                  <div className="grid grid-cols-6 gap-2">
+                    <button 
+                      onClick={() => handleOperator('+')}
+                      className="glass-card py-3 rounded-xl flex items-center justify-center border-2 border-white/10 hover:border-cheerful-pink/60 hover:bg-cheerful-pink/10 text-white font-black text-xl transition-all active:scale-95 cursor-pointer"
+                      title="Add"
+                    >
+                      <Plus className="w-5 h-5 text-pink-400" />
+                    </button>
+                    <button 
+                      onClick={() => handleOperator('-')}
+                      className="glass-card py-3 rounded-xl flex items-center justify-center border-2 border-white/10 hover:border-sky-400/60 hover:bg-sky-400/10 text-white font-black text-xl transition-all active:scale-95 cursor-pointer"
+                      title="Subtract"
+                    >
+                      <Minus className="w-5 h-5 text-sky-400" />
+                    </button>
+                    <button 
+                      onClick={() => handleOperator('×')}
+                      className="glass-card py-3 rounded-xl flex items-center justify-center border-2 border-white/10 hover:border-amber-400/60 hover:bg-amber-400/10 text-amber-300 font-black text-xl transition-all active:scale-95 cursor-pointer"
+                      title="Multiply"
+                    >
+                      ×
+                    </button>
+                    <button 
+                      onClick={() => handleOperator('÷')}
+                      className="glass-card py-3 rounded-xl flex items-center justify-center border-2 border-white/10 hover:border-teal-400/60 hover:bg-teal-400/10 text-teal-300 font-black text-xl transition-all active:scale-95 cursor-pointer"
+                      title="Divide"
+                    >
+                      ÷
+                    </button>
+                    <button 
+                      onClick={calculateResults}
+                      className="glass-card py-3 rounded-xl flex items-center justify-center border-2 border-emerald-400/50 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 font-black text-xl transition-all active:scale-95 cursor-pointer shadow-lg shadow-emerald-500/20"
+                      title="Calculate Result"
+                    >
+                      <Equal className="w-5 h-5" />
+                    </button>
+                    <button 
+                      onClick={clearCalc}
+                      className="glass-card py-3 rounded-xl flex items-center justify-center border-2 border-rose-400/40 bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 font-black text-base transition-all active:scale-95 cursor-pointer"
+                      title="Clear"
+                    >
+                      <Eraser className="w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-5 gap-4 sm:gap-6 max-w-5xl mx-auto">
-              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((num, idx) => {
-                const colorIndex = numberColors[idx];
-                const activeColor = COLORS[colorIndex];
-                
-                return (
-                  <motion.div
-                    key={num}
-                    initial={{ scale: 0.9, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    transition={{ delay: idx * 0.05 }}
-                    onClick={() => handleNumberInput(num, idx)}
-                    className={`glass-card aspect-square flex items-center justify-center cursor-pointer border-4 transition-all duration-500 shadow-2xl relative overflow-hidden group ${activeColor.border} ${activeColor.glow}`}
-                  >
-                    <div className={`absolute inset-0 opacity-10 transition-colors duration-500 ${activeColor.bg}`} />
-                    <span className="text-7xl sm:text-8xl md:text-9xl font-black text-white tracking-tighter relative z-10 drop-shadow-2xl">
-                      {num}
-                    </span>
-                  </motion.div>
-                );
-              })}
+              {/* Right Column: Number Keypad (1-9, 0) in 2 compact rows of 5 */}
+              <div className="lg:col-span-7 glass-card p-5 sm:p-6 border-3 border-white/10 rounded-3xl relative overflow-hidden flex flex-col justify-between shadow-2xl">
+                <div className="flex items-center justify-between mb-3 text-xs font-black uppercase tracking-wider text-white/50">
+                  <span className="flex items-center gap-1.5 text-pink-300">
+                    <Sparkles className="w-3.5 h-3.5" />
+                    Interactive Keypad (Tap Any Number)
+                  </span>
+                  <span className="text-white/40 text-[11px]">Audio + Colors Active</span>
+                </div>
+
+                <div className="grid grid-cols-5 gap-2.5 sm:gap-3 flex-1 items-stretch">
+                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((num, idx) => {
+                    const colorIndex = numberColors[idx];
+                    const activeColor = COLORS[colorIndex];
+                    
+                    return (
+                      <motion.button
+                        key={num}
+                        whileHover={{ scale: 1.06, y: -2 }}
+                        whileTap={{ scale: 0.92 }}
+                        onClick={() => handleNumberInput(num, idx)}
+                        className={`h-20 sm:h-24 rounded-2xl flex flex-col items-center justify-center cursor-pointer border-3 transition-all duration-300 shadow-lg relative overflow-hidden select-none ${activeColor.border} ${activeColor.glow} bg-white/5 hover:bg-white/10`}
+                      >
+                        <div className={`absolute inset-0 opacity-15 transition-colors duration-500 ${activeColor.bg}`} />
+                        <span className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight relative z-10 drop-shadow-md">
+                          {num}
+                        </span>
+                      </motion.button>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
           </motion.div>
         ) : activeMode === 'counting' ? (
@@ -1009,71 +1154,38 @@ export const LearningCenter: React.FC = () => {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.3 }}
+            className="w-full max-w-5xl mx-auto"
           >
-            <header className="text-center mb-12">
+            {/* Header */}
+            <header className="text-center mb-5">
               <motion.div
-                initial={{ y: -10, opacity: 0 }}
+                initial={{ y: -8, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                className="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-white/5 border border-white/10 text-white/40 mb-4"
+                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-pink-400/10 border border-pink-400/25 text-pink-300 mb-2"
               >
-                <Star className="w-5 h-5 text-cheerful-pink" />
-                <span className="text-sm font-black uppercase tracking-widest text-white/60">Count-With-Me Academy</span>
+                <Star className="w-4 h-4 text-pink-400 fill-pink-400" />
+                <span className="text-xs font-black uppercase tracking-widest">Count-With-Me Academy</span>
               </motion.div>
-              <h1 className="text-5xl font-black text-white mb-2 tracking-tighter uppercase">Counting Playground</h1>
-              <p className="text-white/40 font-bold max-w-lg mx-auto">
-                Select a number below, pick your favorite objects, and tap them sequentially to learn counting!
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-white tracking-tight">
+                ⭐ Interactive Counting Arena ⭐
+              </h1>
+              <p className="text-white/60 text-xs sm:text-sm font-medium mt-1">
+                Choose any number (1-20) below, pick your favorite objects, and tap them to count together!
               </p>
             </header>
 
-            {/* Quick Count Selector */}
-            <div className="max-w-4xl mx-auto mb-8 text-center bg-white/5 border border-white/10 p-6 rounded-3xl">
-              <span className="text-xs font-black uppercase tracking-[0.2em] text-cheerful-pink block mb-4">Choose a Number to Count! 🍒</span>
-              <div className="flex flex-wrap justify-center gap-3 select-none">
-                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map((num) => {
-                  const isSelected = activeNumber === num;
-                  return (
-                    <motion.button
-                      key={num}
-                      whileHover={{ scale: 1.15 }}
-                      whileTap={{ scale: 0.9 }}
-                      onClick={() => {
-                        playSound('pop');
-                        setCalcDisplay(String(num));
-                        speakIndianEnglish(`Count ${num}`);
-                      }}
-                      className={`w-12 h-12 rounded-full border-2 transition-all duration-300 font-black text-lg flex items-center justify-center cursor-pointer ${
-                        isSelected
-                          ? 'bg-cheerful-pink border-white text-black shadow-lg shadow-cheerful-pink/20 scale-110'
-                          : 'bg-white/5 border-white/10 text-white/60 hover:border-white/20 hover:text-white'
-                      }`}
-                    >
-                      {num}
-                    </motion.button>
-                  );
-                })}
-              </div>
-            </div>
+            {/* Single Unified Interactive Card: Everything in same view without scrolling */}
+            <div className="glass-card p-5 sm:p-6 border-3 border-white/10 rounded-3xl relative overflow-hidden shadow-2xl flex flex-col gap-4">
+              <div className="absolute inset-0 bg-gradient-to-r from-pink-500/5 via-amber-400/5 to-transparent pointer-events-none" />
 
-            {/* Count-With-Me Stage */}
-            <div className="max-w-4xl mx-auto mb-10">
-              <div className="glass-card p-6 border-4 border-white/10 flex flex-col items-center gap-6 relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-r from-cheerful-yellow/5 to-transparent opacity-50" />
-                
-                <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-4 relative z-10">
-                  <div className="text-left w-full sm:w-auto">
-                    <h2 className="text-2xl font-black text-white tracking-tight uppercase flex items-center gap-2">
-                      <Sparkles className="w-5 h-5 text-cheerful-yellow animate-spin" style={{ animationDuration: '6s' }} />
-                      Count-with-Me Arena
-                    </h2>
-                    <p className="text-white/40 text-xs font-bold uppercase tracking-wider mt-1">
-                      {activeNumber > 0 
-                        ? `Tap the ${selectedObject}s sequentially to count: ${countedIndices.length} / ${activeNumber}` 
-                        : 'Select a number above to start counting!'}
-                    </p>
-                  </div>
-
-                  {/* Object Selector Tabs */}
-                  <div className="flex gap-2 bg-white/5 p-1.5 rounded-2xl border border-white/5 select-none">
+              {/* Top Controls Bar: Object Selector Tabs + Quick Status */}
+              <div className="w-full flex flex-wrap items-center justify-between gap-3 relative z-10 pb-3 border-b border-white/10">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-black uppercase tracking-wider text-pink-300 flex items-center gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+                    Count Object:
+                  </span>
+                  <div className="flex gap-1.5 bg-white/5 p-1 rounded-xl border border-white/10 select-none">
                     {(['star', 'cookie', 'heart', 'smile'] as const).map((obj) => (
                       <button
                         key={obj}
@@ -1083,87 +1195,142 @@ export const LearningCenter: React.FC = () => {
                           const objNames = { star: 'Stars', cookie: 'Cookies', heart: 'Hearts', smile: 'Smiles' };
                           speakIndianEnglish(objNames[obj]);
                         }}
-                        className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
+                        className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1 ${
                           selectedObject === obj 
-                            ? 'bg-white/10 text-white shadow-md font-black' 
-                            : 'text-white/40 hover:text-white/60'
+                            ? 'bg-white/20 text-white shadow-md font-black ring-1 ring-white/30' 
+                            : 'text-white/40 hover:text-white/80'
                         }`}
                       >
-                        {obj === 'star' ? '⭐' : obj === 'cookie' ? '🍪' : obj === 'heart' ? '💖' : '😊'}
+                        <span>{obj === 'star' ? '⭐' : obj === 'cookie' ? '🍪' : obj === 'heart' ? '💖' : '😊'}</span>
+                        <span className="hidden sm:inline capitalize">{obj}</span>
                       </button>
                     ))}
                   </div>
                 </div>
 
-                {/* Counting Stage */}
-                <div className="w-full bg-black/25 rounded-2xl p-6 min-h-[180px] flex flex-wrap items-center justify-center gap-4 relative z-10 border border-white/5">
-                  {activeNumber === 0 ? (
-                    <div className="text-center py-4 select-none">
-                      <p className="text-white/20 text-sm font-bold uppercase tracking-widest italic">
-                        Select a number from the buttons above to start counting!
-                      </p>
-                    </div>
-                  ) : (
-                    <AnimatePresence>
-                      {Array.from({ length: activeNumber }).map((_, index) => {
-                        const isCounted = countedIndices.includes(index);
-                        const countedNum = countedIndices.indexOf(index) + 1;
-                        return (
-                          <motion.div
-                            key={`${selectedObject}-${index}`}
-                            initial={{ scale: 0, rotate: -45 }}
-                            animate={{ scale: 1, rotate: isCounted ? [0, 15, -15, 0] : 0 }}
-                            exit={{ scale: 0, rotate: 45 }}
-                            whileHover={{ scale: 1.15 }}
-                            onClick={() => handleObjectTap(index)}
-                            className={`w-14 h-14 rounded-2xl flex items-center justify-center relative cursor-pointer border-2 transition-all shadow-lg select-none ${
-                              isCounted 
-                                ? 'bg-white/10 border-white text-white' 
-                                : 'bg-white/5 border-white/10 hover:border-white/20 text-white/30'
-                            }`}
-                          >
-                            <div className="transition-transform duration-300">
-                              {selectedObject === 'star' && (
-                                <Star className={`w-8 h-8 ${isCounted ? 'text-cheerful-yellow fill-cheerful-yellow' : 'text-white/20 fill-transparent'}`} />
-                              )}
-                              {selectedObject === 'cookie' && (
-                                <Cookie className={`w-8 h-8 ${isCounted ? 'text-[#D2691E] fill-[#CD853F]' : 'text-white/20 fill-transparent'}`} />
-                              )}
-                              {selectedObject === 'heart' && (
-                                <Heart className={`w-8 h-8 ${isCounted ? 'text-cheerful-pink fill-cheerful-pink' : 'text-white/20 fill-transparent'}`} />
-                              )}
-                              {selectedObject === 'smile' && (
-                                <Smile className={`w-8 h-8 ${isCounted ? 'text-cheerful-blue fill-cheerful-blue' : 'text-white/20 fill-transparent'}`} />
-                              )}
-                            </div>
-
-                            {/* Sequential Counting Badge */}
-                            {isCounted && (
-                              <motion.span
-                                initial={{ scale: 0 }}
-                                animate={{ scale: 1 }}
-                                className="absolute -top-1.5 -right-1.5 bg-cheerful-pink text-white font-black text-[10px] w-5 h-5 rounded-full flex items-center justify-center border-2 border-slate-950 shadow-md"
-                              >
-                                {countedNum}
-                              </motion.span>
-                            )}
-                          </motion.div>
-                        );
-                      })}
-                    </AnimatePresence>
+                <div className="flex items-center gap-3">
+                  <span className="text-xs font-black px-3 py-1 rounded-full bg-white/10 border border-white/15 text-white">
+                    {activeNumber > 0 ? `${countedIndices.length} / ${activeNumber} Counted` : 'Pick Number Below'}
+                  </span>
+                  {activeNumber > 0 && countedIndices.length > 0 && (
+                    <button
+                      onClick={() => {
+                        setCountedIndices([]);
+                        playSound('pop');
+                      }}
+                      className="text-xs font-bold px-2.5 py-1 rounded-lg bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/30 transition-all cursor-pointer"
+                    >
+                      Reset Count
+                    </button>
                   )}
                 </div>
+              </div>
 
-                {/* Progress bar */}
-                {activeNumber > 0 && (
-                  <div className="w-full bg-white/5 rounded-full h-2 relative z-10 overflow-hidden border border-white/5 select-none">
-                    <div 
-                      className="bg-cheerful-yellow h-full transition-all duration-300"
-                      style={{ width: `${(countedIndices.length / activeNumber) * 100}%` }}
-                    />
+              {/* Number Buttons: 1 to 20 in 2 clean compact rows of 10 */}
+              <div className="relative z-10">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-[11px] font-black uppercase tracking-widest text-white/50">
+                    Choose Number to Count (1 - 20):
+                  </span>
+                  <span className="text-[11px] font-bold text-amber-300">
+                    Target: {activeNumber}
+                  </span>
+                </div>
+                <div className="grid grid-cols-10 gap-1.5 sm:gap-2 select-none">
+                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map((num) => {
+                    const isSelected = activeNumber === num;
+                    return (
+                      <motion.button
+                        key={num}
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.92 }}
+                        onClick={() => {
+                          playSound('pop');
+                          setCalcDisplay(String(num));
+                          speakIndianEnglish(`Count ${num}`);
+                        }}
+                        className={`h-9 sm:h-10 rounded-xl border-2 transition-all duration-200 font-black text-xs sm:text-sm flex items-center justify-center cursor-pointer select-none ${
+                          isSelected
+                            ? 'bg-cheerful-pink border-white text-black shadow-lg shadow-pink-500/30 scale-105 ring-2 ring-pink-300'
+                            : 'bg-white/5 border-white/10 text-white/70 hover:border-white/30 hover:bg-white/10 hover:text-white'
+                        }`}
+                      >
+                        {num}
+                      </motion.button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Arena Stage: Immediately visible right below the numbers */}
+              <div className="w-full bg-black/35 rounded-2xl p-4 sm:p-5 min-h-[170px] flex flex-wrap items-center justify-center gap-3 relative z-10 border border-white/10 shadow-inner">
+                {activeNumber === 0 ? (
+                  <div className="text-center py-6 select-none">
+                    <p className="text-white/40 text-sm font-bold uppercase tracking-wider">
+                      👆 Tap any number (1-20) above to populate the arena!
+                    </p>
                   </div>
+                ) : (
+                  <AnimatePresence>
+                    {Array.from({ length: activeNumber }).map((_, index) => {
+                      const isCounted = countedIndices.includes(index);
+                      const countedNum = countedIndices.indexOf(index) + 1;
+                      return (
+                        <motion.button
+                          key={`${selectedObject}-${index}`}
+                          initial={{ scale: 0, rotate: -30 }}
+                          animate={{ scale: 1, rotate: isCounted ? [0, 12, -12, 0] : 0 }}
+                          exit={{ scale: 0, rotate: 30 }}
+                          whileHover={{ scale: 1.15 }}
+                          whileTap={{ scale: 0.9 }}
+                          onClick={() => handleObjectTap(index)}
+                          className={`w-12 h-12 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center relative cursor-pointer border-2 transition-all shadow-md select-none ${
+                            isCounted 
+                              ? 'bg-white/15 border-white text-white shadow-lg' 
+                              : 'bg-white/5 border-white/10 hover:border-white/30 text-white/30 hover:bg-white/10'
+                          }`}
+                        >
+                          <div className="transition-transform duration-300">
+                            {selectedObject === 'star' && (
+                              <Star className={`w-7 h-7 sm:w-8 sm:h-8 ${isCounted ? 'text-cheerful-yellow fill-cheerful-yellow filter drop-shadow' : 'text-white/20 fill-transparent'}`} />
+                            )}
+                            {selectedObject === 'cookie' && (
+                              <Cookie className={`w-7 h-7 sm:w-8 sm:h-8 ${isCounted ? 'text-[#D2691E] fill-[#CD853F] filter drop-shadow' : 'text-white/20 fill-transparent'}`} />
+                            )}
+                            {selectedObject === 'heart' && (
+                              <Heart className={`w-7 h-7 sm:w-8 sm:h-8 ${isCounted ? 'text-cheerful-pink fill-cheerful-pink filter drop-shadow' : 'text-white/20 fill-transparent'}`} />
+                            )}
+                            {selectedObject === 'smile' && (
+                              <Smile className={`w-7 h-7 sm:w-8 sm:h-8 ${isCounted ? 'text-sky-400 fill-sky-400 filter drop-shadow' : 'text-white/20 fill-transparent'}`} />
+                            )}
+                          </div>
+
+                          {/* Sequential Counting Number Badge */}
+                          {isCounted && (
+                            <motion.span
+                              initial={{ scale: 0 }}
+                              animate={{ scale: 1 }}
+                              className="absolute -top-1.5 -right-1.5 bg-cheerful-pink text-white font-black text-[10px] w-5 h-5 rounded-full flex items-center justify-center border-2 border-slate-950 shadow-md"
+                            >
+                              {countedNum}
+                            </motion.span>
+                          )}
+                        </motion.button>
+                      );
+                    })}
+                  </AnimatePresence>
                 )}
               </div>
+
+              {/* Progress bar */}
+              {activeNumber > 0 && (
+                <div className="w-full bg-white/5 rounded-full h-2 relative z-10 overflow-hidden border border-white/5 select-none">
+                  <div 
+                    className="bg-gradient-to-r from-amber-400 via-pink-500 to-emerald-400 h-full transition-all duration-300"
+                    style={{ width: `${(countedIndices.length / activeNumber) * 100}%` }}
+                  />
+                </div>
+              )}
             </div>
           </motion.div>
         ) : activeMode === 'colors' ? (
@@ -1173,144 +1340,195 @@ export const LearningCenter: React.FC = () => {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.3 }}
+            className="w-full max-w-5xl mx-auto"
           >
-            <header className="text-center mb-12">
+            {/* Header */}
+            <header className="text-center mb-5">
               <motion.div
-                initial={{ y: -10, opacity: 0 }}
+                initial={{ y: -8, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                className="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-white/5 border border-white/10 text-white/40 mb-4"
+                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple-400/10 border border-purple-400/25 text-purple-300 mb-2"
               >
-                <Palette className="w-5 h-5" />
-                <span className="text-sm font-black uppercase tracking-widest text-white/60">Color Discovery</span>
+                <Palette className="w-4 h-4 text-purple-300" />
+                <span className="text-xs font-black uppercase tracking-widest">Magic Color Laboratory</span>
               </motion.div>
-              <h1 className="text-5xl font-black text-white mb-4 tracking-tighter uppercase">Magic Color Chart</h1>
-              <p className="text-white/40 font-bold">Tap a color to see its name and feel the magic!</p>
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-white tracking-tight">
+                🎨 Magic Color Mixing Studio
+              </h1>
+              <p className="text-white/60 text-xs sm:text-sm font-medium mt-1">
+                Tap any two colors on the right to mix them like magic in the beaker!
+              </p>
             </header>
 
-            {/* Mixing Laboratory */}
-            <div className="max-w-4xl mx-auto mb-16">
-              <div className="glass-card p-10 border-4 border-white/10 flex flex-col md:flex-row items-center justify-center gap-12 relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-cheerful-pink/5 via-transparent to-cheerful-blue/5" />
-                
-                <div className="flex flex-col items-center gap-4">
-                  <motion.div 
-                    key={mix1?.name || 'empty'}
-                    animate={{ scale: mix1 ? 1.1 : 1, rotate: mix1 ? 0 : 45 }}
-                    className={`w-24 h-24 rounded-full border-4 ${mix1 ? `${mix1.class} ${mix1.border}` : 'bg-white/5 border-dashed border-white/20'} flex items-center justify-center`}
-                  >
-                    {!mix1 && <span className="text-white/20 text-xs font-black">?</span>}
-                  </motion.div>
-                  <span className="text-white/40 font-black text-[10px] uppercase tracking-widest">{mix1?.name || 'Color 1'}</span>
-                </div>
+            {/* Side-by-Side Unified No-Scroll Studio */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+              {/* Left Column: Mixing Laboratory & Live Result */}
+              <div className="lg:col-span-5 glass-card p-5 sm:p-6 border-3 border-white/10 rounded-3xl relative overflow-hidden flex flex-col justify-between shadow-2xl">
+                <div className="absolute inset-0 bg-gradient-to-br from-pink-500/5 via-purple-500/5 to-cyan-500/5 pointer-events-none" />
 
-                <Plus className="w-8 h-8 text-white/20" />
-
-                <div className="flex flex-col items-center gap-4">
-                   <motion.div 
-                    key={mix2?.name || 'empty'}
-                    animate={{ scale: mix2 ? 1.1 : 1, rotate: mix2 ? 0 : -45 }}
-                    className={`w-24 h-24 rounded-full border-4 ${mix2 ? `${mix2.class} ${mix2.border}` : 'bg-white/5 border-dashed border-white/20'} flex items-center justify-center`}
-                  >
-                    {!mix2 && <span className="text-white/20 text-xs font-black">?</span>}
-                  </motion.div>
-                  <span className="text-white/40 font-black text-[10px] uppercase tracking-widest">{mix2?.name || 'Color 2'}</span>
-                </div>
-
-                <Equal className="w-8 h-8 text-white/20" />
-
-                <div className="flex flex-col items-center gap-4">
-                  <motion.div 
-                    key={mixResult || 'result'}
-                    initial={{ scale: 0.5, opacity: 0 }}
-                    animate={{ 
-                      scale: mixResult ? 1.2 : 1, 
-                      opacity: 1, 
-                      rotate: mixResult ? (mixResult.includes('Oops') ? [0, -10, 10, -10, 0] : 360) : 0,
-                    }}
-                    transition={{ 
-                      type: mixResult?.includes('Oops') ? 'keyframes' : 'spring',
-                      damping: 10 
-                    }}
-                    className={`w-32 h-32 rounded-full border-4 shadow-2xl flex items-center justify-center transition-all duration-500 ${
-                      mixResult === 'Orange' ? 'bg-orange-500 border-orange-500/40' :
-                      mixResult === 'Purple' ? 'bg-purple-500 border-purple-500/40' :
-                      mixResult === 'Green' ? 'bg-green-500 border-green-500/40' :
-                      mixResult === 'Pink' ? 'bg-cheerful-pink border-cheerful-pink/40' :
-                      mixResult === 'Gray' ? 'bg-gray-400 border-gray-400/40' :
-                      mixResult === 'Brown' ? 'bg-[#8B4513] border-[#8B4513]/40' :
-                      mixResult === 'Sky Blue' ? 'bg-blue-300 border-blue-300/40' :
-                      mixResult === 'Indigo' ? 'bg-indigo-600 border-indigo-600/40' :
-                      mixResult === 'Violet' ? 'bg-violet-600 border-violet-600/40' :
-                      mixResult === 'Teal' ? 'bg-teal-600 border-teal-600/40' :
-                      mixResult === 'Magenta' ? 'bg-magenta-600 border-magenta-600/40' :
-                      mixResult === 'Amber' ? 'bg-amber-400 border-amber-400/40' :
-                      mixResult === 'Vermilion' ? 'bg-orange-600 border-orange-600/40' :
-                      mixResult === 'Rose' ? 'bg-rose-400 border-rose-400/40' :
-                      mixResult === 'Lavender' ? 'bg-purple-200 border-purple-200/40' :
-                      mixResult === 'Mint' ? 'bg-emerald-100 border-emerald-100/40' :
-                      mixResult === 'Olive' ? 'bg-[#808000] border-[#808000]/40' :
-                      mixResult === 'Fuchsia' ? 'bg-[#FF00FF] border-[#FF00FF]/40' :
-                      mixResult === 'Maroon' ? 'bg-red-900 border-red-900/40' :
-                      mixResult === 'Plum' ? 'bg-[#8E4585] border-[#8E4585]/40' :
-                      mixResult === 'Navy' ? 'bg-blue-900 border-blue-900/40' :
-                      mixResult === 'Dark Green' ? 'bg-green-900 border-green-900/40' :
-                      mixResult === 'Turquoise' ? 'bg-turquoise-400 border-turquoise-400/40' :
-                      mixResult === 'Slate' ? 'bg-slate-500 border-slate-500/40' :
-                      mixResult === 'Mustard' ? 'bg-[#E1AD01] border-[#E1AD01]/40' :
-                      mixResult === 'Brick' ? 'bg-[#B22222] border-[#B22222]/40' :
-                      mixResult === 'Rust' ? 'bg-[#B7410E] border-[#B7410E]/40' :
-                      mixResult === 'Chartreuse' ? 'bg-[#7FFF00] border-[#7FFF00]/40' :
-                      mixResult?.includes('Oops') ? 'bg-white border-white animate-pulse shadow-white/50' :
-                      'bg-white/5 border-dashed border-white/20'
-                    }`}
-                  >
-                    {!mixResult && <Sparkles className="w-8 h-8 text-white/10" />}
-                    {mixResult?.includes('Oops') && <Sparkles className="w-12 h-12 text-black" />}
-                    {mixResult && !mixResult.includes('Oops') && <Star className="w-10 h-10 text-white fill-white shadow-xl" />}
-                  </motion.div>
-                  <span className={`font-black text-xs uppercase tracking-widest min-h-[120px] max-w-[200px] text-center flex items-center justify-center ${mixResult?.includes('Oops') ? 'text-cheerful-yellow italic bg-white/5 p-4 rounded-2xl border border-white/5' : 'text-white'}`}>
-                    {mixResult || 'Wait for it...'}
-                  </span>
-                </div>
-
-                {mix1 && (
-                  <button 
-                    onClick={clearMix}
-                    className="absolute top-4 right-4 p-2 bg-white/5 hover:bg-white/10 rounded-full transition-all"
-                  >
-                    <RefreshCw className="w-4 h-4 text-white/40" />
-                  </button>
-                )}
-              </div>
-              <p className="text-center text-[10px] text-white/20 font-black uppercase tracking-[0.3em] mt-6">Color Laboratory: Mix two colors to see the results!</p>
-            </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-6 max-w-5xl mx-auto">
-              {COLOR_CHART.map((color, idx) => (
-                <motion.div
-                  key={color.name}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: idx * 0.05 }}
-                  onClick={() => handleColorSelect(color)}
-                  className={`glass-card aspect-square flex flex-col items-center justify-center cursor-pointer border-4 transition-all duration-500 shadow-2xl relative overflow-hidden group ${
-                    mix1?.name === color.name || mix2?.name === color.name ? 'border-white scale-105' : color.border
-                  } ${color.glow}`}
-                >
-                  <div className={`absolute inset-0 opacity-80 ${color.class}`} />
-                  <div className="absolute inset-0 bg-white/0 group-hover:bg-white/10 transition-colors" />
-                  
-                  <div className="relative z-10 text-center">
-                    <span className={`text-2xl md:text-3xl font-black tracking-tighter uppercase ${
-                      color.name === 'White' || color.name === 'Yellow' ? 'text-black' : 'text-white'
-                    } drop-shadow-md`}>
-                      {color.name}
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="text-xs font-black uppercase tracking-wider text-purple-300 flex items-center gap-1.5">
+                      <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+                      Mixing Beaker
                     </span>
+                    {(mix1 || mix2 || mixResult) && (
+                      <button 
+                        onClick={clearMix}
+                        className="inline-flex items-center gap-1 px-2.5 py-1 bg-white/10 hover:bg-white/20 text-white rounded-lg text-xs font-bold transition-all cursor-pointer"
+                        title="Reset Mixing"
+                      >
+                        <RefreshCw className="w-3.5 h-3.5 text-rose-300" />
+                        <span>Reset</span>
+                      </button>
+                    )}
                   </div>
-                </motion.div>
-              ))}
+
+                  {/* Formula Row: Beaker 1 + Beaker 2 = Result */}
+                  <div className="flex items-center justify-center gap-2 sm:gap-3 py-2">
+                    {/* Beaker 1 */}
+                    <div className="flex flex-col items-center gap-1.5">
+                      <motion.div 
+                        key={mix1?.name || 'empty1'}
+                        animate={{ scale: mix1 ? 1.08 : 1 }}
+                        className={`w-14 h-14 sm:w-16 sm:h-16 rounded-2xl border-3 flex items-center justify-center shadow-lg transition-all ${
+                          mix1 ? `${mix1.class} ${mix1.border}` : 'bg-white/5 border-dashed border-white/20 text-white/30'
+                        }`}
+                      >
+                        {!mix1 ? <span className="text-sm font-black">?</span> : <span className="text-xl">✨</span>}
+                      </motion.div>
+                      <span className="text-[11px] font-black uppercase tracking-wider text-white/60">
+                        {mix1?.name || 'Color 1'}
+                      </span>
+                    </div>
+
+                    <Plus className="w-5 h-5 text-white/40 shrink-0" />
+
+                    {/* Beaker 2 */}
+                    <div className="flex flex-col items-center gap-1.5">
+                      <motion.div 
+                        key={mix2?.name || 'empty2'}
+                        animate={{ scale: mix2 ? 1.08 : 1 }}
+                        className={`w-14 h-14 sm:w-16 sm:h-16 rounded-2xl border-3 flex items-center justify-center shadow-lg transition-all ${
+                          mix2 ? `${mix2.class} ${mix2.border}` : 'bg-white/5 border-dashed border-white/20 text-white/30'
+                        }`}
+                      >
+                        {!mix2 ? <span className="text-sm font-black">?</span> : <span className="text-xl">✨</span>}
+                      </motion.div>
+                      <span className="text-[11px] font-black uppercase tracking-wider text-white/60">
+                        {mix2?.name || 'Color 2'}
+                      </span>
+                    </div>
+
+                    <Equal className="w-5 h-5 text-white/40 shrink-0" />
+
+                    {/* Result Swatch */}
+                    <div className="flex flex-col items-center gap-1.5">
+                      <motion.div 
+                        key={mixResult || 'empty-res'}
+                        initial={{ scale: 0.8 }}
+                        animate={{ scale: mixResult ? 1.15 : 1, rotate: mixResult ? [0, 8, -8, 0] : 0 }}
+                        className={`w-16 h-16 sm:w-20 sm:h-20 rounded-2xl border-4 shadow-2xl flex items-center justify-center transition-all duration-300 ${
+                          mixResult === 'Orange' ? 'bg-orange-500 border-orange-300' :
+                          mixResult === 'Purple' ? 'bg-purple-600 border-purple-300' :
+                          mixResult === 'Green' ? 'bg-emerald-500 border-emerald-300' :
+                          mixResult === 'Pink' ? 'bg-pink-500 border-pink-300' :
+                          mixResult === 'Gray' ? 'bg-gray-400 border-gray-200' :
+                          mixResult === 'Brown' ? 'bg-[#8B4513] border-[#A0522D]' :
+                          mixResult === 'Sky Blue' ? 'bg-sky-400 border-sky-200' :
+                          mixResult === 'Indigo' ? 'bg-indigo-600 border-indigo-300' :
+                          mixResult === 'Violet' ? 'bg-violet-600 border-violet-300' :
+                          mixResult === 'Teal' ? 'bg-teal-500 border-teal-300' :
+                          mixResult === 'Amber' ? 'bg-amber-400 border-amber-200' :
+                          mixResult?.includes('Oops') ? 'bg-white border-white animate-pulse' :
+                          'bg-white/5 border-dashed border-white/20 text-white/30'
+                        }`}
+                      >
+                        {mixResult && !mixResult.includes('Oops') ? (
+                          <Star className="w-7 h-7 text-white fill-white drop-shadow-md" />
+                        ) : mixResult?.includes('Oops') ? (
+                          <Sparkles className="w-7 h-7 text-black" />
+                        ) : (
+                          <Sparkles className="w-6 h-6 text-white/20" />
+                        )}
+                      </motion.div>
+                      <span className="text-[11px] font-black uppercase tracking-wider text-amber-300">
+                        Result
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Result Announcement Box */}
+                <div className="mt-3 p-3.5 bg-black/35 rounded-2xl border border-white/10 text-center relative z-10 shadow-inner">
+                  <p className="text-xs sm:text-sm font-black text-white tracking-wide">
+                    {mixResult ? (
+                      <span className="text-amber-300">🎉 {mixResult}</span>
+                    ) : mix1 && !mix2 ? (
+                      <span className="text-purple-300">Now tap a second color on the right! ➡️</span>
+                    ) : (
+                      <span className="text-white/60">Tap any color on the right to start! 🌈</span>
+                    )}
+                  </p>
+                  {mixResult && (
+                    <button
+                      onClick={() => {
+                        playSound('glass');
+                        speakIndianEnglish(`${mix1?.name} plus ${mix2?.name} makes ${mixResult}!`);
+                      }}
+                      className="mt-2 inline-flex items-center gap-1.5 px-3 py-1 bg-white/10 hover:bg-white/20 text-emerald-300 rounded-lg text-xs font-bold transition-all cursor-pointer"
+                    >
+                      <Volume2 className="w-3.5 h-3.5" />
+                      <span>Hear Pronunciation</span>
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* Right Column: 10 Colors in a compact 5x2 grid */}
+              <div className="lg:col-span-7 glass-card p-5 sm:p-6 border-3 border-white/10 rounded-3xl relative overflow-hidden flex flex-col justify-between shadow-2xl">
+                <div className="flex items-center justify-between mb-3 text-xs font-black uppercase tracking-wider text-white/50">
+                  <span className="flex items-center gap-1.5 text-cyan-300">
+                    <Sparkles className="w-3.5 h-3.5" />
+                    Color Palette (10 Vibrant Colors)
+                  </span>
+                  <span className="text-white/40 text-[11px]">Tap to mix</span>
+                </div>
+
+                <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5 sm:gap-3 flex-1 items-stretch">
+                  {COLOR_CHART.map((color, idx) => {
+                    const isSelected = mix1?.name === color.name || mix2?.name === color.name;
+                    return (
+                      <motion.button
+                        key={color.name}
+                        whileHover={{ scale: 1.05, y: -2 }}
+                        whileTap={{ scale: 0.94 }}
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: idx * 0.03 }}
+                        onClick={() => handleColorSelect(color)}
+                        className={`h-20 sm:h-22 rounded-2xl flex flex-col items-center justify-center cursor-pointer border-3 transition-all duration-300 shadow-lg relative overflow-hidden group select-none ${
+                          isSelected ? 'border-white scale-105 ring-4 ring-white/50 shadow-2xl' : color.border
+                        } ${color.glow}`}
+                      >
+                        <div className={`absolute inset-0 opacity-85 ${color.class}`} />
+                        <div className="absolute inset-0 bg-white/0 group-hover:bg-white/15 transition-colors" />
+                        
+                        <div className="relative z-10 text-center px-1">
+                          <span className={`text-base sm:text-lg font-black tracking-tight uppercase ${
+                            color.name === 'White' || color.name === 'Yellow' ? 'text-black' : 'text-white'
+                          } drop-shadow-md`}>
+                            {color.name}
+                          </span>
+                        </div>
+                        {isSelected && (
+                          <div className="absolute top-1.5 right-1.5 w-2.5 h-2.5 rounded-full bg-white shadow-md animate-ping" />
+                        )}
+                      </motion.button>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
           </motion.div>
         ) : activeMode === 'emotions' ? (
@@ -1582,22 +1800,57 @@ export const LearningCenter: React.FC = () => {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.3 }}
-            className="flex flex-col items-center w-full"
+            className="flex flex-col items-center w-full max-w-5xl mx-auto"
           >
-            <header className="text-center mb-12">
+            {/* Header without the old prompt text */}
+            <header className="text-center mb-6">
               <motion.div
-                initial={{ y: -10, opacity: 0 }}
+                initial={{ y: -8, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                className="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-white/5 border border-white/10 text-white/40 mb-4"
+                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-400/10 border border-cyan-400/25 text-cyan-300 mb-2"
               >
-                <BookOpen className="w-5 h-5 text-cheerful-blue" />
-                <span className="text-sm font-black uppercase tracking-widest text-white/60">My Vocabulary Academy</span>
+                <BookOpen className="w-4 h-4 text-cyan-300" />
+                <span className="text-xs font-black uppercase tracking-widest">100 Essential First Words</span>
               </motion.div>
-              <h1 className="text-5xl font-black text-white mb-2 tracking-tighter uppercase">First Words Palette</h1>
-              <p className="text-white/40 font-bold max-w-lg mx-auto">
-                Discover 25 essential words! Select an item below to see spelling letter-bubbles pop, or add words to the keyboard typewriter!
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight uppercase">
+                My First Words Palace
+              </h1>
+              <p className="text-white/60 text-xs sm:text-sm font-medium mt-1 max-w-xl mx-auto">
+                100 Indian toddler first words: Family, Food, Nature, Animals, Daily Items & Actions with Hindi script
               </p>
             </header>
+
+            {/* Category Filter Pills */}
+            <div className="flex flex-wrap items-center justify-center gap-2 mb-8 select-none max-w-4xl">
+              {[
+                { id: 'all', label: `All 100 Words (${FIRST_WORDS.length})`, icon: '🇮🇳' },
+                { id: 'family', label: 'Family (9)', icon: '👨‍👩‍👧' },
+                { id: 'food', label: 'Food & Drink (17)', icon: '🍛' },
+                { id: 'nature', label: 'Nature & Sky (8)', icon: '🌿' },
+                { id: 'animals', label: 'Animals (18)', icon: '🐘' },
+                { id: 'home', label: 'Daily Items (36)', icon: '🏠' },
+                { id: 'actions', label: 'Actions (12)', icon: '🏃' },
+              ].map((cat) => {
+                const isActive = activeWordCategory === cat.id;
+                return (
+                  <button
+                    key={cat.id}
+                    onClick={() => {
+                      playSound('click');
+                      setActiveWordCategory(cat.id);
+                    }}
+                    className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl font-black text-xs transition-all cursor-pointer select-none ${
+                      isActive
+                        ? 'bg-cyan-400 text-slate-950 shadow-lg shadow-cyan-400/25 scale-105'
+                        : 'bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white'
+                    }`}
+                  >
+                    <span>{cat.icon}</span>
+                    <span>{cat.label}</span>
+                  </button>
+                );
+              })}
+            </div>
 
             {/* Spelling helper panel */}
             {selectedWord && (() => {
@@ -1607,46 +1860,55 @@ export const LearningCenter: React.FC = () => {
                 <motion.div 
                   initial={{ opacity: 0, y: -20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="w-full max-w-4xl p-8 rounded-[2.5rem] border-4 border-white/10 glass-card relative overflow-hidden mb-12 text-center"
+                  className="w-full max-w-4xl p-6 sm:p-8 rounded-[2.5rem] border-4 border-cyan-400/30 glass-card relative overflow-hidden mb-10 text-center shadow-2xl"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-tr from-cheerful-blue/5 via-transparent to-transparent pointer-events-none" />
+                  <div className="absolute inset-0 bg-gradient-to-tr from-cyan-500/10 via-transparent to-transparent pointer-events-none" />
                   
                   {/* Giant floating emoji of targeted word */}
                   <motion.div 
-                    animate={{ y: [0, -10, 0], scale: [1, 1.08, 1] }}
+                    animate={{ y: [0, -8, 0], scale: [1, 1.06, 1] }}
                     transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-                    className="text-8xl md:text-9xl mb-6 select-none filter drop-shadow-3xl"
+                    className="text-7xl sm:text-8xl md:text-9xl mb-4 select-none filter drop-shadow-2xl"
                   >
                     {currentWordData.emoji}
                   </motion.div>
 
+                  <h2 className="text-3xl sm:text-4xl font-black text-white tracking-wide uppercase mb-1">
+                    {currentWordData.word}
+                  </h2>
+                  <div className="text-lg font-bold text-amber-300 mb-2">
+                    {currentWordData.hindi} • {currentWordData.meaning}
+                  </div>
+
                   {/* Bubbled Spelling Board */}
-                  <h3 className="text-white/30 text-xs font-black uppercase tracking-[0.25em] mb-4">Tap each letter of the spelling bubbles!</h3>
+                  <h3 className="text-white/40 text-xs font-black uppercase tracking-[0.25em] mb-4">
+                    Tap each letter to hear its sound!
+                  </h3>
                   
-                  <div className="flex flex-wrap justify-center gap-4 mb-8 select-none">
+                  <div className="flex flex-wrap justify-center gap-3 sm:gap-4 mb-6 select-none">
                     {currentWordData.word.split('').map((letter, letterIdx) => (
                       <motion.button
                         key={`${letter}-${letterIdx}`}
-                        whileHover={{ scale: 1.2, rotate: [0, 10, -10, 0] }}
+                        whileHover={{ scale: 1.15, rotate: [0, 8, -8, 0] }}
                         whileTap={{ scale: 0.9 }}
                         onClick={() => {
                           playSound('pop');
                           speakIndianEnglish(letter);
                         }}
-                        className="w-16 h-16 md:w-20 md:h-20 rounded-full border-3 border-white/20 bg-white/5 hover:border-white text-white font-black text-3xl md:text-4xl flex items-center justify-center cursor-pointer shadow-xl transition-all"
+                        className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl border-2 border-white/20 bg-white/5 hover:border-white text-white font-black text-2xl sm:text-3xl flex items-center justify-center cursor-pointer shadow-lg transition-all"
                       >
                         {letter}
                       </motion.button>
                     ))}
                   </div>
 
-                  <div className="flex flex-col sm:flex-row justify-center gap-4 relative z-10">
+                  <div className="flex flex-wrap justify-center gap-3 relative z-10">
                     <button
                       onClick={() => {
                         playSound('glass');
-                        speakIndianEnglish(currentWordData.word);
+                        speakIndianEnglish(`${currentWordData.word}. In Hindi: ${currentWordData.hindi}. ${currentWordData.meaning}`);
                       }}
-                      className="px-6 py-3 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500/30 font-black rounded-2xl uppercase text-xs tracking-wider flex items-center justify-center gap-2 hover:scale-105 active:scale-95 transition-all cursor-pointer shadow-lg"
+                      className="px-5 py-2.5 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500/30 font-black rounded-xl uppercase text-xs tracking-wider flex items-center justify-center gap-2 hover:scale-105 active:scale-95 transition-all cursor-pointer shadow-lg"
                     >
                       <Volume2 className="w-4 h-4 text-emerald-400" />
                       Listen to Word
@@ -1656,7 +1918,7 @@ export const LearningCenter: React.FC = () => {
                         handleWordPreset(currentWordData.word);
                         playSound('glass');
                       }}
-                      className="px-6 py-3 bg-cheerful-blue text-slate-950 font-black rounded-2xl uppercase text-xs tracking-wider flex items-center justify-center gap-2 hover:scale-105 active:scale-95 transition-all cursor-pointer shadow-lg shadow-cheerful-blue/15"
+                      className="px-5 py-2.5 bg-cyan-400 text-slate-950 font-black rounded-xl uppercase text-xs tracking-wider flex items-center justify-center gap-2 hover:scale-105 active:scale-95 transition-all cursor-pointer shadow-lg shadow-cyan-400/20"
                     >
                       📝 Add to Typewriter Sentence
                     </button>
@@ -1665,7 +1927,7 @@ export const LearningCenter: React.FC = () => {
                         setSelectedWord(null);
                         playSound('click');
                       }}
-                      className="px-6 py-3 bg-white/5 border border-white/10 hover:bg-white/10 text-white/60 hover:text-white font-black rounded-2xl uppercase text-xs tracking-wider hover:scale-105 active:scale-95 transition-all cursor-pointer"
+                      className="px-5 py-2.5 bg-white/5 border border-white/10 hover:bg-white/10 text-white/60 hover:text-white font-black rounded-xl uppercase text-xs tracking-wider hover:scale-105 active:scale-95 transition-all cursor-pointer"
                     >
                       Close Card
                     </button>
@@ -1674,32 +1936,68 @@ export const LearningCenter: React.FC = () => {
               );
             })()}
 
-            {/* Grid of 25 Word presets */}
-            <div className="w-full max-w-4xl grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 mb-16 select-none">
-              {FIRST_WORDS.map((item) => {
+            {/* Grid of Big Cards: Exactly 3 in a row on desktop/tablet */}
+            <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-16 select-none">
+              {(activeWordCategory === 'all' 
+                ? FIRST_WORDS 
+                : FIRST_WORDS.filter(w => w.category === activeWordCategory)
+              ).map((item) => {
                 const isSelected = selectedWord === item.word;
                 return (
                   <motion.div
                     key={item.word}
-                    whileHover={{ scale: 1.05, y: -4 }}
+                    whileHover={{ scale: 1.04, y: -4 }}
                     whileTap={{ scale: 0.96 }}
                     onClick={() => {
                       setSelectedWord(item.word);
                       playSound('pop');
                       speakIndianEnglish(item.word);
                     }}
-                    className={`glass-card p-6 border-2 flex flex-col items-center justify-center gap-4 cursor-pointer relative overflow-hidden transition-all ${
+                    className={`glass-card p-6 sm:p-7 border-3 rounded-3xl flex flex-col items-center justify-between gap-4 cursor-pointer relative overflow-hidden transition-all duration-300 min-h-[220px] shadow-xl ${
                       isSelected 
-                        ? 'border-cheerful-blue bg-cheerful-blue/5 scale-105 shadow-2xl shadow-cheerful-blue/10 animate-pulse' 
-                        : 'border-white/5 hover:border-white/20 hover:bg-white/5'
+                        ? 'border-cyan-400 bg-cyan-400/10 scale-102 shadow-2xl ring-2 ring-cyan-300' 
+                        : 'border-white/10 hover:border-white/30 hover:bg-white/5'
                     }`}
                   >
-                    <div className="text-5xl md:text-6xl drop-shadow-md select-none">{item.emoji}</div>
-                    <div className="text-center">
-                      <span className="text-white text-base font-black tracking-wider uppercase">{item.word}</span>
+                    <div className="w-full flex items-center justify-between">
+                      <span className="text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-full bg-white/10 border border-white/10 text-white/60">
+                        {item.category}
+                      </span>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          playSound('glass');
+                          speakIndianEnglish(item.word);
+                        }}
+                        className="p-1.5 rounded-full bg-white/10 hover:bg-white/20 text-emerald-300 transition-all cursor-pointer"
+                        title="Speak Word"
+                      >
+                        <Volume2 className="w-4 h-4" />
+                      </button>
                     </div>
+
+                    <div className="text-7xl sm:text-8xl py-2 drop-shadow-xl select-none transition-transform duration-300 hover:scale-110">
+                      {item.emoji}
+                    </div>
+
+                    <div className="text-center w-full">
+                      <h3 className="text-2xl sm:text-3xl font-black text-white tracking-wider uppercase mb-1">
+                        {item.word}
+                      </h3>
+                      <div className="text-sm font-bold text-amber-300 tracking-wide mb-1">
+                        {item.hindi}
+                      </div>
+                      <div className="text-xs text-white/60 font-medium">
+                        {item.meaning}
+                      </div>
+                    </div>
+
                     {isSelected && (
-                      <div className="absolute top-2 right-2 w-3 h-3 rounded-full bg-cheerful-blue animate-ping" />
+                      <div className="w-full pt-1 text-center">
+                        <span className="text-[10px] font-black px-2.5 py-0.5 rounded-full bg-cyan-400/20 text-cyan-300 border border-cyan-400/30">
+                          Spelling Card Open Above ⬆️
+                        </span>
+                      </div>
                     )}
                   </motion.div>
                 );
@@ -1830,12 +2128,7 @@ export const LearningCenter: React.FC = () => {
         )}
       </AnimatePresence>
 
-      <div className="mt-16 text-center">
-        <div className="inline-flex items-center gap-4 px-8 py-4 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-md">
-           <Palette className="w-6 h-6 text-white/40" />
-           <p className="text-white/40 text-sm font-bold italic">Interactive classroom mode enabled</p>
-        </div>
-      </div>
+
 
     </div>
   );

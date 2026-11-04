@@ -416,8 +416,8 @@ export const ToddlerAnimalSoundsSection: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<AnimalCategory>('all');
   const [currentPage, setCurrentPage] = useState<number>(1);
 
-  // 4 items per page = 2 rows of 2 big cards, matching the height of the right compact spotlight card!
-  const ITEMS_PER_PAGE = 4;
+  // 9 items per page = 3 rows of 3 big cards in a 3-column grid
+  const ITEMS_PER_PAGE = 9;
 
   // Filter animals by category
   const filteredAnimals = useMemo(() => {
@@ -482,7 +482,7 @@ export const ToddlerAnimalSoundsSection: React.FC = () => {
     setSelectedAnimal(animal);
     playAnimalSynth(animal);
     setTimeout(() => {
-      speakText(`${animal.name}, in Hindi called ${animal.hindiName}. It says ${animal.soundPhonetic}! Baby is called ${animal.babyName}.`);
+      speakText(`${animal.name} says ${animal.soundPhonetic}!`);
     }, 350);
   };
 
@@ -613,213 +613,124 @@ export const ToddlerAnimalSoundsSection: React.FC = () => {
             })}
           </div>
 
-          {/* 2-Column Responsive Layout: Left 2-in-a-row Cards + Right Compact Spotlight (No Image, No Scroll Needed) */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 items-start relative">
-            {/* Left Column (Span 2): 2 Images in a Row, Large Clear Whole-View Photos (No 3D Overlay), with Bottom-Matching Pagination */}
-            <div className="lg:col-span-2 flex flex-col justify-between space-y-4">
-              {/* 2-in-a-Row Big Cards Grid */}
-              <div className="grid grid-cols-2 gap-3.5 sm:gap-5">
-                {paginatedAnimals.map((animal) => {
-                  const isSelected = selectedAnimal.id === animal.id;
-                  return (
-                    <motion.button
-                      key={animal.id}
-                      type="button"
-                      whileHover={{ scale: 1.02, y: -2 }}
-                      whileTap={{ scale: 0.98 }}
-                      onClick={() => handleSelectAnimal(animal)}
-                      className={`relative p-3.5 sm:p-4 rounded-3xl border text-center transition-all cursor-pointer flex flex-col items-center justify-between group overflow-hidden ${
-                        isSelected
-                          ? `bg-white/15 ${animal.borderColor} ring-2 ring-amber-400 shadow-xl shadow-amber-500/15`
-                          : `${animal.bgColor} border-white/10 hover:border-white/20 hover:bg-white/10`
-                      }`}
-                    >
-                      {/* Real Indian Animal Photo - Clear Full Body View, NO 3D Overlay on top */}
-                      <div className="w-full aspect-[4/3] rounded-2xl overflow-hidden mb-3 border border-white/20 bg-slate-900 flex-shrink-0 relative shadow-md">
-                        <img
-                          src={animal.imageUrl}
-                          alt={animal.name}
-                          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                          loading="eager"
-                          onError={(e) => {
-                            (e.target as HTMLElement).style.display = 'none';
-                          }}
-                        />
-                      </div>
-
-                      {/* Animal Details Below Photo */}
-                      <div className="w-full text-center space-y-1">
-                        <div className="font-black text-sm sm:text-base text-white tracking-wide">
-                          {animal.name}
-                        </div>
-                        <div className="text-[11px] font-bold text-emerald-300/90">
-                          {animal.hindiName}
-                        </div>
-                        <div className="text-xs font-black text-amber-300 tracking-wider">
-                          "{animal.soundPhonetic}"
-                        </div>
-                        <div className="text-[11px] font-bold text-white/50 uppercase tracking-wider">
-                          Baby: {animal.babyName}
-                        </div>
-                      </div>
-
-                      {isSelected && (
-                        <span className="absolute top-3 right-3 w-3 h-3 rounded-full bg-amber-400 animate-ping" />
-                      )}
-                    </motion.button>
-                  );
-                })}
-              </div>
-
-              {/* Pagination Controls - Aligns the bottom of left and right columns */}
-              {totalPages > 1 && (
-                <div className="flex flex-wrap items-center justify-between gap-3 pt-3 p-3.5 rounded-2xl bg-white/[0.03] border border-white/10">
-                  <div className="text-xs text-white/60 font-medium">
-                    Showing <strong className="text-white font-bold">{((currentPage - 1) * ITEMS_PER_PAGE) + 1}–{Math.min(currentPage * ITEMS_PER_PAGE, filteredAnimals.length)}</strong> of <strong className="text-amber-300 font-bold">{filteredAnimals.length}</strong> Indian animals
-                  </div>
-
-                  <div className="flex items-center gap-1.5">
-                    <button
-                      type="button"
-                      disabled={currentPage === 1}
-                      onClick={() => {
-                        playSound('click');
-                        setCurrentPage((p) => Math.max(1, p - 1));
-                      }}
-                      className="p-2 rounded-xl bg-white/5 hover:bg-white/15 border border-white/10 disabled:opacity-30 disabled:cursor-not-allowed text-white cursor-pointer transition-all"
-                      title="Previous Page"
-                    >
-                      <ChevronLeft className="w-4 h-4" />
-                    </button>
-
-                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
-                      <button
-                        key={pageNum}
-                        type="button"
-                        onClick={() => {
-                          playSound('click');
-                          setCurrentPage(pageNum);
+          {/* Full Width 3-in-a-Row Animal Cards Grid (No Right Section) */}
+          <div className="space-y-6">
+            {/* 3-in-a-Row Big Cards Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
+              {paginatedAnimals.map((animal) => {
+                const isSelected = selectedAnimal.id === animal.id;
+                return (
+                  <motion.button
+                    key={animal.id}
+                    type="button"
+                    whileHover={{ scale: 1.02, y: -3 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => handleSelectAnimal(animal)}
+                    className={`relative p-4 rounded-3xl border text-center transition-all cursor-pointer flex flex-col items-center justify-between group overflow-hidden ${
+                      isSelected
+                        ? `bg-white/15 ${animal.borderColor} ring-2 ring-amber-400 shadow-xl shadow-amber-500/15`
+                        : `${animal.bgColor} border-white/10 hover:border-white/20 hover:bg-white/10`
+                    }`}
+                  >
+                    {/* Real Indian Animal Photo - Clear Full Body View */}
+                    <div className="w-full aspect-[4/3] rounded-2xl overflow-hidden mb-3 border border-white/20 bg-slate-900 flex-shrink-0 relative shadow-md">
+                      <img
+                        src={animal.imageUrl}
+                        alt={animal.name}
+                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        loading="eager"
+                        onError={(e) => {
+                          (e.target as HTMLElement).style.display = 'none';
                         }}
-                        className={`w-8 h-8 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                          currentPage === pageNum
-                            ? 'bg-amber-400 text-slate-950 font-black shadow-md'
-                            : 'bg-white/5 text-white/70 hover:bg-white/15 hover:text-white border border-white/10'
-                        }`}
-                      >
-                        {pageNum}
-                      </button>
-                    ))}
+                      />
+                    </div>
 
-                    <button
-                      type="button"
-                      disabled={currentPage === totalPages}
-                      onClick={() => {
-                        playSound('click');
-                        setCurrentPage((p) => Math.min(totalPages, p + 1));
-                      }}
-                      className="p-2 rounded-xl bg-white/5 hover:bg-white/15 border border-white/10 disabled:opacity-30 disabled:cursor-not-allowed text-white cursor-pointer transition-all"
-                      title="Next Page"
-                    >
-                      <ChevronRight className="w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
-              )}
+                    {/* Animal Name & Sound Action (No Hindi name, No baby name) */}
+                    <div className="w-full text-center space-y-2">
+                      <div className="font-black text-base sm:text-lg text-white tracking-wide">
+                        {animal.name}
+                      </div>
+
+                      <div 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          playAnimalSynth(animal);
+                          speakText(`${animal.name} says ${animal.soundPhonetic}!`);
+                        }}
+                        className="px-3 py-2 rounded-xl bg-amber-400/20 hover:bg-amber-400/30 text-amber-300 border border-amber-400/30 font-black text-xs flex items-center justify-center gap-1.5 transition-all shadow-sm"
+                      >
+                        <Volume2 className="w-3.5 h-3.5" />
+                        <span>"{animal.soundPhonetic}"</span>
+                      </div>
+                    </div>
+
+                    {isSelected && (
+                      <span className="absolute top-3 right-3 w-3 h-3 rounded-full bg-amber-400 animate-ping" />
+                    )}
+                  </motion.button>
+                );
+              })}
             </div>
 
-            {/* Right Column (Span 1): Active Spotlight Card WITHOUT IMAGE (Fits 100% On Screen Without Scrolling) */}
-            <div className="lg:col-span-1 lg:sticky lg:top-6 self-start transition-all duration-300">
-              <motion.div
-                key={selectedAnimal.id}
-                initial={{ opacity: 0, scale: 0.97 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className={`p-5 sm:p-6 rounded-3xl border-2 ${selectedAnimal.borderColor} bg-gradient-to-br from-[#1d1b28] via-[#14121d] to-[#0a0910] shadow-2xl text-left space-y-4`}
-              >
-                {/* Header: Category Badge & Hear Sound Voice Button */}
-                <div className="flex items-center justify-between gap-2">
-                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 text-white text-xs font-bold border border-white/15">
-                    <span>{selectedAnimal.emoji}</span>
-                    <span>{selectedAnimal.categoryLabel}</span>
-                  </div>
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+              <div className="flex flex-wrap items-center justify-between gap-3 pt-2 p-4 rounded-2xl bg-white/[0.03] border border-white/10">
+                <div className="text-xs text-white/60 font-medium">
+                  Showing <strong className="text-white font-bold">{((currentPage - 1) * ITEMS_PER_PAGE) + 1}–{Math.min(currentPage * ITEMS_PER_PAGE, filteredAnimals.length)}</strong> of <strong className="text-amber-300 font-bold">{filteredAnimals.length}</strong> Indian animals
+                </div>
+
+                <div className="flex items-center gap-1.5">
                   <button
                     type="button"
+                    disabled={currentPage === 1}
                     onClick={() => {
-                      playAnimalSynth(selectedAnimal);
-                      speakText(`${selectedAnimal.soundPhonetic}! The ${selectedAnimal.name}, in Hindi called ${selectedAnimal.hindiName}, makes the sound ${selectedAnimal.soundName}`);
+                      playSound('click');
+                      setCurrentPage((p) => Math.max(1, p - 1));
                     }}
-                    className="p-2 px-3 rounded-2xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-400/40 transition-all cursor-pointer flex items-center gap-1.5 active:scale-95 shadow-md"
-                    title="Play Animal Sound"
+                    className="p-2 rounded-xl bg-white/5 hover:bg-white/15 border border-white/10 disabled:opacity-30 disabled:cursor-not-allowed text-white cursor-pointer transition-all"
+                    title="Previous Page"
                   >
-                    <Volume2 className="w-4 h-4" />
-                    <span className="text-xs font-bold">Hear Voice</span>
+                    <ChevronLeft className="w-4 h-4" />
+                  </button>
+
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+                    <button
+                      key={pageNum}
+                      type="button"
+                      onClick={() => {
+                        playSound('click');
+                        setCurrentPage(pageNum);
+                      }}
+                      className={`w-8 h-8 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                        currentPage === pageNum
+                          ? 'bg-amber-400 text-slate-950 font-black shadow-md'
+                          : 'bg-white/5 text-white/70 hover:bg-white/15 hover:text-white border border-white/10'
+                      }`}
+                    >
+                      {pageNum}
+                    </button>
+                  ))}
+
+                  <button
+                    type="button"
+                    disabled={currentPage === totalPages}
+                    onClick={() => {
+                      playSound('click');
+                      setCurrentPage((p) => Math.min(totalPages, p + 1));
+                    }}
+                    className="p-2 rounded-xl bg-white/5 hover:bg-white/15 border border-white/10 disabled:opacity-30 disabled:cursor-not-allowed text-white cursor-pointer transition-all"
+                    title="Next Page"
+                  >
+                    <ChevronRight className="w-4 h-4" />
                   </button>
                 </div>
-
-                {/* Animal Title & Hindi Name */}
-                <div>
-                  <div className="flex items-baseline justify-between">
-                    <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-amber-400">
-                      {selectedAnimal.soundName}
-                    </span>
-                    <span className="text-xs font-bold text-emerald-300 bg-emerald-500/10 px-2 py-0.5 rounded-md border border-emerald-400/20">
-                      {selectedAnimal.hindiName}
-                    </span>
-                  </div>
-                  <h3 className="text-2xl sm:text-3xl font-black text-white tracking-tight mt-1">
-                    {selectedAnimal.name}
-                  </h3>
-                </div>
-
-                {/* Big Sound Callout Box */}
-                <div 
-                  onClick={() => {
-                    playAnimalSynth(selectedAnimal);
-                    speakText(selectedAnimal.soundPhonetic);
-                  }}
-                  className="p-4 rounded-2xl bg-gradient-to-r from-amber-500/15 via-amber-500/10 to-amber-500/5 border border-amber-400/30 text-center cursor-pointer hover:border-amber-400/60 transition-all group"
-                  title="Click to replay sound"
-                >
-                  <div className="text-[10px] uppercase font-bold text-amber-300/80 tracking-wider">
-                    Animal Sound Call
-                  </div>
-                  <div className="text-2xl sm:text-3xl font-black text-amber-300 tracking-wider mt-0.5 group-hover:scale-105 transition-transform">
-                    "{selectedAnimal.soundPhonetic}"
-                  </div>
-                </div>
-
-                {/* Baby Animal & Habitat Quick Cards */}
-                <div className="grid grid-cols-2 gap-2 text-center text-xs">
-                  <div className="p-3 rounded-xl bg-white/5 border border-white/10">
-                    <div className="text-[10px] text-white/40 uppercase font-bold">Baby Name</div>
-                    <div className="font-bold text-white mt-0.5 text-xs truncate" title={selectedAnimal.babyName}>
-                      {selectedAnimal.babyName}
-                    </div>
-                  </div>
-                  <div className="p-3 rounded-xl bg-white/5 border border-white/10">
-                    <div className="text-[10px] text-white/40 uppercase font-bold">Native Habitat</div>
-                    <div className="font-bold text-white mt-0.5 text-xs truncate" title={selectedAnimal.habitat}>
-                      {selectedAnimal.habitat}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Fun Nature Fact */}
-                <div className="p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-400/30 space-y-1">
-                  <div className="text-[11px] font-black text-emerald-300 uppercase tracking-wider flex items-center gap-1.5">
-                    <Sparkles className="w-3.5 h-3.5" />
-                    <span>Fun Toddler Fact</span>
-                  </div>
-                  <p className="text-xs text-emerald-100 font-medium leading-relaxed">
-                    {selectedAnimal.funFact}
-                  </p>
-                </div>
-              </motion.div>
-            </div>
+              </div>
+            )}
           </div>
         </div>
       )}
 
-      {/* Mode 2: "Who Said That?" Mystery Quiz */}
+      {/* Mode 2: "Who Said That?" Mystery Quiz (Real Quiz: NO Names, NO Clues, ONLY Animal Photos!) */}
       {activeTab === 'quiz' && (
         <div className="max-w-3xl mx-auto p-6 sm:p-10 rounded-3xl border-2 border-emerald-400/40 bg-gradient-to-br from-[#122421] via-[#0d1a18] to-[#07100e] shadow-2xl text-center space-y-6">
           <div className="flex items-center justify-between">
@@ -841,13 +752,13 @@ export const ToddlerAnimalSoundsSection: React.FC = () => {
 
           <div className="space-y-2">
             <div className="text-sm font-black text-emerald-400 uppercase tracking-widest">
-              Who Said That? Mystery Quiz
+              Who Said That? Sound Quiz
             </div>
             <h3 className="text-2xl sm:text-4xl font-black text-white">
               Who says <span className="text-amber-300">"{quizAnimal.soundPhonetic}"</span>?
             </h3>
             <p className="text-xs sm:text-sm text-slate-300">
-              Listen carefully to the sound! Tap the Indian animal that made it.
+              Listen carefully to the sound! Tap the animal picture that makes this sound.
             </p>
           </div>
 
@@ -876,30 +787,25 @@ export const ToddlerAnimalSoundsSection: React.FC = () => {
             )}
           </AnimatePresence>
 
-          {/* 4 Choice Tiles (2 in a Row, Large & Clean Full Views) */}
-          <div className="grid grid-cols-2 gap-3.5 sm:gap-5 pt-4">
+          {/* 4 Choice Tiles: ONLY THE PHOTO OF THE ANIMAL, NO TEXT LABELS OR CLUES! */}
+          <div className="grid grid-cols-2 gap-4 sm:gap-6 pt-4">
             {(quizChoices.length > 0 ? quizChoices : ANIMALS_DATA.slice(0, 4)).map((animal) => (
               <button
                 key={animal.id}
                 type="button"
                 onClick={() => handleQuizAnswer(animal)}
-                className="p-3.5 sm:p-4 rounded-3xl bg-white/5 hover:bg-white/15 border border-white/10 hover:border-emerald-400/60 transition-all cursor-pointer flex flex-col items-center justify-center gap-3 active:scale-95 shadow-md group"
+                className="p-3 sm:p-4 rounded-3xl bg-white/5 hover:bg-white/15 border-2 border-white/10 hover:border-emerald-400/80 transition-all cursor-pointer flex flex-col items-center justify-center active:scale-95 shadow-xl group"
               >
-                <div className="w-full aspect-[4/3] rounded-2xl overflow-hidden border border-white/15 bg-slate-800">
+                <div className="w-full aspect-[4/3] rounded-2xl overflow-hidden border border-white/20 bg-slate-900 shadow-inner">
                   <img
                     src={animal.imageUrl}
-                    alt={animal.name}
+                    alt="Animal option"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                     loading="eager"
                     onError={(e) => {
                       (e.target as HTMLElement).style.display = 'none';
                     }}
                   />
-                </div>
-                <div className="text-center">
-                  <div className="text-sm sm:text-base font-black text-white">{animal.name}</div>
-                  <div className="text-xs text-emerald-300 font-bold">{animal.hindiName}</div>
-                  <div className="text-xs text-amber-300 font-bold mt-0.5">"{animal.soundPhonetic}"</div>
                 </div>
               </button>
             ))}

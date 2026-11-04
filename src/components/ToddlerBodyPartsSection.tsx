@@ -42,7 +42,7 @@ export const BODY_PARTS_DATA: BodyPartItem[] = [
     color: 'text-sky-300',
     borderColor: 'border-sky-400/40',
     bgColor: 'bg-sky-500/10',
-    whatItDoes: 'We see colors, books, mommy, and daddy with our two eyes!',
+    whatItDoes: 'We see colors, books, mommy, and daddy with our two sparkling eyes!',
     funAction: 'Blink your eyes 3 times like a happy little owl! 🦉',
     sillyTip: 'Can you close your eyes and guess what sounds you hear?',
     count: '2 Eyes'
@@ -56,7 +56,7 @@ export const BODY_PARTS_DATA: BodyPartItem[] = [
     color: 'text-amber-300',
     borderColor: 'border-amber-400/40',
     bgColor: 'bg-amber-500/10',
-    whatItDoes: 'We listen to sweet songs, bird chirps, and laughing sounds with our ears.',
+    whatItDoes: 'We listen to sweet rhymes, bird chirps, and laughing sounds with our ears.',
     funAction: 'Gently wiggle your ears with your fingertips! 🐰',
     sillyTip: 'Cup your ears like elephant ears to hear super sounds!',
     count: '2 Ears'
@@ -71,9 +71,9 @@ export const BODY_PARTS_DATA: BodyPartItem[] = [
     borderColor: 'border-rose-400/40',
     bgColor: 'bg-rose-500/10',
     whatItDoes: 'We smell fragrant flowers, yummy food, and take deep fresh breaths.',
-    funAction: 'Wiggle your nose like a fluffy little bunny rabbit! 🐇',
-    sillyTip: 'Take a big sniff like you are smelling fresh hot dosa or cookies!',
-    count: '1 Nose'
+    funAction: 'Wiggle your cute button nose like a fluffy little bunny rabbit! 🐇',
+    sillyTip: 'Take a big sniff like you are smelling fresh hot dosa or mangoes!',
+    count: '1 Cute Nose'
   },
   {
     id: 'mouth',
@@ -84,10 +84,10 @@ export const BODY_PARTS_DATA: BodyPartItem[] = [
     color: 'text-pink-300',
     borderColor: 'border-pink-400/40',
     bgColor: 'bg-pink-500/10',
-    whatItDoes: 'We eat delicious fruits, talk with our family, and share giant smiles!',
+    whatItDoes: 'We eat delicious fruits, talk with our family, and share giant sweet smiles!',
     funAction: 'Give your biggest, happiest cheesy smile right now! 😁',
-    sillyTip: 'Can you blow a gentle kiss to someone you love? 💋',
-    count: '1 Mouth'
+    sillyTip: 'Can you blow a gentle flying kiss to someone you love? 💋',
+    count: '1 Smiling Mouth'
   },
   {
     id: 'teeth',
@@ -98,24 +98,38 @@ export const BODY_PARTS_DATA: BodyPartItem[] = [
     color: 'text-teal-300',
     borderColor: 'border-teal-400/40',
     bgColor: 'bg-teal-500/10',
-    whatItDoes: 'Our clean, strong white teeth chew crunchy apples and carrots.',
-    funAction: 'Chomp chomp like a friendly little squirrel eating nuts! 🐿️',
-    sillyTip: 'Brush round and round morning and night to keep teeth shining!',
+    whatItDoes: 'Our clean, strong white baby teeth chew crunchy apples and carrots.',
+    funAction: 'Chomp chomp gently like a friendly little squirrel eating nuts! 🐿️',
+    sillyTip: 'Brush round and round morning and night to keep teeth sparkling white!',
     count: 'Sparkling Teeth'
   },
   {
     id: 'hands',
-    name: 'Hands & Fingers',
+    name: 'Hands',
     emoji: '🖐️',
     imageUrl: '/assets/body-parts/hands.png',
     pronunciation: 'Hand-z',
     color: 'text-emerald-300',
     borderColor: 'border-emerald-400/40',
     bgColor: 'bg-emerald-500/10',
-    whatItDoes: 'We draw, build blocks, hold mommy’s hand, and wave goodbye.',
+    whatItDoes: 'We draw, build blocks, hold mommy and daddy’s hand, and wave goodbye.',
     funAction: 'Clap your hands together 5 times! Clap, clap, clap! 👏',
-    sillyTip: 'Wiggle all 10 fingers like gentle raindrops falling from clouds!',
-    count: '2 Hands & 10 Fingers'
+    sillyTip: 'Open wide, give high-fives and make gentle butterfly wings!',
+    count: '2 Warm Hands'
+  },
+  {
+    id: 'fingers',
+    name: 'Fingers',
+    emoji: '🤏',
+    imageUrl: '/assets/body-parts/fingers.jpg',
+    pronunciation: 'Fing-ger-z',
+    color: 'text-green-300',
+    borderColor: 'border-green-400/40',
+    bgColor: 'bg-green-500/10',
+    whatItDoes: 'Our gentle fingers pinch small blueberries, turn book pages, and tickle!',
+    funAction: 'Wiggle all 10 fingers like gentle raindrops falling from the clouds! 🌧️',
+    sillyTip: 'Count your 5 fingers on each hand: 1, 2, 3, 4, 5!',
+    count: '10 Tiny Fingers'
   },
   {
     id: 'tummy',
@@ -126,9 +140,9 @@ export const BODY_PARTS_DATA: BodyPartItem[] = [
     color: 'text-yellow-300',
     borderColor: 'border-yellow-400/40',
     bgColor: 'bg-yellow-500/10',
-    whatItDoes: 'Our tummy digests healthy food and grows our body big and strong.',
+    whatItDoes: 'Our tummy digests yummy healthy food and helps us grow big and strong.',
     funAction: 'Give your tummy a gentle circular rub! Rub, rub, rub! 🍯',
-    sillyTip: 'When we are happy, our belly giggles with laughter!',
+    sillyTip: 'When we are happy, our belly giggles and jiggles with laughter!',
     count: '1 Happy Tummy'
   },
   {
@@ -140,24 +154,38 @@ export const BODY_PARTS_DATA: BodyPartItem[] = [
     color: 'text-indigo-300',
     borderColor: 'border-indigo-400/40',
     bgColor: 'bg-indigo-500/10',
-    whatItDoes: 'Our bendy knees help us jump, crawl, sit criss-cross, and run fast!',
+    whatItDoes: 'Our bendy knees help us crawl, jump, sit criss-cross apple sauce, and run!',
     funAction: 'Bend your knees and bounce up and down softly like a kangaroo! 🦘',
-    sillyTip: 'Touch your knees, then touch your toes!',
+    sillyTip: 'Touch your knees, then reach up high to the sky!',
     count: '2 Bendy Knees'
   },
   {
     id: 'feet',
-    name: 'Feet & Toes',
+    name: 'Feet',
     emoji: '🦶',
     imageUrl: '/assets/body-parts/feet.jpg',
     pronunciation: 'Feet',
     color: 'text-cyan-300',
     borderColor: 'border-cyan-400/40',
     bgColor: 'bg-cyan-500/10',
-    whatItDoes: 'Our feet take us on adventures, balance us tall, and dance to music.',
-    funAction: 'Tiptoe softly like a gentle little kitten on the carpet! 🐾',
-    sillyTip: 'Can you wiggle your big toe all by itself?',
-    count: '2 Feet & 10 Toes'
+    whatItDoes: 'Our soft feet take us on adventures, balance us tall, and dance to music.',
+    funAction: 'Tiptoe softly like a gentle little kitten across the floor! 🐾',
+    sillyTip: 'Stamp your feet rhythmically like a friendly dancing baby bear!',
+    count: '2 Soft Feet'
+  },
+  {
+    id: 'toes',
+    name: 'Toes',
+    emoji: '👣',
+    imageUrl: '/assets/body-parts/toes.jpg',
+    pronunciation: 'Toh-z',
+    color: 'text-sky-300',
+    borderColor: 'border-sky-400/40',
+    bgColor: 'bg-sky-500/10',
+    whatItDoes: 'Our 10 little toes grip the ground, wiggle in the bath, and giggle when tickled!',
+    funAction: 'Can you wiggle your big toe all by itself? Wiggle, wiggle! 🦶',
+    sillyTip: 'Count your 10 little piggies from 1 all the way to 10!',
+    count: '10 Little Toes'
   },
   {
     id: 'hair',
@@ -168,9 +196,9 @@ export const BODY_PARTS_DATA: BodyPartItem[] = [
     color: 'text-purple-300',
     borderColor: 'border-purple-400/40',
     bgColor: 'bg-purple-500/10',
-    whatItDoes: 'Our head protects our clever brain that thinks great ideas and dreams!',
+    whatItDoes: 'Our head protects our clever brain that thinks bright ideas and dreams!',
     funAction: 'Gently nod your head yes, then shake it side to side gently! 😊',
-    sillyTip: 'Comb your fingers through your hair like a gentle breeze!',
+    sillyTip: 'Comb your fingers through your soft hair like a gentle breeze!',
     count: '1 Clever Head'
   },
   {
@@ -182,8 +210,8 @@ export const BODY_PARTS_DATA: BodyPartItem[] = [
     color: 'text-orange-300',
     borderColor: 'border-orange-400/40',
     bgColor: 'bg-orange-500/10',
-    whatItDoes: 'Our shoulders hold up our arms and help us carry cozy backpacks.',
-    funAction: 'Shrug your shoulders up to your ears and let them drop! 🎶',
+    whatItDoes: 'Our shoulders hold up our arms and help us carry fun backpacks.',
+    funAction: 'Shrug your shoulders up high to your ears and let them drop! 🎶',
     sillyTip: 'Roll your shoulders backwards like wheels on a little train!',
     count: '2 Strong Shoulders'
   },
@@ -196,9 +224,9 @@ export const BODY_PARTS_DATA: BodyPartItem[] = [
     color: 'text-rose-400',
     borderColor: 'border-rose-400/40',
     bgColor: 'bg-rose-500/10',
-    whatItDoes: 'Pumps blood everywhere and fills our body with love and kindness.',
+    whatItDoes: 'Pumps blood everywhere and fills our body with love, joy, and kindness.',
     funAction: 'Put your hand over your chest and feel the gentle lub-dub! 💓',
-    sillyTip: 'A kind heart gives warm hugs to family and pets!',
+    sillyTip: 'A kind heart gives warm hugs to family, friends, and pets!',
     count: '1 Loving Heart'
   }
 ];
@@ -211,8 +239,20 @@ export const ToddlerBodyPartsSection: React.FC = () => {
   const [quizTarget, setQuizTarget] = useState<BodyPartItem>(() => {
     return BODY_PARTS_DATA[Math.floor(Math.random() * BODY_PARTS_DATA.length)];
   });
+  const [quizChoices, setQuizChoices] = useState<BodyPartItem[]>(() => {
+    const initialTarget = BODY_PARTS_DATA[0];
+    const others = BODY_PARTS_DATA.filter((p) => p.id !== initialTarget.id);
+    const shuffledOthers = [...others].sort(() => 0.5 - Math.random()).slice(0, 3);
+    return [...shuffledOthers, initialTarget].sort(() => 0.5 - Math.random());
+  });
   const [quizScore, setQuizScore] = useState<number>(0);
   const [quizFeedback, setQuizFeedback] = useState<'correct' | 'wrong' | null>(null);
+
+  const generateChoices = (target: BodyPartItem) => {
+    const others = BODY_PARTS_DATA.filter((p) => p.id !== target.id);
+    const shuffledOthers = [...others].sort(() => 0.5 - Math.random()).slice(0, 3);
+    return [...shuffledOthers, target].sort(() => 0.5 - Math.random());
+  };
 
   // Brush Timer State (2-Minute Healthy Habit Timer)
   const [brushSeconds, setBrushSeconds] = useState<number>(120);
@@ -252,12 +292,13 @@ export const ToddlerBodyPartsSection: React.FC = () => {
         const remaining = BODY_PARTS_DATA.filter((p) => p.id !== part.id);
         const next = remaining[Math.floor(Math.random() * remaining.length)];
         setQuizTarget(next);
+        setQuizChoices(generateChoices(next));
         speakText(`Can you find the ${next.name}?`);
       }, 1600);
     } else {
       playSound('click');
       setQuizFeedback('wrong');
-      speakText(`That is ${part.name}. Try finding ${quizTarget.name}!`);
+      speakText(`Try again! Can you find the ${quizTarget.name}?`);
       setTimeout(() => setQuizFeedback(null), 1400);
     }
   };
@@ -268,6 +309,7 @@ export const ToddlerBodyPartsSection: React.FC = () => {
     setQuizScore(0);
     const firstTarget = BODY_PARTS_DATA[Math.floor(Math.random() * BODY_PARTS_DATA.length)];
     setQuizTarget(firstTarget);
+    setQuizChoices(generateChoices(firstTarget));
     speakText(`Let us play Body Detective! Can you find the ${firstTarget.name}?`);
   };
 
@@ -482,7 +524,7 @@ export const ToddlerBodyPartsSection: React.FC = () => {
               className="inline-flex items-center gap-1.5 text-xs text-sky-300 bg-sky-500/20 px-3 py-1.5 rounded-xl border border-sky-400/30 font-bold cursor-pointer"
             >
               <Volume2 className="w-3.5 h-3.5" />
-              <span>Repeat Clue</span>
+              <span>Hear Again</span>
             </button>
           </div>
 
@@ -493,9 +535,6 @@ export const ToddlerBodyPartsSection: React.FC = () => {
             <h3 className="text-2xl sm:text-4xl font-black text-white">
               Can you find the <span className="text-amber-300 underline decoration-amber-400 underline-offset-4">{quizTarget.name}</span>?
             </h3>
-            <p className="text-xs sm:text-sm text-slate-300">
-              Hint: {quizTarget.whatItDoes}
-            </p>
           </div>
 
           {/* Feedback Splash */}
@@ -523,27 +562,23 @@ export const ToddlerBodyPartsSection: React.FC = () => {
             )}
           </AnimatePresence>
 
-          {/* Choice Tiles */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 pt-4">
-            {BODY_PARTS_DATA.map((part) => (
+          {/* Choice Tiles - Real Quiz without Text Clues (Photo Only) */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 max-w-2xl mx-auto">
+            {(quizChoices.length > 0 ? quizChoices : BODY_PARTS_DATA.slice(0, 4)).map((part) => (
               <button
                 key={part.id}
                 type="button"
                 onClick={() => handleQuizAnswer(part)}
-                className="p-3 rounded-2xl bg-white/5 hover:bg-white/15 border border-white/10 hover:border-amber-400/60 transition-all cursor-pointer flex flex-col items-center justify-center gap-2 active:scale-95 shadow-md group"
+                className="p-2.5 rounded-2xl bg-white/5 hover:bg-white/15 border-2 border-white/15 hover:border-amber-400 transition-all cursor-pointer flex flex-col items-center justify-center active:scale-95 shadow-lg group overflow-hidden"
               >
-                <div className="w-14 h-14 rounded-xl overflow-hidden border border-white/15 bg-slate-800">
+                <div className="w-full aspect-[4/3] rounded-xl overflow-hidden border border-white/20 bg-slate-900 shadow">
                   <img
                     src={part.imageUrl}
-                    alt={part.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                    alt="Body part option"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
                     loading="eager"
-                    onError={(e) => {
-                      (e.target as HTMLElement).style.display = 'none';
-                    }}
                   />
                 </div>
-                <span className="text-xs sm:text-sm font-bold text-white">{part.name}</span>
               </button>
             ))}
           </div>
