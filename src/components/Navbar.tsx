@@ -15,6 +15,7 @@ import {
   MessageSquareHeart,
   Crown,
   Home,
+  BookOpen,
   Sparkles,
   Camera,
   Utensils,
@@ -94,13 +95,6 @@ export const Navbar: React.FC = () => {
   const menuItems: MenuItem[] = [
     // Row 1 (Items 1-7)
     {
-      id: 'home',
-      tab: 'home',
-      label: t('home') || 'Home',
-      icon: Home,
-      iconColor: 'text-indigo-400'
-    },
-    {
       id: 'ai',
       tab: 'ai',
       label: t('aiAssistant') || 'AI Assistant',
@@ -142,13 +136,20 @@ export const Navbar: React.FC = () => {
       icon: Tv,
       iconColor: 'text-purple-400'
     },
-    // Row 2 (Items 8-14)
     {
       id: 'pediatric',
       tab: 'pediatric',
       label: t('pediatricConsultation') || 'Pediatric Care',
       icon: Stethoscope,
       iconColor: 'text-sky-400'
+    },
+    // Row 2 (Items 8-14)
+    {
+      id: 'tales',
+      tab: 'tales',
+      label: t('toddlerTales') || 'Toddler Tales',
+      icon: BookOpen,
+      iconColor: 'text-amber-400'
     },
     {
       id: 'learning',
@@ -300,8 +301,24 @@ export const Navbar: React.FC = () => {
               </button>
             </div>
 
-            {/* Right: About Menu, Language Selector & User Controls */}
+            {/* Right: Home, About Menu, Language Selector & User Controls */}
             <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+              {/* Home Button (Directly previous to About Me tab) */}
+              <button
+                type="button"
+                id="nav-topbar-home-btn"
+                onClick={handleBrandClick}
+                className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl border transition-all text-xs font-bold cursor-pointer ${
+                  (location.pathname === '/' || location.pathname === '/tricky-toddlers') && (!currentTab || currentTab === 'home')
+                    ? 'bg-gradient-to-r from-indigo-500/20 to-purple-500/20 text-indigo-200 border-indigo-400/40 shadow-sm shadow-indigo-500/10'
+                    : 'bg-white/5 hover:bg-white/10 border-white/10 text-white/80 hover:text-white'
+                }`}
+                title={t('home') || 'Home'}
+              >
+                <Home className="w-3.5 h-3.5 text-indigo-400" />
+                <span>{t('home') || 'Home'}</span>
+              </button>
+
               {/* About Me Dropdown (Visible on tablet & desktop; on mobile available in Main Menu) */}
               <div className="relative hidden sm:block" ref={aboutDropdownRef}>
                 <button

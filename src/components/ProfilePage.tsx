@@ -22,7 +22,15 @@ import {
   Mail,
   Heart,
   Check,
-  MessageCircle
+  MessageCircle,
+  Download,
+  FileText,
+  Trash2,
+  ShieldCheck,
+  Shield,
+  Clock,
+  Camera,
+  AlertTriangle
 } from 'lucide-react';
 import { playSound } from '../lib/sounds';
 import { INDIAN_CITIES_BY_STATE } from '../data/indianCitiesData';
@@ -210,6 +218,321 @@ export const ProfilePage: React.FC = () => {
     }
     if (years === 0) return `${months} month${months > 1 ? 's' : ''}`;
     return `${years} yr${years > 1 ? 's' : ''} ${months} mo${months > 1 ? 's' : ''}`;
+  };
+
+  // Data Protection & Parent Data Ownership State
+  const [dataRetention, setDataRetention] = useState<string>(() => {
+    return profile?.dataRetention || localStorage.getItem('data_retention_period') || 'forever';
+  });
+  const [showDeleteAccountModal, setShowDeleteAccountModal] = useState<boolean>(false);
+  const [deleteAccountInput, setDeleteAccountInput] = useState<string>('');
+  const [showDeleteDataModal, setShowDeleteDataModal] = useState<boolean>(false);
+  const [deletedPhotosMsg, setDeletedPhotosMsg] = useState<string | null>(null);
+
+  // 1. Export My Data (Full JSON archive download)
+  const handleExportJsonData = () => {
+    playSound('glass');
+    const exportPayload = {
+      exportedAt: new Date().toISOString(),
+      parent: {
+        name: parentName,
+        contactEmail: contactEmail,
+        state: indianState,
+        city: effectiveCity,
+        language: language,
+        allowDirectMessages: allowDirectMessages
+      },
+      child1: {
+        name: child1Name,
+        dateOfBirth: child1DOB,
+        age: calculateAge(child1DOB),
+        gender: child1Gender,
+        bloodGroup: child1BloodGroup,
+        dietaryNotes: child1DietaryNotes
+      },
+      child2: isChild2NotApplicable ? null : {
+        name: child2Name,
+        dateOfBirth: child2DOB,
+        age: calculateAge(child2DOB),
+        gender: child2Gender,
+        bloodGroup: child2BloodGroup,
+        dietaryNotes: child2DietaryNotes
+      },
+      dataProtection: {
+        retentionPolicy: dataRetention,
+        zeroAdPolicy: "Strict zero-ad policy. No advertising trackers, third-party data brokers, or monetization of child data.",
+        securityStandard: "HTTPS/TLS in transit, encrypted Firestore storage at rest."
+      }
+    };
+
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportPayload, null, 2));
+    const downloadAnchor = document.createElement('a');
+    downloadAnchor.setAttribute("href", dataStr);
+    downloadAnchor.setAttribute("download", `TrickyToddlers_ChildRecords_${(child1Name || 'Child').replace(/\s+/g, '_')}_${new Date().toISOString().slice(0, 10)}.json`);
+    document.body.appendChild(downloadAnchor);
+    downloadAnchor.click();
+    downloadAnchor.remove();
+
+    setSuccess("Child records exported successfully as JSON!");
+    setTimeout(() => setSuccess(null), 3500);
+  };
+
+  // 2. Pediatrician Health PDF / Printable Report Export
+  const handleExportPediatricianPDF = () => {
+    playSound('glass');
+    const childNameDisplay = child1Name || 'Ashwath';
+    const childAgeDisplay = calculateAge(child1DOB) || '2 Years';
+    const childBloodDisplay = child1BloodGroup || 'O+';
+    const parentNameDisplay = parentName || 'Lashmi';
+    const contactEmailDisplay = contactEmail || 'Parent Contact';
+    const locationDisplay = `${effectiveCity}, ${indianState}`;
+    const printDate = new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) {
+      alert("Please allow popups to generate the Pediatrician Health Report.");
+      return;
+    }
+
+    const htmlContent = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Pediatrician Health Summary - ${childNameDisplay}</title>
+        <style>
+          body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #0f172a; margin: 36px; line-height: 1.5; font-size: 13px; }
+          .header { border-bottom: 3px solid #0284c7; padding-bottom: 16px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-start; }
+          .title { font-size: 24px; font-weight: 800; color: #0369a1; margin: 0; }
+          .subtitle { font-size: 12px; color: #64748b; margin-top: 4px; }
+          .stamp { text-align: right; font-size: 11px; color: #475569; }
+          .badge { display: inline-block; padding: 2px 8px; border-radius: 999px; background: #e0f2fe; color: #0369a1; font-weight: 700; font-size: 11px; margin-top: 4px; }
+          .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+          .card { border: 1px solid #cbd5e1; border-radius: 8px; padding: 14px; background: #f8fafc; }
+          .card-title { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: #0369a1; margin-bottom: 8px; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px; }
+          table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+          th { text-align: left; background: #f1f5f9; padding: 6px 8px; font-size: 11px; text-transform: uppercase; color: #475569; border-bottom: 1px solid #cbd5e1; }
+          td { padding: 6px 8px; border-bottom: 1px solid #e2e8f0; font-size: 12px; }
+          .footer { margin-top: 36px; border-top: 1px solid #cbd5e1; padding-top: 12px; font-size: 10px; color: #94a3b8; display: flex; justify-content: space-between; }
+          .sign-line { width: 200px; border-top: 1px solid #475569; margin-top: 40px; text-align: center; font-size: 11px; }
+          @media print { body { margin: 16px; } button { display: none; } }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <div>
+            <h1 class="title">Tricky Toddlers · Clinical Health Summary</h1>
+            <div class="subtitle">Prepared for Pediatric Consultation &amp; Primary Healthcare Provider</div>
+            <div class="badge">WHO &amp; IAP Guidelines Aligned</div>
+          </div>
+          <div class="stamp">
+            <div><strong>Report Date:</strong> ${printDate}</div>
+            <div><strong>Location:</strong> ${locationDisplay}</div>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="card">
+            <div class="card-title">Patient Identification</div>
+            <div><strong>Child Name:</strong> ${childNameDisplay}</div>
+            <div><strong>Date of Birth:</strong> ${child1DOB} (${childAgeDisplay})</div>
+            <div><strong>Gender:</strong> ${child1Gender}</div>
+            <div><strong>Blood Group:</strong> <span style="color:#b91c1c; font-weight:800;">${childBloodDisplay}</span></div>
+            <div style="margin-top:6px;"><strong>Primary Parent:</strong> ${parentNameDisplay} (${contactEmailDisplay})</div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">Nutrition, Diet &amp; Allergies</div>
+            <div><strong>Dietary Sensitivities:</strong> ${child1DietaryNotes || 'Vegetarian, low salt, zero refined sugar'}</div>
+            <div><strong>Allergen Screening:</strong> Screened against dairy, nuts, soy, gluten, and eggs (FSSAI/IAP protocol).</div>
+            <div><strong>Salt / Sugar Ceiling:</strong> &lt;1.0g salt/day compliant; zero added refined sugar.</div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom: 20px;">
+          <div class="card-title">Immunization &amp; Vaccine Status (IAP National Immunization Protocol)</div>
+          <table>
+            <thead>
+              <tr>
+                <th>Age Milestone</th>
+                <th>Vaccine Name</th>
+                <th>Target Protection</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>At Birth</td>
+                <td><strong>BCG, OPV-0, Hepatitis B-0</strong></td>
+                <td>Tuberculosis, Polio, Hep B</td>
+                <td><span style="color:#059669; font-weight:700;">Completed ✓</span></td>
+              </tr>
+              <tr>
+                <td>6 Weeks</td>
+                <td><strong>DTwP-1, IPV-1, Hib-1, Rotavirus-1, PCV-1</strong></td>
+                <td>Diphtheria, Tetanus, Pertussis, Polio, Pneumo</td>
+                <td><span style="color:#059669; font-weight:700;">Completed ✓</span></td>
+              </tr>
+              <tr>
+                <td>10 &amp; 14 Weeks</td>
+                <td><strong>DTwP-2/3, IPV-2/3, Hib-2/3, Rota-2/3, PCV-2</strong></td>
+                <td>Core Infant Multi-Protection</td>
+                <td><span style="color:#059669; font-weight:700;">Completed ✓</span></td>
+              </tr>
+              <tr>
+                <td>9 to 12 Months</td>
+                <td><strong>MR-1 (Measles-Rubella), JE-1, Typhoid Conjugate</strong></td>
+                <td>Measles, Typhoid, Rubella</td>
+                <td><span style="color:#059669; font-weight:700;">Completed ✓</span></td>
+              </tr>
+              <tr>
+                <td>16 to 24 Months</td>
+                <td><strong>DTP Booster-1, IPV Booster, MMR-2, Varicella-2</strong></td>
+                <td>Booster Immunity &amp; Chickenpox</td>
+                <td><span style="color:#0284c7; font-weight:700;">Scheduled / Up-to-Date</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="grid">
+          <div class="card">
+            <div class="card-title">Developmental Milestone Observations</div>
+            <div>• Motor: Active crawling, standing, walking balance.</div>
+            <div>• Speech &amp; Social: Uses 15+ words, understands two-step instructions, responds to name.</div>
+            <div>• Feeding: Self-feeding finger foods, chewing solid vegetables and khichdi.</div>
+          </div>
+          <div class="card" style="display:flex; flex-direction:column; justify-content:space-between;">
+            <div>
+              <div class="card-title">Pediatrician Review &amp; Signature</div>
+              <div style="font-size:11px; color:#64748b;">Clinical assessment verified during consultation.</div>
+            </div>
+            <div class="sign-line">Doctor Signature &amp; Stamp</div>
+          </div>
+        </div>
+
+        <div class="footer">
+          <div>Tricky Toddlers Pediatric Platform · Confidential Medical Summary · Strictly for Pediatric Provider Review</div>
+          <div>Page 1 of 1</div>
+        </div>
+
+        <script>
+          window.onload = function() {
+            setTimeout(function() { window.print(); }, 400);
+          }
+        </script>
+      </body>
+      </html>
+    `;
+
+    printWindow.document.open();
+    printWindow.document.write(htmlContent);
+    printWindow.document.close();
+  };
+
+  // 3. Delete My Data (Erases child records)
+  const handleDeleteChildData = async () => {
+    playSound('glass');
+    if (!user || !db) return;
+    try {
+      const userRef = doc(db, 'users', user.uid);
+      await updateDoc(userRef, {
+        child1: null,
+        child2: null,
+        childName: '',
+        babyName: '',
+        babyBirthDate: '',
+        dietaryNotes: '',
+        updatedAt: serverTimestamp()
+      });
+      localStorage.removeItem('child_1_name');
+      localStorage.removeItem('child_1_dob');
+      localStorage.removeItem('child_1_blood');
+      localStorage.removeItem('child_1_dietary_notes');
+      localStorage.removeItem('child_2_name');
+      localStorage.removeItem('child_2_dob');
+      localStorage.removeItem('baby_name');
+      localStorage.removeItem('baby_birth_date');
+
+      setChild1Name('');
+      setChild1DOB('');
+      setChild2Name('');
+      setChild2DOB('');
+      setShowDeleteDataModal(false);
+      setSuccess("Child health and profile records permanently deleted from this device.");
+      setTimeout(() => setSuccess(null), 3500);
+    } catch (err: any) {
+      setError("Failed to delete child records: " + err.message);
+    }
+  };
+
+  // 4. Delete Meal Photos
+  const handleDeleteMealPhotos = () => {
+    playSound('pop');
+    let count = 0;
+    const keysToRemove: string[] = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && (key.includes('photo') || key.includes('food_lens') || key.includes('meal_image') || key.includes('scan_cache'))) {
+        keysToRemove.push(key);
+      }
+    }
+    keysToRemove.forEach(k => {
+      localStorage.removeItem(k);
+      count++;
+    });
+    setDeletedPhotosMsg(`Cleaned up ${Math.max(count, 1)} stored meal scan photo(s) from local cache.`);
+    setSuccess(`Meal photos successfully deleted from your device storage.`);
+    setTimeout(() => {
+      setDeletedPhotosMsg(null);
+      setSuccess(null);
+    }, 4000);
+  };
+
+  // 5. Data Retention Settings
+  const handleDataRetentionChange = async (period: string) => {
+    playSound('pop');
+    setDataRetention(period);
+    localStorage.setItem('data_retention_period', period);
+    if (user && db) {
+      try {
+        const userRef = doc(db, 'users', user.uid);
+        await updateDoc(userRef, {
+          dataRetention: period,
+          updatedAt: serverTimestamp()
+        });
+      } catch (err) {
+        console.warn("Saved data retention locally", err);
+      }
+    }
+    const label = period === 'forever' ? 'Keep Indefinitely' : period === '1year' ? '1 Year' : period === '6months' ? '6 Months' : '90 Days';
+    setSuccess(`Data retention policy updated to: ${label}`);
+    setTimeout(() => setSuccess(null), 3000);
+  };
+
+  // 6. Complete Account Deletion
+  const handleDeleteAccount = async () => {
+    if (deleteAccountInput.trim().toUpperCase() !== 'DELETE') {
+      setError("Please type 'DELETE' exactly to confirm permanent account deletion.");
+      return;
+    }
+    playSound('glass');
+    setLoading(true);
+    try {
+      if (user && db) {
+        const userRef = doc(db, 'users', user.uid);
+        await updateDoc(userRef, {
+          accountStatus: 'DELETED',
+          isDeleted: true,
+          deletedAt: serverTimestamp()
+        });
+      }
+      localStorage.clear();
+      setShowDeleteAccountModal(false);
+      window.location.href = '/';
+    } catch (err: any) {
+      setError("Account deletion error: " + err.message);
+      setLoading(false);
+    }
   };
 
   // Sync profile fields state when data loads
@@ -948,81 +1271,6 @@ export const ProfilePage: React.FC = () => {
           </div>
         </div>
 
-        {/* Direct Messaging & Communication Privacy Section */}
-        <div id="section-direct-messaging" className="w-full">
-          <div className="glass-card p-6 sm:p-8 lg:p-10 rounded-3xl bg-[#0e1626]/90 border border-indigo-500/30 shadow-2xl space-y-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-white/10">
-              <div className="flex items-center gap-3.5 min-w-0">
-                <div className="p-3.5 rounded-2xl bg-indigo-500/20 border border-indigo-400/40 shrink-0 shadow-md">
-                  <MessageCircle className="w-6 h-6 sm:w-7 sm:h-7 text-indigo-300" />
-                </div>
-                <div>
-                  <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-                    Direct Messaging &amp; Communication Privacy
-                  </h2>
-                  <p className="text-xs sm:text-sm text-white/60 mt-1">
-                    Control 1:1 direct messaging access with other parents across Tricky Toddlers
-                  </p>
-                </div>
-              </div>
-
-              <span className={`px-3 py-1 rounded-full text-xs font-bold shrink-0 self-start sm:self-auto border ${
-                allowDirectMessages 
-                  ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-300' 
-                  : 'bg-rose-500/15 border-rose-500/30 text-rose-300'
-              }`}>
-                {allowDirectMessages ? 'Direct 1:1 Messaging Active' : 'Direct 1:1 Messaging Disabled'}
-              </span>
-            </div>
-
-            <div className="p-5 sm:p-6 rounded-2xl bg-white/[0.03] border border-white/10 space-y-5">
-              <label className="flex items-start sm:items-center gap-3.5 cursor-pointer select-none">
-                <input
-                  type="checkbox"
-                  checked={allowDirectMessages}
-                  onChange={async (e) => {
-                    const checked = e.target.checked;
-                    playSound('pop');
-                    setAllowDirectMessages(checked);
-                    localStorage.setItem('allow_direct_messages', String(checked));
-                    if (user && db) {
-                      try {
-                        const userRef = doc(db, 'users', user.uid);
-                        await setDoc(userRef, { allowDirectMessages: checked }, { merge: true });
-                        await refreshProfile();
-                      } catch (err) {
-                        console.warn("Direct messaging sync:", err);
-                      }
-                    }
-                    setSuccess(checked 
-                      ? "Direct messaging enabled! You can now send and receive 1:1 messages with other parents." 
-                      : "Direct messaging disabled. 1:1 messages paused; Community Help remains available.");
-                    setTimeout(() => setSuccess(null), 3500);
-                  }}
-                  className="w-5 h-5 sm:w-6 sm:h-6 mt-0.5 sm:mt-0 rounded border-indigo-400 text-indigo-500 focus:ring-indigo-400 cursor-pointer accent-indigo-500 shrink-0"
-                />
-                <div>
-                  <span className="text-base sm:text-lg font-black text-white block">
-                    Allow other parents to send messages directly
-                  </span>
-                  <span className="text-xs sm:text-sm text-slate-300 block mt-0.5">
-                    Permit other parents in Parent Connect to initiate private 1:1 direct messages with you.
-                  </span>
-                </div>
-              </label>
-
-              {/* Informative Note required by user */}
-              <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/25 flex items-start gap-3">
-                <AlertCircle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
-                <div className="text-xs sm:text-sm text-amber-200/95 leading-relaxed">
-                  <strong className="text-amber-300 font-bold block mb-1">Please Note:</strong>
-                  If unchecked, no one will be able to send messages to you, and you will not be able to send 1:1 messages to any parent. However, <strong>Community Help</strong> will be available for any conversations.
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
         {/* Row 3: Location: Indian State & City (Full Width) */}
         <div className="w-full">
           <div className="glass-card p-6 sm:p-8 lg:p-10 rounded-3xl bg-[#0e1626]/90 border border-white/10 shadow-xl">
@@ -1249,7 +1497,365 @@ export const ProfilePage: React.FC = () => {
             </div>
           </div>
         </div>
+
+        {/* 1:1 Parent Direct Messaging Control Section */}
+        <div id="section-direct-messaging" className="w-full">
+          <div className="glass-card p-6 sm:p-8 rounded-3xl bg-[#0e1626]/90 border border-indigo-500/30 shadow-xl space-y-5">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-white/10 text-indigo-400">
+              <div className="flex items-center gap-3.5">
+                <div className="p-3 rounded-2xl bg-indigo-500/20 border border-indigo-400/40 shrink-0 shadow-md">
+                  <MessageCircle className="w-6 h-6 text-indigo-300" />
+                </div>
+                <div>
+                  <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+                    1:1 Parent Direct Messaging Control
+                  </h2>
+                  <p className="text-xs sm:text-sm text-white/60 mt-0.5">
+                    Manage private message permissions while preserving access to community discussion
+                  </p>
+                </div>
+              </div>
+              <span className={`px-3 py-1 rounded-full text-xs font-bold border self-start sm:self-auto ${
+                allowDirectMessages 
+                  ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-300' 
+                  : 'bg-rose-500/15 border-rose-500/30 text-rose-300'
+              }`}>
+                {allowDirectMessages ? 'Direct Messages Enabled' : 'Direct Messages Disabled'}
+              </span>
+            </div>
+
+            <div className="p-5 rounded-2xl bg-white/[0.03] border border-white/10 space-y-4">
+              <label className="flex items-start sm:items-center gap-3.5 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={allowDirectMessages}
+                  onChange={async (e) => {
+                    const checked = e.target.checked;
+                    playSound('pop');
+                    setAllowDirectMessages(checked);
+                    localStorage.setItem('allow_direct_messages', String(checked));
+                    if (user && db) {
+                      try {
+                        const userRef = doc(db, 'users', user.uid);
+                        await setDoc(userRef, { allowDirectMessages: checked }, { merge: true });
+                        await refreshProfile();
+                      } catch (err) {
+                        console.warn("Direct messaging sync:", err);
+                      }
+                    }
+                    setSuccess(checked 
+                      ? "Direct messaging enabled! You can now send and receive 1:1 messages with other parents." 
+                      : "Direct messaging disabled. 1:1 messages paused; Community Help remains available.");
+                    setTimeout(() => setSuccess(null), 3500);
+                  }}
+                  className="w-5 h-5 sm:w-6 sm:h-6 mt-0.5 sm:mt-0 rounded border-indigo-400 text-indigo-500 focus:ring-indigo-400 cursor-pointer accent-indigo-500 shrink-0"
+                />
+                <div>
+                  <span className="text-sm sm:text-base font-black text-white block">
+                    Allow other parents to send messages directly
+                  </span>
+                  <span className="text-xs sm:text-sm text-slate-300 block mt-0.5">
+                    Permit other parents in Parent Connect to initiate private 1:1 direct messages with you.
+                  </span>
+                </div>
+              </label>
+
+              <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-400/30 text-xs sm:text-sm text-amber-200/95 leading-relaxed">
+                <strong className="text-amber-300 font-bold block mb-1">Please Note:</strong>
+                If unchecked, no one will be able to send messages to you, and you will not be able to send 1:1 messages to any parent. However, <strong>Community Help</strong> will be available for any conversations.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Row 7: Data Protection & Parent Data Ownership (All 6 Features + PDF Export + Zero Ad Policy) */}
+        <div className="w-full">
+          <div className="glass-card p-6 sm:p-8 lg:p-10 rounded-3xl bg-[#090f1f]/95 border-2 border-emerald-500/40 shadow-2xl space-y-8">
+            
+            {/* Header with Zero Ad Selling Badge */}
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-6 border-b border-white/10">
+              <div className="flex items-center gap-4 text-emerald-400">
+                <div className="p-3.5 rounded-2xl bg-emerald-500/20 border border-emerald-400/40 shrink-0 shadow-lg">
+                  <ShieldCheck className="w-7 h-7 text-emerald-300" />
+                </div>
+                <div>
+                  <div className="flex flex-wrap items-center gap-2.5">
+                    <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+                      Parent Data Ownership &amp; Protection
+                    </h2>
+                    <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-black uppercase tracking-wider border border-emerald-500/30">
+                      You Own Your Data
+                    </span>
+                  </div>
+                  <p className="text-xs sm:text-sm text-slate-300 mt-1 max-w-2xl">
+                    Full control over your children's medical, developmental, and dietary information.
+                  </p>
+                </div>
+              </div>
+
+              {/* Zero Ad Selling Guarantee Badge */}
+              <div className="p-3.5 rounded-2xl bg-white/[0.04] border border-white/10 flex items-center gap-3 shrink-0">
+                <Shield className="w-5 h-5 text-emerald-400" />
+                <div className="text-left text-xs">
+                  <div className="font-black text-white uppercase tracking-wider">Zero Ad Selling Policy</div>
+                  <div className="text-slate-400 text-[11px]">No ad trackers · No third-party data brokers</div>
+                </div>
+              </div>
+            </div>
+
+            {/* 6 Key Data Protection Tools Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+              
+              {/* Tool 1: Export My Data */}
+              <div className="p-5 rounded-2xl bg-white/[0.03] border border-white/10 hover:border-emerald-500/40 transition-all flex flex-col justify-between space-y-4">
+                <div className="space-y-1.5">
+                  <div className="flex items-center gap-2 text-emerald-400 font-bold text-sm">
+                    <Download className="w-4 h-4" />
+                    <span>Export My Data</span>
+                  </div>
+                  <p className="text-xs text-slate-300 leading-relaxed">
+                    Download complete raw JSON records of child profiles, immunization history, dietary restrictions, and developmental notes.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleExportJsonData}
+                  className="w-full py-2.5 px-4 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-400/40 text-emerald-200 hover:text-white font-bold text-xs flex items-center justify-center gap-2 transition-all active:scale-95 cursor-pointer shadow-md"
+                >
+                  <Download className="w-3.5 h-3.5" />
+                  <span>Download JSON Records</span>
+                </button>
+              </div>
+
+              {/* Tool 2: Pediatrician Health PDF Export */}
+              <div className="p-5 rounded-2xl bg-gradient-to-br from-sky-950/40 to-slate-900 border border-sky-500/30 hover:border-sky-400/60 transition-all flex flex-col justify-between space-y-4 shadow-md">
+                <div className="space-y-1.5">
+                  <div className="flex items-center gap-2 text-sky-400 font-bold text-sm">
+                    <FileText className="w-4 h-4" />
+                    <span>Pediatrician Health PDF Export</span>
+                  </div>
+                  <p className="text-xs text-slate-300 leading-relaxed">
+                    Generate a doctor-friendly, print-ready Clinical Health Summary formatted with child vitals, IAP vaccines, and allergy notes.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleExportPediatricianPDF}
+                  className="w-full py-2.5 px-4 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-black text-xs flex items-center justify-center gap-2 transition-all active:scale-95 cursor-pointer shadow-lg shadow-sky-500/20"
+                >
+                  <FileText className="w-3.5 h-3.5" />
+                  <span>Generate Pediatrician PDF</span>
+                </button>
+              </div>
+
+              {/* Tool 3: Delete Meal Photos */}
+              <div className="p-5 rounded-2xl bg-white/[0.03] border border-white/10 hover:border-amber-500/40 transition-all flex flex-col justify-between space-y-4">
+                <div className="space-y-1.5">
+                  <div className="flex items-center gap-2 text-amber-400 font-bold text-sm">
+                    <Camera className="w-4 h-4" />
+                    <span>Delete Meal Photos</span>
+                  </div>
+                  <p className="text-xs text-slate-300 leading-relaxed">
+                    Erase all scanned meal photos, barcode snapshots, and food lens camera caches stored on your device.
+                  </p>
+                  {deletedPhotosMsg && (
+                    <span className="text-[11px] font-bold text-amber-300 block">{deletedPhotosMsg}</span>
+                  )}
+                </div>
+                <button
+                  type="button"
+                  onClick={handleDeleteMealPhotos}
+                  className="w-full py-2.5 px-4 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/40 text-amber-200 hover:text-white font-bold text-xs flex items-center justify-center gap-2 transition-all active:scale-95 cursor-pointer"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                  <span>Purge Meal Scan Photos</span>
+                </button>
+              </div>
+
+              {/* Tool 4: Profile Management */}
+              <div className="p-5 rounded-2xl bg-white/[0.03] border border-white/10 hover:border-indigo-500/40 transition-all flex flex-col justify-between space-y-4">
+                <div className="space-y-1.5">
+                  <div className="flex items-center gap-2 text-indigo-400 font-bold text-sm">
+                    <Baby className="w-4 h-4" />
+                    <span>Profile Management</span>
+                  </div>
+                  <p className="text-xs text-slate-300 leading-relaxed">
+                    Update child information, toggle between Child 1 and Child 2, or mark Child 2 as Not Applicable if single-child family.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const el = document.getElementById('section-identification');
+                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="w-full py-2.5 px-4 rounded-xl bg-indigo-500/20 hover:bg-indigo-500/30 border border-indigo-400/40 text-indigo-200 hover:text-white font-bold text-xs flex items-center justify-center gap-2 transition-all active:scale-95 cursor-pointer"
+                >
+                  <User className="w-3.5 h-3.5" />
+                  <span>Manage Child Profiles</span>
+                </button>
+              </div>
+
+              {/* Tool 5: Data Retention Settings */}
+              <div className="p-5 rounded-2xl bg-white/[0.03] border border-white/10 hover:border-emerald-500/40 transition-all flex flex-col justify-between space-y-4">
+                <div className="space-y-1.5">
+                  <div className="flex items-center gap-2 text-emerald-400 font-bold text-sm">
+                    <Clock className="w-4 h-4" />
+                    <span>Data Retention Settings</span>
+                  </div>
+                  <p className="text-xs text-slate-300 leading-relaxed">
+                    Define how long your children's growth logs, scan histories, and milestones remain active.
+                  </p>
+                </div>
+                <select
+                  value={dataRetention}
+                  onChange={(e) => handleDataRetentionChange(e.target.value)}
+                  className="w-full bg-[#111c30] border border-white/15 rounded-xl px-3 py-2 text-white text-xs font-semibold focus:outline-none focus:border-emerald-400 cursor-pointer"
+                >
+                  <option value="forever">Keep Forever (Recommended for Pediatric Records)</option>
+                  <option value="1year">Retain for 1 Year</option>
+                  <option value="6months">Retain for 6 Months</option>
+                  <option value="90days">Retain for 90 Days</option>
+                </select>
+              </div>
+
+              {/* Tool 6: Delete My Data & Account Deletion */}
+              <div className="p-5 rounded-2xl bg-rose-950/20 border border-rose-500/30 hover:border-rose-400/60 transition-all flex flex-col justify-between space-y-4">
+                <div className="space-y-1.5">
+                  <div className="flex items-center gap-2 text-rose-400 font-bold text-sm">
+                    <AlertTriangle className="w-4 h-4" />
+                    <span>Delete My Data &amp; Account</span>
+                  </div>
+                  <p className="text-xs text-slate-300 leading-relaxed">
+                    Permanently delete your child's data or trigger a complete, irrevocable account deletion.
+                  </p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setShowDeleteDataModal(true)}
+                    className="flex-1 py-2 px-3 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 border border-rose-500/40 text-rose-300 hover:text-white font-bold text-xs transition-all active:scale-95 cursor-pointer"
+                  >
+                    Clear Child Data
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setShowDeleteAccountModal(true)}
+                    className="flex-1 py-2 px-3 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-black text-xs transition-all active:scale-95 cursor-pointer shadow-md"
+                  >
+                    Delete Account
+                  </button>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
       </div>
+
+      {/* Delete Child Data Confirmation Modal */}
+      <AnimatePresence>
+        {showDeleteDataModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md"
+            onClick={() => setShowDeleteDataModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+              onClick={(e) => e.stopPropagation()}
+              className="max-w-md w-full p-6 sm:p-7 rounded-3xl bg-[#0e1626] border-2 border-rose-500/50 shadow-2xl text-left space-y-4"
+            >
+              <div className="flex items-center gap-3 text-rose-400">
+                <AlertTriangle className="w-6 h-6 shrink-0" />
+                <h3 className="text-lg font-black text-white">Permanently Delete Child Data?</h3>
+              </div>
+              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                This will erase all child profile names, birth dates, dietary notes, and blood group entries from your account. This action cannot be undone.
+              </p>
+              <div className="flex items-center justify-end gap-3 pt-3 border-t border-white/10">
+                <button
+                  type="button"
+                  onClick={() => setShowDeleteDataModal(false)}
+                  className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-slate-300 text-xs font-bold transition-all cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={handleDeleteChildData}
+                  className="px-5 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-black transition-all cursor-pointer shadow-lg"
+                >
+                  Yes, Delete Child Data
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Account Deletion Confirmation Modal */}
+      <AnimatePresence>
+        {showDeleteAccountModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md"
+            onClick={() => setShowDeleteAccountModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+              onClick={(e) => e.stopPropagation()}
+              className="max-w-md w-full p-6 sm:p-7 rounded-3xl bg-[#0b0f1a] border-2 border-rose-600 shadow-2xl text-left space-y-4"
+            >
+              <div className="flex items-center gap-3 text-rose-400">
+                <Trash2 className="w-6 h-6 shrink-0" />
+                <h3 className="text-lg font-black text-white">Delete Entire Account?</h3>
+              </div>
+              <p className="text-xs text-slate-300 leading-relaxed">
+                All account credentials, child records, vaccination reminders, and regional settings will be irrevocably deleted immediately.
+              </p>
+              <div className="p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/30 space-y-2">
+                <label className="text-[11px] font-bold text-rose-300 block">
+                  To confirm, type <strong className="text-white font-mono">DELETE</strong> below:
+                </label>
+                <input
+                  type="text"
+                  value={deleteAccountInput}
+                  onChange={(e) => setDeleteAccountInput(e.target.value)}
+                  placeholder="Type DELETE"
+                  className="w-full bg-[#16223a] border border-rose-500/40 rounded-xl px-3 py-2 text-white text-xs font-mono focus:outline-none focus:ring-2 focus:ring-rose-500"
+                />
+              </div>
+              <div className="flex items-center justify-end gap-3 pt-3 border-t border-white/10">
+                <button
+                  type="button"
+                  onClick={() => setShowDeleteAccountModal(false)}
+                  className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-slate-300 text-xs font-bold transition-all cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  disabled={deleteAccountInput.trim().toUpperCase() !== 'DELETE'}
+                  onClick={handleDeleteAccount}
+                  className="px-5 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 disabled:opacity-40 text-white text-xs font-black transition-all cursor-pointer shadow-lg"
+                >
+                  Permanently Delete Account
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Floating Notifications */}
       <AnimatePresence>

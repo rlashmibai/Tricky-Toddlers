@@ -676,6 +676,12 @@ export const FoodLensView: React.FC<FoodLensViewProps> = ({
                     className="w-full h-auto object-contain block" 
                     loading="eager"
                     decoding="async"
+                    onError={(e) => {
+                      const target = e.currentTarget;
+                      if (!target.src.endsWith('.png')) {
+                        target.src = '/assets/aistudio/Gemini_Generated_Image_2vihgd2vihgd2vih__1__7cdf258c.png';
+                      }
+                    }}
                   />
                 </picture>
               </div>
@@ -688,6 +694,12 @@ export const FoodLensView: React.FC<FoodLensViewProps> = ({
                     className="w-full h-auto object-contain block" 
                     loading="eager"
                     decoding="async"
+                    onError={(e) => {
+                      const target = e.currentTarget;
+                      if (!target.src.endsWith('.webp')) {
+                        target.src = '/assets/aistudio/Gemini_Generated_Image_2c1rd52c1rd52c1r_872957ea.webp';
+                      }
+                    }}
                   />
                 </picture>
               </div>
@@ -700,6 +712,12 @@ export const FoodLensView: React.FC<FoodLensViewProps> = ({
                     className="w-full h-auto object-contain block" 
                     loading="eager"
                     decoding="async"
+                    onError={(e) => {
+                      const target = e.currentTarget;
+                      if (!target.src.endsWith('.png')) {
+                        target.src = '/assets/aistudio/Gemini_Generated_Image_2vihgd2vihgd2vih_5acaf8ea.png';
+                      }
+                    }}
                   />
                 </picture>
               </div>

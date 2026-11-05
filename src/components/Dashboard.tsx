@@ -32,7 +32,7 @@ export const Dashboard: React.FC = () => {
   const navigate = useNavigate();
   const hasPremium = isPremiumUser(profile);
   const [searchParams, setSearchParams] = useSearchParams();
-  const [activeTab, setActiveTab] = useState<'home' | 'ai' | 'community' | 'chat' | 'milestones' | 'routine' | 'vaccine' | 'food' | 'foodlens' | 'sample-foods' | 'nutriband' | 'nutriband-cart' | 'pediatric' | 'learning' | 'videos' | 'store' | 'about'>('home');
+  const [activeTab, setActiveTab] = useState<'home' | 'ai' | 'community' | 'chat' | 'milestones' | 'routine' | 'vaccine' | 'food' | 'foodlens' | 'sample-foods' | 'nutriband' | 'nutriband-cart' | 'pediatric' | 'learning' | 'videos' | 'store' | 'about' | 'tales'>('home');
   const [storeInitialView, setStoreInitialView] = useState<'catalog' | 'cart'>('catalog');
   const [showBlog, setShowBlog] = useState(false);
   const [selectedBlogCategory, setSelectedBlogCategory] = useState<string>('All');
@@ -40,7 +40,7 @@ export const Dashboard: React.FC = () => {
   // Sync tab with URL search parameter ?tab=...
   useEffect(() => {
     const tabParam = searchParams.get('tab');
-    if (tabParam && ['home', 'ai', 'community', 'chat', 'milestones', 'routine', 'vaccine', 'food', 'foodlens', 'sample-foods', 'nutriband', 'nutriband-cart', 'pediatric', 'learning', 'videos', 'store', 'about'].includes(tabParam)) {
+    if (tabParam && ['home', 'ai', 'community', 'chat', 'milestones', 'routine', 'vaccine', 'food', 'foodlens', 'sample-foods', 'nutriband', 'nutriband-cart', 'pediatric', 'learning', 'videos', 'store', 'about', 'tales'].includes(tabParam)) {
       setActiveTab(tabParam as any);
       setShowBlog(false);
     } else {
@@ -398,7 +398,7 @@ export const Dashboard: React.FC = () => {
                 onClick={() => {
                   playSound('glass');
                   setSelectedBlogCategory('All');
-                  setShowBlog(true);
+                  handleTabChange('tales');
                 }}
                 className="mt-12 mb-8 glass-card border border-white/10 p-10 relative overflow-hidden group cursor-pointer hover:border-white/20 transition-all font-sans bg-gradient-to-br from-white/[0.02] to-transparent"
               >
@@ -430,7 +430,7 @@ export const Dashboard: React.FC = () => {
                     onClick={() => {
                       playSound('glass');
                       setSelectedBlogCategory(cat.categoryKey);
-                      setShowBlog(true);
+                      handleTabChange('tales');
                     }}
                     className={`glass-card p-8 flex flex-col items-center text-center group cursor-pointer border-2 transition-all duration-300 ${cat.color} hover:scale-[1.02] hover:shadow-xl hover:shadow-theme-glow`}
                   >
@@ -608,6 +608,20 @@ export const Dashboard: React.FC = () => {
               className="py-4"
             >
               <AboutPage embedded={true} />
+            </motion.div>
+          ) : activeTab === 'tales' ? (
+            <motion.div
+              key="toddler-tales-tab"
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -15 }}
+              transition={{ duration: 0.2 }}
+              className="py-4"
+            >
+              <BlogView
+                initialCategory={selectedBlogCategory}
+                onBack={() => handleTabChange('ai')}
+              />
             </motion.div>
           ) : (
             <motion.div

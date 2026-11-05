@@ -365,75 +365,75 @@ export function getCompleteFoodAnalysis(food: {
     },
     {
       id: 'fiber',
-      label: 'Dietary Fiber',
+      label: 'Gentle on Tummy (Fiber)',
       amount: `${estFiber} g`,
       unit: 'grams',
-      rdaPercent: `${Math.round((estFiber / 15) * 100)}% Daily Target`,
+      rdaPercent: 'Digestive Comfort',
       status: estFiber >= 3.0 ? 'excellent' : 'safe',
-      badge: estFiber >= 3.0 ? 'Gut-Friendly Prebiotic' : 'Gentle Fiber',
-      note: 'Soluble and insoluble fiber encouraging healthy gut microbiome balance.'
+      badge: 'Gentle on Tummy ✓',
+      note: 'Soothing prebiotic fiber supporting smooth infant digestion, regular bowels, and gut comfort.'
     },
     {
       id: 'fats',
-      label: 'Bad Fat Content',
+      label: 'Healthy Fats / Lipids',
       amount: `${estFat} g (Sat: ${estSatFat} g)`,
       unit: 'grams',
-      rdaPercent: `${Math.round((estFat / 30) * 100)}% Daily Target`,
+      rdaPercent: 'Wholesome Energy',
       status: isCerelacOrSugar ? 'caution' : 'safe',
       badge: isDairyCurdPaneer || isKhichdiOrDal ? 'Desi Ghee / Milk Lipids' : 'Natural Plant Fats',
-      note: 'Monitors saturated fats, hydrogenated oils, and trans-fats to protect toddler metabolic health.'
+      note: 'Wholesome fatty acids and desi ghee providing steady satiety and lipid absorption.'
     },
     {
       id: 'vitamin_b12',
-      label: 'Vitamin B12',
+      label: 'Brain Fuel (B12 & Neuro)',
       amount: isDairyCurdPaneer ? '0.6 mcg' : '0.4 mcg',
       unit: 'mcg',
-      rdaPercent: '50% Toddler RDA',
+      rdaPercent: 'Neuro Vitality',
       status: 'excellent',
-      badge: 'Neuro & Cognitive Growth ✓',
-      note: 'Critical micronutrient for neural myelination, red blood cell synthesis, and brain growth.'
+      badge: 'Brain Fuel ✓',
+      note: 'Essential micronutrient for neural myelination, cognitive processing speed, and brain development.'
     },
     {
       id: 'sodium',
-      label: 'Sodium',
-      amount: `${estSodiumMg} mg`,
+      label: 'Sodium & Salt',
+      amount: `${estSodiumMg} mg (Salt: ${estSaltG}g)`,
       unit: 'milligrams',
-      rdaPercent: `${Math.round((estSodiumMg / 1000) * 100)}% Max Safe Cap`,
+      rdaPercent: '<1000mg/Day Compliant',
       status: estSodiumMg > 250 ? 'warning' : 'safe',
-      badge: estSodiumMg > 250 ? 'Exceeds Sodium Cap' : '<1000mg/Day Compliant ✓',
+      badge: estSodiumMg > 250 ? 'Exceeds Sodium Cap' : 'Gentle on Kidneys ✓',
       note: estSodiumMg > 250 
         ? 'High sodium stresses undeveloped nephrons and kidneys.' 
-        : 'Safely within the <1000 mg/day safe sodium ceiling established by health standards.'
+        : 'Safely within the <1000 mg/day safe sodium ceiling established by pediatric health standards.'
     },
     {
       id: 'iron',
-      label: 'Iron',
+      label: 'Rich in Iron',
       amount: estIronMg,
       unit: 'mg',
-      rdaPercent: 'Essential Micronutrient',
+      rdaPercent: 'Brain & Blood Support',
       status: 'excellent',
-      badge: 'Cognitive & RBC Support',
-      note: 'Critical for hemoglobin synthesis and preventing pediatric nutritional anemia.'
+      badge: 'Rich in Iron ✓',
+      note: 'Crucial for hemoglobin synthesis, active physical stamina, and cognitive alertness.'
     },
     {
       id: 'calcium',
-      label: 'Calcium',
+      label: 'Strong Bones (Calcium)',
       amount: estCalciumMg,
       unit: 'mg',
       rdaPercent: 'Skeletal Density',
       status: isMilletOrRagi || isDairyCurdPaneer ? 'excellent' : 'safe',
-      badge: isMilletOrRagi ? 'Millet Super-Calcium' : 'Bone Fortification',
-      note: 'Supports rapid skeletal lengthening and early tooth enamel density.'
+      badge: 'Strong Bones ✓',
+      note: 'Pure bioavailable calcium supporting rapid skeletal lengthening and early tooth enamel.'
     },
     {
       id: 'zinc',
-      label: 'Zinc & Minerals',
+      label: 'Immune Shield (Zinc)',
       amount: estZincMg,
       unit: 'mg',
-      rdaPercent: 'Immune & Growth Co-Factor',
+      rdaPercent: 'Daily Defense',
       status: 'excellent',
-      badge: 'Immune Resilience',
-      note: 'Essential trace mineral supporting enzymatic reactions, tissue repair, and immune defense.'
+      badge: 'Immune Resilience ✓',
+      note: 'Natural immune support assisting tissue growth and daily pediatric resistance.'
     }
   ];
 

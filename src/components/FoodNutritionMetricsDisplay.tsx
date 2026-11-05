@@ -208,61 +208,34 @@ export const FoodNutritionMetricsDisplay: React.FC<FoodNutritionMetricsDisplayPr
               </span>
             </div>
 
-            {/* Arithmetic Formula Display */}
-            <div className="p-4 sm:p-5 rounded-2xl bg-black/75 border border-white/10 font-mono space-y-4">
-              {/* Responsive Equation Row */}
-              <div className="flex flex-wrap items-center gap-2.5 text-sm sm:text-base font-black text-white">
-                <span className="px-3 py-1 rounded-xl bg-white/15 border border-white/20 text-white font-mono shadow-sm">
-                  Base: 10.0
-                </span>
-                
+            {/* Step-by-Step Subtraction Display */}
+            <div className="p-4 sm:p-5 rounded-2xl bg-black/75 border border-white/10 font-sans space-y-3">
+              <div className="text-[11px] font-black text-slate-400 uppercase tracking-wider">
+                Step-by-Step Subtraction:
+              </div>
+              <div className="space-y-2 text-xs text-slate-300">
+                <div className="flex items-center gap-2 text-white">
+                  <span className="font-mono font-bold w-12 text-slate-200">10.0</span>
+                  <span className="text-slate-400">Initial gold-standard pediatric baseline score</span>
+                </div>
                 {negativeFactors.length > 0 ? (
                   negativeFactors.map((f, i) => (
-                    <div key={i} className="flex items-center gap-1.5 text-rose-400">
-                      <span className="text-rose-400 font-black text-lg">−</span>
-                      <span className="px-2 py-0.5 rounded-lg bg-rose-500/20 border border-rose-500/30 text-rose-300 font-mono">
-                        {Math.abs(f.points).toFixed(1)}
-                      </span>
-                      <span className="text-xs font-sans font-semibold text-rose-300/80">
-                        ({f.factor})
-                      </span>
-                    </div>
-                  ))
-                ) : (
-                  <span className="text-emerald-400 text-xs font-sans font-semibold">
-                    − 0.0 deductions (100% wholesome composition)
-                  </span>
-                )}
-
-                <span className="text-slate-400 font-sans font-black text-lg">=</span>
-                
-                <span className="text-lg sm:text-xl font-black text-white px-3.5 py-1.5 rounded-xl bg-emerald-500/20 border border-emerald-400/40 shadow-inner">
-                  {scoreCalculation.finalScore.toFixed(1)} / 10
-                </span>
-              </div>
-
-              {/* Vertical Step Breakdown */}
-              {negativeFactors.length > 0 && (
-                <div className="pt-3 border-t border-white/10 font-sans text-xs space-y-1.5 text-slate-300">
-                  <div className="text-[11px] font-black text-slate-400 uppercase tracking-wider mb-1">
-                    Step-by-Step Subtraction:
-                  </div>
-                  <div className="flex items-center gap-2 text-white">
-                    <span className="font-mono font-bold w-12 text-slate-200">10.0</span>
-                    <span className="text-slate-400">Initial gold-standard pediatric baseline score</span>
-                  </div>
-                  {negativeFactors.map((f, i) => (
                     <div key={i} className="flex items-center gap-2 text-rose-300">
                       <span className="font-mono font-bold w-12 text-rose-400">− {Math.abs(f.points).toFixed(1)}</span>
                       <span>({f.factor}) · <span className="text-slate-400">{f.reason}</span></span>
                     </div>
-                  ))}
-                  <div className="flex items-center gap-2 pt-1.5 border-t border-white/10 text-emerald-300 font-bold">
-                    <span className="font-mono w-12 text-emerald-400">= {scoreCalculation.finalScore.toFixed(1)}</span>
-                    <span className="text-slate-200">Final Calculated Score out of 10 ({scoreCalculation.verdict})</span>
+                  ))
+                ) : (
+                  <div className="flex items-center gap-2 text-emerald-400">
+                    <span className="font-mono font-bold w-12 text-emerald-400">− 0.0</span>
+                    <span>Zero deductions · 100% wholesome composition</span>
                   </div>
+                )}
+                <div className="flex items-center gap-2 pt-2 border-t border-white/10 text-emerald-300 font-bold">
+                  <span className="font-mono w-12 text-emerald-400">= {scoreCalculation.finalScore.toFixed(1)}</span>
+                  <span className="text-slate-200">Final Calculated Score out of 10 ({scoreCalculation.verdict})</span>
                 </div>
-              )}
+              </div>
             </div>
 
             {/* Pediatric Health Rationale Alert Box */}
@@ -486,11 +459,11 @@ export const FoodNutritionMetricsDisplay: React.FC<FoodNutritionMetricsDisplayPr
             </div>
 
             <span className="text-xs font-bold text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">
-              12 Signals Verified · Per Serving / 100g
+              Clear Pediatric Signals · Zero Anxiety
             </span>
           </div>
 
-          {/* Clean, spacious 12-signal grid */}
+          {/* Clean, spacious signal grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3.5">
             {nutrients.map((item) => {
               const isWarning = item.status === 'warning';

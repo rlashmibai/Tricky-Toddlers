@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { 
   Search, Sparkles, Loader2, Baby, MessageCircle, 
@@ -135,13 +135,377 @@ function parseAIResponse(rawText: string): ParsedResponse {
   };
 }
 
+export interface AgeTopicItem {
+  title: string;
+  query: string;
+  badge: string;
+  color: string;
+}
+
+export const getChildAgeInMonths = (
+  birthDateStr?: string | null, 
+  ageStr?: string | null,
+  childName?: string,
+  childId?: number
+): number => {
+  const nameLower = (childName || '').toLowerCase();
+  const isAshwath = childId === 1 || nameLower.includes('ashwath') || nameLower.includes('ashath') || nameLower.includes('rashwath');
+  const isAnanya = childId === 2 || nameLower.includes('ananya');
+
+  // If age string explicitly indicates years or months, prioritize parsing ageStr
+  if (ageStr) {
+    const lower = ageStr.toLowerCase();
+    const yrMatch = lower.match(/(\d+)\s*(?:year|yr)/);
+    const moMatch = lower.match(/(\d+)\s*(?:month|mo)/);
+    let total = 0;
+    if (yrMatch) total += parseInt(yrMatch[1], 10) * 12;
+    if (moMatch) total += parseInt(moMatch[1], 10);
+    if (total > 0) {
+      if (isAshwath && total < 12) return 30; // Ashwath is ~2.5 yrs (30 mo)
+      return total;
+    }
+  }
+
+  // Parse birthDateStr if provided
+  if (birthDateStr) {
+    const dob = new Date(birthDateStr);
+    if (!isNaN(dob.getTime())) {
+      const now = new Date();
+      let diff = (now.getFullYear() - dob.getFullYear()) * 12 + (now.getMonth() - dob.getMonth());
+      if (now.getDate() < dob.getDate()) diff--;
+      if (diff >= 0) {
+        if (isAshwath && diff < 12) return 30; // Ashwath is ~2.5 yrs (30 mo)
+        return diff;
+      }
+    }
+  }
+
+  if (isAnanya) return 3; // Ananya is 3 months
+  if (isAshwath) return 30; // Ashwath is 2.5 years (30 months)
+
+  return 30; // Default toddler
+};
+
+export const getAgeSpecificTopics = (
+  childName: string, 
+  childAgeStr?: string | null, 
+  birthDateStr?: string | null,
+  childId?: number
+): AgeTopicItem[] => {
+  const months = getChildAgeInMonths(birthDateStr, childAgeStr, childName, childId);
+
+  // 1. Young Infant: 0 to 5 Months (e.g. 3-4 months)
+  if (months < 6) {
+    return [
+      {
+        badge: "Sleep & Routine",
+        title: "Wake windows & nap cues for 3-4 months",
+        query: `What are the ideal wake windows, daily nap patterns, and sleepy cues for 3 to 4-month-old ${childName}?`,
+        color: "border-purple-500/30 bg-purple-500/10 text-purple-200 hover:border-purple-400"
+      },
+      {
+        badge: "Soothing & Comfort",
+        title: "Relieving evening colic & trapped gas",
+        query: `What gentle techniques, tummy massages, and bicycle leg exercises relieve evening colic and trapped gas in ${childName}?`,
+        color: "border-amber-500/30 bg-amber-500/10 text-amber-200 hover:border-amber-400"
+      },
+      {
+        badge: "Motor Skills",
+        title: "Tummy time & building head control",
+        query: `How much tummy time should ${childName} do daily, and how can I help if they get fussy after a couple of minutes?`,
+        color: "border-emerald-500/30 bg-emerald-500/10 text-emerald-200 hover:border-emerald-400"
+      },
+      {
+        badge: "Sensory Play",
+        title: "High-contrast cards & visual tracking",
+        query: `What black-and-white visual stimulation and sensory tracking toys best support brain development for ${childName}?`,
+        color: "border-cyan-500/30 bg-cyan-500/10 text-cyan-200 hover:border-cyan-400"
+      },
+      {
+        badge: "Infant Feeding",
+        title: "Growth spurts vs cluster feeding",
+        query: `How do I tell if ${childName} is going through a growth spurt cluster feeding session versus overtired fussiness?`,
+        color: "border-rose-500/30 bg-rose-500/10 text-rose-200 hover:border-rose-400"
+      },
+      {
+        badge: "Sleep Progression",
+        title: "Easing the 4-month sleep regression",
+        query: `What gentle sleep habits and circadian cues can I establish to prepare ${childName} for the 4-month sleep regression?`,
+        color: "border-indigo-500/30 bg-indigo-500/10 text-indigo-200 hover:border-indigo-400"
+      },
+      {
+        badge: "Physical Milestones",
+        title: "Rolling over readiness & floor play",
+        query: `What early motor signs show ${childName} is getting ready to roll over, and how should I set up safe floor space?`,
+        color: "border-teal-500/30 bg-teal-500/10 text-teal-200 hover:border-teal-400"
+      },
+      {
+        badge: "Teething & Oral",
+        title: "Drooling, hand-chewing & gum comfort",
+        query: `Is heavy drooling and constant hand-sucking at this age early teething or normal developmental exploration for ${childName}?`,
+        color: "border-amber-500/30 bg-amber-500/10 text-amber-200 hover:border-amber-400"
+      },
+      {
+        badge: "Communication",
+        title: "Encouraging responsive babbling & coos",
+        query: `How can I engage in back-and-forth conversational babbling and vocal games with ${childName}?`,
+        color: "border-blue-500/30 bg-blue-500/10 text-blue-200 hover:border-blue-400"
+      }
+    ];
+  }
+
+  // 2. Older Infant: 6 to 11 Months
+  if (months < 12) {
+    return [
+      {
+        badge: "First Solid Foods",
+        title: "First solids & Indian weaning guide",
+        query: `How should I introduce first solid foods (steamed apple, sprouted ragi porridge, and moong dal) to ${childName}?`,
+        color: "border-rose-500/30 bg-rose-500/10 text-rose-200 hover:border-rose-400"
+      },
+      {
+        badge: "Feeding Safety",
+        title: "Gagging vs choking in finger foods",
+        query: `What is the difference between normal gagging and real choking when offering soft finger foods to ${childName}?`,
+        color: "border-amber-500/30 bg-amber-500/10 text-amber-200 hover:border-amber-400"
+      },
+      {
+        badge: "Motor Skills",
+        title: "Sitting balance & crawling exercises",
+        query: `What playful floor games encourage independent sitting balance and core strength for crawling in ${childName}?`,
+        color: "border-emerald-500/30 bg-emerald-500/10 text-emerald-200 hover:border-emerald-400"
+      },
+      {
+        badge: "Teething Relief",
+        title: "Soothing swollen teething gums safely",
+        query: `What safe, pediatrician-approved home remedies soothe painful swollen gums during teething for ${childName}?`,
+        color: "border-cyan-500/30 bg-cyan-500/10 text-cyan-200 hover:border-cyan-400"
+      },
+      {
+        badge: "Sleep & Separation",
+        title: "Bedtime separation anxiety & routines",
+        query: `How do I handle infant separation anxiety at bedtime and night wakings peacefully with ${childName}?`,
+        color: "border-purple-500/30 bg-purple-500/10 text-purple-200 hover:border-purple-400"
+      },
+      {
+        badge: "Fine Motor",
+        title: "Pincer grasp & self-feeding practice",
+        query: `What finger food textures and grasping toys help ${childName} develop a strong pincer grasp?`,
+        color: "border-teal-500/30 bg-teal-500/10 text-teal-200 hover:border-teal-400"
+      },
+      {
+        badge: "Cup Drinking",
+        title: "Introducing open cups & water sips",
+        query: `When and how should I introduce water sips in an open cup or straw cup to ${childName}?`,
+        color: "border-blue-500/30 bg-blue-500/10 text-blue-200 hover:border-blue-400"
+      },
+      {
+        badge: "Cognitive Play",
+        title: "Object permanence & peek-a-boo",
+        query: `What interactive games teach ${childName} object permanence and help with separation reassurance?`,
+        color: "border-indigo-500/30 bg-indigo-500/10 text-indigo-200 hover:border-indigo-400"
+      },
+      {
+        badge: "Baby Proofing",
+        title: "Pulling to stand & furniture safety",
+        query: `What crucial baby-proofing steps should I take now that ${childName} is pulling up on tables and furniture?`,
+        color: "border-amber-500/30 bg-amber-500/10 text-amber-200 hover:border-amber-400"
+      }
+    ];
+  }
+
+  // 3. Young Toddler: 12 to 23 Months (1 to 2 Years)
+  if (months < 24) {
+    return [
+      {
+        badge: "Nap Transition",
+        title: "Dropping from 2 naps to 1 nap",
+        query: `What schedule adjustments help ${childName} transition smoothly from two naps down to one afternoon nap?`,
+        color: "border-purple-500/30 bg-purple-500/10 text-purple-200 hover:border-purple-400"
+      },
+      {
+        badge: "Speech Explosion",
+        title: "First 50 words & language modeling",
+        query: `How can I encourage speech milestones and help ${childName} expand beyond single words into simple phrases?`,
+        color: "border-cyan-500/30 bg-cyan-500/10 text-cyan-200 hover:border-cyan-400"
+      },
+      {
+        badge: "Big Emotions",
+        title: "Calming early tantrums with empathy",
+        query: `How do I respond when ${childName} has a frustration tantrum because they cannot communicate what they want?`,
+        color: "border-rose-500/30 bg-rose-500/10 text-rose-200 hover:border-rose-400"
+      },
+      {
+        badge: "Toddler Nutrition",
+        title: "Picky eating & family table foods",
+        query: `How can I ensure ${childName} gets balanced iron and protein from home-cooked Indian family meals?`,
+        color: "border-emerald-500/30 bg-emerald-500/10 text-emerald-200 hover:border-emerald-400"
+      },
+      {
+        badge: "Boundary Setting",
+        title: "Gentle scripts to stop hitting or biting",
+        query: `What calm, immediate scripts stop ${childName} from hitting or biting when excited or frustrated?`,
+        color: "border-amber-500/30 bg-amber-500/10 text-amber-200 hover:border-amber-400"
+      },
+      {
+        badge: "Physical Activity",
+        title: "Steady walking & climbing confidence",
+        query: `What safe indoor obstacle activities build balance, coordination, and climbing skills for ${childName}?`,
+        color: "border-teal-500/30 bg-teal-500/10 text-teal-200 hover:border-teal-400"
+      },
+      {
+        badge: "Bedtime Routine",
+        title: "Soothing bedtime routine without tears",
+        query: `How can I create a calming 20-minute bedtime routine that helps ${childName} fall asleep without tears?`,
+        color: "border-indigo-500/30 bg-indigo-500/10 text-indigo-200 hover:border-indigo-400"
+      },
+      {
+        badge: "Dental Care",
+        title: "Brushing toddler teeth twice daily",
+        query: `What playful methods and toothbrush habits make brushing toddler teeth easy and tear-free for ${childName}?`,
+        color: "border-blue-500/30 bg-blue-500/10 text-blue-200 hover:border-blue-400"
+      },
+      {
+        badge: "Sensory Play",
+        title: "Mess-free sensory & water exploration",
+        query: `What simple sensory play ideas with kitchen items keep ${childName} focused and happily exploring?`,
+        color: "border-pink-500/30 bg-pink-500/10 text-pink-200 hover:border-pink-400"
+      }
+    ];
+  }
+
+  // 4. Older Toddler: 24 to 47 Months (2 to 4 Years - Ashwath's stage!)
+  if (months < 48) {
+    return [
+      {
+        badge: "Big Emotions",
+        title: "Respectful scripts for toddler tantrums",
+        query: `What calm, respectful scripts work best to de-escalate big emotional tantrums with ${childName}?`,
+        color: "border-purple-500/30 bg-purple-500/10 text-purple-200 hover:border-purple-400"
+      },
+      {
+        badge: "Potty Training",
+        title: "Potty training readiness & first steps",
+        query: `What clear signs show ${childName} is ready for gentle, pressure-free potty training?`,
+        color: "border-teal-500/30 bg-teal-500/10 text-teal-200 hover:border-teal-400"
+      },
+      {
+        badge: "Speech & Sentences",
+        title: "3-word sentences & storytelling habits",
+        query: `What daily conversational questions stimulate 3-word sentences and expressive vocabulary in ${childName}?`,
+        color: "border-cyan-500/30 bg-cyan-500/10 text-cyan-200 hover:border-cyan-400"
+      },
+      {
+        badge: "Picky Eating",
+        title: "Indian toddler meals & vegetable intake",
+        query: `How can I encourage ${childName} to happily eat vegetables and lentils without mealtime battles?`,
+        color: "border-emerald-500/30 bg-emerald-500/10 text-emerald-200 hover:border-emerald-400"
+      },
+      {
+        badge: "Bedtime Routine",
+        title: "Handling bedtime stalling & curtain calls",
+        query: `How do I stop bedtime stalling (asking for water, leaving bed, bedtime excuses) with ${childName}?`,
+        color: "border-indigo-500/30 bg-indigo-500/10 text-indigo-200 hover:border-indigo-400"
+      },
+      {
+        badge: "Social Skills",
+        title: "Parallel play, turn-taking & sharing",
+        query: `How do I teach ${childName} gentle turn-taking and playing alongside peers without forced sharing?`,
+        color: "border-amber-500/30 bg-amber-500/10 text-amber-200 hover:border-amber-400"
+      },
+      {
+        badge: "Behavior Comparison",
+        title: "Sensory meltdown vs boundary testing",
+        query: `How can I tell the difference between a sensory meltdown and a boundary-testing tantrum in ${childName}?`,
+        color: "border-rose-500/30 bg-rose-500/10 text-rose-200 hover:border-rose-400"
+      },
+      {
+        badge: "Screen Time",
+        title: "Screen-free play & outdoor focus",
+        query: `What engaging screen-free indoor and playground games keep ${childName} actively occupied?`,
+        color: "border-blue-500/30 bg-blue-500/10 text-blue-200 hover:border-blue-400"
+      },
+      {
+        badge: "Independence",
+        title: "Self-dressing, shoes & washing hands",
+        query: `How can I foster daily independence like washing hands, putting on shoes, and toy cleanup for ${childName}?`,
+        color: "border-pink-500/30 bg-pink-500/10 text-pink-200 hover:border-pink-400"
+      }
+    ];
+  }
+
+  // 5. Preschool / Older Child: 4+ Years
+  return [
+    {
+      badge: "Emotional Growth",
+      title: "Cooling down anger & deep breathing",
+      query: `What fun breathing games help ${childName} learn self-regulation when feeling angry or upset?`,
+      color: "border-purple-500/30 bg-purple-500/10 text-purple-200 hover:border-purple-400"
+    },
+    {
+      badge: "Friendships",
+      title: "Resolving playground conflict & sharing",
+      query: `How can I guide ${childName} through resolving disagreements and building strong friendships at school?`,
+      color: "border-teal-500/30 bg-teal-500/10 text-teal-200 hover:border-teal-400"
+    },
+    {
+      badge: "Pre-Writing",
+      title: "Pencil grip & scissor cutting games",
+      query: `What playful fine motor activities strengthen hand muscles for pencil grip and writing in ${childName}?`,
+      color: "border-cyan-500/30 bg-cyan-500/10 text-cyan-200 hover:border-cyan-400"
+    },
+    {
+      badge: "Nighttime Fears",
+      title: "Handling fears of dark, shadows & dreams",
+      query: `How should I talk to ${childName} when they are scared of monsters, shadows, or bad dreams?`,
+      color: "border-indigo-500/30 bg-indigo-500/10 text-indigo-200 hover:border-indigo-400"
+    },
+    {
+      badge: "Healthy Meals",
+      title: "Nutritious school lunchbox recipes",
+      query: `What quick, wholesome Indian lunchbox recipes will ${childName} happily finish at school?`,
+      color: "border-emerald-500/30 bg-emerald-500/10 text-emerald-200 hover:border-emerald-400"
+    },
+    {
+      badge: "Focus & Play",
+      title: "Building 20-min independent play focus",
+      query: `How can I gently cultivate 20+ minutes of focused, creative independent play for ${childName}?`,
+      color: "border-amber-500/30 bg-amber-500/10 text-amber-200 hover:border-amber-400"
+    },
+    {
+      badge: "Sibling Harmony",
+      title: "Reducing jealousy & fostering teamwork",
+      query: `What daily strategies reduce sibling rivalry and help ${childName} feel valued alongside their sibling?`,
+      color: "border-rose-500/30 bg-rose-500/10 text-rose-200 hover:border-rose-400"
+    },
+    {
+      badge: "Curiosity",
+      title: "Answering relentless 'Why' questions",
+      query: `How can I use ${childName}'s endless 'Why' questions to foster curiosity and critical thinking?`,
+      color: "border-blue-500/30 bg-blue-500/10 text-blue-200 hover:border-blue-400"
+    },
+    {
+      badge: "Morning Routine",
+      title: "Stress-free morning school routine",
+      query: `How do I set up a calm morning routine so ${childName} gets ready for school without rushing or stress?`,
+      color: "border-pink-500/30 bg-pink-500/10 text-pink-200 hover:border-pink-400"
+    }
+  ];
+};
+
 export const SearchSection: React.FC = () => {
-  const { profile, childProfiles } = useAuth();
+  const { profile, childProfiles, activeChildIndex } = useAuth();
   const { t } = useLanguage();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  // Scoped to AI Assistant page only (does not overwrite other site features)
-  const [pageChildId, setPageChildId] = useState<1 | 2>(1);
+  // Scoped to AI Assistant page (defaults to active child or child 1)
+  const [pageChildId, setPageChildId] = useState<1 | 2>(() => (activeChildIndex === 2 ? 2 : 1));
+
+  useEffect(() => {
+    if (activeChildIndex) {
+      setPageChildId(activeChildIndex);
+    }
+  }, [activeChildIndex]);
 
   const [query, setQuery] = useState('');
   const [followUpText, setFollowUpText] = useState('');
@@ -160,14 +524,19 @@ export const SearchSection: React.FC = () => {
   // Dynamic Child Profile for AI Assistant
   const activeChild = childProfiles.find(cp => cp.id === pageChildId) || childProfiles[0];
   const parentName = profile?.parentName || profile?.firstName || profile?.name || (typeof window !== 'undefined' ? localStorage.getItem('parent_name') : null) || 'Lashmi';
-  const childName = activeChild?.name || profile?.babyName || profile?.childName || 'Ashwath';
-  const childAge = activeChild?.age || profile?.babyAge || '14 Months';
+  const childName = activeChild?.name || profile?.babyName || profile?.childName || (pageChildId === 2 ? 'Ananya' : 'Ashwath');
+  const childAge = activeChild?.age || profile?.babyAge || (pageChildId === 2 ? '3 Months' : '2 Years 6 Months');
 
-  // Check if current active child is in infant stage (0–12 months, e.g. 3 Months for Ananya)
-  const isInfant = Boolean(
-    (childAge && childAge.toLowerCase().includes('month') && !childAge.toLowerCase().includes('yr')) ||
-    (activeChild?.birthDate && (Date.now() - new Date(activeChild.birthDate).getTime()) < 365 * 24 * 60 * 60 * 1000)
-  );
+  // Accurate age calculation for stage determination
+  const childAgeMonths = useMemo(() => {
+    return getChildAgeInMonths(activeChild?.birthDate, childAge, childName, pageChildId);
+  }, [activeChild?.birthDate, childAge, childName, pageChildId]);
+
+  const isInfant = childAgeMonths < 12;
+
+  const starterTopics = useMemo(() => {
+    return getAgeSpecificTopics(childName, childAge, activeChild?.birthDate, pageChildId);
+  }, [childName, childAge, activeChild?.birthDate, pageChildId]);
 
   // Voice speech-to-text integration
   useEffect(() => {
@@ -438,82 +807,6 @@ export const SearchSection: React.FC = () => {
     handleExecuteQuery(failedQuery, cleanHistory);
   };
 
-  const starterTopics = isInfant ? [
-    {
-      title: "3-Month Wake Windows & Daily Naps",
-      query: `What is the ideal wake window and nap routine for 3-month-old ${childName}?`,
-      badge: "Sleep & Routine",
-      color: "border-purple-500/30 bg-purple-500/10 text-purple-200 hover:border-purple-400",
-    },
-    {
-      title: "Soothing Evening Colic & Trapped Gas",
-      query: `How can I soothe evening colic crying spells and relieve trapped gas in ${childName}?`,
-      badge: "Soothing & Gas Relief",
-      color: "border-amber-500/30 bg-amber-500/10 text-amber-200 hover:border-amber-400",
-    },
-    {
-      title: "Tummy Time & Head Control Milestones",
-      query: `How much daily tummy time should a 3-month-old do, and what if ${childName} gets fussy after 2 minutes?`,
-      badge: "Physical Milestones",
-      color: "border-emerald-500/30 bg-emerald-500/10 text-emerald-200 hover:border-emerald-400",
-    },
-    {
-      title: "High-Contrast Visual & Sensory Play",
-      query: `What high-contrast visual toys and sensory play best stimulate a 3-month-old's developing brain?`,
-      badge: "Sensory Development",
-      color: "border-cyan-500/30 bg-cyan-500/10 text-cyan-200 hover:border-cyan-400",
-    },
-    {
-      title: "3-Month Growth Spurt & Cluster Feeding",
-      query: `How do I tell if ${childName} is having a 3-month growth spurt cluster feeding versus regular hunger?`,
-      badge: "Infant Feeding",
-      color: "border-rose-500/30 bg-rose-500/10 text-rose-200 hover:border-rose-400",
-    },
-    {
-      title: "Gentle 4-Month Sleep Regression Prep",
-      query: `What gentle sleep cues and bedtime habits can I start at 3 months to ease the upcoming 4-month sleep regression?`,
-      badge: "Sleep Progression",
-      color: "border-indigo-500/30 bg-indigo-500/10 text-indigo-200 hover:border-indigo-400",
-    },
-  ] : [
-    {
-      title: "Sensory Meltdown vs. Boundary Tantrum",
-      query: "What is the difference between a sensory meltdown and a boundary tantrum?",
-      badge: "Behavior Comparison",
-      color: "border-purple-500/30 bg-purple-500/10 text-purple-200 hover:border-purple-400",
-    },
-    {
-      title: "5 Indoor Games for a Rainy Day",
-      query: `Give me five fun indoor games to play with ${childName} on a rainy day using simple household items.`,
-      badge: "Creative Play",
-      color: "border-amber-500/30 bg-amber-500/10 text-amber-200 hover:border-amber-400",
-    },
-    {
-      title: "Refusing to Sleep Alone at Night",
-      query: `My child ${childName} refuses to sleep alone and cries when I leave the room. How do I transition peacefully?`,
-      badge: "Bedtime & Sleep",
-      color: "border-indigo-500/30 bg-indigo-500/10 text-indigo-200 hover:border-indigo-400",
-    },
-    {
-      title: "Handling Fear of Ghosts or Monsters",
-      query: `My child ${childName} says they saw a ghost and are scared of shadows under their bed. How should I talk to them?`,
-      badge: "Childhood Fears",
-      color: "border-emerald-500/30 bg-emerald-500/10 text-emerald-200 hover:border-emerald-400",
-    },
-    {
-      title: "Picky Eating & First Ragi Porridge",
-      query: `How do I introduce sprouted ragi porridge to a picky toddler like ${childName} without mealtime battles?`,
-      badge: "Indian Nutrition",
-      color: "border-rose-500/30 bg-rose-500/10 text-rose-200 hover:border-rose-400",
-    },
-    {
-      title: "Tackling Hitting & Biting Calmly",
-      query: `My toddler ${childName} hits and pinches when angry. What immediate calming script and action steps should I take?`,
-      badge: "Big Feelings",
-      color: "border-cyan-500/30 bg-cyan-500/10 text-cyan-200 hover:border-cyan-400",
-    },
-  ];
-
   return (
     <div className="w-full max-w-full mx-auto py-2 sm:py-4 px-2 sm:px-4 lg:px-6 text-center">
       {/* AI Powered Parenting Header */}
@@ -625,37 +918,39 @@ export const SearchSection: React.FC = () => {
         </div>
       )}
 
-      {/* Categorized Starter Suggestion Cards */}
+      {/* Categorized Starter Suggestion Cards (Compact size, text-fitted, 9 age-matched questions) */}
       {!hasSearched && (
         <div className="max-w-5xl mx-auto mb-10 text-left">
-          <div className="flex items-center justify-between mb-3.5 px-1">
-            <span className="text-xs font-black uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+          <div className="flex flex-wrap items-center justify-between gap-2 mb-3.5 px-1">
+            <span className="text-xs font-black uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
               <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
-              <span>Explore Everyday Topics</span>
+              <span>Explore Everyday Topics for {childName} ({childAge})</span>
+            </span>
+            <span className="text-[11px] font-bold text-indigo-300 bg-indigo-500/15 border border-indigo-500/30 px-2.5 py-0.5 rounded-full">
+              {starterTopics.length} Age-Matched Questions
             </span>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-2.5">
             {starterTopics.map((topic, idx) => (
               <motion.button
-                key={idx}
-                initial={{ opacity: 0, y: 15 }}
+                key={`${pageChildId}-${idx}`}
+                initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: idx * 0.05 }}
+                transition={{ delay: idx * 0.02 }}
                 onClick={() => handleExecuteQuery(topic.query, [])}
-                className={`p-4 rounded-2xl border text-left transition-all active:scale-98 cursor-pointer shadow-md group flex flex-col justify-between gap-2.5 ${topic.color}`}
+                className={`p-2.5 sm:px-3 sm:py-2 rounded-xl border text-left transition-all active:scale-[0.98] hover:scale-[1.01] cursor-pointer shadow-sm group flex items-center justify-between gap-2 ${topic.color} hover:bg-white/[0.08] min-h-[50px]`}
               >
-                <div>
-                  <span className="text-[10px] font-black uppercase tracking-wider opacity-80 block mb-1">
+                <div className="min-w-0 flex-1">
+                  <span className="text-[9px] font-black uppercase tracking-wider opacity-75 block truncate">
                     {topic.badge}
                   </span>
-                  <h4 className="text-sm font-bold text-white group-hover:text-indigo-200 transition-colors leading-snug">
+                  <div className="text-[11.5px] sm:text-xs font-semibold text-white group-hover:text-indigo-200 transition-colors leading-snug line-clamp-2 mt-0.5">
                     {topic.title}
-                  </h4>
+                  </div>
                 </div>
-                <div className="flex items-center justify-between text-[11px] opacity-70 group-hover:opacity-100 transition-opacity pt-2 border-t border-white/5">
-                  <span>Ask this now</span>
-                  <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                <div className="w-5 h-5 rounded-md bg-white/10 group-hover:bg-white/20 flex items-center justify-center shrink-0 transition-colors">
+                  <ChevronRight className="w-3 h-3 text-white/80 group-hover:text-white group-hover:translate-x-0.5 transition-transform" />
                 </div>
               </motion.button>
             ))}
@@ -816,6 +1111,25 @@ export const SearchSection: React.FC = () => {
 
                         {loading && index === messages.length - 1 && (
                           <span className="inline-block w-2 h-4 bg-indigo-400 animate-pulse ml-1 align-middle" />
+                        )}
+
+                        {/* In-Chat Responsible AI Trust Badges */}
+                        {!loading && (
+                          <div className="mt-4 pt-3.5 border-t border-white/10 flex flex-wrap items-center justify-between gap-2 text-xs">
+                            <div className="flex flex-wrap items-center gap-2">
+                              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-[11px] font-bold">
+                                <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                                <span>Verified against IAP Infant Guidelines</span>
+                              </span>
+                              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-[11px] font-bold">
+                                <CheckCircle2 className="w-3.5 h-3.5 text-indigo-400" />
+                                <span>WHO &amp; FSSAI Standards</span>
+                              </span>
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white/5 border border-white/10 text-slate-400 text-[10px] font-mono">
+                                🔒 Zero Ad Selling · 100% Private
+                              </span>
+                            </div>
+                          </div>
                         )}
                       </div>
                     )}

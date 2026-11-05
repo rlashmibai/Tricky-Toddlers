@@ -24,7 +24,8 @@ import {
   Save,
   CheckCircle2,
   ExternalLink,
-  ArrowRight
+  ArrowRight,
+  Bell
 } from 'lucide-react';
 import { useAuth } from '../lib/AuthContext';
 import { db, handleFirestoreError } from '../lib/firebase';
@@ -809,6 +810,106 @@ export const VaccineTracker: React.FC = () => {
     persistVaccines(updated);
   };
 
+  // 1-Tap Calendar Sync (.ics download for Apple Calendar, Google Calendar, Outlook)
+  const handleSyncToCalendar = () => {
+    playSound('pop');
+    
+    // Calculate reference birth date
+    const dobStr = currentChild?.birthDate || profile?.babyBirthDate || (typeof window !== 'undefined' ? localStorage.getItem('baby_dob') : null);
+    const baseDate = dobStr && !isNaN(new Date(dobStr).getTime()) ? new Date(dobStr) : new Date();
+
+    // Filter upcoming or scheduled vaccines
+    const targetVaccines = vaccines.filter(v => v.status !== 'Completed');
+    
+    if (targetVaccines.length === 0) {
+      alert(`All vaccines for ${childName} are already marked as completed! No upcoming immunization dates to sync.`);
+      return;
+    }
+
+    // Format date helper for iCalendar: YYYYMMDDTHHMMSSZ
+    const formatICSDate = (date: Date): string => {
+      const pad = (n: number) => n < 10 ? `0${n}` : `${n}`;
+      const year = date.getUTCFullYear();
+      const month = pad(date.getUTCMonth() + 1);
+      const day = pad(date.getUTCDate());
+      return `${year}${month}${day}T090000Z`; // Default 9:00 AM UTC
+    };
+
+    const getDaysOffset = (milestone: string): number => {
+      const m = milestone.toLowerCase();
+      if (m.includes('birth')) return 1;
+      if (m.includes('6 week')) return 42;
+      if (m.includes('10 week')) return 70;
+      if (m.includes('14 week')) return 98;
+      if (m.includes('6 month')) return 180;
+      if (m.includes('9 month')) return 270;
+      if (m.includes('12 month')) return 365;
+      if (m.includes('15 month')) return 450;
+      if (m.includes('18 month') || m.includes('16')) return 540;
+      if (m.includes('2 year')) return 730;
+      if (m.includes('4') || m.includes('5') || m.includes('6 year')) return 1825;
+      if (m.includes('9') || m.includes('10') || m.includes('14 year')) return 3650;
+      return 30;
+    };
+
+    const now = new Date();
+    const events = targetVaccines.map((vac, index) => {
+      const offsetDays = getDaysOffset(vac.ageMilestone);
+      const eventDate = new Date(baseDate.getTime() + offsetDays * 24 * 60 * 60 * 1000);
+      // If eventDate is in the past, stagger from today
+      const finalDate = eventDate < now ? new Date(now.getTime() + (index + 1) * 7 * 24 * 60 * 60 * 1000) : eventDate;
+      const endDate = new Date(finalDate.getTime() + 60 * 60 * 1000); // 1 hour duration
+
+      const dtStart = formatICSDate(finalDate);
+      const dtEnd = formatICSDate(endDate);
+      const uid = `${vac.id}-${Date.now()}@trickytoddlers.in`;
+      const cleanSummary = `Vaccine: ${vac.vaccineName} (${vac.doseNumber}) - ${childName}`;
+      const cleanDescription = `Pediatric Immunization Reminder for ${childName}\\n\\nVaccine: ${vac.vaccineName}\\nDose: ${vac.doseNumber}\\nTarget Disease: ${vac.diseaseProtected}\\nRecommended Window: ${vac.recommendedWindow}\\nCategory: ${vac.category}\\nOfficial Guideline: WHO, Indian IAP and FSSAI Pediatric Schedule\\nNotes: ${vac.description}`;
+
+      return [
+        'BEGIN:VEVENT',
+        `UID:${uid}`,
+        `DTSTAMP:${formatICSDate(now)}`,
+        `DTSTART:${dtStart}`,
+        `DTEND:${dtEnd}`,
+        `SUMMARY:${cleanSummary}`,
+        `DESCRIPTION:${cleanDescription}`,
+        'STATUS:CONFIRMED',
+        'BEGIN:VALARM',
+        'TRIGGER:-P1D',
+        'ACTION:DISPLAY',
+        `DESCRIPTION:Reminder: Upcoming ${vac.vaccineName} immunization for ${childName} tomorrow`,
+        'END:VALARM',
+        'END:VEVENT'
+      ].join('\r\n');
+    });
+
+    const icsContent = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'PRODID:-//Tricky Toddlers//IAP Digital Vaccine Tracker//EN',
+      'CALSCALE:GREGORIAN',
+      'METHOD:PUBLISH',
+      `X-WR-CALNAME:${childName} IAP Immunization Schedule`,
+      'X-WR-TIMEZONE:Asia/Kolkata',
+      ...events,
+      'END:VCALENDAR'
+    ].join('\r\n');
+
+    const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `${childName.toLowerCase().replace(/\\s+/g, '-')}-iap-vaccines.ics`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+
+    setSaveStatus('Calendar .ics Synced!');
+    setTimeout(() => setSaveStatus(''), 4000);
+  };
+
   // Open printable vaccine card modal
   const handlePrint = () => {
     playSound('pop');
@@ -1022,6 +1123,15 @@ export const VaccineTracker: React.FC = () => {
               >
                 <Printer className="w-4 h-4 text-cyan-400" />
                 <span>Print Vaccine Card</span>
+              </button>
+
+              <button
+                onClick={handleSyncToCalendar}
+                className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs sm:text-sm tracking-wide shadow-lg shadow-emerald-500/20 transition-all transform hover:scale-[1.02] active:scale-95 flex items-center gap-2 cursor-pointer border border-emerald-400/30"
+                title="Sync upcoming immunization milestone dates directly to Apple Calendar, Google Calendar, or Outlook with 1-day advance reminder alerts"
+              >
+                <Calendar className="w-4 h-4 text-emerald-200" />
+                <span>1-Tap Calendar Sync (.ics)</span>
               </button>
             </div>
           </div>

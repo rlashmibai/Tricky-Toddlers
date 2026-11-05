@@ -196,7 +196,9 @@ const AppContent: React.FC = () => {
               <Route path="/tricky-toddlers/feedback" element={<ContactFeedbackPage />} />
               <Route path="/our-story" element={<Navigate to="/about?tab=story" replace />} />
               <Route path="/mission" element={<Navigate to="/#problem-and-mission" replace />} />
-              <Route path="/vision" element={<Navigate to="/#vision" replace />} />
+              <Route path="/tales" element={<Navigate to="/?tab=tales" replace />} />
+              <Route path="/toddler-tales" element={<Navigate to="/?tab=tales" replace />} />
+              <Route path="/tricky-toddlers/tales" element={<Navigate to="/?tab=tales" replace />} />
               <Route path="/reviews" element={<Navigate to="/about?tab=reviews" replace />} />
               <Route path="/disclaimer" element={<LegalPage initialPolicy="disclaimer" />} />
               <Route path="/privacy-policy" element={<LegalPage initialPolicy="privacy" />} />
