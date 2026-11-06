@@ -237,7 +237,26 @@ function isOutOfScopeQuery(query: string): boolean {
   return outOfScopeKeywords.some(kw => q.includes(kw));
 }
 
-function generateTailoredFallback(q: string, parentName?: string, childName?: string, childAge?: string): string {
+function getTopicExplainabilityMarkdown(lq: string): string {
+  if (lq.includes('potty') || lq.includes('toilet') || lq.includes('diaper') || lq.includes('pee') || lq.includes('poop')) {
+    return `\n\n### 🔗 Explainability & Reference Links\n* [IAP Parental Guidelines on Toilet Training Readiness](https://iapindia.org/parental-guidelines/) — Explains neuromuscular bladder/bowel readiness cues, footstool posture for pelvic floor relaxation, and gentle accident management.\n* [AAP HealthyChildren – Toilet Training Clinical Guide](https://www.healthychildren.org/English/ages-stages/toddler/toilet-training/Pages/default.aspx) — Details post-meal gastrocolic timing and positive reinforcement strategies.`;
+  }
+  if (lq.includes('colic') || lq.includes('gas') || (lq.includes('cry') && !lq.includes('public'))) {
+    return `\n\n### 🔗 Explainability & Reference Links\n* [IAP Parental Guideline on Excessive Crying & Infantile Colic](https://iapindia.org/parental-guidelines/) — Explains why immature gut motility and evening sensory fatigue trigger colic and how rhythmic soothing calms the vagus nerve.\n* [AAP HealthyChildren – Calming a Fussy Baby & Colic Relief](https://www.healthychildren.org/English/ages-stages/baby/crying-colic/Pages/default.aspx) — Clinical rationale behind the 5 S's soothing protocol, bicycle leg exercises, and red-flag symptoms.`;
+  }
+  if (lq.includes('sleep') || lq.includes('nap') || lq.includes('wake') || lq.includes('bedtime') || lq.includes('night') || lq.includes('regression')) {
+    return `\n\n### 🔗 Explainability & Reference Links\n* [IAP Parental Guidelines on Infant & Child Sleep Hygiene](https://iapindia.org/parental-guidelines/) — Explains how age-appropriate wake windows and screen-free wind-down routines regulate melatonin and prevent overtired cortisol spikes.\n* [WHO Guidelines on Sleep & Physical Activity for Children Under 5](https://www.who.int/publications/i/item/9789241550536) — Global clinical benchmarks for 24-hour sleep duration and safe sleep practices.`;
+  }
+  if (lq.includes('feed') || lq.includes('milk') || lq.includes('eat') || lq.includes('food') || lq.includes('picky') || lq.includes('ragi') || lq.includes('khichdi') || lq.includes('wean') || lq.includes('solid')) {
+    return `\n\n### 🔗 Explainability & Reference Links\n* [ICMR–National Institute of Nutrition (NIN) Dietary Guidelines](https://www.nin.res.in) — Evidence-based rationale for exclusive milk feeding (0–6 months), iron-rich complementary foods, and balanced Indian child nutrition.\n* [IAP Guidelines on Infant and Young Child Feeding (IYCF)](https://iapindia.org/parental-guidelines/) — Explains responsive feeding, division of responsibility at mealtime, and safe textures to prevent choking.`;
+  }
+  if (lq.includes('tantrum') || lq.includes('meltdown') || lq.includes('hit') || lq.includes('bite') || lq.includes('kick') || lq.includes('script') || lq.includes('aggress') || lq.includes('sibling') || lq.includes('share')) {
+    return `\n\n### 🔗 Explainability & Reference Links\n* [IAP Positive Parenting & Managing Toddler Tantrums Guide](https://iapindia.org/parental-guidelines/) — Explains why toddler prefrontal brain development leads to big emotional storms and why calm co-regulation works faster than punishment.\n* [UNICEF Parenting – How to Handle Tantrums & Big Emotions](https://www.unicef.org/parenting/child-care/how-handle-tantrums) — Evidence-based strategies on emotion naming, gentle physical boundaries, and connection-first scripts.`;
+  }
+  return `\n\n### 🔗 Explainability & Reference Links\n* [WHO Child Growth & Developmental Milestones Standards](https://www.who.int/tools/child-growth-standards) — Clinical benchmarks for motor, sensory, cognitive, and expressive language development.\n* [UNICEF Parenting – Early Childhood Development & Play](https://www.unicef.org/parenting/child-development) — Explains how responsive interactions and age-appropriate play strengthen neural pathways.`;
+}
+
+function generateTailoredFallback(q: string, parentName?: string, childName?: string, childAge?: string, isFollowUp: boolean = false): string {
   const pName = parentName?.trim() || "Lashmi";
   const cName = childName?.trim() || "Ashwath";
   const age = childAge?.trim() || "2 yrs 6 mos";
@@ -247,6 +266,31 @@ function generateTailoredFallback(q: string, parentName?: string, childName?: st
     return getResponsibleAIRefusal(pName, cName, age);
   }
 
+  const rawBody = generateTailoredFallbackRaw(q, pName, cName, age);
+
+  // Format greeting based on whether this is the first turn of a new session or a follow-up turn
+  const greetingPrefix = isFollowUp
+    ? `${pName}, building on our conversation, here`
+    : `Namaste ${pName}! Here`;
+  let formatted = rawBody.replace(new RegExp(`^Hello\\s+${pName},\\s+here`, 'i'), greetingPrefix);
+
+  // Inject explainability links right before ---CLARIFICATION_OPTIONS--- or ---RELATED_QUESTIONS---
+  const explainabilityBlock = getTopicExplainabilityMarkdown(lq);
+  if (!formatted.includes('Explainability & Reference Links')) {
+    if (formatted.includes('---CLARIFICATION_OPTIONS---')) {
+      formatted = formatted.replace('---CLARIFICATION_OPTIONS---', `${explainabilityBlock.trim()}\n\n---CLARIFICATION_OPTIONS---`);
+    } else if (formatted.includes('---RELATED_QUESTIONS---')) {
+      formatted = formatted.replace('---RELATED_QUESTIONS---', `${explainabilityBlock.trim()}\n\n---RELATED_QUESTIONS---`);
+    } else {
+      formatted = `${formatted}${explainabilityBlock}`;
+    }
+  }
+
+  return formatted;
+}
+
+function generateTailoredFallbackRaw(q: string, pName: string, cName: string, age: string): string {
+  const lq = (q || '').toLowerCase();
   const { bracket } = parseChildAgeBracket(age);
   const isInfant = bracket === 'infant';
 
@@ -724,7 +768,7 @@ At age ${age}, children undergo rapid neural wiring and language expansion. They
 - [What positive parenting scripts help when ${cName} says 'No'?]`;
 }
 
-function getSystemInstruction(parentName?: string, childName?: string, childAge?: string, languagePromptModifier?: string): string {
+function getSystemInstruction(parentName?: string, childName?: string, childAge?: string, languagePromptModifier?: string, isFollowUp: boolean = false): string {
   const pName = parentName?.trim() || "Lashmi";
   const cName = childName?.trim() || "Ashwath";
   const age = childAge?.trim() || "2 yrs 6 mos";
@@ -739,10 +783,15 @@ ${languagePromptModifier}
 ======================================================================
 ` : '';
 
+  const greetingInstruction = isFollowUp
+    ? `- **FOLLOW-UP CONVERSATION RULE (STRICT)**: This is a follow-up question in an ongoing conversation. Do NOT say "Namaste", "Hello", or "Hi" again! Do NOT greet ${pName} as if starting a brand-new conversation. Start naturally and conversationally using ${pName}'s name or a conversational bridge (e.g., "${pName}, building on what we discussed...", "Following up on that for ${cName}, ${pName}—", or "That's a great follow-up question, ${pName}. Here is how...").`
+    : `- **FIRST CONVERSATION GREETING RULE (STRICT)**: This is the first message of a new conversation session. Start your very first sentence with EXACTLY: "Namaste ${pName}! " followed by your warm, helpful response.`;
+
   return `${langHeader}
 You are Tricky Toddler AI, an elite Pediatric Clinical Assistant, Child Safety Specialist, and Developmental Parenting Companion aligned with the Indian Academy of Pediatrics (IAP), ICMR-NIN, and WHO child health standards.
 Current Parent: ${pName}
 Current Child: ${cName} (Age: ${age} · ${ageBracketLabel})
+Session Turn Type: ${isFollowUp ? 'FOLLOW-UP TURN IN ONGOING CONVERSATION (Do NOT repeat Namaste)' : 'FIRST TURN OF NEW CONVERSATION (Start with "Namaste ' + pName + '! ")'}
 
 ### 1. DIRECT QUESTION UNDERSTANDING (ZERO KEYWORD HIJACKING)
 - Always answer the EXACT question asked by ${pName}. Never replace or derail the question with a generic or pre-canned response triggered by matching keywords.
@@ -774,44 +823,24 @@ Current Child: ${cName} (Age: ${age} · ${ageBracketLabel})
 - Parents need structured, highly actionable guidance that is fresh and directly tailored to their immediate question.
 - **EVERY response (both initial questions AND follow-up queries) MUST contain 3 to 4 distinct, engaging, topic-specific sections** crafted dynamically for the exact user question.
 - **STRICT PROHIBITION**: NEVER reuse the exact generic heading "Practical Steps for [Parent]" or "Understanding What [Child] Needs" in every answer. Headings MUST be rich, diverse, and contextual with relevant emojis.
-- Diverse heading templates depending on topic:
-  * **For Calming Scripts / Public Tantrums**:
-    ### 🗣️ Word-for-Word Calming Scripts to Say Out Loud
-    ### ⏱️ Immediate 3-Step Public Tantrum Reset
-    ### 🛡️ Deflecting Bystander Pressure & Stares
-    ### 🛑 What NOT to Say in the Heat of the Moment
-  * **For Bedtime & Sleep Resistance**:
-    ### 🌙 The Step-by-Step Bedtime Bridge
-    ### 🗣️ Calming Bedtime Separation Dialogue
-    ### 🧸 Sensory Wind-Down Anchors
-    ### 🛑 Bedtime Pitfalls to Steer Clear Of
-  * **For Sibling Sharing & Rivalry**:
-    ### 🤝 Neutral Refreeing: Stepping In Without Blame
-    ### 🗣️ Turn-Taking Scripts (Instead of Forced Sharing)
-    ### 🧸 Protected Special Toys Strategy
-    ### 🛑 Why Forced Sharing Backfires
-  * **For Aggression (Hitting, Biting, Kicking)**:
-    ### 🛑 Immediate Physical Boundary (Block Without Anger)
-    ### 🗣️ Exact Emotion-Naming Scripts
-    ### ⚡ Constructive Heavy-Work Outlets
-    ### 🛑 Reactions That Escalate Distress
-  * **For Picky Eating & Nutrition**:
-    ### 🥦 Division of Responsibility at the Family Table
-    ### 🍲 Safe Anchor Foods & Low-Stress Exposure
-    ### 🗣️ Stress-Free Table Scripts
-    ### 🛑 Mealtime Traps to Avoid
-  * **For Games & Creative Play**:
-    Provide 3 to 5 clear games with Title, Supplies, Instructions, and Skills Encouraged.
-  * **For Comparisons (e.g. Meltdown vs Tantrum)**:
-    Present a clean GitHub-Flavored Markdown table with explicit line breaks between every single row, followed by Action Steps and What to Avoid.
 
-### 5. CONVERSATIONAL CONTINUITY & MULTI-TURN MEMORY
+### 5. EXPLAINABILITY & REFERENCE LINKS AT THE END OF THE POST (STRICT REQUIREMENT)
+- At the end of your main guidance (immediately BEFORE ---CLARIFICATION_OPTIONS--- or ---RELATED_QUESTIONS---), you MUST include a section titled:
+  ### 🔗 Explainability & Reference Links
+- Inside this section, provide **1 or 2 clickable Markdown links** (\`[Source Title](URL)\`) related to the answer from trusted pediatric authorities—such as:
+  * \`[Indian Academy of Pediatrics (IAP) Parental Guidelines](https://iapindia.org/parental-guidelines/)\`
+  * \`[WHO Child Health & Growth Standards](https://www.who.int/health-topics/child-health)\`
+  * \`[ICMR–National Institute of Nutrition (NIN)](https://www.nin.res.in)\`
+  * \`[UNICEF Parenting Hub](https://www.unicef.org/parenting)\`
+  * \`[AAP HealthyChildren Guidance](https://www.healthychildren.org)\`
+- Include a brief 1-sentence explanation next to each link describing how that clinical source explains or supports the answer.
+
+### 6. CONVERSATIONAL CONTINUITY & MULTI-TURN MEMORY
 - You will receive previous messages in the conversation. Use earlier turns to understand context.
 - Accurately resolve pronouns ("he", "she", "they") and references ("that method didn't work", "we tried this yesterday").
 - When ${pName} reports that a suggested method failed, validate their experience and pivot to an adjusted next-stage approach. Never repeat the same rejected strategy.
-- Distinguish parent-supplied facts from assumptions.
 
-### 6. AMBIGUITY CLARIFICATION & FOLLOW-UP PROTOCOL
+### 7. AMBIGUITY CLARIFICATION & FOLLOW-UP PROTOCOL
 - **If the question is unclear, misspelled, or ambiguous** (e.g., "bad tantrums" or "shot"):
   Politely ask a 1-sentence clarifying question and list 2-3 clickable options using this exact delimiter:
   ---CLARIFICATION_OPTIONS---
@@ -825,10 +854,11 @@ Current Child: ${cName} (Age: ${age} · ${ageBracketLabel})
   - [Relevant follow-up question 2]
   - [Relevant follow-up question 3]
 
-### 7. TONE & EMPATHY
+### 8. TONE, GREETING & EMPATHY
 - Warm, respectful, nonjudgmental, and culturally attuned to Indian and global families.
-- Address ${pName} respectfully by name (e.g., "Hello ${pName}," or "Namaste ${pName},") and mention ${cName} naturally where relevant. Do not robotically repeat ${cName}'s name in every single sentence.
-  Plain language: translate complex medical jargon into intuitive words (e.g., explain "sensory overload" in simple daily terms).`;
+${greetingInstruction}
+- Mention ${cName} naturally where relevant. Do not robotically repeat ${cName}'s name in every single sentence.
+- Plain language: translate complex medical jargon into intuitive words (e.g., explain "sensory overload" in simple daily terms).`;
 }
 
 // In-memory fast cache for repeated pediatric responses
@@ -1188,7 +1218,7 @@ ${languagePromptModifier ? `\n\nREMINDER: Entire response must be in the request
 
   // Dedicated AI Assistant endpoint with streaming
   router.post("/ai-assistant", async (req, res) => {
-    const { query, messages, parentName, childName, childAge, languagePromptModifier } = req.body;
+    const { query, messages, parentName, childName, childAge, languagePromptModifier, isFollowUp: bodyIsFollowUp } = req.body;
     if (!query && (!messages || !messages.length)) {
       return res.status(400).json({ error: "Query or messages are required" });
     }
@@ -1196,6 +1226,7 @@ ${languagePromptModifier ? `\n\nREMINDER: Entire response must be in the request
     const pName = parentName?.trim() || "Lashmi";
     const cName = childName?.trim() || "Ashwath";
     const age = childAge?.trim() || "14 Months";
+    const isFollowUp = Boolean(bodyIsFollowUp || (Array.isArray(messages) && messages.length > 1));
 
     const userQueryText = (query || (Array.isArray(messages) && messages[messages.length - 1]?.parts?.[0]?.text) || (Array.isArray(messages) && messages[messages.length - 1]?.content) || '').toLowerCase();
 
@@ -1205,9 +1236,9 @@ ${languagePromptModifier ? `\n\nREMINDER: Entire response must be in the request
       return res.end();
     }
 
-    const cacheKey = `${userQueryText.trim()}|${pName}|${cName}|${age}|${languagePromptModifier || ''}`;
+    const cacheKey = `${userQueryText.trim()}|${pName}|${cName}|${age}|${languagePromptModifier || ''}|${isFollowUp ? 'followup' : 'first'}`;
     const cachedResponse = aiAssistantServerCache.get(cacheKey);
-    if (cachedResponse && (!Array.isArray(messages) || messages.length <= 1)) {
+    if (cachedResponse && !isFollowUp) {
       res.setHeader("Content-Type", "text/plain; charset=utf-8");
       res.write(cachedResponse);
       return res.end();
@@ -1216,13 +1247,13 @@ ${languagePromptModifier ? `\n\nREMINDER: Entire response must be in the request
     try {
       const ai = getAI();
       if (!ai) {
-        const fallbackText = generateTailoredFallback(userQueryText, parentName, childName, childAge);
+        const fallbackText = generateTailoredFallback(userQueryText, parentName, childName, childAge, isFollowUp);
         res.setHeader("Content-Type", "text/plain; charset=utf-8");
         res.write(fallbackText);
         return res.end();
       }
 
-      const systemInstruction = getSystemInstruction(parentName, childName, childAge, languagePromptModifier);
+      const systemInstruction = getSystemInstruction(parentName, childName, childAge, languagePromptModifier, isFollowUp);
 
       let contents: any = query;
       if (Array.isArray(messages) && messages.length > 0) {
@@ -1262,7 +1293,7 @@ ${languagePromptModifier ? `\n\nREMINDER: Entire response must be in the request
           const modelConfig: any = {
             systemInstruction,
             temperature: 0.65,
-            maxOutputTokens: 950,
+            maxOutputTokens: 1050,
           };
 
           const streamPromise = ai.models.generateContentStream({
@@ -1290,7 +1321,7 @@ ${languagePromptModifier ? `\n\nREMINDER: Entire response must be in the request
 
           if (streamedAny) {
             modelSucceeded = true;
-            if (accumulatedOutput.length > 50 && (!Array.isArray(messages) || messages.length <= 1)) {
+            if (accumulatedOutput.length > 50 && !isFollowUp) {
               if (aiAssistantServerCache.size > 250) {
                 const firstKey = aiAssistantServerCache.keys().next().value;
                 if (firstKey) aiAssistantServerCache.delete(firstKey);
@@ -1319,7 +1350,8 @@ ${languagePromptModifier ? `\n\nREMINDER: Entire response must be in the request
           lastUserQuery,
           parentName,
           childName,
-          childAge
+          childAge,
+          isFollowUp
         );
         res.write(fallbackText);
       }

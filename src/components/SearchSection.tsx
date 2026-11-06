@@ -36,7 +36,33 @@ interface ParsedResponse {
   medicalDisclaimer?: string;
 }
 
-function parseAIResponse(rawText: string): ParsedResponse {
+function getExplainabilityLinksMarkdown(contextText: string): string {
+  const lq = (contextText || '').toLowerCase();
+  if (lq.includes('potty') || lq.includes('toilet') || lq.includes('diaper') || lq.includes('pee') || lq.includes('poop')) {
+    return `\n\n### 🔗 Explainability & Reference Links\n* [IAP Parental Guidelines on Toilet Training Readiness](https://iapindia.org/parental-guidelines/) — Explains neuromuscular bladder/bowel readiness cues, footstool posture for pelvic floor relaxation, and gentle accident management.\n* [AAP HealthyChildren – Toilet Training Clinical Guide](https://www.healthychildren.org/English/ages-stages/toddler/toilet-training/Pages/default.aspx) — Details post-meal gastrocolic timing and positive reinforcement strategies.`;
+  }
+  if (lq.includes('colic') || lq.includes('gas') || (lq.includes('cry') && !lq.includes('public'))) {
+    return `\n\n### 🔗 Explainability & Reference Links\n* [IAP Parental Guideline on Excessive Crying & Infantile Colic](https://iapindia.org/parental-guidelines/) — Explains why immature gut motility and evening sensory fatigue trigger colic and how rhythmic soothing calms the vagus nerve.\n* [AAP HealthyChildren – Calming a Fussy Baby & Colic Relief](https://www.healthychildren.org/English/ages-stages/baby/crying-colic/Pages/default.aspx) — Clinical rationale behind the 5 S's soothing protocol, bicycle leg exercises, and red-flag symptoms.`;
+  }
+  if (lq.includes('sleep') || lq.includes('nap') || lq.includes('wake') || lq.includes('bedtime') || lq.includes('night') || lq.includes('regression')) {
+    return `\n\n### 🔗 Explainability & Reference Links\n* [IAP Parental Guidelines on Infant & Child Sleep Hygiene](https://iapindia.org/parental-guidelines/) — Explains how age-appropriate wake windows and screen-free wind-down routines regulate melatonin and prevent overtired cortisol spikes.\n* [WHO Guidelines on Sleep & Physical Activity for Children Under 5](https://www.who.int/publications/i/item/9789241550536) — Global clinical benchmarks for 24-hour sleep duration and safe sleep practices.`;
+  }
+  if (lq.includes('feed') || lq.includes('milk') || lq.includes('eat') || lq.includes('food') || lq.includes('picky') || lq.includes('ragi') || lq.includes('khichdi') || lq.includes('wean') || lq.includes('solid')) {
+    return `\n\n### 🔗 Explainability & Reference Links\n* [ICMR–National Institute of Nutrition (NIN) Dietary Guidelines](https://www.nin.res.in) — Evidence-based rationale for exclusive milk feeding (0–6 months), iron-rich complementary foods, and balanced Indian child nutrition.\n* [IAP Guidelines on Infant and Young Child Feeding (IYCF)](https://iapindia.org/parental-guidelines/) — Explains responsive feeding, division of responsibility at mealtime, and safe textures to prevent choking.`;
+  }
+  if (lq.includes('tantrum') || lq.includes('meltdown') || lq.includes('hit') || lq.includes('bite') || lq.includes('kick') || lq.includes('script') || lq.includes('aggress') || lq.includes('sibling') || lq.includes('share')) {
+    return `\n\n### 🔗 Explainability & Reference Links\n* [IAP Positive Parenting & Managing Toddler Tantrums Guide](https://iapindia.org/parental-guidelines/) — Explains why toddler prefrontal brain development leads to big emotional storms and why calm co-regulation works faster than punishment.\n* [UNICEF Parenting – How to Handle Tantrums & Big Emotions](https://www.unicef.org/parenting/child-care/how-handle-tantrums) — Evidence-based strategies on emotion naming, gentle physical boundaries, and connection-first scripts.`;
+  }
+  return `\n\n### 🔗 Explainability & Reference Links\n* [WHO Child Growth & Developmental Milestones Standards](https://www.who.int/tools/child-growth-standards) — Clinical benchmarks for motor, sensory, cognitive, and expressive language development.\n* [UNICEF Parenting – Early Childhood Development & Play](https://www.unicef.org/parenting/child-development) — Explains how responsive interactions and age-appropriate play strengthen neural pathways.`;
+}
+
+function parseAIResponse(
+  rawText: string,
+  isFirstTurn: boolean = true,
+  parentName: string = 'Lashmi',
+  queryContext: string = '',
+  isStreaming: boolean = false
+): ParsedResponse {
   if (!rawText) {
     return { cleanContent: '', clarificationOptions: [], relatedQuestions: [] };
   }
@@ -126,6 +152,53 @@ function parseAIResponse(rawText: string): ParsedResponse {
 
   // 5. Clean up any trailing double pipe at end of lines
   text = text.replace(/\|\s*\|\s*$/gm, '|');
+
+  // 6. Enforce First-Conversation vs Follow-Up Greeting Rule
+  const pName = (parentName || 'Lashmi').trim();
+  const escapedName = pName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  if (isFirstTurn) {
+    // First conversation turn in the session: normalize greeting to "Namaste Lashmi! "
+    const firstTurnGreetRegex = new RegExp(
+      `^(?:Namaste[,\\s]*${escapedName}[!,.\\s]*|Hello[,\\s]*${escapedName}[!,.\\s]*|Hi[,\\s]*${escapedName}[!,.\\s]*|${escapedName}[,!\\s]+)`,
+      'i'
+    );
+    if (firstTurnGreetRegex.test(text)) {
+      text = text.replace(firstTurnGreetRegex, (_, offset, full) => {
+        return `Namaste ${pName}! `;
+      });
+      // Ensure the character immediately after "Namaste Lashmi! " is capitalized
+      const prefix = `Namaste ${pName}! `;
+      if (text.startsWith(prefix) && text.length > prefix.length) {
+        const nextChar = text.charAt(prefix.length);
+        if (/[a-z]/.test(nextChar)) {
+          text = prefix + nextChar.toUpperCase() + text.slice(prefix.length + 1);
+        }
+      }
+    } else if (!text.startsWith('#') && text.length > 20 && !/^namaste/i.test(text)) {
+      text = `Namaste ${pName}! ${text}`;
+    }
+  } else {
+    // Follow-up conversation turn: NEVER repeat "Namaste" or "Hello"; keep it conversational with parent's name
+    const followUpGreetRegex = new RegExp(
+      `^(?:Namaste[,\\s]*${escapedName}[!,.\\s]*|Hello[,\\s]*${escapedName}[!,.\\s]*|Hi[,\\s]*${escapedName}[!,.\\s]*|Namaste[!,.\\s]+|Hello[!,.\\s]+)`,
+      'i'
+    );
+    if (followUpGreetRegex.test(text)) {
+      text = text.replace(followUpGreetRegex, `${pName}, `);
+      const prefix = `${pName}, `;
+      if (text.startsWith(prefix) && text.length > prefix.length) {
+        const rest = text.slice(prefix.length);
+        if (/^Here\s+is\b/i.test(rest)) {
+          text = `${pName}, here${rest.slice(4)}`;
+        }
+      }
+    }
+  }
+
+  // 7. Ensure 1-2 Explainability Links are included at the end of the post once streaming completes
+  if (!isStreaming && text.trim().length > 40 && !text.includes('](http')) {
+    text = `${text.trim()}${getExplainabilityLinksMarkdown(queryContext + ' ' + text)}`;
+  }
 
   return {
     cleanContent: text,
@@ -495,7 +568,7 @@ export const getAgeSpecificTopics = (
 
 export const SearchSection: React.FC = () => {
   const { profile, childProfiles, activeChildIndex } = useAuth();
-  const { t } = useLanguage();
+  const { t, getAIPromptModifier } = useLanguage();
   const [searchParams, setSearchParams] = useSearchParams();
 
   // Scoped to AI Assistant page (defaults to active child or child 1)
@@ -712,6 +785,8 @@ export const SearchSection: React.FC = () => {
           parentName,
           childName,
           childAge,
+          isFollowUp: existingHistory.length > 0,
+          languagePromptModifier: getAIPromptModifier(),
         }),
       });
 
@@ -813,13 +888,13 @@ export const SearchSection: React.FC = () => {
       <div className="flex flex-col items-center justify-center text-center space-y-2 mb-6">
         <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-gradient-to-r from-indigo-500/15 via-purple-500/15 to-pink-500/15 border border-indigo-500/30 text-indigo-300 text-xs font-black uppercase tracking-wider shadow-sm">
           <Sparkles className="w-3.5 h-3.5 text-indigo-400 animate-pulse" />
-          <span>AI Powered Parenting</span>
+          <span className="notranslate" translate="no">{t('aiPoweredParenting') || 'AI Powered Parenting'}</span>
         </div>
 
         <h1 className="text-2xl sm:text-4xl md:text-5xl font-sans font-black tracking-tight leading-tight px-2">
-          <span className="text-white">How can we help </span>
-          <span className="italic font-serif bg-gradient-to-r from-teal-300 via-indigo-300 to-pink-400 bg-clip-text text-transparent">
-            today?
+          <span className="notranslate text-white" translate="no">{t('howCanHelp') || 'How can we help'} </span>
+          <span className="notranslate italic font-serif bg-gradient-to-r from-teal-300 via-indigo-300 to-pink-400 bg-clip-text text-transparent" translate="no">
+            {t('today') || 'today?'}
           </span>
         </h1>
 
@@ -839,7 +914,7 @@ export const SearchSection: React.FC = () => {
                 title="Start a new conversation topic and reset history"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
-                <span>New Topic</span>
+                <span className="notranslate" translate="no">{t('newTopic') || 'New Topic'}</span>
               </button>
             </div>
           )}
@@ -903,11 +978,11 @@ export const SearchSection: React.FC = () => {
                   {loading ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin" />
-                      <span>Thinking...</span>
+                      <span className="notranslate" translate="no">{t('thinking') || 'Thinking...'}</span>
                     </>
                   ) : (
                     <>
-                      <span>Ask Tricky Toddlers</span>
+                      <span className="notranslate" translate="no">{t('askAI') || 'Ask Tricky Toddlers'}</span>
                       <ArrowRight className="w-4 h-4" />
                     </>
                   )}
@@ -987,8 +1062,16 @@ export const SearchSection: React.FC = () => {
                 );
               }
 
-              // Assistant Message Turn
-              const parsed = parseAIResponse(msg.content);
+              // Assistant Message Turn (index === 1 is the first assistant response in a new conversation; index > 1 is a follow-up turn)
+              const isFirstAssistantTurn = index <= 1;
+              const isCurrentlyStreamingThisTurn = loading && index === messages.length - 1;
+              const parsed = parseAIResponse(
+                msg.content,
+                isFirstAssistantTurn,
+                parentName,
+                msg.failedQuery || '',
+                isCurrentlyStreamingThisTurn
+              );
 
               return (
                 <div key={msg.id} className="flex items-start gap-3.5">
@@ -1069,6 +1152,16 @@ export const SearchSection: React.FC = () => {
                             ol: ({ children }) => <ol className="list-decimal pl-5 mb-3 space-y-1.5 text-slate-200">{children}</ol>,
                             li: ({ children }) => <li className="text-slate-200">{children}</li>,
                             strong: ({ children }) => <strong className="font-bold text-white">{children}</strong>,
+                            a: ({ href, children }) => (
+                              <a
+                                href={href}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-cyan-300 hover:text-cyan-200 underline decoration-cyan-400/50 hover:decoration-cyan-300 font-semibold transition-colors"
+                              >
+                                {children}
+                              </a>
+                            ),
                             table: ({ children }) => (
                               <div className="overflow-x-auto my-5 rounded-2xl border border-indigo-500/30 bg-[#090f1f]/95 shadow-xl shadow-black/40">
                                 <table className="w-full text-left text-xs sm:text-sm border-collapse min-w-[540px]">{children}</table>

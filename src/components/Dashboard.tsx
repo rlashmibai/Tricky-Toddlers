@@ -359,7 +359,7 @@ export const Dashboard: React.FC = () => {
                 <SearchSection />
               </div>
 
-              {/* History of Chats Button Card - Directly Before Toddler Tales */}
+              {/* History of Chats Button Card */}
               <div className="mt-8 mb-4 p-5 rounded-2xl bg-gradient-to-r from-indigo-950/70 via-slate-900/90 to-blue-950/70 border border-indigo-500/25 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-4 text-left">
                 <div className="flex items-center gap-3.5">
                   <div className="p-3 rounded-xl bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 shrink-0">
@@ -389,58 +389,6 @@ export const Dashboard: React.FC = () => {
                   <Clock className="w-4 h-4" />
                   <span>View History of Chats</span>
                 </button>
-              </div>
-
-              {/* Blog Section (Teaser) */}
-              <motion.div 
-                whileHover={{ scale: 1.01 }}
-                whileTap={{ scale: 0.99 }}
-                onClick={() => {
-                  playSound('glass');
-                  setSelectedBlogCategory('All');
-                  handleTabChange('tales');
-                }}
-                className="mt-12 mb-8 glass-card border border-white/10 p-10 relative overflow-hidden group cursor-pointer hover:border-white/20 transition-all font-sans bg-gradient-to-br from-white/[0.02] to-transparent"
-              >
-                <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-8 text-left">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 text-indigo-400 mb-4">
-                      <div className="p-2 bg-indigo-500/10 rounded-lg">
-                        <BookOpen className="w-5 h-5" />
-                      </div>
-                      <span className="text-[10px] font-black uppercase tracking-[0.2em]">{t('toddlerTales')}</span>
-                    </div>
-                    <h2 className="text-4xl font-black text-white mb-3 tracking-tight">{t('toddlerTales')}</h2>
-                    <p className="text-white/60 text-xs sm:text-sm md:text-base whitespace-nowrap overflow-hidden text-ellipsis block max-w-full leading-normal">{t('toddlerTalesDesc')}</p>
-                  </div>
-                  <div className="flex items-center gap-2 text-white font-bold group-hover:translate-x-2 transition-transform">
-                    {t('viewAllStories')} <Sparkles className="w-4 h-4 text-cheerful-yellow" />
-                  </div>
-                </div>
-              </motion.div>
-              
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-                {AICategories.map((cat, idx) => (
-                  <motion.div
-                    key={cat.title}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.1 * idx }}
-                    onClick={() => {
-                      playSound('glass');
-                      setSelectedBlogCategory(cat.categoryKey);
-                      handleTabChange('tales');
-                    }}
-                    className={`glass-card p-8 flex flex-col items-center text-center group cursor-pointer border-2 transition-all duration-300 ${cat.color} hover:scale-[1.02] hover:shadow-xl hover:shadow-theme-glow`}
-                  >
-                    <div className="w-16 h-16 bg-white/5 rounded-3xl flex items-center justify-center text-3xl mb-4 group-hover:scale-110 transition-transform shadow-inner">
-                      {cat.icon}
-                    </div>
-                    <h3 className="text-xl font-bold text-white mb-2 group-hover:text-cheerful-yellow transition-colors">{cat.title}</h3>
-                    <p className="text-white/50 text-sm leading-relaxed">{cat.desc}</p>
-                  </motion.div>
-                ))}
               </div>
             </motion.div>
           ) : activeTab === 'community' ? (

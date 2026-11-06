@@ -34,6 +34,7 @@ import {
   Languages
 } from 'lucide-react';
 import { playSound } from '../lib/sounds';
+import { useLanguage, LanguageCode } from '../lib/LanguageContext';
 
 interface HomePageProps {
   onNavigate: (tab: string, subTab?: string) => void;
@@ -47,6 +48,7 @@ export const HomePage: React.FC<HomePageProps> = ({
   onOpenUpgrade 
 }) => {
   const navigate = useNavigate();
+  const { language, setLanguage, t } = useLanguage();
   const [premiumActivated] = useState<boolean>(() => {
     return localStorage.getItem('tricky_toddlers_premium_unlocked') === 'true' || localStorage.getItem('user_plan') === 'comprehensive' || localStorage.getItem('user_plan') === 'essential';
   });
@@ -372,19 +374,19 @@ export const HomePage: React.FC<HomePageProps> = ({
     }
   ];
 
-  const indianLanguagesList = [
-    { name: 'Hindi', local: 'हिन्दी' },
-    { name: 'English', local: 'English' },
-    { name: 'Tamil', local: 'தமிழ்' },
-    { name: 'Telugu', local: 'తెలుగు' },
-    { name: 'Kannada', local: 'ಕನ್ನಡ' },
-    { name: 'Malayalam', local: 'മലയാളം' },
-    { name: 'Marathi', local: 'मराठी' },
-    { name: 'Bengali', local: 'বাংলা' },
-    { name: 'Gujarati', local: 'ગુજરાતી' },
-    { name: 'Punjabi', local: 'ਪੰਜਾਬੀ' },
-    { name: 'Assamese', local: 'অসমীয়া' },
-    { name: 'Odia', local: 'ଓଡ଼ିଆ' }
+  const indianLanguagesList: Array<{ code: LanguageCode; name: string; local: string }> = [
+    { code: 'hi', name: 'Hindi', local: 'हिन्दी' },
+    { code: 'en', name: 'English', local: 'English' },
+    { code: 'ta', name: 'Tamil', local: 'தமிழ்' },
+    { code: 'te', name: 'Telugu', local: 'తెలుగు' },
+    { code: 'kn', name: 'Kannada', local: 'ಕನ್ನಡ' },
+    { code: 'ml', name: 'Malayalam', local: 'മലയാളം' },
+    { code: 'mr', name: 'Marathi', local: 'मराठी' },
+    { code: 'bn', name: 'Bengali', local: 'বাংলা' },
+    { code: 'gu', name: 'Gujarati', local: 'ગુજરાતી' },
+    { code: 'pa', name: 'Punjabi', local: 'ਪੰਜਾਬੀ' },
+    { code: 'as', name: 'Assamese', local: 'অসমীয়া' },
+    { code: 'or', name: 'Odia', local: 'ଓଡ଼ିଆ' }
   ];
 
   return (
@@ -422,7 +424,7 @@ export const HomePage: React.FC<HomePageProps> = ({
               className="px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-purple-500/15 hover:bg-purple-500/25 border border-purple-400/35 text-purple-200 hover:text-white font-bold text-xs sm:text-sm tracking-tight transition-all transform hover:scale-[1.02] active:scale-95 flex items-center gap-1.5 shadow-md whitespace-nowrap"
             >
               <Eye className="w-3.5 h-3.5 text-purple-300 shrink-0" />
-              <span>Why Tricky Toddlers</span>
+              <span className="notranslate" translate="no">{t('whyTrickyToddlers') || 'Why Tricky Toddlers'}</span>
             </a>
 
             <a
@@ -431,7 +433,7 @@ export const HomePage: React.FC<HomePageProps> = ({
               className="px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-400/35 text-amber-200 hover:text-white font-bold text-xs sm:text-sm tracking-tight transition-all transform hover:scale-[1.02] active:scale-95 flex items-center gap-1.5 shadow-md whitespace-nowrap"
             >
               <Compass className="w-3.5 h-3.5 text-amber-300 shrink-0" />
-              <span>Why Choose Us?</span>
+              <span className="notranslate" translate="no">{t('whyChooseUs') || 'Why Choose Us?'}</span>
             </a>
 
             <a
@@ -440,7 +442,7 @@ export const HomePage: React.FC<HomePageProps> = ({
               className="px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:from-indigo-400 hover:to-pink-400 text-white font-black text-xs sm:text-sm tracking-tight shadow-lg shadow-indigo-500/20 transition-all transform hover:scale-[1.02] active:scale-95 flex items-center gap-1.5 whitespace-nowrap"
             >
               <Layers className="w-3.5 h-3.5 shrink-0" />
-              <span>Explore Features</span>
+              <span className="notranslate" translate="no">{t('exploreFeatures') || 'Explore Features'}</span>
             </a>
 
             <a
@@ -449,7 +451,7 @@ export const HomePage: React.FC<HomePageProps> = ({
               className="px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-cyan-500/15 hover:bg-cyan-500/25 border border-cyan-400/35 text-cyan-200 hover:text-white font-bold text-xs sm:text-sm tracking-tight transition-all transform hover:scale-[1.02] active:scale-95 flex items-center gap-1.5 shadow-md whitespace-nowrap"
             >
               <Sparkles className="w-3.5 h-3.5 text-cyan-300 shrink-0" />
-              <span>How It Works</span>
+              <span className="notranslate" translate="no">{t('howItWorks') || 'How It Works'}</span>
             </a>
 
             <a
@@ -458,7 +460,7 @@ export const HomePage: React.FC<HomePageProps> = ({
               className="px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/20 text-white font-bold text-xs sm:text-sm tracking-tight transition-all transform hover:scale-[1.02] active:scale-95 flex items-center gap-1.5 shadow-md whitespace-nowrap"
             >
               <ShieldCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-              <span>Responsible AI</span>
+              <span className="notranslate" translate="no">{t('responsibleAI') || 'Responsible AI'}</span>
             </a>
 
             <a
@@ -471,7 +473,7 @@ export const HomePage: React.FC<HomePageProps> = ({
               className="px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-400/35 text-amber-300 hover:text-white font-bold text-xs sm:text-sm tracking-tight transition-all transform hover:scale-[1.02] active:scale-95 flex items-center gap-1.5 shadow-md whitespace-nowrap cursor-pointer"
             >
               <Crown className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-              <span>Premium Features</span>
+              <span className="notranslate" translate="no">{t('premiumFeatures') || 'Premium Features'}</span>
             </a>
           </div>
 
@@ -537,7 +539,7 @@ export const HomePage: React.FC<HomePageProps> = ({
           </div>
 
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-white tracking-tight">
-            Why Tricky Toddlers
+            Why <span className="notranslate" translate="no">Tricky Toddlers</span>
           </h2>
 
           <div className="text-lg sm:text-xl font-bold text-purple-200 tracking-tight leading-snug">
@@ -550,7 +552,7 @@ export const HomePage: React.FC<HomePageProps> = ({
 
           <div className="p-3.5 sm:p-4 rounded-2xl bg-purple-500/10 border border-purple-500/25 w-full">
             <p className="text-xs sm:text-sm md:text-base text-purple-200 font-semibold leading-relaxed">
-              Tricky Toddlers is not about adding more technology to parenting. It is about making technology work for parents.
+              <span className="notranslate" translate="no">Tricky Toddlers</span> is not about adding more technology to parenting. It is about making technology work for parents.
             </p>
           </div>
         </div>
@@ -564,7 +566,7 @@ export const HomePage: React.FC<HomePageProps> = ({
 
         <div className="relative z-10 space-y-4">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-white tracking-tight">
-            What Makes Tricky Toddlers Different?
+            What Makes <span className="notranslate" translate="no">Tricky Toddlers</span> Different?
           </h2>
 
           <div className="p-4 sm:p-5 rounded-2xl bg-amber-500/10 border border-amber-500/25">
@@ -576,7 +578,7 @@ export const HomePage: React.FC<HomePageProps> = ({
           <div className="space-y-4 pt-1">
             <h3 className="text-base sm:text-lg md:text-xl font-bold text-white flex items-center gap-2">
               <Sparkles className="w-4 h-4 text-amber-400" />
-              <span>What Makes Tricky Toddlers Different?</span>
+              <span>What Makes <span className="notranslate" translate="no">Tricky Toddlers</span> Different?</span>
             </h3>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
@@ -611,7 +613,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                 <div>
                   <h4 className="text-sm sm:text-base font-bold text-white">Fine-Tuned AI Specially Designed for Toddlers</h4>
                   <p className="text-xs sm:text-sm text-slate-300 mt-0.5 leading-relaxed">
-                    Tricky Toddlers is calibrated for parents of toddlers, using pediatric guidance and recognised health standards (IAP, FSSAI &amp; ICMR).
+                    <span className="notranslate" translate="no">Tricky Toddlers</span> is calibrated for parents of toddlers, using pediatric guidance and recognised health standards (IAP, FSSAI &amp; ICMR).
                   </p>
                 </div>
               </div>
@@ -774,7 +776,7 @@ export const HomePage: React.FC<HomePageProps> = ({
           </div>
 
           <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-white tracking-tight leading-snug text-balance">
-            Tricky Toddlers speaks the language of Indian families.
+            <span className="notranslate" translate="no">Tricky Toddlers</span> speaks the language of Indian families.
           </h2>
 
           <div className="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-amber-500/15 via-indigo-500/15 to-pink-500/15 border border-amber-400/30 shadow-md">
@@ -786,16 +788,25 @@ export const HomePage: React.FC<HomePageProps> = ({
             </div>
           </div>
 
-          {/* Supported Indian Languages Badges Grid */}
+          {/* Supported Indian Languages Badges Grid (Click any language to switch immediately) */}
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2.5 pt-1">
             {indianLanguagesList.map((l) => (
-              <div 
-                key={l.name} 
-                className="px-3 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 text-center hover:bg-white/[0.08] hover:border-cyan-400/40 transition-all shadow-sm"
+              <button
+                type="button"
+                key={l.code}
+                onClick={() => {
+                  playSound('glass');
+                  setLanguage(l.code);
+                }}
+                className={`px-3 py-2.5 rounded-xl border text-center transition-all shadow-sm cursor-pointer active:scale-95 ${
+                  language === l.code
+                    ? 'bg-cyan-500/25 border-cyan-400 text-white shadow-cyan-500/20'
+                    : 'bg-white/[0.04] border-white/10 hover:bg-white/[0.08] hover:border-cyan-400/40'
+                }`}
               >
-                <div className="text-sm sm:text-base font-bold text-white">{l.local}</div>
-                <div className="text-[10px] text-cyan-300 uppercase tracking-wider font-semibold font-mono mt-0.5">{l.name}</div>
-              </div>
+                <div className="notranslate text-sm sm:text-base font-bold text-white" translate="no">{l.local}</div>
+                <div className="notranslate text-[10px] text-cyan-300 uppercase tracking-wider font-semibold font-mono mt-0.5" translate="no">{l.name}</div>
+              </button>
             ))}
           </div>
         </div>
@@ -811,7 +822,7 @@ export const HomePage: React.FC<HomePageProps> = ({
             <span>Safety, Trust &amp; Ethics First</span>
           </div>
           <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black text-white tracking-tight text-balance">
-            How Responsible AI is Built into Tricky Toddlers
+            How Responsible AI is Built into <span className="notranslate" translate="no">Tricky Toddlers</span>
           </h2>
         </div>
 
@@ -858,7 +869,7 @@ export const HomePage: React.FC<HomePageProps> = ({
             <ShieldAlert className="w-5 h-5 text-rose-400 shrink-0 mt-0.5" />
             <div className="text-xs sm:text-sm text-slate-200 leading-relaxed text-balance">
               <strong className="text-white font-bold block mb-0.5">Clinical Red-Flag Guardrails:</strong>
-              If not confident in providing a safe answer, Tricky Toddlers will advise seeking professional medical care and direct to appropriate emergency services.
+              If not confident in providing a safe answer, <span className="notranslate" translate="no">Tricky Toddlers</span> will advise seeking professional medical care and direct to appropriate emergency services.
             </div>
           </div>
         </div>

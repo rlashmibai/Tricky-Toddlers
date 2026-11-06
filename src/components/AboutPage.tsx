@@ -36,17 +36,17 @@ export const AboutPage: React.FC<{ embedded?: boolean }> = ({ embedded = false }
           <div className="pb-8 border-b border-white/10 text-left">
             <div className="space-y-2.5 text-left">
               <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight leading-snug text-balance">
-                The Story Behind Tricky Toddlers
+                The Story Behind <span className="notranslate" translate="no">Tricky Toddlers</span>
               </h1>
               <div className="text-slate-200 text-base sm:text-lg leading-relaxed space-y-2 text-left pt-2">
                 <p className="text-left">
-                  Hi, I’m <strong className="text-white font-bold">Ashwath Amudhan</strong>, a Young Innovator and Startup Entrepreneur with a passion for technology and problem-solving.
+                  Hi, I’m <strong className="notranslate text-white font-bold" translate="no">Ashwath Amudhan</strong>, a Young Innovator and Startup Entrepreneur with a passion for technology and problem-solving.
                 </p>
                 <p className="text-left">
                   I often wondered, if technology can simplify so many parts of our lives, why can’t it make parenting simpler too?
                 </p>
                 <p className="text-indigo-300 font-semibold text-left">
-                  That question led me to create Tricky Toddlers.
+                  That question led me to create <span className="notranslate text-amber-300 font-bold" translate="no">Tricky Toddlers</span>.
                 </p>
               </div>
             </div>
@@ -141,7 +141,7 @@ export const AboutPage: React.FC<{ embedded?: boolean }> = ({ embedded = false }
             </div>
 
             <p>
-              And that became the starting point for <strong className="text-amber-300 font-bold">Tricky Toddlers</strong>.
+              And that became the starting point for <strong className="notranslate text-amber-300 font-bold" translate="no">Tricky Toddlers</strong>.
             </p>
 
             <p>
@@ -155,7 +155,7 @@ export const AboutPage: React.FC<{ embedded?: boolean }> = ({ embedded = false }
             </div>
 
             <p className="text-lg text-slate-200">
-              That is what <span className="text-amber-300 font-bold">Tricky Toddlers</span> does. It brings nutrition, wellness, development, routines, vaccines and parenting guidance into one connected ecosystem.
+              That is what <span className="notranslate text-amber-300 font-bold" translate="no">Tricky Toddlers</span> does. It brings nutrition, wellness, development, routines, vaccines and parenting guidance into one connected ecosystem.
             </p>
 
             {/* 4 Pillars of Ashwath's Innovation */}
@@ -195,7 +195,7 @@ export const AboutPage: React.FC<{ embedded?: boolean }> = ({ embedded = false }
 
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs sm:text-sm text-slate-300 pt-2 border-t border-white/10">
                   <span className="font-semibold text-white">
-                    Ashwath Amudhan | Founder &amp; Creator of Tricky Toddlers
+                    <span className="notranslate" translate="no">Ashwath Amudhan</span> | Founder &amp; Creator of <span className="notranslate" translate="no">Tricky Toddlers</span>
                   </span>
                   <Link
                     to="/?tab=home"

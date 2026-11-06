@@ -125,7 +125,7 @@ export const Navbar: React.FC = () => {
     {
       id: 'food',
       tab: 'food',
-      label: 'AI NutriChef',
+      label: t('aiNutriChef') || 'AI NutriChef',
       icon: Utensils,
       iconColor: 'text-emerald-400'
     },
@@ -295,7 +295,7 @@ export const Navbar: React.FC = () => {
                 <div className="w-8 h-8 sm:w-9 sm:h-9 bg-gradient-to-tr from-indigo-600 to-purple-500 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform shadow-lg shadow-indigo-500/30 shrink-0">
                   <Baby className="text-white w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
-                <span className="font-sans font-black text-base sm:text-lg lg:text-xl tracking-tight text-white group-hover:text-indigo-200 transition-colors whitespace-nowrap shrink-0">
+                <span className="notranslate font-sans font-black text-base sm:text-lg lg:text-xl tracking-tight text-white group-hover:text-indigo-200 transition-colors whitespace-nowrap shrink-0" translate="no">
                   Tricky Toddlers
                 </span>
               </button>
@@ -316,7 +316,7 @@ export const Navbar: React.FC = () => {
                 title={t('home') || 'Home'}
               >
                 <Home className="w-3.5 h-3.5 text-indigo-400" />
-                <span>{t('home') || 'Home'}</span>
+                <span className="notranslate" translate="no">{t('home') || 'Home'}</span>
               </button>
 
               {/* About Me Dropdown (Visible on tablet & desktop; on mobile available in Main Menu) */}
@@ -335,7 +335,7 @@ export const Navbar: React.FC = () => {
                   }`}
                   title={t('aboutMe') || 'About Me'}
                 >
-                  <span>{t('aboutMe') || 'About Me'}</span>
+                  <span className="notranslate" translate="no">{t('aboutMe') || 'About Me'}</span>
                   <ChevronDown className={`w-3 h-3 text-white/50 transition-transform ${aboutDropdownOpen ? 'rotate-180' : ''}`} />
                 </button>
 
@@ -366,8 +366,8 @@ export const Navbar: React.FC = () => {
                             <Heart className="w-3.5 h-3.5 fill-pink-400/30" />
                           </div>
                           <div>
-                            <div className="font-bold text-white group-hover:text-pink-200 transition-colors">{t('myStory') || 'My Story'}</div>
-                            <div className="text-[10px] text-slate-400">How I started Tricky Toddlers</div>
+                            <div className="notranslate font-bold text-white group-hover:text-pink-200 transition-colors" translate="no">{t('myStory') || 'My Story'}</div>
+                            <div className="notranslate text-[10px] text-slate-400" translate="no">{t('howIStarted') || 'How I started Tricky Toddlers'}</div>
                           </div>
                         </Link>
 
@@ -385,8 +385,8 @@ export const Navbar: React.FC = () => {
                             <MessageSquareHeart className="w-3.5 h-3.5" />
                           </div>
                           <div>
-                            <div className="font-bold text-white group-hover:text-emerald-200 transition-colors">Contact & Feedback</div>
-                            <div className="text-[10px] text-slate-400">Help me help you • Share stories</div>
+                            <div className="notranslate font-bold text-white group-hover:text-emerald-200 transition-colors" translate="no">{t('contactFeedback') || 'Contact & Feedback'}</div>
+                            <div className="notranslate text-[10px] text-slate-400" translate="no">{t('shareStories') || 'Help me help you • Share stories'}</div>
                           </div>
                         </Link>
                       </motion.div>
@@ -472,7 +472,7 @@ export const Navbar: React.FC = () => {
                     title="Plans & Premium Membership"
                   >
                     <Crown className="w-3.5 h-3.5 text-amber-400" />
-                    <span className="hidden sm:inline">Plans</span>
+                    <span className="notranslate hidden sm:inline" translate="no">{t('plans') || 'Plans'}</span>
                   </Link>
                   <Link 
                     to="/dietary-preferences" 
@@ -488,8 +488,8 @@ export const Navbar: React.FC = () => {
                     title="Dietary Preferences & Child Health"
                   >
                     <Utensils className="w-3.5 h-3.5 text-emerald-400" />
-                    <span className="hidden md:inline">Dietary Preferences</span>
-                    <span className="md:hidden">Diet</span>
+                    <span className="notranslate hidden md:inline" translate="no">{t('dietaryPreferences') || 'Dietary Preferences'}</span>
+                    <span className="notranslate md:hidden" translate="no">{t('diet') || 'Diet'}</span>
                   </Link>
                   <Link 
                     to="/profile" 
@@ -506,7 +506,7 @@ export const Navbar: React.FC = () => {
                     }`}
                   >
                     <User className="w-3.5 h-3.5 text-indigo-300" />
-                    <span className="hidden md:inline">{t('profileSettings')}</span>
+                    <span className="notranslate hidden md:inline" translate="no">{t('profileSettings')}</span>
                     {needsProfileSetup && (
                       <span className="px-1.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-amber-400 text-slate-950">
                         Setup Required
@@ -520,7 +520,7 @@ export const Navbar: React.FC = () => {
                     title="Sign Out"
                   >
                     <LogOut className="w-3.5 h-3.5" />
-                    <span className="hidden sm:inline">{t('logout')}</span>
+                    <span className="notranslate hidden sm:inline" translate="no">{t('logout')}</span>
                   </button>
                 </>
               ) : (
@@ -529,17 +529,19 @@ export const Navbar: React.FC = () => {
                     <Link 
                       to="/register" 
                       onClick={() => playSound('glass')}
-                      className="bg-indigo-500 text-white rounded-xl px-3.5 py-1.5 font-bold transition-all shadow-lg shadow-indigo-500/20 hover:scale-105 active:scale-95 text-xs"
+                      className="notranslate bg-indigo-500 text-white rounded-xl px-3.5 py-1.5 font-bold transition-all shadow-lg shadow-indigo-500/20 hover:scale-105 active:scale-95 text-xs"
+                      translate="no"
                     >
-                      Get Started
+                      {t('getStarted') || 'Get Started'}
                     </Link>
                   ) : (
                     <Link 
                       to="/login" 
                       onClick={() => playSound('click')}
-                      className="text-xs font-bold text-white/80 hover:text-white transition-colors bg-white/5 px-3 py-1.5 rounded-xl border border-white/10"
+                      className="notranslate text-xs font-bold text-white/80 hover:text-white transition-colors bg-white/5 px-3 py-1.5 rounded-xl border border-white/10"
+                      translate="no"
                     >
-                      Sign In
+                      {t('signIn') || 'Sign In'}
                     </Link>
                   )}
                 </>
@@ -581,7 +583,7 @@ export const Navbar: React.FC = () => {
                   }`}
                 >
                   <Icon className={`w-3.5 h-3.5 xl:w-4 xl:h-4 shrink-0 ${active ? 'text-white' : item.iconColor}`} />
-                  <span className="whitespace-nowrap shrink-0">{item.label}</span>
+                  <span className="notranslate whitespace-nowrap shrink-0" translate="no">{item.label}</span>
                   {item.badge && (
                     <span className={`px-1.5 py-0.5 rounded-full text-[8px] xl:text-[8.5px] font-black uppercase tracking-wider shrink-0 ${item.badgeClass}`}>
                       {item.badge}
@@ -597,8 +599,8 @@ export const Navbar: React.FC = () => {
         <div className="md:hidden relative z-30 border-b border-white/10 bg-[#060a16]/95 backdrop-blur-2xl shadow-md">
           <div className="flex justify-between items-center px-4 py-3">
              <div className="flex items-center gap-2">
-               <span className="text-white font-black text-sm tracking-tight">Main Menu</span>
-               <span className="text-[10px] text-indigo-300 bg-indigo-500/20 px-2 py-0.5 rounded-full font-bold">14 Features</span>
+               <span className="notranslate text-white font-black text-sm tracking-tight" translate="no">{t('mainMenu') || 'Main Menu'}</span>
+               <span className="notranslate text-[10px] text-indigo-300 bg-indigo-500/20 px-2 py-0.5 rounded-full font-bold" translate="no">{t('featuresCount') || '14 Features'}</span>
              </div>
              <button
                 type="button"
@@ -613,7 +615,7 @@ export const Navbar: React.FC = () => {
                 }`}
                 aria-label="Toggle menu"
              >
-                <span className="text-xs font-bold text-white/90">{mobileMenuOpen ? 'Close' : 'Menu'}</span>
+                <span className="notranslate text-xs font-bold text-white/90" translate="no">{mobileMenuOpen ? (t('close') || 'Close') : (t('menu') || 'Menu')}</span>
                 <Menu className="w-5 h-5 text-white" />
              </button>
           </div>
@@ -638,7 +640,7 @@ export const Navbar: React.FC = () => {
                     className="flex flex-col items-center justify-center p-2 rounded-xl bg-pink-500/10 border border-pink-500/20 text-pink-300 text-[10px] font-bold hover:bg-pink-500/20 transition-all text-center gap-1 active:scale-95"
                   >
                     <Heart className="w-3.5 h-3.5 text-pink-400 fill-pink-400/20" />
-                    <span>About Me</span>
+                    <span className="notranslate" translate="no">{t('aboutMe') || 'About Me'}</span>
                   </Link>
 
                   <Link
@@ -651,7 +653,7 @@ export const Navbar: React.FC = () => {
                     className="flex flex-col items-center justify-center p-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-[10px] font-bold hover:bg-emerald-500/20 transition-all text-center gap-1 active:scale-95"
                   >
                     <MessageSquareHeart className="w-3.5 h-3.5 text-emerald-400" />
-                    <span>Contact</span>
+                    <span className="notranslate" translate="no">{t('contactFeedback') || 'Contact'}</span>
                   </Link>
 
                   <Link
@@ -664,7 +666,7 @@ export const Navbar: React.FC = () => {
                     className="flex flex-col items-center justify-center p-2 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-[10px] font-bold hover:bg-indigo-500/20 transition-all text-center gap-1 active:scale-95"
                   >
                     <Utensils className="w-3.5 h-3.5 text-indigo-400" />
-                    <span>Diet</span>
+                    <span className="notranslate" translate="no">{t('diet') || 'Diet'}</span>
                   </Link>
                 </div>
 
@@ -691,7 +693,7 @@ export const Navbar: React.FC = () => {
                           <Icon className="w-4 h-4 shrink-0" />
                         </div>
                         <div className="min-w-0 flex-1">
-                          <div className="leading-tight truncate">{item.label}</div>
+                          <div className="notranslate leading-tight truncate" translate="no">{item.label}</div>
                           {item.badge && (
                             <span className={`inline-block mt-0.5 px-1.5 py-0.2 rounded-full text-[8px] font-black uppercase tracking-wider ${item.badgeClass}`}>
                               {item.badge}
