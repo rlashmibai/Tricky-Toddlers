@@ -51,16 +51,10 @@ function sanitizeAIOutput(text: string, parentName?: string): string {
   const pName = parentName?.trim() || "Lashmi";
   let result = text;
   
-  // Clean corrupted greetings, stuttered name fragments (e.g. "Lashmi, mi!", "Lashmi, Lashmi!")
+  // Clean corrupted greetings or stuttered name fragments on the same line without touching newlines
   result = result
-    .replace(new RegExp(`\\b${pName}[,\\s]+${pName.slice(-2)}[!\\?,\\s]*`, 'gi'), `${pName}, `)
-    .replace(new RegExp(`\\b${pName}[,\\s]+${pName}[!,\\s]*`, 'gi'), `${pName}, `)
-    .replace(/\b([A-Z][a-z]+)[,\s]+([a-z]{1,3})[!,\s]+/gi, (m, name, suffix) => {
-      if (name.toLowerCase().endsWith(suffix.toLowerCase())) {
-        return `${name}, `;
-      }
-      return m;
-    });
+    .replace(new RegExp(`\\b${pName}[, \\t]+${pName.slice(-2)}[!\\?, \\t]*`, 'gi'), `${pName}, `)
+    .replace(new RegExp(`\\b${pName}[, \\t]+${pName}[!, \\t]*`, 'gi'), `${pName}, `);
 
   return result
     .replace(/#+\s*Pediatric Assessment & Developmental Stage[^\n]*\n?/gi, '')
@@ -819,9 +813,18 @@ Session Turn Type: ${isFollowUp ? 'FOLLOW-UP TURN IN ONGOING CONVERSATION (Do NO
   ⚠️ *Medical Information Note: For educational guidance only. Please consult your pediatrician for individual clinical diagnosis.*
   *(Do NOT include this medical disclaimer for non-medical topics like games, play, stories, toys, or daily crafts).*
 
-### 4. DYNAMIC VARIETY OF 3 TO 4 TOPIC-SPECIFIC SECTIONS (STRICT REQUIREMENT)
-- Parents need structured, highly actionable guidance that is fresh and directly tailored to their immediate question.
+### 4. DYNAMIC VARIETY OF 3 TO 4 TOPIC-SPECIFIC SECTIONS & CLEAR SPACING (STRICT REQUIREMENT)
+- Parents need structured, highly readable guidance that is well-spaced and easy to scan.
 - **EVERY response (both initial questions AND follow-up queries) MUST contain 3 to 4 distinct, engaging, topic-specific sections** crafted dynamically for the exact user question.
+- **MANDATORY SECTION SPACING & MARKDOWN FORMAT**:
+  * Every section title MUST start with \`### \` and an emoji on its own dedicated line, preceded by a blank line (\`\\n\\n\`) and followed by a blank line (\`\\n\\n\`) — for example:
+    \`### 🎨 The "Labeling in the Moment" Strategy\`
+    (blank line)
+    * Bullet or paragraph text...
+    (blank line)
+    \`### 🧩 Using "Emotion Anchors" During Calm Play\`
+  * NEVER place a section title inline on the same line after a sentence, and NEVER omit the \`### \` heading prefix.
+  * Put a blank line between each bullet point (\`* \`) or numbered step (\`1. \`) so that sections and points never run together into dense blocks of text.
 - **STRICT PROHIBITION**: NEVER reuse the exact generic heading "Practical Steps for [Parent]" or "Understanding What [Child] Needs" in every answer. Headings MUST be rich, diverse, and contextual with relevant emojis.
 
 ### 5. EXPLAINABILITY & REFERENCE LINKS AT THE END OF THE POST (STRICT REQUIREMENT)

@@ -909,7 +909,7 @@ export const ProfilePage: React.FC = () => {
                   <User className="w-7 h-7 text-indigo-300" />
                 </div>
                 <div>
-                  <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight">{t('generalInfo') || 'General Profile Information'}</h2>
+                  <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight">{t('generalInfo') || 'General Information'}</h2>
                   <p className="text-xs sm:text-sm text-white/60 mt-1">Fields marked with <span className="text-rose-400 font-bold">*</span> are required for localization &amp; account setup.</p>
                 </div>
               </div>
@@ -981,7 +981,7 @@ export const ProfilePage: React.FC = () => {
                   <Lock className="w-7 h-7 text-indigo-300" />
                 </div>
                 <div>
-                  <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">{t('security') || 'Security & Access'}</h2>
+                  <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">{t('security') || 'Security'}</h2>
                   <p className="text-xs sm:text-sm text-white/60 mt-1">Update your account password</p>
                 </div>
               </div>
@@ -1483,18 +1483,6 @@ export const ProfilePage: React.FC = () => {
                 </div>
               ))}
             </div>
-            
-            <div className="mt-8 pt-6 border-t border-white/10">
-              <button
-                type="button"
-                onClick={handleUpdateProfile}
-                disabled={loading}
-                className="bg-indigo-500 hover:bg-indigo-600 text-white flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl font-bold transition-all shadow-lg shadow-indigo-500/20 active:scale-95 disabled:opacity-50 cursor-pointer w-full sm:w-auto"
-              >
-                {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-                <span>{t('saveChanges') || 'Save Changes'}</span>
-              </button>
-            </div>
           </div>
         </div>
 
@@ -1565,6 +1553,19 @@ export const ProfilePage: React.FC = () => {
                 If unchecked, no one will be able to send messages to you, and you will not be able to send 1:1 messages to any parent. However, <strong>Community Help</strong> will be available for any conversations.
               </div>
             </div>
+          </div>
+
+          {/* Save Changes Action Bar after 1:1 Parent Direct Messaging Control */}
+          <div className="mt-6 flex justify-start">
+            <button
+              type="button"
+              onClick={handleUpdateProfile}
+              disabled={loading}
+              className="bg-indigo-500 hover:bg-indigo-600 text-white flex items-center justify-center gap-2.5 px-8 py-4 rounded-2xl font-black text-sm sm:text-base transition-all shadow-xl shadow-indigo-500/25 active:scale-95 disabled:opacity-50 cursor-pointer w-full sm:w-auto"
+            >
+              {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
+              <span>{t('saveChanges') || 'Save Changes'}</span>
+            </button>
           </div>
         </div>
 

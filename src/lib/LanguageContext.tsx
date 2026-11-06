@@ -117,7 +117,17 @@ export const translations: Record<LanguageCode, Record<string, string>> = {
     Physical: 'Physical',
     Cognitive: 'Cognitive',
     Language: 'Language',
-    Social: 'Social'
+    Social: 'Social',
+    foodLens: 'FoodLens AI',
+    generalInfo: 'General Information',
+    username: 'Username',
+    security: 'Security',
+    currentPassword: 'Current Password',
+    newPassword: 'New Password',
+    confirmNewPassword: 'Confirm New Password',
+    changePassword: 'Change Password',
+    languageSaved: 'Language preference saved!',
+    saveChanges: 'Save Changes'
   },
   hi: {
     home: 'होम',
@@ -212,7 +222,17 @@ export const translations: Record<LanguageCode, Record<string, string>> = {
     Physical: 'शारीरिक',
     Cognitive: 'मानसिक (बौद्धिक)',
     Language: 'भाषा व बोलचाल',
-    Social: 'सामाजिक'
+    Social: 'सामाजिक',
+    foodLens: 'FoodLens AI',
+    generalInfo: 'सामान्य जानकारी',
+    username: 'यूज़रनेम',
+    security: 'सुरक्षा',
+    currentPassword: 'वर्तमान पासवर्ड',
+    newPassword: 'नया पासवर्ड',
+    confirmNewPassword: 'नए पासवर्ड की पुष्टि करें',
+    changePassword: 'पासवर्ड बदलें',
+    languageSaved: 'भाषा प्राथमिकता सहेजी गई!',
+    saveChanges: 'परिवर्तन सहेजें'
   },
   ta: {
     home: 'முகப்பு',
@@ -307,7 +327,17 @@ export const translations: Record<LanguageCode, Record<string, string>> = {
     Physical: 'உடல் வளர்ச்சி',
     Cognitive: 'அறிவாற்றல்',
     Language: 'மொழித்திறன்',
-    Social: 'சமூகத் திறன்'
+    Social: 'சமூகத் திறன்',
+    foodLens: 'FoodLens AI',
+    generalInfo: 'பொதுத் தகவல்கள்',
+    username: 'பயனர் பெயர்',
+    security: 'பாதுகாப்பு',
+    currentPassword: 'தற்போதைய கடவுச்சொல்',
+    newPassword: 'புதிய கடவுச்சொல்',
+    confirmNewPassword: 'புதிய கடவுச்சொல்லை உறுதிப்படுத்தவும்',
+    changePassword: 'கடவுச்சொல்லை மாற்று',
+    languageSaved: 'மொழி விருப்பம் சேமிக்கப்பட்டது!',
+    saveChanges: 'மாற்றங்களைச் சேமி'
   },
   te: {
     home: 'హోమ్',
@@ -402,7 +432,17 @@ export const translations: Record<LanguageCode, Record<string, string>> = {
     Physical: 'శారీరక',
     Cognitive: 'మానసిక వికాసం',
     Language: 'భాషా నైపుణ్యం',
-    Social: 'సామాజిక'
+    Social: 'సామాజిక',
+    foodLens: 'FoodLens AI',
+    generalInfo: 'సాధారణ సమాచారం',
+    username: 'వినియోగదారు పేరు',
+    security: 'భద్రత',
+    currentPassword: 'ప్రస్తుత పాస్‌వర్డ్',
+    newPassword: 'కొత్త పాస్‌వర్డ్',
+    confirmNewPassword: 'కొత్త పాస్‌వర్డ్‌ను నిర్ధారించండి',
+    changePassword: 'పాస్‌వర్డ్ మార్చండి',
+    languageSaved: 'భాషా ప్రాధాన్యత సేవ్ చేయబడింది!',
+    saveChanges: 'మార్పులను సేవ్ చేయండి'
   },
   kn: {
     home: 'ಮುಖಪುಟ',
@@ -450,7 +490,7 @@ export const translations: Record<LanguageCode, Record<string, string>> = {
     askAI: 'Tricky Toddlers ಅನ್ನು ಕೇಳಿ',
     newTopic: 'ಹೊಸ ವಿಷಯ',
     thinking: 'ಯೋಚಿಸುತ್ತಿದೆ...',
-    popularQuestions: 'জনಪ್ರಿಯ ಪ್ರಶ್ನೆಗಳು:',
+    popularQuestions: 'ಜನಪ್ರಿಯ ಪ್ರಶ್ನೆಗಳು:',
     sleepTipsTitle: 'ನಿದ್ರೆಯ ಸಲಹೆಗಳು',
     sleepTipsDesc: 'ಆರೋಗ್ಯಕರ ಮಲಗುವ ದಿನಚರಿಯನ್ನು ರೂಪಿಸಿ ಮತ್ತು ರಾತ್ರಿ ಎಚ್ಚರಗೊಳ್ಳುವುದನ್ನು ಕಡಿಮೆ ಮಾಡಿ.',
     mealtimeTitle: 'ಊಟದ ಸಮಯ',
@@ -497,7 +537,17 @@ export const translations: Record<LanguageCode, Record<string, string>> = {
     Physical: 'ದೈಹಿಕ',
     Cognitive: 'ಬೌದ್ಧಿಕ',
     Language: 'ಭಾಷೆ',
-    Social: 'ಸಾಮಾಜಿಕ'
+    Social: 'ಸಾಮಾಜಿಕ',
+    foodLens: 'FoodLens AI',
+    generalInfo: 'ಸಾಮಾನ್ಯ ಮಾಹಿತಿ',
+    username: 'ಬಳಕೆದಾರರ ಹೆಸರು',
+    security: 'ಭದ್ರತೆ',
+    currentPassword: 'ಪ್ರಸ್ತುತ ಪಾಸ್‌ವರ್ಡ್',
+    newPassword: 'ಹೊಸ ಪಾಸ್‌ವರ್ಡ್',
+    confirmNewPassword: 'ಹೊಸ ಪಾಸ್‌ವರ್ಡ್ ದೃಢೀಕರಿಸಿ',
+    changePassword: 'ಪಾಸ್‌ವರ್ಡ್ ಬದಲಾಯಿಸಿ',
+    languageSaved: 'ಭಾಷೆಯ ಆದ್ಯತೆಯನ್ನು ಉಳಿಸಲಾಗಿದೆ!',
+    saveChanges: 'ಬದಲಾವಣೆಗಳನ್ನು ಉಳಿಸಿ'
   },
   ml: {
     home: 'ഹോം',
@@ -592,7 +642,17 @@ export const translations: Record<LanguageCode, Record<string, string>> = {
     Physical: 'ശാരീരികം',
     Cognitive: 'ബൗദ്ധികം',
     Language: 'ഭാഷ',
-    Social: 'സാമൂഹികം'
+    Social: 'സാമൂഹികം',
+    foodLens: 'FoodLens AI',
+    generalInfo: 'പൊതുവായ വിവരങ്ങൾ',
+    username: 'ഉപയോക്തൃനാമം',
+    security: 'സുരക്ഷ',
+    currentPassword: 'നിലവിലെ പാസ്‌വേഡ്',
+    newPassword: 'പുതിയ പാസ്‌വേഡ്',
+    confirmNewPassword: 'പുതിയ പാസ്‌വേഡ് സ്ഥിരീകരിക്കുക',
+    changePassword: 'പാസ്‌വേഡ് മാറ്റുക',
+    languageSaved: 'ഭാഷാ മുൻഗണന സേവ് ചെയ്തു!',
+    saveChanges: 'മാറ്റങ്ങൾ സേവ് ചെയ്യുക'
   },
   mr: {
     home: 'मुख्यपृष्ठ',
@@ -687,7 +747,17 @@ export const translations: Record<LanguageCode, Record<string, string>> = {
     Physical: 'शारीरिक',
     Cognitive: 'बौद्धिक',
     Language: 'भाषा',
-    Social: 'सामाजिक'
+    Social: 'सामाजिक',
+    foodLens: 'FoodLens AI',
+    generalInfo: 'सामान्य माहिती',
+    username: 'वापरकर्तानाव',
+    security: 'सुरक्षा',
+    currentPassword: 'सध्याचा पासवर्ड',
+    newPassword: 'नवीन पासवर्ड',
+    confirmNewPassword: 'नवीन पासवर्डची पुष्टी करा',
+    changePassword: 'पासवर्ड बदला',
+    languageSaved: 'भाषा पसंती जतन केली!',
+    saveChanges: 'बदल जतन करा'
   },
   bn: {
     home: 'হোম',
@@ -782,7 +852,17 @@ export const translations: Record<LanguageCode, Record<string, string>> = {
     Physical: 'শারীরিক',
     Cognitive: 'বুদ্ধিবৃত্তিক',
     Language: 'ভাষা',
-    Social: 'সামাজিক'
+    Social: 'সামাজিক',
+    foodLens: 'FoodLens AI',
+    generalInfo: 'সাধারণ তথ্য',
+    username: 'ব্যবহারকারীর নাম',
+    security: 'নিরাপত্তা',
+    currentPassword: 'বর্তমান পাসওয়ার্ড',
+    newPassword: 'নতুন পাসওয়ার্ড',
+    confirmNewPassword: 'নতুন পাসওয়ার্ড নিশ্চিত করুন',
+    changePassword: 'পাসওয়ার্ড পরিবর্তন করুন',
+    languageSaved: 'ভাষার পছন্দ সংরক্ষিত হয়েছে!',
+    saveChanges: 'পরিবর্তন সংরক্ষণ করুন'
   },
   gu: {
     home: 'હોમ',
@@ -877,7 +957,17 @@ export const translations: Record<LanguageCode, Record<string, string>> = {
     Physical: 'શારીરિક',
     Cognitive: 'બૌદ્ધિક',
     Language: 'ભાષા',
-    Social: 'સામાજિક'
+    Social: 'સામાજિક',
+    foodLens: 'FoodLens AI',
+    generalInfo: 'સામાન્ય માહિતી',
+    username: 'વપરાશકર્તા નામ',
+    security: 'સુરક્ષા',
+    currentPassword: 'વર્તમાન પાસવર્ડ',
+    newPassword: 'નવો પાસવર્ડ',
+    confirmNewPassword: 'નવા પાસવર્ડની પુષ્ટિ કરો',
+    changePassword: 'પાસવર્ડ બદલો',
+    languageSaved: 'ભાષા પસંદગી સાચવવામાં આવી!',
+    saveChanges: 'ફેરફારો સાચવો'
   },
   pa: {
     home: 'ਹੋਮ',
@@ -972,7 +1062,17 @@ export const translations: Record<LanguageCode, Record<string, string>> = {
     Physical: 'ਸਰੀਰਕ',
     Cognitive: 'ਬੌਧਿਕ',
     Language: 'ਭਾਸ਼ਾ',
-    Social: 'ਸਮਾਜਿਕ'
+    Social: 'ਸਮਾਜਿਕ',
+    foodLens: 'FoodLens AI',
+    generalInfo: 'ਆਮ ਜਾਣਕਾਰੀ',
+    username: 'ਯੂਜ਼ਰਨੇਮ',
+    security: 'ਸੁਰੱਖਿਆ',
+    currentPassword: 'ਮੌਜੂਦਾ ਪਾਸਵਰਡ',
+    newPassword: 'ਨਵਾਂ ਪਾਸਵਰਡ',
+    confirmNewPassword: 'ਨਵੇਂ ਪਾਸਵਰਡ ਦੀ ਪੁਸ਼ਟੀ ਕਰੋ',
+    changePassword: 'ਪਾਸਵਰਡ ਬਦਲੋ',
+    languageSaved: 'ਭਾਸ਼ਾ ਪਸੰਦ ਸੇਵ ਕੀਤੀ ਗਈ!',
+    saveChanges: 'ਤਬਦੀਲੀਆਂ ਸੇਵ ਕਰੋ'
   },
   as: {
     home: 'হোম',
@@ -1067,7 +1167,17 @@ export const translations: Record<LanguageCode, Record<string, string>> = {
     Physical: 'শাৰীৰিক',
     Cognitive: 'বৌদ্ধিক',
     Language: 'ভাষা',
-    Social: 'সামাজিক'
+    Social: 'সামাজিক',
+    foodLens: 'FoodLens AI',
+    generalInfo: 'সাধাৰণ তথ্য',
+    username: 'ব্যৱহাৰকাৰীৰ নাম',
+    security: 'নিৰাপত্তা',
+    currentPassword: 'বৰ্তমান পাছৱৰ্ড',
+    newPassword: 'নতুন পাছৱৰ্ড',
+    confirmNewPassword: 'নতুন পাছৱৰ্ড নিশ্চিত কৰক',
+    changePassword: 'পাছৱৰ্ড সলনি কৰক',
+    languageSaved: 'ভাষাৰ পছন্দ সংৰক্ষণ কৰা হ’ল!',
+    saveChanges: 'পৰিৱৰ্তনসমূহ সংৰক্ষণ কৰক'
   },
   or: {
     home: 'হোମ୍',
@@ -1093,7 +1203,7 @@ export const translations: Record<LanguageCode, Record<string, string>> = {
     dietaryPreferences: 'ଖାଦ୍ୟ ପସନ୍ଦ',
     diet: 'ଖାଦ୍ୟ',
     mainMenu: 'ମୁଖ୍ୟ ମେନୁ',
-    featuresCount: '୧୪ଟି বৈଶିଷ୍ଟ୍ୟ',
+    featuresCount: '୧୪ଟି ବୈଶିଷ୍ଟ୍ୟ',
     menu: 'ମେନୁ',
     close: 'ବନ୍ଦ କରନ୍ତୁ',
     aboutMe: 'ମୋ ବିଷୟରେ',
@@ -1162,7 +1272,17 @@ export const translations: Record<LanguageCode, Record<string, string>> = {
     Physical: 'ଶାରୀରିକ',
     Cognitive: 'ବୌଦ୍ଧିକ',
     Language: 'ଭାଷା',
-    Social: 'ସାମାଜିକ'
+    Social: 'ସାମାଜିକ',
+    foodLens: 'FoodLens AI',
+    generalInfo: 'ସାଧାରଣ ସୂଚନା',
+    username: 'ୟୁଜରନେମ୍',
+    security: 'ସୁରକ୍ଷା',
+    currentPassword: 'ବର୍ତ୍ତମାନର ପାସୱାର୍ଡ',
+    newPassword: 'ନୂଆ ପାସୱାର୍ଡ',
+    confirmNewPassword: 'ନୂଆ ପାସୱାର୍ଡ ନିଶ୍ଚିତ କରନ୍ତୁ',
+    changePassword: 'ପାସୱାର୍ଡ ବଦଳାନ୍ତୁ',
+    languageSaved: 'ଭାଷା ପସନ୍ଦ ସେଭ୍ ହୋଇଛି!',
+    saveChanges: 'ପରିବର୍ତ୍ତନ ସେଭ୍ କରନ୍ତୁ'
   }
 };
 
@@ -1173,10 +1293,17 @@ interface LanguageContextType {
   getAIPromptModifier: () => string;
 }
 
+const formatKeyFallback = (key: string): string => {
+  return key
+    .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
+    .replace(/[_-]+/g, ' ')
+    .replace(/\b\w/g, (c) => c.toUpperCase());
+};
+
 const LanguageContext = createContext<LanguageContextType>({
   language: 'en',
   setLanguage: () => {},
-  t: (key: string) => key,
+  t: (key: string) => translations['en']?.[key] || formatKeyFallback(key),
   getAIPromptModifier: () => '',
 });
 
@@ -1381,7 +1508,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   };
 
   const t = (key: string): string => {
-    return translations[language]?.[key] || translations['en']?.[key] || key;
+    return translations[language]?.[key] || translations['en']?.[key] || formatKeyFallback(key);
   };
 
   const getAIPromptModifier = (): string => {

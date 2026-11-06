@@ -163,7 +163,7 @@ function parseAIResponse(
       'i'
     );
     if (firstTurnGreetRegex.test(text)) {
-      text = text.replace(firstTurnGreetRegex, (_, offset, full) => {
+      text = text.replace(firstTurnGreetRegex, () => {
         return `Namaste ${pName}! `;
       });
       // Ensure the character immediately after "Namaste Lashmi! " is capitalized
@@ -199,6 +199,63 @@ function parseAIResponse(
   if (!isStreaming && text.trim().length > 40 && !text.includes('](http')) {
     text = `${text.trim()}${getExplainabilityLinksMarkdown(queryContext + ' ' + text)}`;
   }
+
+  // 8. Comprehensive Section & Paragraph Readability Spacing Normalization
+  // A. If any Markdown heading (#, ##, ###, ####) is inline after text, break it onto a new section with double newlines
+  text = text.replace(/([^\n#])\s+(#{1,4}\s+)/g, '$1\n\n$2');
+
+  // B. If an emoji-prefixed section title appears inline after sentence punctuation (e.g. ". 🎨 The..." or ". **🧩 Using..."), split it onto a new section
+  text = text.replace(
+    /([.!?])\s+(?=(?:\*\*)?(?:[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}][\uFE0F\u200D]*)+[ \t]*(?:\*\*)?[A-Z"“])/gu,
+    '$1\n\n'
+  );
+
+  // C. Promote standalone emoji-prefixed section title lines (e.g. '🎨 The "Labeling in the Moment" Strategy' or '**🧩 Using "Emotion Anchors" During Calm Play**') to '### ' headings
+  text = text
+    .split('\n')
+    .map(line => {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith('#') || trimmed.startsWith('|') || trimmed.startsWith('* ') || trimmed.startsWith('- ') || trimmed.startsWith('• ')) {
+        return line;
+      }
+      // Match line starting with optional ** or numbered prefix + Emoji + Title (up to 105 chars, not ending with a regular sentence period)
+      const emojiHeadingMatch = trimmed.match(
+        /^(?:\d+\.\s*)?(?:\*\*)?((?:[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}][\uFE0F\u200D]*)+)\s*(.+?)(?:\*\*)?$/u
+      );
+      if (emojiHeadingMatch) {
+        const emoji = emojiHeadingMatch[1];
+        const rest = emojiHeadingMatch[2].replace(/\*\*/g, '').trim();
+        // If it's a concise section title (or ends with ':' with no body after it)
+        if (rest.length > 3 && rest.length <= 105 && !/[.]$/.test(rest)) {
+          return `### ${emoji} ${rest}`;
+        }
+        // If it has 'Emoji Title: Body text' on the same line, split the heading and body into separate lines
+        const colonIdx = rest.indexOf(':');
+        if (colonIdx > 4 && colonIdx <= 65) {
+          const titlePart = rest.slice(0, colonIdx).trim();
+          const bodyPart = rest.slice(colonIdx + 1).trim();
+          if (bodyPart.length > 15) {
+            return `### ${emoji} ${titlePart}\n\n${bodyPart}`;
+          }
+        }
+      }
+      return line;
+    })
+    .join('\n');
+
+  // D. Ensure every Markdown heading line (#, ##, ###, ####) has a blank line BEFORE it and a blank line AFTER it
+  text = text.replace(/\n*(#{1,4}\s+[^\n]+)\n*/g, '\n\n$1\n\n');
+
+  // E. Split inline bullet points or numbered items that accidentally follow a sentence or colon on the same line
+  text = text.replace(/([.!?:])\s+\*\s+(\*\*|[A-Z"“])/g, '$1\n\n* $2');
+  text = text.replace(/([.!?:])\s+-\s+(\*\*|[A-Z"“])/g, '$1\n\n- $2');
+  text = text.replace(/([.!?:])\s+(\d+\.\s+(?:\*\*|[A-Z"“]))/g, '$1\n\n$2');
+
+  // F. Ensure blank line between consecutive bullet items or numbered list items for breathable spacing
+  text = text.replace(/(\n[ \t]*(?:[*•-]|\d+\.)[ \t]+[^\n]+)\n(?=[ \t]*(?:[*•-]|\d+\.)[ \t]+)/g, '$1\n\n');
+
+  // G. Collapse 3+ consecutive newlines to clean double newlines
+  text = text.replace(/\n{3,}/g, '\n\n').trim();
 
   return {
     cleanContent: text,
@@ -1140,17 +1197,51 @@ export const SearchSection: React.FC = () => {
 
                     {/* Clean Markdown Response */}
                     {parsed.cleanContent && (
-                      <div className="prose prose-invert max-w-none text-slate-200 leading-relaxed font-sans text-sm sm:text-base">
+                      <div className="prose prose-invert max-w-none text-slate-100 leading-7 font-sans text-[15px] sm:text-base space-y-4">
                         <Markdown
                           remarkPlugins={[remarkGfm]}
                           components={{
-                            h1: ({ children }) => <h1 className="text-lg sm:text-xl font-black text-white mt-4 mb-2 pb-1 border-b border-white/10">{children}</h1>,
-                            h2: ({ children }) => <h2 className="text-base sm:text-lg font-bold text-indigo-300 mt-4 mb-2">{children}</h2>,
-                            h3: ({ children }) => <h3 className="text-sm sm:text-base font-bold text-emerald-400 mt-3.5 mb-1.5">{children}</h3>,
-                            p: ({ children }) => <p className="mb-3 text-slate-200 leading-relaxed">{children}</p>,
-                            ul: ({ children }) => <ul className="list-disc pl-5 mb-3 space-y-1.5 text-slate-200">{children}</ul>,
-                            ol: ({ children }) => <ol className="list-decimal pl-5 mb-3 space-y-1.5 text-slate-200">{children}</ol>,
-                            li: ({ children }) => <li className="text-slate-200">{children}</li>,
+                            h1: ({ children }) => (
+                              <h1 className="text-lg sm:text-xl font-black text-white mt-8 mb-4 pt-6 border-t border-white/15 first:mt-1 first:pt-0 first:border-t-0 tracking-tight leading-snug">
+                                {children}
+                              </h1>
+                            ),
+                            h2: ({ children }) => (
+                              <h2 className="text-base sm:text-lg font-extrabold text-indigo-200 mt-8 mb-4 pt-6 border-t border-white/15 first:mt-1 first:pt-0 first:border-t-0 tracking-tight leading-snug">
+                                {children}
+                              </h2>
+                            ),
+                            h3: ({ children }) => (
+                              <h3 className="text-base sm:text-lg font-extrabold text-emerald-300 mt-8 mb-4 pt-6 border-t border-white/15 first:mt-1 first:pt-0 first:border-t-0 tracking-tight leading-snug">
+                                {children}
+                              </h3>
+                            ),
+                            h4: ({ children }) => (
+                              <h4 className="text-sm sm:text-base font-bold text-amber-200 mt-6 mb-2.5 tracking-tight leading-snug">
+                                {children}
+                              </h4>
+                            ),
+                            p: ({ children }) => (
+                              <p className="mb-4 last:mb-0 text-slate-100 leading-7">
+                                {children}
+                              </p>
+                            ),
+                            ul: ({ children }) => (
+                              <ul className="list-disc pl-5 sm:pl-6 my-4 space-y-3.5 text-slate-100 leading-7">
+                                {children}
+                              </ul>
+                            ),
+                            ol: ({ children }) => (
+                              <ol className="list-decimal pl-5 sm:pl-6 my-4 space-y-3.5 text-slate-100 leading-7">
+                                {children}
+                              </ol>
+                            ),
+                            li: ({ children }) => (
+                              <li className="text-slate-100 leading-7 pl-1 marker:text-indigo-400">
+                                {children}
+                              </li>
+                            ),
+                            hr: () => <hr className="my-7 border-white/15" />,
                             strong: ({ children }) => <strong className="font-bold text-white">{children}</strong>,
                             a: ({ href, children }) => (
                               <a
@@ -1163,7 +1254,7 @@ export const SearchSection: React.FC = () => {
                               </a>
                             ),
                             table: ({ children }) => (
-                              <div className="overflow-x-auto my-5 rounded-2xl border border-indigo-500/30 bg-[#090f1f]/95 shadow-xl shadow-black/40">
+                              <div className="overflow-x-auto my-6 rounded-2xl border border-indigo-500/30 bg-[#090f1f]/95 shadow-xl shadow-black/40">
                                 <table className="w-full text-left text-xs sm:text-sm border-collapse min-w-[540px]">{children}</table>
                               </div>
                             ),
@@ -1193,7 +1284,7 @@ export const SearchSection: React.FC = () => {
                               </td>
                             ),
                             blockquote: ({ children }) => (
-                              <blockquote className="my-3 p-3.5 rounded-xl bg-indigo-500/10 border border-indigo-500/30 text-indigo-200 italic font-medium">
+                              <blockquote className="my-5 p-4 rounded-xl bg-indigo-500/10 border border-indigo-500/30 text-indigo-100 italic font-medium leading-7">
                                 {children}
                               </blockquote>
                             ),
