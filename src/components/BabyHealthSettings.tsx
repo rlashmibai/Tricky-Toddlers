@@ -1204,7 +1204,7 @@ export const BabyHealthSettings: React.FC = () => {
             <Bot className="w-7 h-7" />
           </div>
           <div className="min-w-0 flex-1">
-            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black text-white tracking-tight whitespace-nowrap">
+            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black text-white tracking-tight break-words">
               Instructions for Tricky Toddler AI Assistant
             </h2>
             <p className="text-xs sm:text-sm text-slate-300 mt-1">

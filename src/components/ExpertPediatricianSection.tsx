@@ -1227,7 +1227,7 @@ export const ExpertPediatricianSection: React.FC = () => {
   };
 
   return (
-    <div className="max-w-5xl mx-auto glass-card border border-white/10 rounded-[2.5rem] p-6 sm:p-8 lg:p-10 bg-gradient-to-br from-indigo-500/5 via-transparent to-transparent relative overflow-hidden mb-12 text-left shadow-3xl">
+    <div className="max-w-5xl mx-auto glass-card border border-white/10 rounded-3xl sm:rounded-[2.5rem] p-4 sm:p-8 lg:p-10 bg-gradient-to-br from-indigo-500/5 via-transparent to-transparent relative overflow-hidden mb-12 text-left shadow-3xl">
       <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-500/5 blur-3xl rounded-full pointer-events-none" />
       
       {/* Header with Premium Tag */}
@@ -1673,7 +1673,7 @@ export const ExpertPediatricianSection: React.FC = () => {
                         </select>
                         <ChevronDown className="w-5 h-5 text-white/40 absolute right-4 top-4.5 pointer-events-none" />
                       </div>
-                      <div className="flex items-center gap-1.5 mt-2.5 overflow-x-auto pb-1 scrollbar-none">
+                      <div className="flex flex-wrap items-center gap-1.5 mt-2.5">
                         <button
                           type="button"
                           onClick={() => handleSlotFilterChange('All')}

@@ -709,10 +709,10 @@ export const ToddlerVideoLibrary: React.FC<ToddlerVideoLibraryProps> = ({ onGoHo
               <Tv className="w-4 h-4 text-cheerful-yellow" />
               Toddler TV • Expert Video Library
             </div>
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-black text-white tracking-tight mb-2 whitespace-nowrap overflow-hidden text-ellipsis">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-black text-white tracking-tight mb-2 text-balance">
               Pediatric Guidance <span className="bg-gradient-to-r from-cheerful-yellow via-amber-300 to-purple-300 bg-clip-text text-transparent">On Demand</span>
             </h1>
-            <p className="text-xs sm:text-sm lg:text-[15px] text-purple-100/80 font-medium whitespace-nowrap overflow-hidden text-ellipsis">
+            <p className="text-xs sm:text-sm lg:text-[15px] text-purple-100/80 font-medium leading-relaxed">
               Bite-sized, evidence-backed video lessons from top pediatric sleep consultants, speech therapists, and child behavior experts.
             </p>
           </div>
@@ -750,7 +750,7 @@ export const ToddlerVideoLibrary: React.FC<ToddlerVideoLibraryProps> = ({ onGoHo
         </div>
 
         {/* Category Pills */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+        <div className="flex flex-wrap items-center gap-2">
           {CATEGORIES.map((cat) => (
             <button
               key={cat}
@@ -758,7 +758,7 @@ export const ToddlerVideoLibrary: React.FC<ToddlerVideoLibraryProps> = ({ onGoHo
                 playSound('click');
                 setSelectedCategory(cat);
               }}
-              className={`px-4 py-2 rounded-xl text-xs font-black whitespace-nowrap transition-all border shrink-0 ${
+              className={`px-3.5 sm:px-4 py-2 rounded-xl text-xs font-black whitespace-nowrap transition-all border shrink-0 cursor-pointer ${
                 selectedCategory === cat 
                   ? 'bg-gradient-to-r from-purple-500 to-indigo-500 text-white border-purple-400 shadow-lg shadow-purple-500/20' 
                   : 'bg-white/5 hover:bg-white/10 text-white/60 hover:text-white border-white/10'

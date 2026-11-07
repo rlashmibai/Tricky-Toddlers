@@ -583,7 +583,7 @@ export const ToddlerAnimalSoundsSection: React.FC = () => {
       {activeTab === 'soundboard' && (
         <div className="space-y-6">
           {/* Category Filter Chips */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+          <div className="flex flex-wrap items-center gap-2">
             {CATEGORIES_CONFIG.map((cat) => {
               const count = cat.id === 'all' 
                 ? ANIMALS_DATA.length 

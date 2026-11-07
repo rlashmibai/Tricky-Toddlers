@@ -259,8 +259,8 @@ export const NutriBandView: React.FC<NutriBandViewProps> = ({
           </h1>
 
           {/* In-Page Navigation Buttons */}
-          <div className="w-full overflow-x-auto no-scrollbar py-2">
-            <div className="flex items-center justify-center gap-2 sm:gap-2.5 flex-nowrap min-w-max mx-auto px-2">
+          <div className="w-full py-2">
+            <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center justify-center gap-2 sm:gap-2.5 mx-auto px-1 sm:px-2">
               <a 
                 href="#how-it-works" 
                 onClick={(e) => {
@@ -268,9 +268,9 @@ export const NutriBandView: React.FC<NutriBandViewProps> = ({
                   playSound('pop');
                   document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }}
-                className="px-4 py-3 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/15 hover:border-white/30 text-slate-200 hover:text-white font-bold text-xs sm:text-sm tracking-tight transition-all flex items-center gap-2 whitespace-nowrap cursor-pointer hover:scale-[1.02] active:scale-95 shadow-md"
+                className="px-3 sm:px-4 py-2.5 sm:py-3 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/15 hover:border-white/30 text-slate-200 hover:text-white font-bold text-xs sm:text-sm tracking-tight transition-all flex items-center justify-center gap-1.5 sm:gap-2 whitespace-nowrap cursor-pointer hover:scale-[1.02] active:scale-95 shadow-md"
               >
-                <Sparkles className="w-4 h-4 text-cyan-400 shrink-0" />
+                <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-cyan-400 shrink-0" />
                 <span>How it Works</span>
               </a>
 
@@ -281,28 +281,27 @@ export const NutriBandView: React.FC<NutriBandViewProps> = ({
                   playSound('pop');
                   document.getElementById('six-signals')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }}
-                className="px-4 py-3 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/15 hover:border-white/30 text-slate-200 hover:text-white font-bold text-xs sm:text-sm tracking-tight transition-all flex items-center gap-2 whitespace-nowrap cursor-pointer hover:scale-[1.02] active:scale-95 shadow-md"
+                className="px-3 sm:px-4 py-2.5 sm:py-3 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/15 hover:border-white/30 text-slate-200 hover:text-white font-bold text-xs sm:text-sm tracking-tight transition-all flex items-center justify-center gap-1.5 sm:gap-2 whitespace-nowrap cursor-pointer hover:scale-[1.02] active:scale-95 shadow-md"
               >
-                <Radio className="w-4 h-4 text-cyan-300 shrink-0" />
+                <Radio className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-cyan-300 shrink-0" />
                 <span>Six Signals</span>
               </a>
-
 
               <a 
                 href="#product-comparison" 
                 onClick={() => playSound('pop')}
-                className="px-4 py-3 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/15 hover:border-white/30 text-slate-200 hover:text-white font-bold text-xs sm:text-sm tracking-tight transition-all flex items-center gap-2 whitespace-nowrap cursor-pointer hover:scale-[1.02] active:scale-95 shadow-md"
+                className="px-3 sm:px-4 py-2.5 sm:py-3 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/15 hover:border-white/30 text-slate-200 hover:text-white font-bold text-xs sm:text-sm tracking-tight transition-all flex items-center justify-center gap-1.5 sm:gap-2 whitespace-nowrap cursor-pointer hover:scale-[1.02] active:scale-95 shadow-md"
               >
-                <ShieldCheck className="w-4 h-4 text-pink-400 shrink-0" />
+                <ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-pink-400 shrink-0" />
                 <span>Why Nutriband</span>
               </a>
 
               <a 
                 href="#integrated-ecosystem" 
                 onClick={() => playSound('pop')}
-                className="px-4 py-3 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/15 hover:border-white/30 text-slate-200 hover:text-white font-bold text-xs sm:text-sm tracking-tight transition-all flex items-center gap-2 whitespace-nowrap cursor-pointer hover:scale-[1.02] active:scale-95 shadow-md"
+                className="px-3 sm:px-4 py-2.5 sm:py-3 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/15 hover:border-white/30 text-slate-200 hover:text-white font-bold text-xs sm:text-sm tracking-tight transition-all flex items-center justify-center gap-1.5 sm:gap-2 whitespace-nowrap cursor-pointer hover:scale-[1.02] active:scale-95 shadow-md"
               >
-                <Layers className="w-4 h-4 text-cyan-400 shrink-0" />
+                <Layers className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-cyan-400 shrink-0" />
                 <span>Nutriband Ecosystem</span>
               </a>
             </div>
@@ -340,8 +339,8 @@ export const NutriBandView: React.FC<NutriBandViewProps> = ({
             <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
             <span>One Single Device · Three Ways to Wear</span>
           </div>
-          <div className="w-full overflow-x-auto scrollbar-none py-1">
-            <h2 className="text-base xs:text-lg sm:text-2xl md:text-3xl lg:text-4xl font-black text-white tracking-tight whitespace-nowrap inline-block">
+          <div className="w-full py-1">
+            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black text-white tracking-tight text-balance">
               How to Wear NutriBand Across Every Childhood Stage
             </h2>
           </div>
@@ -802,10 +801,10 @@ export const NutriBandView: React.FC<NutriBandViewProps> = ({
             <Sparkles className="w-3.5 h-3.5" />
             <span>Product Comparison</span>
           </div>
-          <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black text-white tracking-tight whitespace-normal md:whitespace-nowrap">
+          <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black text-white tracking-tight text-balance">
             Conventional Wearables vs. NutriBand Health Ecosystem
           </h2>
-          <p className="text-slate-300 text-xs sm:text-sm md:text-base lg:text-lg leading-relaxed whitespace-normal md:whitespace-nowrap">
+          <p className="text-slate-300 text-xs sm:text-sm md:text-base lg:text-lg leading-relaxed max-w-4xl mx-auto">
             Calibrated specifically for Indian childhood physiology with clinical sensors and FoodLens nutrition integration.
           </p>
         </div>

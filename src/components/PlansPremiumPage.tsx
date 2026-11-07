@@ -233,7 +233,7 @@ export const PlansPremiumPage: React.FC = () => {
               <span>Advance Technology at Your Fingertips</span>
             </div>
 
-            <h2 className="text-3xl sm:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-orange-300 to-yellow-200 mb-2 whitespace-nowrap">
+            <h2 className="text-3xl sm:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-orange-300 to-yellow-200 mb-2 break-words">
               PREMIUM
             </h2>
 

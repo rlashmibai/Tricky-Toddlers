@@ -281,42 +281,42 @@ export const Navbar: React.FC = () => {
   return (
     <>
       <nav className="glass-nav border-b border-white/10 bg-[#070b14]/95 backdrop-blur-xl sticky top-0 z-[100] shadow-2xl">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 items-center gap-2">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+          <div className="flex justify-between h-14 sm:h-16 items-center gap-1.5 sm:gap-2">
             
             {/* Left: Brand - Takes to Home Page */}
-            <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+            <div className="flex items-center gap-1.5 sm:gap-3 min-w-0 shrink-0">
               <button 
                 type="button"
                 onClick={handleBrandClick}
-                className="flex items-center gap-2 sm:gap-2.5 group shrink-0 cursor-pointer text-left focus:outline-none"
+                className="flex items-center gap-1.5 sm:gap-2.5 group shrink-0 cursor-pointer text-left focus:outline-none"
                 title="Go to Tricky Toddlers Home"
               >
                 <div className="w-8 h-8 sm:w-9 sm:h-9 bg-gradient-to-tr from-indigo-600 to-purple-500 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform shadow-lg shadow-indigo-500/30 shrink-0">
                   <Baby className="text-white w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
-                <span className="notranslate font-sans font-black text-base sm:text-lg lg:text-xl tracking-tight text-white group-hover:text-indigo-200 transition-colors whitespace-nowrap shrink-0" translate="no">
+                <span className="notranslate font-sans font-black text-sm sm:text-lg lg:text-xl tracking-tight text-white group-hover:text-indigo-200 transition-colors whitespace-nowrap shrink-0" translate="no">
                   Tricky Toddlers
                 </span>
               </button>
             </div>
 
             {/* Right: Home, About Menu, Language Selector & User Controls */}
-            <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+            <div className="flex items-center gap-1 sm:gap-2.5 shrink-0">
               {/* Home Button (Directly previous to About Me tab) */}
               <button
                 type="button"
                 id="nav-topbar-home-btn"
                 onClick={handleBrandClick}
-                className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl border transition-all text-xs font-bold cursor-pointer ${
+                className={`flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1.5 rounded-xl border transition-all text-xs font-bold cursor-pointer ${
                   (location.pathname === '/' || location.pathname === '/tricky-toddlers') && (!currentTab || currentTab === 'home')
                     ? 'bg-gradient-to-r from-indigo-500/20 to-purple-500/20 text-indigo-200 border-indigo-400/40 shadow-sm shadow-indigo-500/10'
                     : 'bg-white/5 hover:bg-white/10 border-white/10 text-white/80 hover:text-white'
                 }`}
                 title={t('home') || 'Home'}
               >
-                <Home className="w-3.5 h-3.5 text-indigo-400" />
-                <span className="notranslate" translate="no">{t('home') || 'Home'}</span>
+                <Home className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
+                <span className="notranslate hidden xs:inline sm:inline" translate="no">{t('home') || 'Home'}</span>
               </button>
 
               {/* About Me Dropdown (Visible on tablet & desktop; on mobile available in Main Menu) */}
@@ -403,10 +403,10 @@ export const Navbar: React.FC = () => {
                     playSound('click');
                     setLangDropdownOpen(!langDropdownOpen);
                   }}
-                  className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition-colors text-xs font-bold text-white/80 hover:text-white"
+                  className="flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition-colors text-xs font-bold text-white/80 hover:text-white"
                   title="Select Language"
                 >
-                  <Languages className="w-3.5 h-3.5 text-indigo-400" />
+                  <Languages className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
                   <span className="hidden sm:inline">
                     {SUPPORTED_LANGUAGES.find(l => l.code === language)?.localName || 'English'}
                   </span>
@@ -464,14 +464,14 @@ export const Navbar: React.FC = () => {
                       playSound('glass');
                       window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
                     }}
-                    className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl border transition-all text-xs font-bold ${
+                    className={`flex items-center gap-1.5 px-2 sm:px-3 py-1.5 rounded-xl border transition-all text-xs font-bold ${
                       location.pathname === '/plans'
                         ? 'bg-amber-500/20 text-amber-200 border-amber-400/40 shadow-sm shadow-amber-500/10'
                         : 'bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border-amber-400/30'
                     }`}
                     title="Plans & Premium Membership"
                   >
-                    <Crown className="w-3.5 h-3.5 text-amber-400" />
+                    <Crown className="w-3.5 h-3.5 text-amber-400 shrink-0" />
                     <span className="notranslate hidden sm:inline" translate="no">{t('plans') || 'Plans'}</span>
                   </Link>
                   <Link 
@@ -497,7 +497,7 @@ export const Navbar: React.FC = () => {
                       playSound('click');
                       window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
                     }}
-                    className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl transition-colors text-xs font-bold ${
+                    className={`flex items-center gap-1.5 px-2 sm:px-3 py-1.5 rounded-xl transition-colors text-xs font-bold relative ${
                       location.pathname === '/profile'
                         ? 'bg-indigo-500/20 text-indigo-200 border border-indigo-400/40'
                         : needsProfileSetup
@@ -505,21 +505,24 @@ export const Navbar: React.FC = () => {
                         : 'hover:bg-white/5 text-white/70 hover:text-white border border-transparent hover:border-white/10'
                     }`}
                   >
-                    <User className="w-3.5 h-3.5 text-indigo-300" />
+                    <User className="w-3.5 h-3.5 text-indigo-300 shrink-0" />
                     <span className="notranslate hidden md:inline" translate="no">{t('profileSettings')}</span>
                     {needsProfileSetup && (
-                      <span className="px-1.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-amber-400 text-slate-950">
-                        Setup Required
-                      </span>
+                      <>
+                        <span className="hidden sm:inline-block px-1.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-amber-400 text-slate-950">
+                          Setup Required
+                        </span>
+                        <span className="sm:hidden w-2 h-2 rounded-full bg-amber-400 shrink-0" />
+                      </>
                     )}
                   </Link>
                   <button
                     type="button"
                     onClick={handleLogout}
-                    className="flex items-center gap-1 px-2.5 sm:px-3 py-1.5 rounded-xl hover:bg-red-500/10 text-red-400 hover:text-red-300 transition-colors text-xs font-bold border border-transparent hover:border-red-500/20"
+                    className="flex items-center gap-1 px-2 sm:px-3 py-1.5 rounded-xl hover:bg-red-500/10 text-red-400 hover:text-red-300 transition-colors text-xs font-bold border border-transparent hover:border-red-500/20"
                     title="Sign Out"
                   >
-                    <LogOut className="w-3.5 h-3.5" />
+                    <LogOut className="w-3.5 h-3.5 shrink-0" />
                     <span className="notranslate hidden sm:inline" translate="no">{t('logout')}</span>
                   </button>
                 </>
@@ -529,7 +532,7 @@ export const Navbar: React.FC = () => {
                     <Link 
                       to="/register" 
                       onClick={() => playSound('glass')}
-                      className="notranslate bg-indigo-500 text-white rounded-xl px-3.5 py-1.5 font-bold transition-all shadow-lg shadow-indigo-500/20 hover:scale-105 active:scale-95 text-xs"
+                      className="notranslate bg-indigo-500 text-white rounded-xl px-3 sm:px-3.5 py-1.5 font-bold transition-all shadow-lg shadow-indigo-500/20 hover:scale-105 active:scale-95 text-xs"
                       translate="no"
                     >
                       {t('getStarted') || 'Get Started'}
@@ -538,7 +541,7 @@ export const Navbar: React.FC = () => {
                     <Link 
                       to="/login" 
                       onClick={() => playSound('click')}
-                      className="notranslate text-xs font-bold text-white/80 hover:text-white transition-colors bg-white/5 px-3 py-1.5 rounded-xl border border-white/10"
+                      className="notranslate text-xs font-bold text-white/80 hover:text-white transition-colors bg-white/5 px-2.5 sm:px-3 py-1.5 rounded-xl border border-white/10"
                       translate="no"
                     >
                       {t('signIn') || 'Sign In'}
@@ -595,28 +598,49 @@ export const Navbar: React.FC = () => {
           </div>
         </div>
 
-        {/* Mobile Hamburger Menu */}
+        {/* Mobile Navigation Bar & Feature Switcher */}
         <div className="md:hidden relative z-30 border-b border-white/10 bg-[#060a16]/95 backdrop-blur-2xl shadow-md">
-          <div className="flex justify-between items-center px-4 py-3">
-             <div className="flex items-center gap-2">
-               <span className="notranslate text-white font-black text-sm tracking-tight" translate="no">{t('mainMenu') || 'Main Menu'}</span>
-               <span className="notranslate text-[10px] text-indigo-300 bg-indigo-500/20 px-2 py-0.5 rounded-full font-bold" translate="no">{t('featuresCount') || '14 Features'}</span>
-             </div>
+          <div className="flex justify-between items-center px-3.5 py-2.5 gap-2">
+             <button
+               type="button"
+               onClick={() => {
+                 playSound('click');
+                 setMobileMenuOpen(!mobileMenuOpen);
+               }}
+               className="flex items-center gap-2 min-w-0 flex-1 text-left cursor-pointer"
+             >
+               <span className="notranslate text-white font-black text-xs sm:text-sm tracking-tight shrink-0" translate="no">{t('mainMenu') || 'Main Menu'}</span>
+               {(() => {
+                 const activeItem = menuItems.find(item => isItemActive(item));
+                 if (activeItem) {
+                   const ActiveIcon = activeItem.icon;
+                   return (
+                     <span className="inline-flex items-center gap-1.5 text-[11px] text-indigo-200 bg-indigo-500/25 border border-indigo-400/40 px-2.5 py-1 rounded-xl font-bold truncate max-w-[180px]">
+                       <ActiveIcon className="w-3.5 h-3.5 text-indigo-300 shrink-0" />
+                       <span className="notranslate truncate" translate="no">{activeItem.label}</span>
+                     </span>
+                   );
+                 }
+                 return (
+                   <span className="notranslate text-[10px] text-indigo-300 bg-indigo-500/20 px-2 py-0.5 rounded-full font-bold shrink-0" translate="no">{t('featuresCount') || '14 Features'}</span>
+                 );
+               })()}
+             </button>
              <button
                 type="button"
                 onClick={() => {
                   playSound('click');
                   setMobileMenuOpen(!mobileMenuOpen);
                 }}
-                className={`p-2 rounded-xl border transition-all cursor-pointer flex items-center gap-1.5 ${
+                className={`px-3 py-2 rounded-xl border transition-all cursor-pointer flex items-center gap-1.5 shrink-0 ${
                   mobileMenuOpen 
                     ? 'bg-indigo-600 text-white border-indigo-400/50 shadow-md shadow-indigo-500/20' 
                     : 'bg-white/10 hover:bg-white/15 border-white/20 text-white'
                 }`}
                 aria-label="Toggle menu"
              >
-                <span className="notranslate text-xs font-bold text-white/90" translate="no">{mobileMenuOpen ? (t('close') || 'Close') : (t('menu') || 'Menu')}</span>
-                <Menu className="w-5 h-5 text-white" />
+                <span className="notranslate text-xs font-bold text-white/90" translate="no">{mobileMenuOpen ? (t('close') || 'Close') : (t('menu') || 'Switch Tab')}</span>
+                <Menu className="w-4 h-4 text-white" />
              </button>
           </div>
           
@@ -626,7 +650,7 @@ export const Navbar: React.FC = () => {
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
                 exit={{ opacity: 0, height: 0 }}
-                className="p-4 border-t border-white/10 bg-[#0a0f1d] space-y-3.5 overflow-hidden"
+                className="p-3.5 border-t border-white/10 bg-[#0a0f1d] space-y-3 overflow-hidden"
               >
                 {/* Mobile Quick Links: About Me, Contact, and Dietary Preferences */}
                 <div className="grid grid-cols-3 gap-2 pb-3 border-b border-white/10">
@@ -671,7 +695,7 @@ export const Navbar: React.FC = () => {
                 </div>
 
                 {/* 14 Features Grid */}
-                <div className="grid grid-cols-2 gap-2.5">
+                <div className="grid grid-cols-2 gap-2">
                   {menuItems.map((item) => {
                     const active = isItemActive(item);
                     const Icon = item.icon;
@@ -683,7 +707,7 @@ export const Navbar: React.FC = () => {
                           handleMenuClick(item); 
                           setMobileMenuOpen(false); 
                         }}
-                        className={`flex items-center gap-2.5 p-3 rounded-2xl text-xs font-bold transition-all border cursor-pointer active:scale-95 text-left ${
+                        className={`flex items-center gap-2.5 p-2.5 rounded-2xl text-xs font-bold transition-all border cursor-pointer active:scale-95 text-left min-h-[48px] ${
                           active
                             ? 'bg-gradient-to-r from-indigo-600/30 to-purple-600/30 text-white border-indigo-500/60 shadow-md shadow-indigo-500/20'
                             : 'bg-white/5 text-white/80 hover:text-white border-white/5 hover:border-white/15 hover:bg-white/10'
@@ -693,7 +717,7 @@ export const Navbar: React.FC = () => {
                           <Icon className="w-4 h-4 shrink-0" />
                         </div>
                         <div className="min-w-0 flex-1">
-                          <div className="notranslate leading-tight truncate" translate="no">{item.label}</div>
+                          <div className="notranslate leading-snug break-words" translate="no">{item.label}</div>
                           {item.badge && (
                             <span className={`inline-block mt-0.5 px-1.5 py-0.2 rounded-full text-[8px] font-black uppercase tracking-wider ${item.badgeClass}`}>
                               {item.badge}

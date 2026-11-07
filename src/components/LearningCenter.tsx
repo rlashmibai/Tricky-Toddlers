@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../lib/AuthContext';
+import { useLanguage } from '../lib/LanguageContext';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   Star, Palette, Keyboard, Hash, Delete, RefreshCw,
@@ -42,62 +43,182 @@ const COLOR_CHART = [
 ];
 
 const MIX_LOGIC: { [key: string]: string } = {
-  // Primary & Secondary
-  'Red+Yellow': 'Orange',
-  'Yellow+Red': 'Orange',
-  'Red+Blue': 'Purple',
-  'Blue+Red': 'Purple',
-  'Blue+Yellow': 'Green',
-  'Yellow+Blue': 'Green',
-  
-  // Tertiaries
-  'Yellow+Orange': 'Amber',
-  'Orange+Yellow': 'Amber',
+  // Same-color mixes
+  'Red+Red': 'Red',
+  'Orange+Orange': 'Orange',
+  'Yellow+Yellow': 'Yellow',
+  'Green+Green': 'Green',
+  'Blue+Blue': 'Blue',
+  'Purple+Purple': 'Purple',
+  'Pink+Pink': 'Pink',
+  'Brown+Brown': 'Brown',
+  'Black+Black': 'Black',
+  'White+White': 'White',
+
+  // Red combinations
   'Red+Orange': 'Vermilion',
   'Orange+Red': 'Vermilion',
+  'Red+Yellow': 'Orange',
+  'Yellow+Red': 'Orange',
+  'Red+Green': 'Brown',
+  'Green+Red': 'Brown',
+  'Red+Blue': 'Purple',
+  'Blue+Red': 'Purple',
   'Red+Purple': 'Magenta',
   'Purple+Red': 'Magenta',
-  'Blue+Purple': 'Violet',
-  'Purple+Blue': 'Violet',
-  'Blue+Green': 'Teal',
-  'Green+Blue': 'Teal',
-  'Yellow+Green': 'Chartreuse',
-  'Green+Yellow': 'Chartreuse',
-
-  // Shades & Tints (White/Black)
-  'Red+White': 'Rose',
-  'White+Red': 'Rose',
+  'Red+Pink': 'Coral Red',
+  'Pink+Red': 'Coral Red',
+  'Red+Brown': 'Brick Red',
+  'Brown+Red': 'Brick Red',
   'Red+Black': 'Maroon',
   'Black+Red': 'Maroon',
-  'Purple+White': 'Lavender',
-  'White+Purple': 'Lavender',
-  'Purple+Black': 'Plum',
-  'Black+Purple': 'Plum',
-  'Blue+White': 'Sky Blue',
-  'White+Blue': 'Sky Blue',
-  'Blue+Black': 'Navy',
-  'Black+Blue': 'Navy',
-  'Green+White': 'Mint',
-  'White+Green': 'Mint',
-  'Green+Black': 'Dark Green',
-  'Black+Green': 'Dark Green',
-  'Black+White': 'Gray',
-  'White+Black': 'Gray',
+  'Red+White': 'Rose Pink',
+  'White+Red': 'Rose Pink',
 
-  // Complex & Requested Mixes
-  'Blue+Green+White': 'Turquoise',
-  'Green+Blue+White': 'Turquoise',
-  'Blue+White+Black': 'Slate',
-  'Yellow+Brown': 'Mustard',
-  'Brown+Yellow': 'Mustard',
-  'Red+Brown': 'Brick',
-  'Brown+Red': 'Brick',
+  // Orange combinations
+  'Orange+Yellow': 'Amber',
+  'Yellow+Orange': 'Amber',
+  'Orange+Green': 'Olive',
+  'Green+Orange': 'Olive',
+  'Orange+Blue': 'Terracotta Slate',
+  'Blue+Orange': 'Terracotta Slate',
+  'Orange+Purple': 'Russet',
+  'Purple+Orange': 'Russet',
+  'Orange+Pink': 'Coral',
+  'Pink+Orange': 'Coral',
   'Orange+Brown': 'Rust',
   'Brown+Orange': 'Rust',
-  'Green+Brown': 'Olive',
-  'Brown+Green': 'Olive',
+  'Orange+Black': 'Burnt Umber',
+  'Black+Orange': 'Burnt Umber',
+  'Orange+White': 'Peach',
+  'White+Orange': 'Peach',
+
+  // Yellow combinations
+  'Yellow+Green': 'Lime Green',
+  'Green+Yellow': 'Lime Green',
+  'Yellow+Blue': 'Green',
+  'Blue+Yellow': 'Green',
+  'Yellow+Purple': 'Golden Ochre',
+  'Purple+Yellow': 'Golden Ochre',
+  'Yellow+Pink': 'Peach Coral',
+  'Pink+Yellow': 'Peach Coral',
+  'Yellow+Brown': 'Mustard',
+  'Brown+Yellow': 'Mustard',
+  'Yellow+Black': 'Olive Green',
+  'Black+Yellow': 'Olive Green',
+  'Yellow+White': 'Lemon Cream',
+  'White+Yellow': 'Lemon Cream',
+
+  // Green combinations
+  'Green+Blue': 'Teal',
+  'Blue+Green': 'Teal',
+  'Green+Purple': 'Deep Forest',
+  'Purple+Green': 'Deep Forest',
+  'Green+Pink': 'Sage Rose',
+  'Pink+Green': 'Sage Rose',
+  'Green+Brown': 'Moss Green',
+  'Brown+Green': 'Moss Green',
+  'Green+Black': 'Dark Green',
+  'Black+Green': 'Dark Green',
+  'Green+White': 'Mint',
+  'White+Green': 'Mint',
+
+  // Blue combinations
+  'Blue+Purple': 'Violet',
+  'Purple+Blue': 'Violet',
+  'Blue+Pink': 'Lilac Blue',
+  'Pink+Blue': 'Lilac Blue',
+  'Blue+Brown': 'Slate Blue',
+  'Brown+Blue': 'Slate Blue',
+  'Blue+Black': 'Navy Blue',
+  'Black+Blue': 'Navy Blue',
+  'Blue+White': 'Sky Blue',
+  'White+Blue': 'Sky Blue',
+
+  // Purple combinations
   'Purple+Pink': 'Fuchsia',
   'Pink+Purple': 'Fuchsia',
+  'Purple+Brown': 'Burgundy',
+  'Brown+Purple': 'Burgundy',
+  'Purple+Black': 'Plum',
+  'Black+Purple': 'Plum',
+  'Purple+White': 'Lavender',
+  'White+Purple': 'Lavender',
+
+  // Pink combinations
+  'Pink+Brown': 'Dusty Rose',
+  'Brown+Pink': 'Dusty Rose',
+  'Pink+Black': 'Mulberry',
+  'Black+Pink': 'Mulberry',
+  'Pink+White': 'Baby Pink',
+  'White+Pink': 'Baby Pink',
+
+  // Brown combinations
+  'Brown+Black': 'Espresso',
+  'Black+Brown': 'Espresso',
+  'Brown+White': 'Tan',
+  'White+Brown': 'Tan',
+
+  // Black & White
+  'Black+White': 'Gray',
+  'White+Black': 'Gray',
+};
+
+const COLOR_SWATCH_MAP: Record<string, { hex: string; border: string; lightText?: boolean }> = {
+  'Red': { hex: '#EF4444', border: '#FCA5A5' },
+  'Orange': { hex: '#F97316', border: '#FDBA74' },
+  'Yellow': { hex: '#FACC15', border: '#FEF08A', lightText: true },
+  'Green': { hex: '#22C55E', border: '#86EFAC' },
+  'Blue': { hex: '#3B82F6', border: '#93C5FD' },
+  'Purple': { hex: '#9333EA', border: '#D8B4FE' },
+  'Pink': { hex: '#EC4899', border: '#F9A8D4' },
+  'Brown': { hex: '#8B4513', border: '#CD853F' },
+  'Black': { hex: '#111827', border: '#6B7280' },
+  'White': { hex: '#FFFFFF', border: '#E5E7EB', lightText: true },
+  'Vermilion': { hex: '#EA580C', border: '#FDBA74' },
+  'Magenta': { hex: '#DB2777', border: '#F9A8D4' },
+  'Coral Red': { hex: '#F43F5E', border: '#FDA4AF' },
+  'Brick Red': { hex: '#991B1B', border: '#F87171' },
+  'Maroon': { hex: '#7F1D1D', border: '#EF4444' },
+  'Rose Pink': { hex: '#FB7185', border: '#FECDD3' },
+  'Rose': { hex: '#FB7185', border: '#FECDD3' },
+  'Amber': { hex: '#F59E0B', border: '#FDE68A' },
+  'Olive': { hex: '#65A30D', border: '#BEF264' },
+  'Terracotta Slate': { hex: '#64748B', border: '#CBD5E1' },
+  'Russet': { hex: '#9A3412', border: '#FDBA74' },
+  'Coral': { hex: '#FB7185', border: '#FECDD3' },
+  'Rust': { hex: '#B45309', border: '#FCD34D' },
+  'Burnt Umber': { hex: '#7C2D12', border: '#FDBA74' },
+  'Peach': { hex: '#FDBA74', border: '#FFEDD5', lightText: true },
+  'Lime Green': { hex: '#84CC16', border: '#D9F99D', lightText: true },
+  'Chartreuse': { hex: '#84CC16', border: '#D9F99D', lightText: true },
+  'Golden Ochre': { hex: '#CA8A04', border: '#FEF08A' },
+  'Peach Coral': { hex: '#FCA5A5', border: '#FEE2E2', lightText: true },
+  'Mustard': { hex: '#D97706', border: '#FDE68A' },
+  'Olive Green': { hex: '#4D7C0F', border: '#BEF264' },
+  'Lemon Cream': { hex: '#FEF08A', border: '#FEF9C3', lightText: true },
+  'Teal': { hex: '#0D9488', border: '#5EEAD4' },
+  'Deep Forest': { hex: '#1E293B', border: '#64748B' },
+  'Sage Rose': { hex: '#A7F3D0', border: '#D1FAE5', lightText: true },
+  'Moss Green': { hex: '#3F6212', border: '#A3E635' },
+  'Dark Green': { hex: '#14532D', border: '#4ADE80' },
+  'Mint': { hex: '#34D399', border: '#A7F3D0', lightText: true },
+  'Violet': { hex: '#7C3AED', border: '#C4B5FD' },
+  'Lilac Blue': { hex: '#818CF8', border: '#C7D2FE' },
+  'Slate Blue': { hex: '#334155', border: '#94A3B8' },
+  'Navy Blue': { hex: '#1E3A8A', border: '#60A5FA' },
+  'Navy': { hex: '#1E3A8A', border: '#60A5FA' },
+  'Sky Blue': { hex: '#38BDF8', border: '#BAE6FD', lightText: true },
+  'Fuchsia': { hex: '#D946EF', border: '#F5D0FE' },
+  'Burgundy': { hex: '#581C87', border: '#C084FC' },
+  'Plum': { hex: '#4C1D95', border: '#A78BFA' },
+  'Lavender': { hex: '#C084FC', border: '#E9D5FF' },
+  'Dusty Rose': { hex: '#BE185D', border: '#FBCFE8' },
+  'Mulberry': { hex: '#831843', border: '#F472B6' },
+  'Baby Pink': { hex: '#F9A8D4', border: '#FCE7F3', lightText: true },
+  'Espresso': { hex: '#451A03', border: '#B45309' },
+  'Tan': { hex: '#D2B48C', border: '#F5DEB3', lightText: true },
+  'Gray': { hex: '#9CA3AF', border: '#E5E7EB', lightText: true },
 };
 
 const COLOR_QUESTS = [
@@ -575,6 +696,8 @@ const ROUTINES: any[] = [];
 export const LearningCenter: React.FC = () => {
   const navigate = useNavigate();
   const { profile } = useAuth();
+  const { language } = useLanguage();
+  const isHindi = language === 'hi';
   const activePlan = profile?.plan || localStorage.getItem('user_plan') || 'free';
   const isPremium = true; // Always unlocked for demo as requested
 
@@ -669,21 +792,18 @@ export const LearningCenter: React.FC = () => {
     if (!mix1) {
       setMix1(color);
       setMixResult(null);
-    } else if (!mix2 && mix1.name !== color.name) {
+    } else if (!mix2) {
       setMix2(color);
       const key = `${mix1.name}+${color.name}`;
-      const result = MIX_LOGIC[key] || 'Oops, Not all colors mix into something bright';
+      const result = MIX_LOGIC[key] || color.name;
       setMixResult(result);
-      if (!result.includes('Oops')) {
-        playSound('glass');
-        speakIndianEnglish(`${mix1.name} and ${color.name} make ${result}!`);
-        // Validate Quest matching (Toddler Academy #3)
-        const currentQuest = COLOR_QUESTS[questIndex];
-        if (currentQuest && result === currentQuest.target) {
-          setShowQuestSuccess(true);
-          if (!completedQuests.includes(currentQuest.id)) {
-            setCompletedQuests(prev => [...prev, currentQuest.id]);
-          }
+      playSound('glass');
+      speakIndianEnglish(`${mix1.name} and ${color.name} make ${result}!`);
+      const currentQuest = COLOR_QUESTS[questIndex];
+      if (currentQuest && result === currentQuest.target) {
+        setShowQuestSuccess(true);
+        if (!completedQuests.includes(currentQuest.id)) {
+          setCompletedQuests(prev => [...prev, currentQuest.id]);
         }
       }
     } else {
@@ -877,108 +997,108 @@ export const LearningCenter: React.FC = () => {
           </button>
         </div>
 
-        {/* Row 2: Category Menu Items - Single Line */}
-        <div className="flex items-center justify-center gap-1.5 py-1">
+        {/* Row 2: Category Menu Items - Responsive Grid on Mobile, Wrapped Row on Desktop */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:flex lg:flex-wrap items-center justify-center gap-1.5 sm:gap-2 py-1">
           <button
             id="btn-mode-numbers"
             onClick={() => handleModeChange('numbers')}
-            className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-xl transition-all duration-200 font-extrabold text-xs tracking-wider cursor-pointer shadow-sm select-none whitespace-nowrap ${
+            className={`inline-flex items-center justify-center gap-1.5 px-3 py-2.5 sm:py-2 rounded-xl transition-all duration-200 font-extrabold text-xs tracking-wider cursor-pointer shadow-sm select-none whitespace-nowrap ${
               activeMode === 'numbers' 
                 ? 'bg-cheerful-yellow text-black shadow-lg shadow-cheerful-yellow/20 scale-102 ring-2 ring-cheerful-yellow/50' 
                 : 'bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white'
             }`}
           >
-            <Hash className="w-3.5 h-3.5" />
+            <Hash className="w-3.5 h-3.5 shrink-0" />
             <span>Numbers</span>
           </button>
           <button
             id="btn-mode-counting"
             onClick={() => handleModeChange('counting')}
-            className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-xl transition-all duration-200 font-extrabold text-xs tracking-wider cursor-pointer shadow-sm select-none whitespace-nowrap ${
+            className={`inline-flex items-center justify-center gap-1.5 px-3 py-2.5 sm:py-2 rounded-xl transition-all duration-200 font-extrabold text-xs tracking-wider cursor-pointer shadow-sm select-none whitespace-nowrap ${
               activeMode === 'counting' 
                 ? 'bg-cheerful-pink text-black shadow-lg shadow-cheerful-pink/20 scale-102 ring-2 ring-cheerful-pink/50' 
                 : 'bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white'
             }`}
           >
-            <Star className="w-3.5 h-3.5" />
+            <Star className="w-3.5 h-3.5 shrink-0" />
             <span>Counting</span>
           </button>
           <button
             id="btn-mode-words"
             onClick={() => handleModeChange('words')}
-            className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-xl transition-all duration-200 font-extrabold text-xs tracking-wider cursor-pointer shadow-sm select-none whitespace-nowrap ${
+            className={`inline-flex items-center justify-center gap-1.5 px-3 py-2.5 sm:py-2 rounded-xl transition-all duration-200 font-extrabold text-xs tracking-wider cursor-pointer shadow-sm select-none whitespace-nowrap ${
               activeMode === 'words' 
                 ? 'bg-cheerful-blue text-black shadow-lg shadow-cheerful-blue/20 scale-102 ring-2 ring-cheerful-blue/50' 
                 : 'bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white'
             }`}
           >
-            <BookOpen className="w-3.5 h-3.5" />
+            <BookOpen className="w-3.5 h-3.5 shrink-0" />
             <span>First Words</span>
           </button>
           <button
             id="btn-mode-alphabet"
             onClick={() => handleModeChange('alphabet')}
-            className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-xl transition-all duration-200 font-extrabold text-xs tracking-wider cursor-pointer shadow-sm select-none whitespace-nowrap ${
+            className={`inline-flex items-center justify-center gap-1.5 px-3 py-2.5 sm:py-2 rounded-xl transition-all duration-200 font-extrabold text-xs tracking-wider cursor-pointer shadow-sm select-none whitespace-nowrap ${
               activeMode === 'alphabet' 
                 ? 'bg-indigo-400 text-black shadow-lg shadow-indigo-400/20 scale-102 ring-2 ring-indigo-400/50' 
                 : 'bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white'
             }`}
           >
-            <Keyboard className="w-3.5 h-3.5" />
+            <Keyboard className="w-3.5 h-3.5 shrink-0" />
             <span>Sentence Builder</span>
           </button>
           <button
             id="btn-mode-colors"
             onClick={() => handleModeChange('colors')}
-            className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-xl transition-all duration-200 font-extrabold text-xs tracking-wider cursor-pointer shadow-sm select-none whitespace-nowrap ${
+            className={`inline-flex items-center justify-center gap-1.5 px-3 py-2.5 sm:py-2 rounded-xl transition-all duration-200 font-extrabold text-xs tracking-wider cursor-pointer shadow-sm select-none whitespace-nowrap ${
               activeMode === 'colors' 
                 ? 'bg-purple-500 text-white shadow-lg shadow-purple-500/20 scale-102 ring-2 ring-purple-400/50' 
                 : 'bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white'
             }`}
           >
-            <Palette className="w-3.5 h-3.5" />
+            <Palette className="w-3.5 h-3.5 shrink-0" />
             <span>Colors</span>
           </button>
           <button
             id="btn-mode-emotions"
             onClick={() => handleModeChange('emotions')}
-            className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-xl transition-all duration-200 font-extrabold text-xs tracking-wider cursor-pointer shadow-sm select-none whitespace-nowrap ${
+            className={`inline-flex items-center justify-center gap-1.5 px-3 py-2.5 sm:py-2 rounded-xl transition-all duration-200 font-extrabold text-xs tracking-wider cursor-pointer shadow-sm select-none whitespace-nowrap ${
               activeMode === 'emotions' 
                 ? 'bg-rose-400 text-black shadow-lg shadow-rose-400/20 scale-102 ring-2 ring-rose-300/50' 
                 : 'bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white'
             }`}
           >
-            <Heart className="w-3.5 h-3.5 text-pink-300" />
+            <Heart className="w-3.5 h-3.5 text-pink-300 shrink-0" />
             <span>Emotions</span>
           </button>
           <button
             id="btn-mode-bodyparts"
             onClick={() => handleModeChange('bodyparts')}
-            className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-xl transition-all duration-200 font-extrabold text-xs tracking-wider cursor-pointer shadow-sm select-none whitespace-nowrap ${
+            className={`inline-flex items-center justify-center gap-1.5 px-3 py-2.5 sm:py-2 rounded-xl transition-all duration-200 font-extrabold text-xs tracking-wider cursor-pointer shadow-sm select-none whitespace-nowrap ${
               activeMode === 'bodyparts' 
                 ? 'bg-sky-400 text-black shadow-lg shadow-sky-400/20 scale-102 ring-2 ring-sky-300/50' 
                 : 'bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white'
             }`}
           >
-            <Smile className="w-3.5 h-3.5 text-sky-300" />
+            <Smile className="w-3.5 h-3.5 text-sky-300 shrink-0" />
             <span>Body Parts</span>
           </button>
           <button
             id="btn-mode-shapes"
             onClick={() => handleModeChange('shapes')}
-            className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-xl transition-all duration-200 font-extrabold text-xs tracking-wider cursor-pointer shadow-sm select-none whitespace-nowrap ${
+            className={`inline-flex items-center justify-center gap-1.5 px-3 py-2.5 sm:py-2 rounded-xl transition-all duration-200 font-extrabold text-xs tracking-wider cursor-pointer shadow-sm select-none whitespace-nowrap ${
               activeMode === 'shapes' 
                 ? 'bg-amber-400 text-black shadow-lg shadow-amber-400/20 scale-102 ring-2 ring-amber-300/50' 
                 : 'bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white'
             }`}
           >
-            <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+            <Sparkles className="w-3.5 h-3.5 text-amber-300 shrink-0" />
             <span>Shapes</span>
           </button>
           <button
             id="btn-mode-animals"
             onClick={() => handleModeChange('animals')}
-            className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-xl transition-all duration-200 font-extrabold text-xs tracking-wider cursor-pointer shadow-sm select-none whitespace-nowrap ${
+            className={`col-span-2 sm:col-span-1 inline-flex items-center justify-center gap-1.5 px-3 py-2.5 sm:py-2 rounded-xl transition-all duration-200 font-extrabold text-xs tracking-wider cursor-pointer shadow-sm select-none whitespace-nowrap ${
               activeMode === 'animals' 
                 ? 'bg-emerald-400 text-black shadow-lg shadow-emerald-400/20 scale-102 ring-2 ring-emerald-300/50' 
                 : 'bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white'
@@ -1066,7 +1186,7 @@ export const LearningCenter: React.FC = () => {
                 {/* Arithmetic Operators Row */}
                 <div className="mt-4 pt-3 border-t border-white/10">
                   <span className="text-[10px] font-black uppercase tracking-widest text-white/40 block mb-2">Math Actions</span>
-                  <div className="grid grid-cols-6 gap-2">
+                  <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
                     <button 
                       onClick={() => handleOperator('+')}
                       className="glass-card py-3 rounded-xl flex items-center justify-center border-2 border-white/10 hover:border-cheerful-pink/60 hover:bg-cheerful-pink/10 text-white font-black text-xl transition-all active:scale-95 cursor-pointer"
@@ -1236,7 +1356,7 @@ export const LearningCenter: React.FC = () => {
                     Target: {activeNumber}
                   </span>
                 </div>
-                <div className="grid grid-cols-10 gap-1.5 sm:gap-2 select-none">
+                <div className="grid grid-cols-5 sm:grid-cols-10 gap-1.5 sm:gap-2 select-none">
                   {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map((num) => {
                     const isSelected = activeNumber === num;
                     return (
@@ -1286,22 +1406,22 @@ export const LearningCenter: React.FC = () => {
                           onClick={() => handleObjectTap(index)}
                           className={`w-12 h-12 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center relative cursor-pointer border-2 transition-all shadow-md select-none ${
                             isCounted 
-                              ? 'bg-white/15 border-white text-white shadow-lg' 
-                              : 'bg-white/5 border-white/10 hover:border-white/30 text-white/30 hover:bg-white/10'
+                              ? 'bg-white/25 border-white text-white shadow-xl ring-2 ring-amber-300/70 scale-105' 
+                              : 'bg-white/10 border-white/20 hover:border-white/40 hover:bg-white/15'
                           }`}
                         >
-                          <div className="transition-transform duration-300">
+                          <div className={`transition-transform duration-300 flex items-center justify-center ${isCounted ? 'scale-110' : 'opacity-90'}`}>
                             {selectedObject === 'star' && (
-                              <Star className={`w-7 h-7 sm:w-8 sm:h-8 ${isCounted ? 'text-cheerful-yellow fill-cheerful-yellow filter drop-shadow' : 'text-white/20 fill-transparent'}`} />
+                              <span className="text-2xl sm:text-3xl filter drop-shadow-md leading-none">⭐</span>
                             )}
                             {selectedObject === 'cookie' && (
-                              <Cookie className={`w-7 h-7 sm:w-8 sm:h-8 ${isCounted ? 'text-[#D2691E] fill-[#CD853F] filter drop-shadow' : 'text-white/20 fill-transparent'}`} />
+                              <span className="text-2xl sm:text-3xl filter drop-shadow-md leading-none">🍪</span>
                             )}
                             {selectedObject === 'heart' && (
-                              <Heart className={`w-7 h-7 sm:w-8 sm:h-8 ${isCounted ? 'text-cheerful-pink fill-cheerful-pink filter drop-shadow' : 'text-white/20 fill-transparent'}`} />
+                              <span className="text-2xl sm:text-3xl filter drop-shadow-md leading-none">💖</span>
                             )}
                             {selectedObject === 'smile' && (
-                              <Smile className={`w-7 h-7 sm:w-8 sm:h-8 ${isCounted ? 'text-sky-400 fill-sky-400 filter drop-shadow' : 'text-white/20 fill-transparent'}`} />
+                              <span className="text-2xl sm:text-3xl filter drop-shadow-md leading-none">😊</span>
                             )}
                           </div>
 
@@ -1428,32 +1548,34 @@ export const LearningCenter: React.FC = () => {
                         key={mixResult || 'empty-res'}
                         initial={{ scale: 0.8 }}
                         animate={{ scale: mixResult ? 1.15 : 1, rotate: mixResult ? [0, 8, -8, 0] : 0 }}
+                        style={
+                          mixResult && COLOR_SWATCH_MAP[mixResult]
+                            ? {
+                                backgroundColor: COLOR_SWATCH_MAP[mixResult].hex,
+                                borderColor: COLOR_SWATCH_MAP[mixResult].border,
+                              }
+                            : undefined
+                        }
                         className={`w-16 h-16 sm:w-20 sm:h-20 rounded-2xl border-4 shadow-2xl flex items-center justify-center transition-all duration-300 ${
-                          mixResult === 'Orange' ? 'bg-orange-500 border-orange-300' :
-                          mixResult === 'Purple' ? 'bg-purple-600 border-purple-300' :
-                          mixResult === 'Green' ? 'bg-emerald-500 border-emerald-300' :
-                          mixResult === 'Pink' ? 'bg-pink-500 border-pink-300' :
-                          mixResult === 'Gray' ? 'bg-gray-400 border-gray-200' :
-                          mixResult === 'Brown' ? 'bg-[#8B4513] border-[#A0522D]' :
-                          mixResult === 'Sky Blue' ? 'bg-sky-400 border-sky-200' :
-                          mixResult === 'Indigo' ? 'bg-indigo-600 border-indigo-300' :
-                          mixResult === 'Violet' ? 'bg-violet-600 border-violet-300' :
-                          mixResult === 'Teal' ? 'bg-teal-500 border-teal-300' :
-                          mixResult === 'Amber' ? 'bg-amber-400 border-amber-200' :
-                          mixResult?.includes('Oops') ? 'bg-white border-white animate-pulse' :
-                          'bg-white/5 border-dashed border-white/20 text-white/30'
+                          mixResult && COLOR_SWATCH_MAP[mixResult]
+                            ? ''
+                            : 'bg-white/5 border-dashed border-white/20 text-white/30'
                         }`}
                       >
-                        {mixResult && !mixResult.includes('Oops') ? (
-                          <Star className="w-7 h-7 text-white fill-white drop-shadow-md" />
-                        ) : mixResult?.includes('Oops') ? (
-                          <Sparkles className="w-7 h-7 text-black" />
+                        {mixResult ? (
+                          <Star
+                            className={`w-7 h-7 drop-shadow-md ${
+                              COLOR_SWATCH_MAP[mixResult]?.lightText
+                                ? 'text-slate-900 fill-slate-900'
+                                : 'text-white fill-white'
+                            }`}
+                          />
                         ) : (
                           <Sparkles className="w-6 h-6 text-white/20" />
                         )}
                       </motion.div>
                       <span className="text-[11px] font-black uppercase tracking-wider text-amber-300">
-                        Result
+                        {mixResult || 'Result'}
                       </span>
                     </div>
                   </div>
@@ -1816,7 +1938,9 @@ export const LearningCenter: React.FC = () => {
                 My First Words Palace
               </h1>
               <p className="text-white/60 text-xs sm:text-sm font-medium mt-1 max-w-xl mx-auto">
-                100 Indian toddler first words: Family, Food, Nature, Animals, Daily Items & Actions with Hindi script
+                {isHindi
+                  ? '100 Indian toddler first words: Family, Food, Nature, Animals, Daily Items & Actions with Hindi script'
+                  : '100 Indian toddler first words: Family, Food, Nature, Animals, Daily Items & Actions'}
               </p>
             </header>
 
@@ -1877,7 +2001,7 @@ export const LearningCenter: React.FC = () => {
                     {currentWordData.word}
                   </h2>
                   <div className="text-lg font-bold text-amber-300 mb-2">
-                    {currentWordData.hindi} • {currentWordData.meaning}
+                    {isHindi ? `${currentWordData.hindi} • ${currentWordData.meaning}` : currentWordData.meaning}
                   </div>
 
                   {/* Bubbled Spelling Board */}
@@ -1906,7 +2030,11 @@ export const LearningCenter: React.FC = () => {
                     <button
                       onClick={() => {
                         playSound('glass');
-                        speakIndianEnglish(`${currentWordData.word}. In Hindi: ${currentWordData.hindi}. ${currentWordData.meaning}`);
+                        speakIndianEnglish(
+                          isHindi
+                            ? `${currentWordData.word}. In Hindi: ${currentWordData.hindi}. ${currentWordData.meaning}`
+                            : `${currentWordData.word}. ${currentWordData.meaning}`
+                        );
                       }}
                       className="px-5 py-2.5 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500/30 font-black rounded-xl uppercase text-xs tracking-wider flex items-center justify-center gap-2 hover:scale-105 active:scale-95 transition-all cursor-pointer shadow-lg"
                     >
@@ -1984,9 +2112,11 @@ export const LearningCenter: React.FC = () => {
                       <h3 className="text-2xl sm:text-3xl font-black text-white tracking-wider uppercase mb-1">
                         {item.word}
                       </h3>
-                      <div className="text-sm font-bold text-amber-300 tracking-wide mb-1">
-                        {item.hindi}
-                      </div>
+                      {isHindi && (
+                        <div className="text-sm font-bold text-amber-300 tracking-wide mb-1">
+                          {item.hindi}
+                        </div>
+                      )}
                       <div className="text-xs text-white/60 font-medium">
                         {item.meaning}
                       </div>
@@ -2011,117 +2141,160 @@ export const LearningCenter: React.FC = () => {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.3 }}
-            className="flex flex-col items-center"
+            className="w-full max-w-5xl mx-auto"
           >
-            <header className="text-center mb-12">
-              <motion.div
-                initial={{ y: -10, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                className="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-white/5 border border-white/10 text-white/40 mb-4"
-              >
-                <Keyboard className="w-5 h-5" />
-                <span className="text-sm font-black uppercase tracking-widest text-white/60">Sentence Discovery</span>
-              </motion.div>
-              <h1 className="text-5xl font-black text-white mb-4 tracking-tighter uppercase">Word Academy</h1>
+            {/* Compact Header matching Numbers, Counting & Colors */}
+            <header className="text-center mb-3">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-indigo-400/10 border border-indigo-400/25 text-indigo-300 mb-1">
+                <Keyboard className="w-3.5 h-3.5" />
+                <span className="text-[11px] font-black uppercase tracking-widest">Sentence Discovery Studio</span>
+              </div>
+              <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight uppercase">
+                ✨ Word & Sentence Builder ✨
+              </h1>
             </header>
 
-            {/* Sentence Display */}
-            <div className={`w-full max-w-4xl min-h-[180px] glass-card mb-6 flex flex-col items-center justify-center p-8 border-4 border-white/10 relative overflow-hidden`}>
-              <div className={`absolute inset-0 opacity-5 transition-colors duration-500 ${COLORS[keyColorIndex].bg}`} />
-              
-              <div className="flex flex-col items-center gap-4 relative z-10 w-full text-center">
-                {/* Floating Emojis matching written letters (Toddler Academy #2) */}
-                {getEmojisToDisplay().length > 0 && (
-                  <div className="flex justify-center gap-3 mb-2 flex-wrap max-w-full">
-                    <AnimatePresence>
+            {/* Unified Single-Screen Card: Sentence Display + Quick Words + A-Z Keyboard with ZERO scrolling */}
+            <div className="glass-card p-4 sm:p-5 border-3 border-white/10 rounded-3xl relative overflow-hidden shadow-2xl flex flex-col gap-3">
+              <div className={`absolute inset-0 opacity-5 transition-colors duration-500 pointer-events-none ${COLORS[keyColorIndex].bg}`} />
+
+              {/* Row 1: Live Sentence Display & Instant Action Controls */}
+              <div className="w-full bg-black/40 rounded-2xl p-3 sm:p-4 border border-white/15 flex flex-col sm:flex-row items-center justify-between gap-3 relative z-10 min-h-[76px]">
+                <div className="flex items-center gap-3 flex-wrap justify-center sm:justify-start flex-1 min-w-0">
+                  {getEmojisToDisplay().length > 0 && (
+                    <div className="flex items-center gap-1.5 shrink-0">
                       {getEmojisToDisplay().map((emo, eIdx) => (
                         <motion.span
                           key={`${emo}-${eIdx}`}
-                          initial={{ scale: 0, y: 15 }}
-                          animate={{ scale: 1, y: 0, rotate: [0, 10, -10, 0] }}
-                          exit={{ scale: 0 }}
-                          className="text-5xl md:text-6xl filter drop-shadow-2xl select-none"
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          className="text-2xl sm:text-3xl filter drop-shadow select-none"
                         >
                           {emo}
                         </motion.span>
                       ))}
-                    </AnimatePresence>
-                  </div>
-                )}
-
-                  <AnimatePresence mode="popLayout">
-                  {sentence ? (
-                    <div className="flex flex-col items-center gap-3">
-                      <motion.p 
-                        key={sentence}
-                        initial={{ scale: 1.1, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        className="text-4xl md:text-6xl font-black text-white tracking-tight break-words text-center uppercase"
-                      >
-                        {sentence}
-                      </motion.p>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          playSound('glass');
-                          speakIndianEnglish(sentence);
-                        }}
-                        className="inline-flex items-center gap-2 px-5 py-2 rounded-xl bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-300 border border-indigo-400/30 font-black text-xs uppercase tracking-wider transition-all cursor-pointer shadow-md active:scale-95"
-                      >
-                        <Volume2 className="w-4 h-4 text-indigo-300 animate-pulse" />
-                        <span>Speak Full Sentence</span>
-                      </button>
                     </div>
-                  ) : (
-                    <p className="text-2xl font-bold text-white/20 italic tracking-wide uppercase text-center select-none">Start typing to build a sentence!</p>
                   )}
-                </AnimatePresence>
-              </div>
-            </div>
 
-            {/* Keyboard Grid */}
-            <div className="w-full max-w-4xl space-y-4">
-              {ALPHABET_ROWS.map((row, rowIdx) => (
-                <div key={rowIdx} className="flex justify-center gap-2 md:gap-4">
-                  {row.map((char) => (
-                    <motion.button
-                      key={char}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.9 }}
-                      onClick={() => handleKeyPress(char)}
-                      className="glass-card flex-1 min-h-[70px] md:min-h-[90px] flex items-center justify-center border-2 border-white/5 hover:border-white/20 transition-all cursor-pointer font-black text-3xl md:text-4xl text-white/80 hover:text-white"
+                  {sentence ? (
+                    <motion.p
+                      key={sentence}
+                      initial={{ scale: 1.03, opacity: 0.8 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      className="text-xl sm:text-2xl md:text-3xl font-black text-white tracking-wide break-words uppercase text-center sm:text-left"
                     >
-                      {char}
-                    </motion.button>
-                  ))}
+                      {sentence}
+                    </motion.p>
+                  ) : (
+                    <p className="text-sm sm:text-base font-bold text-white/35 italic tracking-wide uppercase select-none">
+                      Tap letters or quick words below to build your sentence...
+                    </p>
+                  )}
                 </div>
-              ))}
-              
-              {/* Feature Keys */}
-              <div className="flex justify-center gap-4">
-                <motion.button
-                  whileTap={{ scale: 0.95 }}
-                  onClick={backspace}
-                  className="glass-card px-8 h-20 flex items-center justify-center border-2 border-cheerful-pink/20 text-cheerful-pink font-black text-xl tracking-widest uppercase gap-3"
-                >
-                  <Delete className="w-6 h-6" />
-                  Del
-                </motion.button>
-                <motion.button
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => handleKeyPress(' ')}
-                  className="glass-card flex-[3] h-20 border-2 border-white/5 hover:border-white/20 text-white/40 font-black text-xl uppercase tracking-[0.4em]"
-                >
-                  Space
-                </motion.button>
-                <motion.button
-                  whileTap={{ scale: 0.95 }}
-                  onClick={clearSentence}
-                  className="glass-card px-8 h-20 border-2 border-cheerful-green/20 text-cheerful-green font-black text-xl uppercase tracking-widest gap-3 flex items-center"
-                >
-                  <RefreshCw className="w-6 h-6" />
-                  Clear
-                </motion.button>
+
+                {/* Action Controls right inside the sentence bar */}
+                <div className="flex items-center gap-1.5 shrink-0">
+                  <button
+                    type="button"
+                    disabled={!sentence}
+                    onClick={() => {
+                      if (!sentence) return;
+                      playSound('glass');
+                      speakIndianEnglish(sentence);
+                    }}
+                    className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-xl font-black text-xs uppercase tracking-wider transition-all cursor-pointer shadow-md ${
+                      sentence
+                        ? 'bg-emerald-500 text-slate-950 hover:bg-emerald-400 active:scale-95'
+                        : 'bg-white/5 text-white/25 border border-white/10 cursor-not-allowed'
+                    }`}
+                  >
+                    <Volume2 className="w-4 h-4" />
+                    <span>Speak</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => handleKeyPress(' ')}
+                    className="px-3 py-2 rounded-xl bg-indigo-500/20 hover:bg-indigo-500/30 border border-indigo-400/30 text-indigo-200 font-black text-xs uppercase tracking-wider transition-all cursor-pointer active:scale-95"
+                  >
+                    Space
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={backspace}
+                    className="inline-flex items-center gap-1 px-3 py-2 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 border border-rose-400/30 text-rose-300 font-black text-xs uppercase tracking-wider transition-all cursor-pointer active:scale-95"
+                  >
+                    <Delete className="w-3.5 h-3.5" />
+                    <span>Del</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={clearSentence}
+                    className="inline-flex items-center gap-1 px-3 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/30 text-amber-300 font-black text-xs uppercase tracking-wider transition-all cursor-pointer active:scale-95"
+                  >
+                    <RefreshCw className="w-3.5 h-3.5" />
+                    <span>Clear</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Row 2: 1-Tap Quick Toddler Word Starters */}
+              <div className="flex items-center gap-1.5 flex-wrap justify-center relative z-10 py-0.5">
+                <span className="text-[10px] font-black uppercase tracking-widest text-indigo-300 mr-1">
+                  Quick Words:
+                </span>
+                {[
+                  { label: 'AMMA', emoji: '👩‍🍼' },
+                  { label: 'APPA', emoji: '👨‍🍼' },
+                  { label: 'I LOVE', emoji: '❤️' },
+                  { label: 'PAANI', emoji: '💧' },
+                  { label: 'DOODH', emoji: '🥛' },
+                  { label: 'ROTI', emoji: '🫓' },
+                  { label: 'BALL', emoji: '⚽' },
+                  { label: 'STAR', emoji: '⭐' },
+                  { label: 'HAPPY', emoji: '😊' },
+                ].map((qw) => (
+                  <button
+                    key={qw.label}
+                    type="button"
+                    onClick={() => handleWordPreset(qw.label)}
+                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white/5 hover:bg-indigo-500/25 border border-white/10 hover:border-indigo-400/40 text-white/80 hover:text-white text-xs font-extrabold transition-all cursor-pointer active:scale-95"
+                  >
+                    <span>{qw.emoji}</span>
+                    <span>{qw.label}</span>
+                  </button>
+                ))}
+              </div>
+
+              {/* Row 3: Compact A-Z Keyboard Grid (All 3 rows visible simultaneously without scrolling) */}
+              <div className="w-full space-y-1.5 sm:space-y-2 relative z-10 select-none">
+                {ALPHABET_ROWS.map((row, rowIdx) => (
+                  <div key={rowIdx} className="grid grid-cols-9 gap-1 sm:gap-2">
+                    {row.map((char) => (
+                      <motion.button
+                        key={char}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.92 }}
+                        onClick={() => handleKeyPress(char)}
+                        className="h-10 sm:h-12 rounded-xl bg-white/10 hover:bg-indigo-500/30 border-2 border-white/15 hover:border-indigo-300 flex items-center justify-center transition-all cursor-pointer font-black text-base sm:text-xl text-white shadow-sm"
+                      >
+                        {char}
+                      </motion.button>
+                    ))}
+                    {row.length === 8 && (
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.92 }}
+                        onClick={() => handleKeyPress(' ')}
+                        className="h-10 sm:h-12 rounded-xl bg-indigo-500/25 hover:bg-indigo-500/40 border-2 border-indigo-400/40 flex items-center justify-center transition-all cursor-pointer font-black text-[9px] sm:text-xs uppercase tracking-wider text-indigo-200 shadow-sm"
+                      >
+                        SPACE
+                      </motion.button>
+                    )}
+                  </div>
+                ))}
               </div>
             </div>
           </motion.div>

@@ -1056,13 +1056,13 @@ Each object must have these exact keys:
                 <Sparkles className="w-6 h-6" />
               </div>
               <div className="min-w-0 flex-1">
-                <div className="flex items-center gap-2">
-                  <span className="font-black text-lg sm:text-xl text-white shrink-0">{gt('aiCustomizerTitle')}</span>
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="font-black text-lg sm:text-xl text-white">{gt('aiCustomizerTitle')}</span>
                   <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-[9px] font-black uppercase tracking-wider shrink-0">
                     Free AI Assistant
                   </span>
                 </div>
-                <p className="text-xs text-white/60 mt-0.5 whitespace-nowrap overflow-hidden text-ellipsis">
+                <p className="text-xs text-white/60 mt-0.5 leading-relaxed">
                   {gt('aiCustomizerDesc')}
                 </p>
               </div>

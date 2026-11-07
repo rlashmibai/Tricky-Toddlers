@@ -50,7 +50,7 @@
   }
 
   .glass-card {
-    @apply bg-white/[0.03] backdrop-blur-[32px] border border-white/[0.08] rounded-[32px] shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] relative z-10 hover:border-white/[0.12] transition-all duration-500;
+    @apply bg-white/[0.03] backdrop-blur-[32px] border border-white/[0.08] rounded-2xl sm:rounded-[32px] shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] relative z-10 hover:border-white/[0.12] transition-all duration-500 max-w-full;
   }
 
   .shadow-theme-glow {
@@ -69,11 +69,13 @@
     @apply border-b border-white/10 bg-white/5 backdrop-blur-md sticky top-0 z-50;
   }
 
-  /* Hide scrollbars globally for scrollbar-none elements */
-  .scrollbar-none::-webkit-scrollbar {
+  /* Hide scrollbars globally for scrollbar-none and no-scrollbar elements */
+  .scrollbar-none::-webkit-scrollbar,
+  .no-scrollbar::-webkit-scrollbar {
     display: none !important;
   }
-  .scrollbar-none {
+  .scrollbar-none,
+  .no-scrollbar {
     -ms-overflow-style: none !important;  /* IE and Edge */
     scrollbar-width: none !important;  /* Firefox */
   }

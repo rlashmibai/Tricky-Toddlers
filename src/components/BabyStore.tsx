@@ -973,7 +973,7 @@ export const BabyStore: React.FC<BabyStoreProps> = ({ onGoHome, initialView = 'c
       {/* Search, Category & Sort Filter Bar */}
       <div className="mb-8 flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4 bg-slate-900/70 p-4 rounded-2xl border border-white/10 shadow-lg">
         {/* Category Pills */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-2 lg:pb-0 scrollbar-thin">
+        <div className="flex flex-wrap items-center gap-1.5">
           {CATEGORIES.map((category) => {
             const isSelected = selectedCategory === category;
             return (

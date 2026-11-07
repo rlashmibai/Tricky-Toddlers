@@ -116,7 +116,7 @@ export const FoodNutritionMetricsDisplay: React.FC<FoodNutritionMetricsDisplayPr
         </div>
 
         {/* Section Navigation Filter */}
-        <div className="flex items-center gap-1.5 bg-black/40 p-1 rounded-xl border border-white/10 text-xs font-semibold overflow-x-auto">
+        <div className="flex flex-wrap items-center gap-1.5 bg-black/40 p-1.5 rounded-xl border border-white/10 text-xs font-semibold">
           <button
             onClick={() => { playSound('click'); setActiveTab('all'); }}
             className={`px-3 py-1 rounded-lg transition-all cursor-pointer whitespace-nowrap ${

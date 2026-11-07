@@ -1043,7 +1043,7 @@ export const ProfilePage: React.FC = () => {
                 </div>
                 <div className="min-w-0">
                   <div className="flex flex-wrap items-center gap-2.5">
-                    <h2 className="text-xl sm:text-2xl lg:text-3xl font-black text-white tracking-tight whitespace-nowrap">
+                    <h2 className="text-xl sm:text-2xl lg:text-3xl font-black text-white tracking-tight break-words">
                       Child Details
                     </h2>
                     <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 shrink-0">

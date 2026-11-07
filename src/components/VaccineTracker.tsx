@@ -1218,7 +1218,7 @@ export const VaccineTracker: React.FC = () => {
         </div>
 
         {/* Age Group Quick Filter Bar */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-1 text-xs">
+        <div className="flex flex-wrap items-center gap-2 text-xs">
           <span className="text-slate-400 font-bold uppercase tracking-wider text-[10px] shrink-0 pl-1">
             Age Stage:
           </span>
