@@ -21,6 +21,27 @@
     <div id="root"></div>
     <div id="google_translate_element" style="display:none;"></div>
     <script type="text/javascript">
+      (function() {
+        try {
+          // Clear any stale googtrans cookies across all domain levels so the app always defaults to English on load/update
+          var host = window.location.hostname;
+          var parts = host.split('.');
+          var domains = ['', host, '.' + host];
+          for (var i = 0; i < parts.length - 1; i++) {
+            var d = '.' + parts.slice(i).join('.');
+            if (domains.indexOf(d) === -1) domains.push(d);
+          }
+          domains.forEach(function(domain) {
+            var domainAttr = domain ? '; domain=' + domain : '';
+            document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/' + domainAttr;
+            document.cookie = 'googtrans=/en/en; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/' + domainAttr;
+          });
+          if (localStorage.getItem('app_language') === 'as') {
+            localStorage.setItem('app_language', 'en');
+          }
+        } catch (e) {}
+      })();
+
       function googleTranslateElementInit() {
         if (window.google && window.google.translate) {
           new window.google.translate.TranslateElement({
@@ -31,7 +52,6 @@
         }
       }
     </script>
-    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async defer></script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

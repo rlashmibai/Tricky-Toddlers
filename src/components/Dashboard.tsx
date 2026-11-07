@@ -578,7 +578,7 @@ export const Dashboard: React.FC = () => {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
               transition={{ duration: 0.2 }}
-              className="py-10"
+              className="py-1"
             >
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-cheerful-pink/5 blur-[120px] rounded-full pointer-events-none" />
               <LearningCenter />

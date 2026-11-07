@@ -1424,10 +1424,39 @@ function protectBrandNamesInDOM(root: Node = document.body) {
   }
 }
 
+function clearAllGoogTransCookies() {
+  if (typeof window === 'undefined' || typeof document === 'undefined') return;
+  const host = window.location.hostname;
+  const parts = host.split('.');
+  const domains = ['', host, `.${host}`];
+  for (let i = 0; i < parts.length - 1; i++) {
+    const d = `.${parts.slice(i).join('.')}`;
+    if (!domains.includes(d)) domains.push(d);
+  }
+  for (const domain of domains) {
+    const domainAttr = domain ? `; domain=${domain}` : '';
+    document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/${domainAttr}`;
+    document.cookie = `googtrans=/en/en; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/${domainAttr}`;
+  }
+}
+
+function ensureGoogleTranslateScriptLoaded() {
+  if (typeof document === 'undefined') return;
+  if (document.getElementById('google-translate-script')) return;
+  const script = document.createElement('script');
+  script.id = 'google-translate-script';
+  script.type = 'text/javascript';
+  script.src = '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+  script.async = true;
+  script.defer = true;
+  document.body.appendChild(script);
+}
+
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [language, setLanguageState] = useState<LanguageCode>(() => {
-    const saved = localStorage.getItem('app_language');
-    return (saved as LanguageCode) || 'en';
+    clearAllGoogTransCookies();
+    localStorage.setItem('app_language', 'en');
+    return 'en';
   });
 
   const triggerGoogleTranslate = (langCode: LanguageCode) => {
@@ -1435,22 +1464,28 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       // Ensure all brand names are protected before triggering translation
       protectBrandNamesInDOM(document.body);
 
-      const domain = window.location.hostname;
       if (langCode === 'en') {
-        document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
-        document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.${domain};`;
-        document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${domain};`;
-      } else {
-        document.cookie = `googtrans=/en/${langCode}; path=/;`;
-        document.cookie = `googtrans=/en/${langCode}; path=/; domain=.${domain};`;
-        document.cookie = `googtrans=/en/${langCode}; path=/; domain=${domain};`;
+        clearAllGoogTransCookies();
+        const selectEl = document.querySelector('.goog-te-combo') as HTMLSelectElement | null;
+        if (selectEl && selectEl.value) {
+          selectEl.value = '';
+          selectEl.dispatchEvent(new Event('change'));
+        }
+        return;
       }
+
+      const domain = window.location.hostname;
+      document.cookie = `googtrans=/en/${langCode}; path=/;`;
+      document.cookie = `googtrans=/en/${langCode}; path=/; domain=.${domain};`;
+      document.cookie = `googtrans=/en/${langCode}; path=/; domain=${domain};`;
+
+      ensureGoogleTranslateScriptLoaded();
 
       const selectEl = document.querySelector('.goog-te-combo') as HTMLSelectElement | null;
       if (selectEl) {
         selectEl.value = langCode;
         selectEl.dispatchEvent(new Event('change'));
-      } else if (langCode !== 'en') {
+      } else {
         let attempts = 0;
         const interval = setInterval(() => {
           attempts++;
@@ -1460,7 +1495,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
             el.value = langCode;
             el.dispatchEvent(new Event('change'));
             clearInterval(interval);
-          } else if (attempts > 20) {
+          } else if (attempts > 25) {
             clearInterval(interval);
           }
         }, 300);
@@ -1502,8 +1537,14 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   const setLanguage = (lang: LanguageCode | string) => {
     const validCode = (SUPPORTED_LANGUAGES.find(l => l.code === lang || l.name.toLowerCase() === String(lang).toLowerCase())?.code || 'en') as LanguageCode;
+    const prevLang = language;
     setLanguageState(validCode);
     localStorage.setItem('app_language', validCode);
+    if (validCode === 'en' && prevLang !== 'en') {
+      clearAllGoogTransCookies();
+      window.location.reload();
+      return;
+    }
     triggerGoogleTranslate(validCode);
   };
 

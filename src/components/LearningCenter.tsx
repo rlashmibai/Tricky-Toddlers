@@ -958,182 +958,183 @@ export const LearningCenter: React.FC = () => {
   };
 
   return (
-    <div className="max-w-6xl mx-auto px-4">
-      {/* View Switcher Bar (All 9 Tabs + Elegant Master Voice Toggle) */}
-      <div className="mb-6 sm:mb-8 bg-slate-900/90 p-3 sm:p-5 rounded-2xl sm:rounded-3xl border border-white/10 shadow-2xl backdrop-blur-md space-y-3 sm:space-y-4">
-        {/* Row 1: Academy Header + Dedicated Master Voice Toggle */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pb-3 border-b border-white/10">
-          <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-cheerful-yellow animate-pulse" />
-            <span className="text-sm sm:text-base font-extrabold uppercase tracking-wider text-slate-300">
-              Interactive Learning Modules
+    <div className="w-full max-w-[1640px] mx-auto px-2 sm:px-3 flex flex-col md:flex-row items-start gap-4 lg:gap-5">
+      {/* Thin Left-Side Navigation Panel (All 9 Modules + Voice Toggle) */}
+      <aside className="w-full md:w-44 lg:w-48 shrink-0 md:sticky md:top-20 bg-slate-900/90 p-2.5 rounded-2xl border border-white/10 shadow-xl backdrop-blur-md space-y-2">
+        {/* Compact Header + Voice Toggle */}
+        <div className="flex md:flex-col items-center md:items-stretch justify-between gap-2 pb-2 border-b border-white/10">
+          <div className="flex items-center gap-1.5 px-1">
+            <span className="w-2 h-2 rounded-full bg-cheerful-yellow animate-pulse shrink-0" />
+            <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-300 truncate">
+              Modules
             </span>
           </div>
 
-          {/* Master Voice Toggle Button - Placed Outside Menu Items */}
           <button
             type="button"
             id="toddler-academy-voice-toggle"
             onClick={handleToggleVoice}
-            className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-xl font-bold text-xs uppercase tracking-wider transition-all duration-200 cursor-pointer shadow-md active:scale-95 select-none whitespace-nowrap ${
+            className={`inline-flex items-center justify-center gap-1.5 px-2.5 py-1.5 rounded-xl font-bold text-[11px] uppercase tracking-wider transition-all duration-200 cursor-pointer shadow-sm active:scale-95 select-none whitespace-nowrap ${
               isMuted
-                ? 'bg-rose-950/70 hover:bg-rose-900/70 text-rose-300 border border-rose-500/60 hover:border-rose-400 shadow-rose-900/20'
-                : 'bg-emerald-950/70 hover:bg-emerald-900/70 text-emerald-300 border border-emerald-500/60 hover:border-emerald-400 shadow-emerald-900/20'
+                ? 'bg-rose-950/70 hover:bg-rose-900/70 text-rose-300 border border-rose-500/60 hover:border-rose-400'
+                : 'bg-emerald-950/70 hover:bg-emerald-900/70 text-emerald-300 border border-emerald-500/60 hover:border-emerald-400'
             }`}
             title={isMuted ? 'Voice is Muted - Click to turn voice ON' : 'Voice is Active - Click to turn voice OFF'}
           >
             {isMuted ? (
               <>
-                <VolumeX className="w-4 h-4 text-rose-400 shrink-0" />
-                <span>Turn Voice On</span>
+                <VolumeX className="w-3.5 h-3.5 text-rose-400 shrink-0" />
+                <span>Voice On</span>
               </>
             ) : (
               <>
-                <Volume2 className="w-4 h-4 text-emerald-400 animate-pulse shrink-0" />
-                <span>Turn Voice Off</span>
-                <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.9)] shrink-0" />
+                <Volume2 className="w-3.5 h-3.5 text-emerald-400 animate-pulse shrink-0" />
+                <span>Voice Off</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.9)] shrink-0" />
               </>
             )}
           </button>
         </div>
 
-        {/* Row 2: Category Menu Items - Responsive Grid on Mobile, Wrapped Row on Desktop */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:flex lg:flex-wrap items-center justify-center gap-1.5 sm:gap-2 py-1">
+        {/* Thin Vertical Menu Buttons */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:flex md:flex-col gap-1.5">
           <button
             id="btn-mode-numbers"
             onClick={() => handleModeChange('numbers')}
-            className={`inline-flex items-center justify-center gap-1.5 px-3 py-2.5 sm:py-2 rounded-xl transition-all duration-200 font-extrabold text-xs tracking-wider cursor-pointer shadow-sm select-none whitespace-nowrap ${
+            className={`w-full flex items-center justify-start gap-2 px-2.5 py-2 rounded-xl transition-all duration-200 font-extrabold text-xs tracking-wide cursor-pointer shadow-sm select-none whitespace-nowrap ${
               activeMode === 'numbers' 
-                ? 'bg-cheerful-yellow text-black shadow-lg shadow-cheerful-yellow/20 scale-102 ring-2 ring-cheerful-yellow/50' 
-                : 'bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white'
+                ? 'bg-cheerful-yellow text-black shadow-md shadow-cheerful-yellow/20 ring-1 ring-cheerful-yellow/50' 
+                : 'bg-white/5 text-white/70 border border-white/10 hover:bg-white/10 hover:text-white'
             }`}
           >
             <Hash className="w-3.5 h-3.5 shrink-0" />
-            <span>Numbers</span>
+            <span className="truncate">Numbers</span>
           </button>
           <button
             id="btn-mode-counting"
             onClick={() => handleModeChange('counting')}
-            className={`inline-flex items-center justify-center gap-1.5 px-3 py-2.5 sm:py-2 rounded-xl transition-all duration-200 font-extrabold text-xs tracking-wider cursor-pointer shadow-sm select-none whitespace-nowrap ${
+            className={`w-full flex items-center justify-start gap-2 px-2.5 py-2 rounded-xl transition-all duration-200 font-extrabold text-xs tracking-wide cursor-pointer shadow-sm select-none whitespace-nowrap ${
               activeMode === 'counting' 
-                ? 'bg-cheerful-pink text-black shadow-lg shadow-cheerful-pink/20 scale-102 ring-2 ring-cheerful-pink/50' 
-                : 'bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white'
+                ? 'bg-cheerful-pink text-black shadow-md shadow-cheerful-pink/20 ring-1 ring-cheerful-pink/50' 
+                : 'bg-white/5 text-white/70 border border-white/10 hover:bg-white/10 hover:text-white'
             }`}
           >
             <Star className="w-3.5 h-3.5 shrink-0" />
-            <span>Counting</span>
+            <span className="truncate">Counting</span>
           </button>
           <button
             id="btn-mode-words"
             onClick={() => handleModeChange('words')}
-            className={`inline-flex items-center justify-center gap-1.5 px-3 py-2.5 sm:py-2 rounded-xl transition-all duration-200 font-extrabold text-xs tracking-wider cursor-pointer shadow-sm select-none whitespace-nowrap ${
+            className={`w-full flex items-center justify-start gap-2 px-2.5 py-2 rounded-xl transition-all duration-200 font-extrabold text-xs tracking-wide cursor-pointer shadow-sm select-none whitespace-nowrap ${
               activeMode === 'words' 
-                ? 'bg-cheerful-blue text-black shadow-lg shadow-cheerful-blue/20 scale-102 ring-2 ring-cheerful-blue/50' 
-                : 'bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white'
+                ? 'bg-cheerful-blue text-black shadow-md shadow-cheerful-blue/20 ring-1 ring-cheerful-blue/50' 
+                : 'bg-white/5 text-white/70 border border-white/10 hover:bg-white/10 hover:text-white'
             }`}
           >
             <BookOpen className="w-3.5 h-3.5 shrink-0" />
-            <span>First Words</span>
+            <span className="truncate">First Words</span>
           </button>
           <button
             id="btn-mode-alphabet"
             onClick={() => handleModeChange('alphabet')}
-            className={`inline-flex items-center justify-center gap-1.5 px-3 py-2.5 sm:py-2 rounded-xl transition-all duration-200 font-extrabold text-xs tracking-wider cursor-pointer shadow-sm select-none whitespace-nowrap ${
+            className={`w-full flex items-center justify-start gap-2 px-2.5 py-2 rounded-xl transition-all duration-200 font-extrabold text-xs tracking-wide cursor-pointer shadow-sm select-none whitespace-nowrap ${
               activeMode === 'alphabet' 
-                ? 'bg-indigo-400 text-black shadow-lg shadow-indigo-400/20 scale-102 ring-2 ring-indigo-400/50' 
-                : 'bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white'
+                ? 'bg-indigo-400 text-black shadow-md shadow-indigo-400/20 ring-1 ring-indigo-400/50' 
+                : 'bg-white/5 text-white/70 border border-white/10 hover:bg-white/10 hover:text-white'
             }`}
           >
             <Keyboard className="w-3.5 h-3.5 shrink-0" />
-            <span>Sentence Builder</span>
+            <span className="truncate">Sentence Builder</span>
           </button>
           <button
             id="btn-mode-colors"
             onClick={() => handleModeChange('colors')}
-            className={`inline-flex items-center justify-center gap-1.5 px-3 py-2.5 sm:py-2 rounded-xl transition-all duration-200 font-extrabold text-xs tracking-wider cursor-pointer shadow-sm select-none whitespace-nowrap ${
+            className={`w-full flex items-center justify-start gap-2 px-2.5 py-2 rounded-xl transition-all duration-200 font-extrabold text-xs tracking-wide cursor-pointer shadow-sm select-none whitespace-nowrap ${
               activeMode === 'colors' 
-                ? 'bg-purple-500 text-white shadow-lg shadow-purple-500/20 scale-102 ring-2 ring-purple-400/50' 
-                : 'bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white'
+                ? 'bg-purple-500 text-white shadow-md shadow-purple-500/20 ring-1 ring-purple-400/50' 
+                : 'bg-white/5 text-white/70 border border-white/10 hover:bg-white/10 hover:text-white'
             }`}
           >
             <Palette className="w-3.5 h-3.5 shrink-0" />
-            <span>Colors</span>
+            <span className="truncate">Colors</span>
           </button>
           <button
             id="btn-mode-emotions"
             onClick={() => handleModeChange('emotions')}
-            className={`inline-flex items-center justify-center gap-1.5 px-3 py-2.5 sm:py-2 rounded-xl transition-all duration-200 font-extrabold text-xs tracking-wider cursor-pointer shadow-sm select-none whitespace-nowrap ${
+            className={`w-full flex items-center justify-start gap-2 px-2.5 py-2 rounded-xl transition-all duration-200 font-extrabold text-xs tracking-wide cursor-pointer shadow-sm select-none whitespace-nowrap ${
               activeMode === 'emotions' 
-                ? 'bg-rose-400 text-black shadow-lg shadow-rose-400/20 scale-102 ring-2 ring-rose-300/50' 
-                : 'bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white'
+                ? 'bg-rose-400 text-black shadow-md shadow-rose-400/20 ring-1 ring-rose-300/50' 
+                : 'bg-white/5 text-white/70 border border-white/10 hover:bg-white/10 hover:text-white'
             }`}
           >
             <Heart className="w-3.5 h-3.5 text-pink-300 shrink-0" />
-            <span>Emotions</span>
+            <span className="truncate">Emotions</span>
           </button>
           <button
             id="btn-mode-bodyparts"
             onClick={() => handleModeChange('bodyparts')}
-            className={`inline-flex items-center justify-center gap-1.5 px-3 py-2.5 sm:py-2 rounded-xl transition-all duration-200 font-extrabold text-xs tracking-wider cursor-pointer shadow-sm select-none whitespace-nowrap ${
+            className={`w-full flex items-center justify-start gap-2 px-2.5 py-2 rounded-xl transition-all duration-200 font-extrabold text-xs tracking-wide cursor-pointer shadow-sm select-none whitespace-nowrap ${
               activeMode === 'bodyparts' 
-                ? 'bg-sky-400 text-black shadow-lg shadow-sky-400/20 scale-102 ring-2 ring-sky-300/50' 
-                : 'bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white'
+                ? 'bg-sky-400 text-black shadow-md shadow-sky-400/20 ring-1 ring-sky-300/50' 
+                : 'bg-white/5 text-white/70 border border-white/10 hover:bg-white/10 hover:text-white'
             }`}
           >
             <Smile className="w-3.5 h-3.5 text-sky-300 shrink-0" />
-            <span>Body Parts</span>
+            <span className="truncate">Body Parts</span>
           </button>
           <button
             id="btn-mode-shapes"
             onClick={() => handleModeChange('shapes')}
-            className={`inline-flex items-center justify-center gap-1.5 px-3 py-2.5 sm:py-2 rounded-xl transition-all duration-200 font-extrabold text-xs tracking-wider cursor-pointer shadow-sm select-none whitespace-nowrap ${
+            className={`w-full flex items-center justify-start gap-2 px-2.5 py-2 rounded-xl transition-all duration-200 font-extrabold text-xs tracking-wide cursor-pointer shadow-sm select-none whitespace-nowrap ${
               activeMode === 'shapes' 
-                ? 'bg-amber-400 text-black shadow-lg shadow-amber-400/20 scale-102 ring-2 ring-amber-300/50' 
-                : 'bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white'
+                ? 'bg-amber-400 text-black shadow-md shadow-amber-400/20 ring-1 ring-amber-300/50' 
+                : 'bg-white/5 text-white/70 border border-white/10 hover:bg-white/10 hover:text-white'
             }`}
           >
             <Sparkles className="w-3.5 h-3.5 text-amber-300 shrink-0" />
-            <span>Shapes</span>
+            <span className="truncate">Shapes</span>
           </button>
           <button
             id="btn-mode-animals"
             onClick={() => handleModeChange('animals')}
-            className={`col-span-2 sm:col-span-1 inline-flex items-center justify-center gap-1.5 px-3 py-2.5 sm:py-2 rounded-xl transition-all duration-200 font-extrabold text-xs tracking-wider cursor-pointer shadow-sm select-none whitespace-nowrap ${
+            className={`col-span-2 sm:col-span-1 w-full flex items-center justify-start gap-2 px-2.5 py-2 rounded-xl transition-all duration-200 font-extrabold text-xs tracking-wide cursor-pointer shadow-sm select-none whitespace-nowrap ${
               activeMode === 'animals' 
-                ? 'bg-emerald-400 text-black shadow-lg shadow-emerald-400/20 scale-102 ring-2 ring-emerald-300/50' 
-                : 'bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white'
+                ? 'bg-emerald-400 text-black shadow-md shadow-emerald-400/20 ring-1 ring-emerald-300/50' 
+                : 'bg-white/5 text-white/70 border border-white/10 hover:bg-white/10 hover:text-white'
             }`}
           >
             <Volume2 className="w-3.5 h-3.5 text-emerald-300 shrink-0" />
-            <span className="whitespace-nowrap">Animal Sounds</span>
+            <span className="truncate">Animal Sounds</span>
           </button>
         </div>
-      </div>
+      </aside>
 
+      {/* Right-Side Active Module Content - Starts immediately at the top */}
+      <div className="flex-1 min-w-0 w-full mt-0 pt-0">
       <AnimatePresence mode="wait">
           {activeMode === 'numbers' ? (
           <motion.div
             key="numbers-view"
-            initial={{ opacity: 0, scale: 0.95 }}
+            initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            transition={{ duration: 0.3 }}
-            className="w-full max-w-5xl mx-auto"
+            exit={{ opacity: 0, scale: 0.98 }}
+            transition={{ duration: 0.2 }}
+            className="w-full"
           >
             {/* Header with interesting numbers title */}
-            <header className="text-center mb-6">
+            <header className="text-center mb-3 sm:mb-4">
               <motion.div
                 initial={{ y: -8, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-400/10 border border-amber-400/25 text-amber-300 mb-2"
+                className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-400/10 border border-amber-400/25 text-amber-300 mb-1"
               >
-                <Hash className="w-4 h-4 text-amber-300" />
-                <span className="text-xs font-black uppercase tracking-widest">Little Math Explorer</span>
+                <Hash className="w-3.5 h-3.5 text-amber-300" />
+                <span className="text-[11px] font-black uppercase tracking-widest">Little Math Explorer</span>
               </motion.div>
-              <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-white tracking-tight">
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-black text-white tracking-tight">
                 ✨ Magic Numbers & Talking Calculator ✨
               </h1>
-              <p className="text-white/60 text-xs sm:text-sm font-medium mt-1">
+              <p className="text-white/60 text-xs sm:text-sm font-medium mt-0.5">
                 Tap numbers to hear them spoken aloud, see magic colors glow, and calculate together!
               </p>
             </header>
@@ -1270,26 +1271,26 @@ export const LearningCenter: React.FC = () => {
         ) : activeMode === 'counting' ? (
           <motion.div
             key="counting-view"
-            initial={{ opacity: 0, scale: 0.95 }}
+            initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            transition={{ duration: 0.3 }}
-            className="w-full max-w-5xl mx-auto"
+            exit={{ opacity: 0, scale: 0.98 }}
+            transition={{ duration: 0.2 }}
+            className="w-full"
           >
             {/* Header */}
-            <header className="text-center mb-5">
+            <header className="text-center mb-3 sm:mb-4">
               <motion.div
                 initial={{ y: -8, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-pink-400/10 border border-pink-400/25 text-pink-300 mb-2"
+                className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-pink-400/10 border border-pink-400/25 text-pink-300 mb-1"
               >
-                <Star className="w-4 h-4 text-pink-400 fill-pink-400" />
-                <span className="text-xs font-black uppercase tracking-widest">Count-With-Me Academy</span>
+                <Star className="w-3.5 h-3.5 text-pink-400 fill-pink-400" />
+                <span className="text-[11px] font-black uppercase tracking-widest">Count-With-Me Academy</span>
               </motion.div>
-              <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-white tracking-tight">
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-black text-white tracking-tight">
                 ⭐ Interactive Counting Arena ⭐
               </h1>
-              <p className="text-white/60 text-xs sm:text-sm font-medium mt-1">
+              <p className="text-white/60 text-xs sm:text-sm font-medium mt-0.5">
                 Choose any number (1-20) below, pick your favorite objects, and tap them to count together!
               </p>
             </header>
@@ -1456,26 +1457,26 @@ export const LearningCenter: React.FC = () => {
         ) : activeMode === 'colors' ? (
           <motion.div
             key="colors-view"
-            initial={{ opacity: 0, scale: 0.95 }}
+            initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            transition={{ duration: 0.3 }}
-            className="w-full max-w-5xl mx-auto"
+            exit={{ opacity: 0, scale: 0.98 }}
+            transition={{ duration: 0.2 }}
+            className="w-full"
           >
             {/* Header */}
-            <header className="text-center mb-5">
+            <header className="text-center mb-3 sm:mb-4">
               <motion.div
                 initial={{ y: -8, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple-400/10 border border-purple-400/25 text-purple-300 mb-2"
+                className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-purple-400/10 border border-purple-400/25 text-purple-300 mb-1"
               >
-                <Palette className="w-4 h-4 text-purple-300" />
-                <span className="text-xs font-black uppercase tracking-widest">Magic Color Laboratory</span>
+                <Palette className="w-3.5 h-3.5 text-purple-300" />
+                <span className="text-[11px] font-black uppercase tracking-widest">Magic Color Laboratory</span>
               </motion.div>
-              <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-white tracking-tight">
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-black text-white tracking-tight">
                 🎨 Magic Color Mixing Studio
               </h1>
-              <p className="text-white/60 text-xs sm:text-sm font-medium mt-1">
+              <p className="text-white/60 text-xs sm:text-sm font-medium mt-0.5">
                 Tap any two colors on the right to mix them like magic in the beaker!
               </p>
             </header>
@@ -1918,26 +1919,26 @@ export const LearningCenter: React.FC = () => {
         ) : activeMode === 'words' ? (
           <motion.div
             key="words-view"
-            initial={{ opacity: 0, scale: 0.95 }}
+            initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            transition={{ duration: 0.3 }}
-            className="flex flex-col items-center w-full max-w-5xl mx-auto"
+            exit={{ opacity: 0, scale: 0.98 }}
+            transition={{ duration: 0.2 }}
+            className="flex flex-col items-center w-full"
           >
             {/* Header without the old prompt text */}
-            <header className="text-center mb-6">
+            <header className="text-center mb-3 sm:mb-4">
               <motion.div
                 initial={{ y: -8, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-400/10 border border-cyan-400/25 text-cyan-300 mb-2"
+                className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-cyan-400/10 border border-cyan-400/25 text-cyan-300 mb-1"
               >
-                <BookOpen className="w-4 h-4 text-cyan-300" />
-                <span className="text-xs font-black uppercase tracking-widest">100 Essential First Words</span>
+                <BookOpen className="w-3.5 h-3.5 text-cyan-300" />
+                <span className="text-[11px] font-black uppercase tracking-widest">100 Essential First Words</span>
               </motion.div>
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight uppercase">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-white tracking-tight uppercase">
                 My First Words Palace
               </h1>
-              <p className="text-white/60 text-xs sm:text-sm font-medium mt-1 max-w-xl mx-auto">
+              <p className="text-white/60 text-xs sm:text-sm font-medium mt-0.5 max-w-xl mx-auto">
                 {isHindi
                   ? '100 Indian toddler first words: Family, Food, Nature, Animals, Daily Items & Actions with Hindi script'
                   : '100 Indian toddler first words: Family, Food, Nature, Animals, Daily Items & Actions'}
@@ -1945,7 +1946,7 @@ export const LearningCenter: React.FC = () => {
             </header>
 
             {/* Category Filter Pills */}
-            <div className="flex flex-wrap items-center justify-center gap-2 mb-8 select-none max-w-4xl">
+            <div className="flex flex-wrap items-center justify-center gap-2 mb-5 select-none max-w-4xl">
               {[
                 { id: 'all', label: `All 100 Words (${FIRST_WORDS.length})`, icon: '🇮🇳' },
                 { id: 'family', label: 'Family (9)', icon: '👨‍👩‍👧' },
@@ -2300,9 +2301,7 @@ export const LearningCenter: React.FC = () => {
           </motion.div>
         )}
       </AnimatePresence>
-
-
-
+      </div>
     </div>
   );
 };
