@@ -411,16 +411,16 @@ export const HomePage: React.FC<HomePageProps> = ({
   ];
 
   return (
-    <div className="space-y-10 sm:space-y-14 py-2 sm:py-3 max-w-7xl mx-auto">
+    <div className="w-full max-w-7xl mx-auto space-y-10 sm:space-y-14 py-2 sm:py-3">
       
       {/* =========================================================
           HERO BANNER: PARENTING TODDLERS JUST GOT EASIER
       ========================================================== */}
-      <section id="home-top" className="relative overflow-hidden rounded-3xl sm:rounded-[2.25rem] border border-white/15 bg-gradient-to-b from-[#0f172a]/95 via-[#0d1527]/90 to-[#070b14]/95 p-4 sm:p-6 lg:p-7 shadow-2xl backdrop-blur-xl">
+      <section id="home-top" className="w-full relative overflow-hidden rounded-3xl sm:rounded-[2.25rem] border border-white/15 bg-gradient-to-b from-[#0f172a]/95 via-[#0d1527]/90 to-[#070b14]/95 p-5 sm:p-8 lg:p-10 shadow-2xl backdrop-blur-xl">
         <div className="absolute -top-24 -right-24 w-96 h-96 bg-indigo-500/15 blur-[120px] rounded-full pointer-events-none" />
         <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-cyan-500/15 blur-[120px] rounded-full pointer-events-none" />
 
-        <div className="relative z-10 max-w-6xl mx-auto text-center space-y-3 sm:space-y-4">
+        <div className="relative z-10 w-full text-center space-y-3 sm:space-y-4">
           <div className="inline-flex items-center gap-2 px-3.5 py-1 sm:px-4 sm:py-1.5 rounded-full bg-indigo-500/15 border border-indigo-400/30 text-indigo-300 text-xs sm:text-sm font-bold tracking-wide shadow-inner text-balance">
             <Sparkles className="w-3.5 h-3.5 text-amber-300 shrink-0" />
             <span>The One Stop Solution to All Your Parenting Needs</span>
@@ -433,12 +433,12 @@ export const HomePage: React.FC<HomePageProps> = ({
             </span>
           </h1>
 
-          <p className="text-xs sm:text-sm md:text-base text-slate-300 w-full max-w-3xl mx-auto px-2 font-normal leading-relaxed text-balance">
+          <p className="text-xs sm:text-sm md:text-base text-slate-300 w-full max-w-4xl mx-auto px-2 font-normal leading-relaxed text-balance">
             The all-in-one parenting co-pilot that decodes nutrition, crafts personalized AI recipes, provides certified parenting guidance, and puts trusted pediatric doctors just a tap away  -  all integrated in one ecosystem.
           </p>
 
           {/* Customer Journey In-Page Navigation Buttons */}
-          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 pt-1 max-w-6xl mx-auto">
+          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 pt-1 w-full">
             <a
               href="#vision"
               onClick={() => playSound('glass')}
@@ -495,7 +495,7 @@ export const HomePage: React.FC<HomePageProps> = ({
           </div>
 
           {/* Quick 5 Stats Bar */}
-          <div className="pt-2 sm:pt-3 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-2.5 max-w-5xl mx-auto text-left">
+          <div className="pt-2 sm:pt-3 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-2.5 w-full text-left">
             <a
               href="#features-directory"
               onClick={() => playSound('pop')}
@@ -546,7 +546,7 @@ export const HomePage: React.FC<HomePageProps> = ({
       {/* =========================================================
           1. GUIDING VISION / WHY TRICKY TODDLERS
       ========================================================== */}
-      <section id="vision" className="space-y-4 rounded-3xl sm:rounded-[2.25rem] border border-purple-500/25 bg-gradient-to-br from-[#120d2b] via-[#0d0920] to-[#080514] p-5 sm:p-8 lg:p-10 shadow-2xl text-left scroll-mt-20 relative overflow-hidden">
+      <section id="vision" className="w-full space-y-4 rounded-3xl sm:rounded-[2.25rem] border border-purple-500/25 bg-gradient-to-br from-[#120d2b] via-[#0d0920] to-[#080514] p-5 sm:p-8 lg:p-10 shadow-2xl text-left scroll-mt-20 relative overflow-hidden">
         <div className="absolute -top-24 -right-24 w-80 h-80 bg-purple-500/10 blur-[100px] rounded-full pointer-events-none" />
 
         <div className="relative z-10 space-y-3.5 w-full">
@@ -578,10 +578,10 @@ export const HomePage: React.FC<HomePageProps> = ({
       {/* =========================================================
           2. PROBLEM STATEMENT & OUR MISSION / WHY CHOOSE US
       ========================================================== */}
-      <section id="problem-and-mission" className="space-y-6 rounded-3xl sm:rounded-[2.25rem] border border-amber-500/25 bg-gradient-to-br from-[#161208] via-[#0e172a] to-[#070b15] p-5 sm:p-8 lg:p-10 shadow-2xl text-left scroll-mt-20 relative overflow-hidden">
+      <section id="problem-and-mission" className="w-full space-y-6 rounded-3xl sm:rounded-[2.25rem] border border-amber-500/25 bg-gradient-to-br from-[#161208] via-[#0e172a] to-[#070b15] p-5 sm:p-8 lg:p-10 shadow-2xl text-left scroll-mt-20 relative overflow-hidden">
         <div className="absolute -top-24 -right-24 w-80 h-80 bg-amber-500/10 blur-[100px] rounded-full pointer-events-none" />
 
-        <div className="relative z-10 space-y-4">
+        <div className="relative z-10 space-y-4 w-full">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-white tracking-tight">
             What Makes <span className="notranslate" translate="no">Tricky Toddlers</span> Different?
           </h2>
@@ -673,7 +673,7 @@ export const HomePage: React.FC<HomePageProps> = ({
       {/* =========================================================
           3. ALL FEATURES DIRECTORY
       ========================================================== */}
-      <section id="features-directory" className="space-y-6 scroll-mt-20">
+      <section id="features-directory" className="w-full space-y-6 rounded-3xl sm:rounded-[2.25rem] border border-white/15 bg-gradient-to-b from-[#0c1322] via-[#090e1a] to-[#050810] p-5 sm:p-8 lg:p-10 shadow-2xl text-left scroll-mt-20">
         <div className="border-b border-white/10 pb-5">
           <div className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-cyan-400 mb-1">
             <Layers className="w-3.5 h-3.5" />
@@ -682,13 +682,13 @@ export const HomePage: React.FC<HomePageProps> = ({
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-white tracking-tight text-balance">
             All Features at a Glance
           </h2>
-          <p className="text-slate-300 text-xs sm:text-sm mt-1 max-w-2xl leading-relaxed text-balance">
+          <p className="text-slate-300 text-xs sm:text-sm mt-1 leading-relaxed text-balance">
             Click anywhere on any feature card below to open and use it immediately.
           </p>
         </div>
 
         {/* Feature Grid: Clean, Compact, 16 Integrated Features in 4 columns */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-4 w-full">
           {allFeatures.map((feat) => {
             const Icon = feat.icon;
             const isPremiumBadge = feat.badge === 'PREMIUM';
@@ -760,7 +760,7 @@ export const HomePage: React.FC<HomePageProps> = ({
       {/* =========================================================
           4. HOW IT WORKS · CHILD WELLNESS JOURNEY
       ========================================================== */}
-      <section id="child-wellness-journey" className="space-y-6 rounded-[2.5rem] border border-white/15 bg-gradient-to-b from-[#0c1322] via-[#090e1a] to-[#050810] p-6 sm:p-10 shadow-2xl text-left scroll-mt-20">
+      <section id="child-wellness-journey" className="w-full space-y-6 rounded-3xl sm:rounded-[2.25rem] border border-white/15 bg-gradient-to-b from-[#0c1322] via-[#090e1a] to-[#050810] p-5 sm:p-8 lg:p-10 shadow-2xl text-left scroll-mt-20">
         <div className="w-full space-y-2 text-left">
           <div className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-cyan-400">
             <Sparkles className="w-4 h-4" />
@@ -771,7 +771,7 @@ export const HomePage: React.FC<HomePageProps> = ({
           </h2>
         </div>
 
-        <div className="relative rounded-3xl overflow-hidden border border-white/10 bg-white/95 shadow-xl max-w-6xl mx-auto flex items-center justify-center p-2 sm:p-4">
+        <div className="relative rounded-3xl overflow-hidden border border-white/10 bg-white/95 shadow-xl w-full flex items-center justify-center p-2 sm:p-4">
           <img 
             src="/child-wellness-journey.svg" 
             alt="Child Wellness Journey - A Brighter Tomorrow: 1 Register, 2 Collect, 3 Analyse, 4 Personalise, 5 Alert, 6 Monitor"
@@ -783,10 +783,10 @@ export const HomePage: React.FC<HomePageProps> = ({
       {/* =========================================================
           5. SPEAKING THE LANGUAGE OF INDIAN FAMILIES
       ========================================================== */}
-      <section id="indian-languages" className="space-y-5 rounded-3xl sm:rounded-[2.25rem] border border-cyan-500/25 bg-gradient-to-br from-[#0c142b] via-[#091122] to-[#050a16] p-5 sm:p-8 lg:p-10 shadow-2xl text-left scroll-mt-20 relative overflow-hidden">
+      <section id="indian-languages" className="w-full space-y-5 rounded-3xl sm:rounded-[2.25rem] border border-cyan-500/25 bg-gradient-to-br from-[#0c142b] via-[#091122] to-[#050a16] p-5 sm:p-8 lg:p-10 shadow-2xl text-left scroll-mt-20 relative overflow-hidden">
         <div className="absolute -top-24 -right-24 w-80 h-80 bg-cyan-500/10 blur-[100px] rounded-full pointer-events-none" />
 
-        <div className="relative z-10 space-y-4">
+        <div className="relative z-10 space-y-4 w-full">
           <div className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-cyan-300 px-3 py-1 rounded-full bg-cyan-500/15 border border-cyan-400/30 text-balance">
             <Languages className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
             <span>Speaking the Language of Indian Families</span>
@@ -832,7 +832,7 @@ export const HomePage: React.FC<HomePageProps> = ({
       {/* =========================================================
           6. HOW RESPONSIBLE AI IS BUILT INTO TRICKY TODDLERS
       ========================================================== */}
-      <section id="responsible-ai" className="space-y-8 rounded-[2.5rem] border border-white/15 bg-gradient-to-b from-[#0c1322] via-[#090e1a] to-[#050810] p-6 sm:p-10 shadow-2xl scroll-mt-20">
+      <section id="responsible-ai" className="w-full space-y-8 rounded-3xl sm:rounded-[2.25rem] border border-white/15 bg-gradient-to-b from-[#0c1322] via-[#090e1a] to-[#050810] p-5 sm:p-8 lg:p-10 shadow-2xl scroll-mt-20">
         <div className="w-full space-y-2 text-left">
           <div className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-emerald-400 text-balance">
             <ShieldCheck className="w-4 h-4 shrink-0" />
@@ -844,7 +844,7 @@ export const HomePage: React.FC<HomePageProps> = ({
         </div>
 
         {/* Responsible AI Principles Grid (All 9 Pillars) */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
           {responsibleAIPrinciples.map((prin) => {
             const Icon = prin.icon;
             return (
@@ -881,7 +881,7 @@ export const HomePage: React.FC<HomePageProps> = ({
         </div>
 
         {/* Clinical Guardrails Banner */}
-        <div className="p-5 rounded-2xl bg-rose-500/10 border border-rose-500/25 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-left">
+        <div className="p-5 rounded-2xl bg-rose-500/10 border border-rose-500/25 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-left w-full">
           <div className="flex items-start gap-3">
             <ShieldAlert className="w-5 h-5 text-rose-400 shrink-0 mt-0.5" />
             <div className="text-xs sm:text-sm text-slate-200 leading-relaxed text-balance">
@@ -895,8 +895,8 @@ export const HomePage: React.FC<HomePageProps> = ({
       {/* =========================================================
           7. PREMIUM PLAN CONVERSION CARD
       ========================================================== */}
-      <section id="premium-plans" className="space-y-8 scroll-mt-20">
-        <div className="relative overflow-hidden rounded-[2.5rem] border-2 border-amber-500/40 bg-gradient-to-br from-[#1a1405] via-[#120e06] to-[#0a0703] p-6 sm:p-10 shadow-2xl shadow-amber-950/60 text-left space-y-6">
+      <section id="premium-plans" className="w-full space-y-8 scroll-mt-20">
+        <div className="w-full relative overflow-hidden rounded-3xl sm:rounded-[2.25rem] border-2 border-amber-500/40 bg-gradient-to-br from-[#1a1405] via-[#120e06] to-[#0a0703] p-5 sm:p-8 lg:p-10 shadow-2xl shadow-amber-950/60 text-left space-y-6">
           <div className="absolute top-0 right-0 w-80 h-80 bg-amber-500/10 blur-[90px] rounded-full pointer-events-none" />
 
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative z-10">
@@ -967,11 +967,11 @@ export const HomePage: React.FC<HomePageProps> = ({
       </section>
 
       {/* =========================================================
-          FREQUENTLY ASKED QUESTIONS (FAQ) SECTION
+          8. FREQUENTLY ASKED QUESTIONS (FAQ) SECTION
       ========================================================== */}
-      <section id="faq-section" className="scroll-mt-24 space-y-6">
-        <div className="text-center space-y-2.5 max-w-3xl mx-auto px-2">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-indigo-500/15 border border-indigo-400/30 text-indigo-300 text-xs font-bold tracking-wider uppercase">
+      <section id="faq-section" className="w-full space-y-6 rounded-3xl sm:rounded-[2.25rem] border border-indigo-500/25 bg-gradient-to-b from-[#0c1322] via-[#090e1a] to-[#050810] p-5 sm:p-8 lg:p-10 shadow-2xl text-left scroll-mt-20">
+        <div className="w-full space-y-2 text-left">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/15 border border-indigo-400/30 text-indigo-300 text-xs font-black tracking-wider uppercase">
             <HelpCircle className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
             <span>Parenting &amp; Platform FAQs</span>
           </div>
@@ -983,7 +983,7 @@ export const HomePage: React.FC<HomePageProps> = ({
           </p>
         </div>
 
-        <div className="max-w-4xl mx-auto space-y-3">
+        <div className="w-full space-y-3">
           {[
             {
               question: 'What age group is Tricky Toddlers designed for, and can I track more than one child?',
@@ -1016,9 +1016,9 @@ export const HomePage: React.FC<HomePageProps> = ({
                 'Yes! You can switch the app interface and AI guidance across 10 supported languages—including English, Hindi, Tamil, Telugu, Kannada, Malayalam, Marathi, Gujarati, Bengali, and Punjabi—from the top language selector.'
             },
             {
-              question: 'How does the Guest Account work, and is my family’s data private?',
+              question: 'How does Instant Guest Access work, and is my family’s data private?',
               answer:
-                'Clicking Guest Account (Instant Access) lets you explore all 14 features immediately with a pre-loaded sample profile without signing up. When you create your own account, your child’s logs, photos, and health records are stored privately in your encrypted account and never shared publicly unless you choose to post in Community Help or Parent Connect.'
+                'Clicking Instant Guest Access lets you explore all 14 features immediately with a pre-loaded sample profile without signing up. When you create your own account, your child’s logs, photos, and health records are stored privately in your encrypted account and never shared publicly unless you choose to post in Community Help or Parent Connect.'
             },
             {
               question: 'What is the difference between the Free plan and Premium plans?',
@@ -1030,7 +1030,7 @@ export const HomePage: React.FC<HomePageProps> = ({
             return (
               <div
                 key={idx}
-                className={`glass-card rounded-2xl border transition-all duration-200 overflow-hidden ${
+                className={`w-full glass-card rounded-2xl border transition-all duration-200 overflow-hidden ${
                   isOpen
                     ? 'border-indigo-400/40 bg-indigo-950/30 shadow-lg shadow-indigo-500/10'
                     : 'border-white/10 bg-white/[0.03] hover:bg-white/[0.06] hover:border-white/20'

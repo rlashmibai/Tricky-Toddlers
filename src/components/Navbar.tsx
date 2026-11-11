@@ -584,15 +584,15 @@ export const Navbar: React.FC = () => {
                 </>
               ) : (
                 <>
-                  {/* Guest Account (Instant Access) */}
+                  {/* Instant Guest Access */}
                   <button
                     type="button"
                     onClick={handleQuickGuestClick}
                     className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 text-xs font-black transition-all shadow-md shadow-emerald-500/20 cursor-pointer"
-                    title="Guest Account (Instant Access)"
+                    title="Instant Guest Access"
                   >
                     <Sparkles className="w-3.5 h-3.5 text-slate-950 shrink-0" />
-                    <span className="notranslate" translate="no">Guest Account (Instant Access)</span>
+                    <span className="notranslate" translate="no">Instant Guest Access</span>
                   </button>
 
                   {/* Create Account */}
