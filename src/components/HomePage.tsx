@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
 import { 
   Sparkles, 
@@ -26,6 +26,8 @@ import {
   Crown, 
   Layers,
   ChevronRight,
+  ChevronDown,
+  HelpCircle,
   ShieldAlert,
   Syringe,
   MessageSquare,
@@ -53,6 +55,7 @@ export const HomePage: React.FC<HomePageProps> = ({
   const navigate = useNavigate();
   const { language, setLanguage, t } = useLanguage();
   const { isSessionActive, setSessionActive, loginAsGuest } = useAuth();
+  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
   const [premiumActivated] = useState<boolean>(() => {
     return localStorage.getItem('tricky_toddlers_premium_unlocked') === 'true' || localStorage.getItem('user_plan') === 'comprehensive' || localStorage.getItem('user_plan') === 'essential';
   });
@@ -434,44 +437,6 @@ export const HomePage: React.FC<HomePageProps> = ({
             The all-in-one parenting co-pilot that decodes nutrition, crafts personalized AI recipes, provides certified parenting guidance, and puts trusted pediatric doctors just a tap away  -  all integrated in one ecosystem.
           </p>
 
-          {/* Primary Entry CTAs on Landing Page: Guest or Create Account */}
-          {!isSessionActive && (
-            <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3.5 pt-2 pb-1">
-              <button
-                type="button"
-                onClick={handleEnterAsGuest}
-                className="px-5 py-2.5 sm:px-6 sm:py-3 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black text-xs sm:text-sm tracking-wide shadow-lg shadow-emerald-500/25 transition-all transform hover:scale-[1.02] active:scale-95 flex items-center gap-2 cursor-pointer"
-              >
-                <Sparkles className="w-4 h-4 text-slate-950 shrink-0" />
-                <span>Guest Account (Instant Access)</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => {
-                  playSound('glass');
-                  navigate('/register');
-                }}
-                className="px-5 py-2.5 sm:px-6 sm:py-3 rounded-2xl bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-600 hover:from-indigo-400 hover:to-purple-500 text-white font-black text-xs sm:text-sm tracking-wide shadow-lg shadow-indigo-500/25 transition-all transform hover:scale-[1.02] active:scale-95 flex items-center gap-2 cursor-pointer"
-              >
-                <UserPlus className="w-4 h-4 text-white shrink-0" />
-                <span>Create Account</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => {
-                  playSound('click');
-                  navigate('/login');
-                }}
-                className="px-4 py-2.5 sm:px-5 sm:py-3 rounded-2xl bg-white/10 hover:bg-white/15 border border-white/20 text-white font-bold text-xs sm:text-sm tracking-wide transition-all transform hover:scale-[1.02] active:scale-95 flex items-center gap-1.5 cursor-pointer"
-              >
-                <LogIn className="w-3.5 h-3.5 text-indigo-300 shrink-0" />
-                <span>Sign In</span>
-              </button>
-            </div>
-          )}
-
           {/* Customer Journey In-Page Navigation Buttons */}
           <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 pt-1 max-w-6xl mx-auto">
             <a
@@ -520,12 +485,8 @@ export const HomePage: React.FC<HomePageProps> = ({
             </a>
 
             <a
-              href="/plans"
-              onClick={(e) => {
-                e.preventDefault();
-                playSound('glass');
-                navigate('/plans');
-              }}
+              href="#premium-plans"
+              onClick={() => playSound('glass')}
               className="px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-400/35 text-amber-300 hover:text-white font-bold text-xs sm:text-sm tracking-tight transition-all transform hover:scale-[1.02] active:scale-95 flex items-center gap-1.5 shadow-md whitespace-nowrap cursor-pointer"
             >
               <Crown className="w-3.5 h-3.5 text-amber-400 shrink-0" />
@@ -931,19 +892,6 @@ export const HomePage: React.FC<HomePageProps> = ({
         </div>
       </section>
 
-      {/* Premium Features Call to Action */}
-      <section className="text-center py-6">
-        <button
-          onClick={() => {
-            playSound('glass');
-            navigate('/plans');
-          }}
-          className="px-6 py-3 rounded-2xl bg-amber-500 hover:bg-amber-400 text-black font-black uppercase tracking-widest text-xs transition-all shadow-xl shadow-amber-500/20 cursor-pointer"
-        >
-          Explore Premium Features
-        </button>
-      </section>
-
       {/* =========================================================
           7. PREMIUM PLAN CONVERSION CARD
       ========================================================== */}
@@ -1018,6 +966,125 @@ export const HomePage: React.FC<HomePageProps> = ({
         </div>
       </section>
 
+      {/* =========================================================
+          FREQUENTLY ASKED QUESTIONS (FAQ) SECTION
+      ========================================================== */}
+      <section id="faq-section" className="scroll-mt-24 space-y-6">
+        <div className="text-center space-y-2.5 max-w-3xl mx-auto px-2">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-indigo-500/15 border border-indigo-400/30 text-indigo-300 text-xs font-bold tracking-wider uppercase">
+            <HelpCircle className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
+            <span>Parenting &amp; Platform FAQs</span>
+          </div>
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight">
+            Frequently Asked Questions
+          </h2>
+          <p className="text-xs sm:text-sm md:text-base text-slate-300 leading-relaxed">
+            Everything you need to know about tracking your child’s milestones, nutrition, safe learning, and pediatric care in one place.
+          </p>
+        </div>
+
+        <div className="max-w-4xl mx-auto space-y-3">
+          {[
+            {
+              question: 'What age group is Tricky Toddlers designed for, and can I track more than one child?',
+              answer:
+                'Tricky Toddlers is tailored for babies and toddlers from 0 to 5 years old (Newborn through 60 months). Yes—you can manage up to two child profiles (for example, an older toddler and a younger infant) and switch between them anytime to get age-specific milestones, vaccine schedules, and meal ideas for each child.'
+            },
+            {
+              question: 'How do AI NutriChef and FoodLens AI help with picky eaters and food allergies?',
+              answer:
+                'AI NutriChef generates custom, age-appropriate recipes based on the ingredients you have at home and automatically respects your saved Dietary Preferences (such as Vegetarian, Jain, Eggitarian, zero refined sugar, or specific allergies). FoodLens AI lets you snap or upload a photo of any meal to get an instant nutritional breakdown, choking-hazard check, and toddler-friendly serving tips.'
+            },
+            {
+              question: 'Are the developmental milestones and immunization schedules aligned with pediatric standards?',
+              answer:
+                'Yes. Our Milestone Tracker (covering motor, cognitive, speech, and social skills) and Vaccine Tracker follow standard IAP (Indian Academy of Pediatrics) and WHO guidelines, complete with due-date tracking and downloadable PDF health summaries for your pediatrician visits.'
+            },
+            {
+              question: 'Is the AI Parenting Assistant a replacement for my child’s pediatrician?',
+              answer:
+                'No. The AI Parenting Assistant and Pediatric Care guides provide 24/7 educational support for everyday parenting questions—like sleep regressions, teething relief, and tantrum calming—while highlighting red-flag symptoms so you know when to consult your pediatrician directly.'
+            },
+            {
+              question: 'How is screen time kept safe in Toddler Academy, Toddler Tales, and Toddler TV?',
+              answer:
+                'Unlike passive, overstimulating video feeds, Toddler Academy focuses on interactive, bite-sized learning modules (First Words, Numbers, Emotions, Shapes, and Animal Sounds) with gentle audio feedback, while Toddler Tales and Toddler TV offer curated, ad-free stories and rhymes designed for calm co-viewing.'
+            },
+            {
+              question: 'Can I use Tricky Toddlers in Indian regional languages?',
+              answer:
+                'Yes! You can switch the app interface and AI guidance across 10 supported languages—including English, Hindi, Tamil, Telugu, Kannada, Malayalam, Marathi, Gujarati, Bengali, and Punjabi—from the top language selector.'
+            },
+            {
+              question: 'How does the Guest Account work, and is my family’s data private?',
+              answer:
+                'Clicking Guest Account (Instant Access) lets you explore all 14 features immediately with a pre-loaded sample profile without signing up. When you create your own account, your child’s logs, photos, and health records are stored privately in your encrypted account and never shared publicly unless you choose to post in Community Help or Parent Connect.'
+            },
+            {
+              question: 'What is the difference between the Free plan and Premium plans?',
+              answer:
+                'Every parent gets access to core trackers, learning modules, and community support. Upgrading to a Monthly (₹299/mo), Yearly (₹2,499/yr), or Lifetime (₹4,999) plan unlocks unlimited AI Assistant consultations, unlimited FoodLens AI scans, personalized meal plans, downloadable pediatric PDF reports, and priority expert Q&A.'
+            }
+          ].map((faq, idx) => {
+            const isOpen = openFaqIndex === idx;
+            return (
+              <div
+                key={idx}
+                className={`glass-card rounded-2xl border transition-all duration-200 overflow-hidden ${
+                  isOpen
+                    ? 'border-indigo-400/40 bg-indigo-950/30 shadow-lg shadow-indigo-500/10'
+                    : 'border-white/10 bg-white/[0.03] hover:bg-white/[0.06] hover:border-white/20'
+                }`}
+              >
+                <button
+                  type="button"
+                  onClick={() => {
+                    playSound('pop');
+                    setOpenFaqIndex(isOpen ? null : idx);
+                  }}
+                  aria-expanded={isOpen}
+                  className="w-full px-4 sm:px-6 py-4 sm:py-5 text-left flex items-center justify-between gap-4 cursor-pointer"
+                >
+                  <div className="flex items-start sm:items-center gap-3 min-w-0">
+                    <span className="inline-flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-indigo-500/20 border border-indigo-400/30 text-indigo-300 text-xs font-black shrink-0 mt-0.5 sm:mt-0">
+                      {idx + 1}
+                    </span>
+                    <span className="text-sm sm:text-base font-bold text-white leading-snug">
+                      {faq.question}
+                    </span>
+                  </div>
+                  <div
+                    className={`w-8 h-8 rounded-xl flex items-center justify-center border shrink-0 transition-transform duration-200 ${
+                      isOpen
+                        ? 'bg-indigo-500/25 border-indigo-400/40 text-indigo-300 rotate-180'
+                        : 'bg-white/5 border-white/10 text-slate-400'
+                    }`}
+                  >
+                    <ChevronDown className="w-4 h-4" />
+                  </div>
+                </button>
+
+                <AnimatePresence initial={false}>
+                  {isOpen && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.2, ease: 'easeInOut' }}
+                    >
+                      <div className="px-4 sm:px-6 pb-4 sm:pb-5 pt-1 border-t border-white/10 text-xs sm:text-sm text-slate-300 leading-relaxed pl-13 sm:pl-16">
+                        {faq.answer}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
     </div>
   );
 };
+

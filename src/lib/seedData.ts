@@ -1,23 +1,24 @@
 import { collection, addDoc, getDocs, serverTimestamp, query, limit, where } from 'firebase/firestore';
-import { db } from './firebase';
+import { auth, db } from './firebase';
 
 export const seedSampleData = async () => {
   // Small delay to ensure auth token is fully propagated to Firestore
   await new Promise(resolve => setTimeout(resolve, 1500));
-  
+
+  if (!db || !auth?.currentUser) {
+    return;
+  }
+
   try {
-    console.log("Checking database state for seeding...");
-    
     // 1. Seed Posts
     let postsSnap;
     try {
       postsSnap = await getDocs(query(collection(db, 'posts'), limit(1)));
-    } catch (e) {
-      console.warn("Could not check posts collection (may be permissions):", e);
+    } catch {
+      return;
     }
 
-    if (!postsSnap || postsSnap.empty) {
-      console.log("Seeding sample posts...");
+    if (postsSnap && postsSnap.empty) {
       const samplePosts = [
         {
           userId: "sample_user_1",
@@ -57,7 +58,7 @@ export const seedSampleData = async () => {
              });
           }
         } catch (postErr) {
-          console.error(`Error seeding post for ${post.username}:`, postErr);
+          console.warn(`Skipped seeding post for ${post.username}:`, postErr);
         }
       }
     }
@@ -66,12 +67,11 @@ export const seedSampleData = async () => {
     let messagesSnap;
     try {
       messagesSnap = await getDocs(query(collection(db, 'messages'), where('username', '==', 'Sarah'), limit(1)));
-    } catch (e) {
-      console.warn("Could not check messages collection:", e);
+    } catch {
+      return;
     }
 
-    if (!messagesSnap || messagesSnap.empty) {
-      console.log("Seeding base chat messages...");
+    if (messagesSnap && messagesSnap.empty) {
       const sampleMessages = [
         {
           userId: "demo_user_sarah",
@@ -121,14 +121,11 @@ export const seedSampleData = async () => {
         try {
           await addDoc(collection(db, 'messages'), msg);
         } catch (msgErr) {
-          console.error("Error seeding message:", msgErr);
+          console.warn("Skipped seeding message:", msgErr);
         }
       }
     }
-
-    // 3. Seed 1:1 Chat Demo has been replaced by the Sarah and Lashmi conversation in base messages.
-    console.log("Seeding process finalized successfully.");
   } catch (error) {
-    console.error("Critical error in seeding process:", error);
+    console.warn("Seeding notice:", error);
   }
 };

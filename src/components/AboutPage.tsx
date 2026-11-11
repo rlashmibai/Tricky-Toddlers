@@ -75,8 +75,8 @@ export const AboutPage: React.FC<{ embedded?: boolean }> = ({ embedded = false }
               I was just listening to them, but at one point I started thinking...
             </p>
 
-            <div className="p-6 rounded-2xl bg-indigo-500/10 border border-indigo-500/25 space-y-2">
-              <h2 className="text-xl sm:text-2xl font-black text-white leading-snug text-balance">
+            <div className="p-5 sm:p-6 rounded-2xl bg-indigo-500/10 border border-indigo-500/25">
+              <h2 className="text-base sm:text-lg lg:text-xl font-black text-white leading-snug lg:whitespace-nowrap">
                 “How much information does a parent actually have to manage every single day?”
               </h2>
             </div>
@@ -90,7 +90,7 @@ export const AboutPage: React.FC<{ embedded?: boolean }> = ({ embedded = false }
             </p>
 
             <div className="p-5 sm:p-6 rounded-2xl bg-gradient-to-r from-amber-500/15 via-indigo-500/15 to-purple-500/15 border border-amber-400/30">
-              <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight leading-snug text-balance">
+              <h2 className="text-base sm:text-lg lg:text-xl font-black text-white tracking-tight leading-snug lg:whitespace-nowrap">
                 “There is actually too much information. The information is just scattered everywhere.”
               </h2>
             </div>

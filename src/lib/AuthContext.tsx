@@ -43,7 +43,7 @@ interface AuthContextType {
   isSessionActive: boolean;
   setSessionActive: (active: boolean) => void;
   refreshProfile: () => Promise<void>;
-  loginAsGuest: () => Promise<User | null>;
+  loginAsGuest: (activateUI?: boolean) => Promise<User | null>;
   activeChildIndex: 1 | 2;
   childProfiles: ChildProfile[];
   activeChild: ChildProfile;
@@ -235,8 +235,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const loginAsGuest = async (): Promise<User | null> => {
-    setSessionActive(true);
+  const loginAsGuest = async (activateUI: boolean = true): Promise<User | null> => {
+    if (activateUI) {
+      setSessionActive(true);
+    }
     if (!auth) return null;
     setLoading(true);
     try {
@@ -369,15 +371,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         await fetchProfile(currentUser.uid);
         setLoading(false);
       } else {
-        // Keep a visitor fallback user so the Landing Page (/?tab=home) and 14 features
-        // remain accessible before clicking Guest or Create Account
-        const fallbackVisitor = {
-          uid: 'guest_instant_user',
-          email: 'lashmi@gmail.com',
-          isAnonymous: true,
-        } as unknown as User;
-        setUser(fallbackVisitor);
-        setLoading(false);
+        // Maintain a silent background Firebase Auth session so all 14 features & Firestore
+        // rules work seamlessly while keeping isSessionActive false on the Landing Page
+        await loginAsGuest(false);
       }
     });
 

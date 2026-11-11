@@ -30,7 +30,9 @@ import {
   MessageCircle,
   Tv,
   AlertCircle,
-  Menu
+  Menu,
+  UserPlus,
+  LogIn
 } from 'lucide-react';
 import { playSound } from '../lib/sounds';
 import { motion, AnimatePresence } from 'motion/react';
@@ -466,7 +468,7 @@ export const Navbar: React.FC = () => {
                 <span className="notranslate" translate="no">{t('plans') || 'Plans'}</span>
               </Link>
 
-              {isSessionActive && (
+              {isSessionActive ? (
                 <>
                   {/* 4. Dietary Preferences (Visible once Guest or Create Account is clicked) */}
                   <Link 
@@ -579,6 +581,39 @@ export const Navbar: React.FC = () => {
                     <LogOut className="w-3.5 h-3.5 shrink-0" />
                     <span className="notranslate" translate="no">{t('logout') || 'Sign Out'}</span>
                   </button>
+                </>
+              ) : (
+                <>
+                  {/* Guest Account (Instant Access) */}
+                  <button
+                    type="button"
+                    onClick={handleQuickGuestClick}
+                    className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 text-xs font-black transition-all shadow-md shadow-emerald-500/20 cursor-pointer"
+                    title="Guest Account (Instant Access)"
+                  >
+                    <Sparkles className="w-3.5 h-3.5 text-slate-950 shrink-0" />
+                    <span className="notranslate" translate="no">Guest Account (Instant Access)</span>
+                  </button>
+
+                  {/* Create Account */}
+                  <Link
+                    to="/register"
+                    onClick={() => playSound('glass')}
+                    className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-600 hover:from-indigo-400 hover:to-purple-500 text-white text-xs font-black transition-all shadow-md shadow-indigo-500/20"
+                  >
+                    <UserPlus className="w-3.5 h-3.5 text-white shrink-0" />
+                    <span className="notranslate" translate="no">Create Account</span>
+                  </Link>
+
+                  {/* Sign In */}
+                  <Link
+                    to="/login"
+                    onClick={() => playSound('click')}
+                    className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/20 text-white text-xs font-bold transition-all"
+                  >
+                    <LogIn className="w-3.5 h-3.5 text-indigo-300 shrink-0" />
+                    <span className="notranslate" translate="no">Sign In</span>
+                  </Link>
                 </>
               )}
             </div>
