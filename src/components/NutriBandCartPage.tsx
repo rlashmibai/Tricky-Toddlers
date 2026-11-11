@@ -33,6 +33,7 @@ import {
   Edit3
 } from 'lucide-react';
 import { playSound } from '../lib/sounds';
+import { triggerToast } from '../lib/ToastContext';
 import nutribandSensorImg from '../assets/images/nutriband_sensor_pod_standalone.svg';
 import nutribandDiaperClipImg from '../assets/images/baby_diaper_clip_1789457013108.jpg';
 import nutribandCottonStrapImg from '../assets/images/three_cotton_straps_real.jpg';
@@ -183,6 +184,7 @@ export const NutriBandCartPage: React.FC<NutriBandCartPageProps> = ({ onBack }) 
       setIsProcessing(false);
       setIsOrderPlaced(true);
       playSound('glass');
+      triggerToast(`NutriBand™ order ${orderId} confirmed!`, 'success', 'Order Confirmed');
       window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
     }, 1500);
   };

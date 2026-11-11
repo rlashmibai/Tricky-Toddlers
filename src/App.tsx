@@ -8,6 +8,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, useNavig
 import { motion, AnimatePresence } from 'motion/react';
 import { AuthProvider, useAuth } from './lib/AuthContext';
 import { LanguageProvider } from './lib/LanguageContext';
+import { ToastProvider } from './lib/ToastContext';
 import { Navbar } from './components/Navbar';
 import { LoginForm } from './components/LoginForm';
 import { RegisterForm } from './components/RegisterForm';
@@ -319,11 +320,13 @@ export default function App() {
   return (
     <AuthProvider>
       <LanguageProvider>
-        <Router>
-          <ScrollToTop />
-          <AppContent />
-          <ScrollToTopButton />
-        </Router>
+        <ToastProvider>
+          <Router>
+            <ScrollToTop />
+            <AppContent />
+            <ScrollToTopButton />
+          </Router>
+        </ToastProvider>
       </LanguageProvider>
     </AuthProvider>
   );

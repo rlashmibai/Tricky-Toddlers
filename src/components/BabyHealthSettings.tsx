@@ -29,6 +29,7 @@ import { useAuth } from '../lib/AuthContext';
 import { db, handleFirestoreError } from '../lib/firebase';
 import { doc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { playSound } from '../lib/sounds';
+import { triggerToast } from '../lib/ToastContext';
 import { ALL_VACCINES } from './VaccineTracker';
 import { ChildProfileSelector } from './ChildProfileSelector';
 
@@ -608,6 +609,7 @@ export const BabyHealthSettings: React.FC = () => {
 
       playSound('glass');
       setSuccess(`${babyName.trim()}'s dietary preferences & health settings saved! Redirecting to Home AI Assistant...`);
+      triggerToast(`${babyName.trim()}'s dietary preferences & health settings saved!`, 'success', 'Dietary Preferences Saved');
 
       // Scroll window to top
       window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
@@ -623,6 +625,7 @@ export const BabyHealthSettings: React.FC = () => {
       }, 400);
     } catch (err: any) {
       setError(err.message || "Failed to save baby profile");
+      triggerToast(err.message || "Failed to save dietary preferences", 'error', 'Save Failed');
       setLoading(false);
     }
   };

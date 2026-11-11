@@ -35,6 +35,7 @@ import {
   LogIn
 } from 'lucide-react';
 import { playSound } from '../lib/sounds';
+import { triggerToast } from '../lib/ToastContext';
 import { motion, AnimatePresence } from 'motion/react';
 
 interface MenuItem {
@@ -314,6 +315,7 @@ export const Navbar: React.FC = () => {
     } catch (err) {
       console.warn("Guest login via top bar:", err);
     }
+    triggerToast('Instant Guest Access activated for Lashmi & Ashwath.', 'success', 'Guest Session Active');
     if (location.pathname.includes('login') || location.pathname.includes('register')) {
       navigate('/?tab=home');
       window.dispatchEvent(new CustomEvent('nav-reset-to-home'));
@@ -329,6 +331,7 @@ export const Navbar: React.FC = () => {
     } catch (error) {
       console.error("Logout error:", error);
     }
+    triggerToast('You have been signed out safely.', 'info', 'Signed Out');
     navigate('/?tab=home');
     window.dispatchEvent(new CustomEvent('nav-reset-to-home'));
   };
@@ -530,6 +533,7 @@ export const Navbar: React.FC = () => {
                                   playSound('glass');
                                   setLanguage(lang.code);
                                   setLangDropdownOpen(false);
+                                  triggerToast(`Language switched to ${lang.name} (${lang.localName}).`, 'info', 'Language Updated');
                                 }}
                                 className={`w-full text-left px-2.5 py-2 rounded-xl text-xs font-semibold transition-all flex justify-between items-center ${
                                   language === lang.code

@@ -35,6 +35,7 @@ import {
 } from 'lucide-react';
 import { playSound } from '../lib/sounds';
 import { useLanguage } from '../lib/LanguageContext';
+import { triggerToast } from '../lib/ToastContext';
 
 import { Product, PRODUCTS } from "../data/storeProducts";
 export type { Product };
@@ -137,6 +138,7 @@ export const BabyStore: React.FC<BabyStoreProps> = ({ onGoHome, initialView = 'c
       }
       return [...prev, { product, quantity: quantityToAdd, isGift: false }];
     });
+    triggerToast(`${product.name} (${quantityToAdd}x) added to your cart.`, 'cart', 'Added to Cart');
   };
 
   const updateQuantity = (productId: string, delta: number) => {
@@ -156,7 +158,11 @@ export const BabyStore: React.FC<BabyStoreProps> = ({ onGoHome, initialView = 'c
 
   const removeFromCart = (productId: string) => {
     playSound('glass');
+    const removed = cart.find((item) => item.product.id === productId);
     setCart((prev) => prev.filter((item) => item.product.id !== productId));
+    if (removed) {
+      triggerToast(`${removed.product.name} removed from your cart.`, 'info', 'Removed from Cart');
+    }
   };
 
   const toggleGiftItem = (productId: string) => {
@@ -174,6 +180,7 @@ export const BabyStore: React.FC<BabyStoreProps> = ({ onGoHome, initialView = 'c
       if (prev.some(item => item.product.id === product.id)) return prev;
       return [...prev, { product, quantity: 1 }];
     });
+    triggerToast(`${product.name} saved for later.`, 'info', 'Saved for Later');
   };
 
   const handleMoveToCart = (product: Product) => {
@@ -204,6 +211,7 @@ export const BabyStore: React.FC<BabyStoreProps> = ({ onGoHome, initialView = 'c
     setIsCheckoutSuccess(true);
     setIsCheckoutModalOpen(false);
     setCart([]);
+    triggerToast(`Order ${newOrderId} placed! Thank you for shopping at Baby Store.`, 'success', 'Order Confirmed');
   };
 
   // Remove all NutriBand-related products from Baby Store page only

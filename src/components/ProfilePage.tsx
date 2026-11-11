@@ -33,6 +33,7 @@ import {
   AlertTriangle
 } from 'lucide-react';
 import { playSound } from '../lib/sounds';
+import { triggerToast } from '../lib/ToastContext';
 import { INDIAN_CITIES_BY_STATE } from '../data/indianCitiesData';
 
 export const INDIAN_STATES_AND_UTS = [
@@ -740,6 +741,7 @@ export const ProfilePage: React.FC = () => {
       await refreshProfile();
       playSound('pop');
       setSuccess("Profile settings saved successfully! All features and tabs are now unlocked.");
+      triggerToast(`Profile settings saved for ${firstName.trim()} & ${activeName}!`, 'success', 'Profile Saved');
       
       // Auto-navigate to home so user can explore all tabs freely
       setTimeout(() => {
@@ -749,6 +751,7 @@ export const ProfilePage: React.FC = () => {
       }, 1500);
     } catch (err: any) {
       setError(err.message || "Failed to update profile");
+      triggerToast(err.message || "Failed to update profile", 'error', 'Save Failed');
       handleFirestoreError(err, 'update', `users/${user.uid}`);
     } finally {
       setLoading(false);
@@ -780,6 +783,7 @@ export const ProfilePage: React.FC = () => {
       }
     }
     setSuccess(`Indian State updated to ${stateVal}. Please select your city below.`);
+    triggerToast(`State updated to ${stateVal}.`, 'info', 'State Updated');
     setTimeout(() => setSuccess(null), 3500);
   };
 
@@ -808,6 +812,7 @@ export const ProfilePage: React.FC = () => {
       }
     }
     setSuccess(`City updated to ${cityVal}`);
+    triggerToast(`City updated to ${cityVal}.`, 'success', 'City Updated');
     setTimeout(() => setSuccess(null), 3500);
   };
 
@@ -816,6 +821,7 @@ export const ProfilePage: React.FC = () => {
     if (!user || !auth.currentUser) return;
     if (newPassword !== confirmPassword) {
       setError("New passwords do not match");
+      triggerToast("New passwords do not match.", 'warning', 'Password Mismatch');
       return;
     }
 
@@ -829,14 +835,17 @@ export const ProfilePage: React.FC = () => {
       await updatePassword(auth.currentUser, newPassword);
       
       setSuccess("Password changed successfully!");
+      triggerToast("Your account password was changed.", 'success', 'Password Updated');
       setCurrentPassword('');
       setNewPassword('');
       setConfirmPassword('');
     } catch (err: any) {
       if (err.code === 'auth/wrong-password') {
         setError("Current password is incorrect");
+        triggerToast("Current password is incorrect.", 'error', 'Password Error');
       } else {
         setError(err.message || "Failed to change password");
+        triggerToast(err.message || "Failed to change password", 'error', 'Password Error');
       }
     } finally {
       setLoading(false);
