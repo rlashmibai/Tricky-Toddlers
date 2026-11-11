@@ -947,8 +947,37 @@ Each object must have these exact keys:
         </div>
       </div>
 
-      {/* 4 Big Attractive Navigation Menu Buttons */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-8">
+      {/* Mobile Only (< 768px): Compact Quick Jump Section Selector */}
+      <div className="md:hidden mb-6 bg-slate-900/90 p-3 rounded-2xl border border-teal-500/30 shadow-lg flex items-center gap-2.5">
+        <span className="text-[11px] font-black uppercase tracking-wider text-teal-300 shrink-0">
+          Jump To:
+        </span>
+        <select
+          aria-label="Quick Jump to Nutrition Section"
+          defaultValue=""
+          onChange={(e) => {
+            const val = e.target.value;
+            if (!val) return;
+            playSound('pop');
+            if (val === 'history') {
+              navigate('/ai-recipe-history');
+            } else {
+              document.getElementById(val)?.scrollIntoView({ behavior: 'smooth' });
+            }
+            e.target.value = '';
+          }}
+          className="flex-1 min-w-0 bg-slate-800/95 border border-white/15 rounded-xl px-3 py-2 text-xs font-extrabold text-white focus:outline-none focus:border-teal-400"
+        >
+          <option value="" disabled>Select Section...</option>
+          <option value="ai-recipe-maker-section">✨ AI Recipe Maker (Custom Cooker)</option>
+          <option value="nutritious-recipes-section">🍲 Nutritious Recipes (250+ Dishes)</option>
+          <option value="history">📋 AI Recipe History Log</option>
+          <option value="select-stage-guidelines-section">📅 Stage Feeding Guidelines</option>
+        </select>
+      </div>
+
+      {/* Laptop/Desktop (>= 768px): 4 Big Attractive Navigation Menu Buttons (100% Untouched) */}
+      <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-8">
         {/* 1. AI Recipe Maker */}
         <button
           type="button"

@@ -3,10 +3,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { auth, db } from '../lib/firebase';
+import { useAuth } from '../lib/AuthContext';
 import { motion } from 'motion/react';
 import { Mail, Lock, User, UserPlus, AlertCircle, Loader2 } from 'lucide-react';
 
 export const RegisterForm: React.FC = () => {
+  const { setSessionActive } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
@@ -73,6 +75,7 @@ export const RegisterForm: React.FC = () => {
       localStorage.removeItem('baby_name');
       localStorage.removeItem('user_indian_state');
       localStorage.removeItem('user_city');
+      setSessionActive(true);
 
       navigate('/profile?mandatory=true', { replace: true });
     } catch (err: any) {

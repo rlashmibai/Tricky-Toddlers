@@ -47,13 +47,14 @@ interface MenuItem {
 }
 
 export const Navbar: React.FC = () => {
-  const { user, loginAsGuest, needsProfileSetup } = useAuth();
+  const { user, loginAsGuest, needsProfileSetup, isSessionActive, setSessionActive } = useAuth();
   const { language, setLanguage, t } = useLanguage();
   const navigate = useNavigate();
   const location = useLocation();
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [aboutDropdownOpen, setAboutDropdownOpen] = useState(false);
+  const [expandedMobileGroup, setExpandedMobileGroup] = useState<string | null>('trackers');
   const [setupNotice, setSetupNotice] = useState(false);
 
   const aboutDropdownRef = useRef<HTMLDivElement>(null);
@@ -86,8 +87,6 @@ export const Navbar: React.FC = () => {
       document.removeEventListener('touchstart', handleClickOutside, true);
     };
   }, []);
-
-  const isAuthPage = location.pathname.includes('login') || location.pathname.includes('register');
 
   const currentPath = location.pathname;
   const currentTab = new URLSearchParams(location.search).get('tab') || (currentPath === '/' || currentPath === '/tricky-toddlers' ? 'home' : '');
@@ -201,6 +200,52 @@ export const Navbar: React.FC = () => {
     }
   ];
 
+  // Grouped structure for Mobile (< 768px) to reduce visual clutter
+  const mobileMenuGroups = [
+    {
+      id: 'ai-direct',
+      label: 'AI Assistant',
+      icon: Sparkles,
+      iconColor: 'text-amber-400',
+      directItem: menuItems.find(m => m.id === 'ai')!,
+    },
+    {
+      id: 'trackers',
+      label: 'Trackers & Health',
+      icon: Stethoscope,
+      iconColor: 'text-teal-400',
+      items: menuItems.filter(m => ['milestones', 'routine', 'vaccine', 'pediatric'].includes(m.id)),
+    },
+    {
+      id: 'nutrition',
+      label: 'Nutrition & Food AI',
+      icon: Utensils,
+      iconColor: 'text-emerald-400',
+      items: menuItems.filter(m => ['food', 'foodlens'].includes(m.id)),
+    },
+    {
+      id: 'learn',
+      label: 'Learn & Watch',
+      icon: Palette,
+      iconColor: 'text-pink-400',
+      items: menuItems.filter(m => ['learning', 'tales', 'videos'].includes(m.id)),
+    },
+    {
+      id: 'community-shop',
+      label: 'Community & Shop',
+      icon: Users,
+      iconColor: 'text-indigo-400',
+      items: menuItems.filter(m => ['community', 'chat', 'store'].includes(m.id)),
+    },
+    {
+      id: 'nutriband-direct',
+      label: 'NutriBand',
+      icon: Activity,
+      iconColor: 'text-cyan-400',
+      directItem: menuItems.find(m => m.id === 'nutriband')!,
+    },
+  ];
+
   const isItemActive = (item: MenuItem) => {
     if (item.path) {
       return currentPath === item.path || currentPath.startsWith(item.path);
@@ -237,52 +282,60 @@ export const Navbar: React.FC = () => {
     document.body.scrollTop = 0;
   };
 
-  const handleBrandClick = async (e: React.MouseEvent) => {
+  const handleBrandClick = (e: React.MouseEvent) => {
     e.preventDefault();
     playSound('glass');
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
     document.documentElement.scrollTop = 0;
     document.body.scrollTop = 0;
 
-    if (needsProfileSetup) {
+    if (needsProfileSetup && isSessionActive) {
       setSetupNotice(true);
       setTimeout(() => setSetupNotice(false), 4500);
       navigate('/profile?mandatory=true');
       return;
     }
 
-    localStorage.removeItem('user_logged_out');
-
-    if (!user) {
-      if (!localStorage.getItem('parent_name')) localStorage.setItem('parent_name', 'Lashmi');
-      if (!localStorage.getItem('baby_name')) localStorage.setItem('baby_name', 'Ashwath');
-      try {
-        await loginAsGuest();
-      } catch (err) {
-        console.warn("Guest login via brand click:", err);
-      }
-    }
-
     navigate('/?tab=home');
     window.dispatchEvent(new CustomEvent('nav-reset-to-home'));
   };
 
+  const handleQuickGuestClick = async () => {
+    playSound('glass');
+    setLanguage('en');
+    setSessionActive(true);
+    localStorage.removeItem('user_logged_out');
+    if (!localStorage.getItem('parent_name')) localStorage.setItem('parent_name', 'Lashmi');
+    if (!localStorage.getItem('baby_name')) localStorage.setItem('baby_name', 'Ashwath');
+    try {
+      await loginAsGuest();
+    } catch (err) {
+      console.warn("Guest login via top bar:", err);
+    }
+    if (location.pathname.includes('login') || location.pathname.includes('register')) {
+      navigate('/?tab=home');
+      window.dispatchEvent(new CustomEvent('nav-reset-to-home'));
+    }
+  };
+
   const handleLogout = async () => {
     playSound('pop');
+    setSessionActive(false);
     try {
       localStorage.setItem('user_logged_out', 'true');
       await signOut(auth);
-      navigate('/login');
     } catch (error) {
       console.error("Logout error:", error);
     }
+    navigate('/?tab=home');
+    window.dispatchEvent(new CustomEvent('nav-reset-to-home'));
   };
 
   return (
     <>
       <nav className="glass-nav border-b border-white/10 bg-[#070b14]/95 backdrop-blur-xl sticky top-0 z-[100] shadow-2xl">
-        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-14 sm:h-16 items-center gap-1.5 sm:gap-2">
+        <div className="max-w-7xl mx-auto px-2.5 sm:px-6 lg:px-8 py-2 sm:py-2.5">
+          <div className="flex flex-wrap justify-between items-center gap-2">
             
             {/* Left: Brand - Takes to Home Page */}
             <div className="flex items-center gap-1.5 sm:gap-3 min-w-0 shrink-0">
@@ -301,14 +354,14 @@ export const Navbar: React.FC = () => {
               </button>
             </div>
 
-            {/* Right: Home, About Menu, Language Selector & User Controls */}
-            <div className="flex items-center gap-1 sm:gap-2.5 shrink-0">
-              {/* Home Button (Directly previous to About Me tab) */}
+            {/* Right: Top Nav Items (Both Desktop & Mobile) */}
+            <div className="flex flex-wrap items-center justify-end gap-1.5 sm:gap-2">
+              {/* 1. Home Button (Always visible on Landing Page & Logged-In/Guest) */}
               <button
                 type="button"
                 id="nav-topbar-home-btn"
                 onClick={handleBrandClick}
-                className={`flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1.5 rounded-xl border transition-all text-xs font-bold cursor-pointer ${
+                className={`flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl border transition-all text-xs font-bold cursor-pointer ${
                   (location.pathname === '/' || location.pathname === '/tricky-toddlers') && (!currentTab || currentTab === 'home')
                     ? 'bg-gradient-to-r from-indigo-500/20 to-purple-500/20 text-indigo-200 border-indigo-400/40 shadow-sm shadow-indigo-500/10'
                     : 'bg-white/5 hover:bg-white/10 border-white/10 text-white/80 hover:text-white'
@@ -316,11 +369,11 @@ export const Navbar: React.FC = () => {
                 title={t('home') || 'Home'}
               >
                 <Home className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
-                <span className="notranslate hidden xs:inline sm:inline" translate="no">{t('home') || 'Home'}</span>
+                <span className="notranslate" translate="no">{t('home') || 'Home'}</span>
               </button>
 
-              {/* About Me Dropdown (Visible on tablet & desktop; on mobile available in Main Menu) */}
-              <div className="relative hidden sm:block" ref={aboutDropdownRef}>
+              {/* 2. About Me Dropdown (Always visible on Landing Page & Logged-In/Guest on both Mobile & Desktop) */}
+              <div className="relative" ref={aboutDropdownRef}>
                 <button
                   type="button"
                   id="nav-about-btn"
@@ -328,8 +381,8 @@ export const Navbar: React.FC = () => {
                     playSound('click');
                     setAboutDropdownOpen(!aboutDropdownOpen);
                   }}
-                  className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl border transition-all text-xs font-bold ${
-                    location.pathname === '/about'
+                  className={`flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl border transition-all text-xs font-bold cursor-pointer ${
+                    location.pathname === '/about' || location.pathname === '/contact'
                       ? 'bg-gradient-to-r from-pink-500/20 to-indigo-500/20 text-pink-200 border-pink-400/40 shadow-sm shadow-pink-500/10'
                       : 'bg-white/5 hover:bg-white/10 border-white/10 text-white/80 hover:text-white'
                   }`}
@@ -350,7 +403,7 @@ export const Navbar: React.FC = () => {
                         initial={{ opacity: 0, y: 10, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                        className="absolute right-0 sm:left-auto sm:right-0 mt-2 w-64 rounded-2xl bg-[#090d1a]/95 border border-white/15 p-2 shadow-2xl z-50 backdrop-blur-2xl"
+                        className="absolute right-0 mt-2 w-60 sm:w-64 rounded-2xl bg-[#090d1a]/95 border border-white/15 p-2 shadow-2xl z-50 backdrop-blur-2xl"
                       >
                         {/* My Story */}
                         <Link
@@ -395,158 +448,137 @@ export const Navbar: React.FC = () => {
                 </AnimatePresence>
               </div>
 
-              {/* Language Selector Dropdown */}
-              <div className="relative" ref={langDropdownRef}>
-                <button
-                  type="button"
-                  onClick={() => {
-                    playSound('click');
-                    setLangDropdownOpen(!langDropdownOpen);
-                  }}
-                  className="flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition-colors text-xs font-bold text-white/80 hover:text-white"
-                  title="Select Language"
-                >
-                  <Languages className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
-                  <span className="hidden sm:inline">
-                    {SUPPORTED_LANGUAGES.find(l => l.code === language)?.localName || 'English'}
-                  </span>
-                  <span className="sm:hidden uppercase font-mono text-[10px]">
-                    {language}
-                  </span>
-                </button>
+              {/* 3. Plans (Always visible on Landing Page & Logged-In/Guest on both Mobile & Desktop) */}
+              <Link 
+                to="/plans" 
+                onClick={() => {
+                  playSound('glass');
+                  window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+                }}
+                className={`flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl border transition-all text-xs font-bold ${
+                  location.pathname === '/plans'
+                    ? 'bg-amber-500/20 text-amber-200 border-amber-400/40 shadow-sm shadow-amber-500/10'
+                    : 'bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border-amber-400/30'
+                }`}
+                title="Plans & Premium Membership"
+              >
+                <Crown className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                <span className="notranslate" translate="no">{t('plans') || 'Plans'}</span>
+              </Link>
 
-                <AnimatePresence>
-                  {langDropdownOpen && (
-                    <>
-                      <div 
-                        className="fixed inset-0 z-40" 
-                        onClick={() => setLangDropdownOpen(false)} 
-                      />
-                      <motion.div
-                        initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                        className="absolute right-0 mt-2 w-48 rounded-2xl bg-[#090d1a] border border-white/10 p-1.5 shadow-2xl z-50 backdrop-blur-2xl max-h-80 overflow-y-auto"
-                      >
-                        <div className="px-2.5 py-1 text-[9px] font-bold text-white/30 uppercase tracking-widest mb-1 border-b border-white/5">
-                          Indian Languages
-                        </div>
-                        {SUPPORTED_LANGUAGES.map((lang) => (
-                          <button
-                            type="button"
-                            key={lang.code}
-                            onClick={() => {
-                              playSound('glass');
-                              setLanguage(lang.code);
-                              setLangDropdownOpen(false);
-                            }}
-                            className={`w-full text-left px-2.5 py-2 rounded-xl text-xs font-semibold transition-all flex justify-between items-center ${
-                              language === lang.code
-                                ? 'bg-indigo-500 text-white shadow-lg shadow-indigo-500/20'
-                                : 'text-white/60 hover:text-white hover:bg-white/5'
-                            }`}
-                          >
-                            <span>{lang.localName}</span>
-                            <span className="text-[9px] opacity-40 font-mono">{lang.name}</span>
-                          </button>
-                        ))}
-                      </motion.div>
-                    </>
-                  )}
-                </AnimatePresence>
-              </div>
-
-              {user && !isAuthPage ? (
+              {isSessionActive && (
                 <>
-                  <Link 
-                    to="/plans" 
-                    onClick={() => {
-                      playSound('glass');
-                      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-                    }}
-                    className={`flex items-center gap-1.5 px-2 sm:px-3 py-1.5 rounded-xl border transition-all text-xs font-bold ${
-                      location.pathname === '/plans'
-                        ? 'bg-amber-500/20 text-amber-200 border-amber-400/40 shadow-sm shadow-amber-500/10'
-                        : 'bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border-amber-400/30'
-                    }`}
-                    title="Plans & Premium Membership"
-                  >
-                    <Crown className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-                    <span className="notranslate hidden sm:inline" translate="no">{t('plans') || 'Plans'}</span>
-                  </Link>
+                  {/* 4. Dietary Preferences (Visible once Guest or Create Account is clicked) */}
                   <Link 
                     to="/dietary-preferences" 
                     onClick={() => {
                       playSound('glass');
                       window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
                     }}
-                    className={`hidden sm:flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl border transition-all text-xs font-bold ${
+                    className={`flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl border transition-all text-xs font-bold ${
                       location.pathname === '/dietary-preferences' || location.pathname.includes('baby-health')
                         ? 'bg-emerald-500/20 text-emerald-200 border-emerald-400/40 shadow-sm shadow-emerald-500/10'
                         : 'bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border-emerald-400/30'
                     }`}
                     title="Dietary Preferences & Child Health"
                   >
-                    <Utensils className="w-3.5 h-3.5 text-emerald-400" />
-                    <span className="notranslate hidden md:inline" translate="no">{t('dietaryPreferences') || 'Dietary Preferences'}</span>
-                    <span className="notranslate md:hidden" translate="no">{t('diet') || 'Diet'}</span>
+                    <Utensils className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                    <span className="notranslate" translate="no">{t('dietaryPreferences') || 'Dietary Preferences'}</span>
                   </Link>
+
+                  {/* 5. Language Selector Dropdown (English by default, visible once Guest or Create Account is clicked) */}
+                  <div className="relative" ref={langDropdownRef}>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        playSound('click');
+                        setLangDropdownOpen(!langDropdownOpen);
+                      }}
+                      className="flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition-colors text-xs font-bold text-white/80 hover:text-white cursor-pointer"
+                      title="Select Language"
+                    >
+                      <Languages className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
+                      <span className="notranslate" translate="no">
+                        {SUPPORTED_LANGUAGES.find(l => l.code === language)?.localName || 'English'}
+                      </span>
+                      <ChevronDown className={`w-3 h-3 text-white/50 transition-transform ${langDropdownOpen ? 'rotate-180' : ''}`} />
+                    </button>
+
+                    <AnimatePresence>
+                      {langDropdownOpen && (
+                        <>
+                          <div 
+                            className="fixed inset-0 z-40" 
+                            onClick={() => setLangDropdownOpen(false)} 
+                          />
+                          <motion.div
+                            initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                            className="absolute right-0 mt-2 w-48 rounded-2xl bg-[#090d1a] border border-white/10 p-1.5 shadow-2xl z-50 backdrop-blur-2xl max-h-80 overflow-y-auto"
+                          >
+                            <div className="px-2.5 py-1 text-[9px] font-bold text-white/30 uppercase tracking-widest mb-1 border-b border-white/5">
+                              Indian Languages
+                            </div>
+                            {SUPPORTED_LANGUAGES.map((lang) => (
+                              <button
+                                type="button"
+                                key={lang.code}
+                                onClick={() => {
+                                  playSound('glass');
+                                  setLanguage(lang.code);
+                                  setLangDropdownOpen(false);
+                                }}
+                                className={`w-full text-left px-2.5 py-2 rounded-xl text-xs font-semibold transition-all flex justify-between items-center ${
+                                  language === lang.code
+                                    ? 'bg-indigo-500 text-white shadow-lg shadow-indigo-500/20'
+                                    : 'text-white/60 hover:text-white hover:bg-white/5'
+                                }`}
+                              >
+                                <span>{lang.localName}</span>
+                                <span className="text-[9px] opacity-40 font-mono">{lang.name}</span>
+                              </button>
+                            ))}
+                          </motion.div>
+                        </>
+                      )}
+                    </AnimatePresence>
+                  </div>
+
+                  {/* 6. Profile Settings (Visible once Guest or Create Account is clicked) */}
                   <Link 
                     to="/profile" 
                     onClick={() => {
                       playSound('click');
                       window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
                     }}
-                    className={`flex items-center gap-1.5 px-2 sm:px-3 py-1.5 rounded-xl transition-colors text-xs font-bold relative ${
+                    className={`flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl transition-colors text-xs font-bold relative ${
                       location.pathname === '/profile'
                         ? 'bg-indigo-500/20 text-indigo-200 border border-indigo-400/40'
                         : needsProfileSetup
                         ? 'bg-amber-500/20 text-amber-200 border border-amber-400/50 shadow-sm animate-pulse'
-                        : 'hover:bg-white/5 text-white/70 hover:text-white border border-transparent hover:border-white/10'
+                        : 'bg-white/5 hover:bg-white/10 text-white/80 hover:text-white border border-white/10'
                     }`}
                   >
                     <User className="w-3.5 h-3.5 text-indigo-300 shrink-0" />
-                    <span className="notranslate hidden md:inline" translate="no">{t('profileSettings')}</span>
+                    <span className="notranslate" translate="no">{t('profileSettings') || 'Profile Settings'}</span>
                     {needsProfileSetup && (
-                      <>
-                        <span className="hidden sm:inline-block px-1.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-amber-400 text-slate-950">
-                          Setup Required
-                        </span>
-                        <span className="sm:hidden w-2 h-2 rounded-full bg-amber-400 shrink-0" />
-                      </>
+                      <span className="inline-block px-1.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-amber-400 text-slate-950">
+                        Setup Required
+                      </span>
                     )}
                   </Link>
+
+                  {/* 7. Sign Out (Visible once Guest or Create Account is clicked) */}
                   <button
                     type="button"
                     onClick={handleLogout}
-                    className="flex items-center gap-1 px-2 sm:px-3 py-1.5 rounded-xl hover:bg-red-500/10 text-red-400 hover:text-red-300 transition-colors text-xs font-bold border border-transparent hover:border-red-500/20"
+                    className="flex items-center gap-1 px-2.5 sm:px-3 py-1.5 rounded-xl hover:bg-red-500/15 text-red-400 hover:text-red-300 transition-colors text-xs font-bold border border-red-500/20 bg-red-500/5 cursor-pointer"
                     title="Sign Out"
                   >
                     <LogOut className="w-3.5 h-3.5 shrink-0" />
-                    <span className="notranslate hidden sm:inline" translate="no">{t('logout')}</span>
+                    <span className="notranslate" translate="no">{t('logout') || 'Sign Out'}</span>
                   </button>
-                </>
-              ) : (
-                <>
-                  {location.pathname.includes('login') ? (
-                    <Link 
-                      to="/register" 
-                      onClick={() => playSound('glass')}
-                      className="notranslate bg-indigo-500 text-white rounded-xl px-3 sm:px-3.5 py-1.5 font-bold transition-all shadow-lg shadow-indigo-500/20 hover:scale-105 active:scale-95 text-xs"
-                      translate="no"
-                    >
-                      {t('getStarted') || 'Get Started'}
-                    </Link>
-                  ) : (
-                    <Link 
-                      to="/login" 
-                      onClick={() => playSound('click')}
-                      className="notranslate text-xs font-bold text-white/80 hover:text-white transition-colors bg-white/5 px-2.5 sm:px-3 py-1.5 rounded-xl border border-white/10"
-                      translate="no"
-                    >
-                      {t('signIn') || 'Sign In'}
-                    </Link>
-                  )}
                 </>
               )}
             </div>
@@ -563,12 +595,11 @@ export const Navbar: React.FC = () => {
       )}
 
     {/* =========================================================
-        TOP NAVIGATION MENU: RESPONSIVE
-        (Available at the top across all pages, scrolls naturally with the page)
+        TOP NAVIGATION MENU: ALL 14 FEATURES VISIBLE ALL THE TIME
+        (Desktop >= 768px untouched; Mobile < 768px consolidated into grouped dropdowns)
     ========================================================== */}
-    {!isAuthPage && (
       <>
-        {/* Desktop Menu */}
+        {/* Desktop Menu (100% Untouched) */}
         <div className="hidden md:block relative z-30 border-b border-white/10 bg-[#060a16]/95 backdrop-blur-2xl px-2 sm:px-4 lg:px-6 py-2.5 sm:py-3 shadow-md">
           <div className="w-full max-w-[1720px] mx-auto grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-7 gap-1.5 xl:gap-2">
             {menuItems.map((item) => {
@@ -598,7 +629,7 @@ export const Navbar: React.FC = () => {
           </div>
         </div>
 
-        {/* Mobile Navigation Bar & Feature Switcher */}
+        {/* Mobile Navigation Bar & Grouped Category Dropdowns (< 768px Only) */}
         <div className="md:hidden relative z-30 border-b border-white/10 bg-[#060a16]/95 backdrop-blur-2xl shadow-md">
           <div className="flex justify-between items-center px-3.5 py-2.5 gap-2">
              <button
@@ -622,7 +653,7 @@ export const Navbar: React.FC = () => {
                    );
                  }
                  return (
-                   <span className="notranslate text-[10px] text-indigo-300 bg-indigo-500/20 px-2 py-0.5 rounded-full font-bold shrink-0" translate="no">{t('featuresCount') || '14 Features'}</span>
+                   <span className="notranslate text-[10px] text-indigo-300 bg-indigo-500/20 px-2 py-0.5 rounded-full font-bold shrink-0" translate="no">6 Categories</span>
                  );
                })()}
              </button>
@@ -639,7 +670,7 @@ export const Navbar: React.FC = () => {
                 }`}
                 aria-label="Toggle menu"
              >
-                <span className="notranslate text-xs font-bold text-white/90" translate="no">{mobileMenuOpen ? (t('close') || 'Close') : (t('menu') || 'Switch Tab')}</span>
+                <span className="notranslate text-xs font-bold text-white/90" translate="no">{mobileMenuOpen ? (t('close') || 'Close') : (t('menu') || 'Categories')}</span>
                 <Menu className="w-4 h-4 text-white" />
              </button>
           </div>
@@ -650,81 +681,100 @@ export const Navbar: React.FC = () => {
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
                 exit={{ opacity: 0, height: 0 }}
-                className="p-3.5 border-t border-white/10 bg-[#0a0f1d] space-y-3 overflow-hidden"
+                className="p-3 border-t border-white/10 bg-[#0a0f1d] space-y-2 overflow-hidden"
               >
-                {/* Mobile Quick Links: About Me, Contact, and Dietary Preferences */}
-                <div className="grid grid-cols-3 gap-2 pb-3 border-b border-white/10">
-                  <Link
-                    to="/about?tab=story"
-                    onClick={() => {
-                      playSound('glass');
-                      setMobileMenuOpen(false);
-                      window.scrollTo({ top: 0, behavior: 'instant' });
-                    }}
-                    className="flex flex-col items-center justify-center p-2 rounded-xl bg-pink-500/10 border border-pink-500/20 text-pink-300 text-[10px] font-bold hover:bg-pink-500/20 transition-all text-center gap-1 active:scale-95"
-                  >
-                    <Heart className="w-3.5 h-3.5 text-pink-400 fill-pink-400/20" />
-                    <span className="notranslate" translate="no">{t('aboutMe') || 'About Me'}</span>
-                  </Link>
-
-                  <Link
-                    to="/contact"
-                    onClick={() => {
-                      playSound('glass');
-                      setMobileMenuOpen(false);
-                      window.scrollTo({ top: 0, behavior: 'instant' });
-                    }}
-                    className="flex flex-col items-center justify-center p-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-[10px] font-bold hover:bg-emerald-500/20 transition-all text-center gap-1 active:scale-95"
-                  >
-                    <MessageSquareHeart className="w-3.5 h-3.5 text-emerald-400" />
-                    <span className="notranslate" translate="no">{t('contactFeedback') || 'Contact'}</span>
-                  </Link>
-
-                  <Link
-                    to="/dietary-preferences"
-                    onClick={() => {
-                      playSound('glass');
-                      setMobileMenuOpen(false);
-                      window.scrollTo({ top: 0, behavior: 'instant' });
-                    }}
-                    className="flex flex-col items-center justify-center p-2 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-[10px] font-bold hover:bg-indigo-500/20 transition-all text-center gap-1 active:scale-95"
-                  >
-                    <Utensils className="w-3.5 h-3.5 text-indigo-400" />
-                    <span className="notranslate" translate="no">{t('diet') || 'Diet'}</span>
-                  </Link>
-                </div>
-
-                {/* 14 Features Grid */}
-                <div className="grid grid-cols-2 gap-2">
-                  {menuItems.map((item) => {
-                    const active = isItemActive(item);
-                    const Icon = item.icon;
-                    return (
-                      <button
-                        key={item.id}
-                        type="button"
-                        onClick={() => { 
-                          handleMenuClick(item); 
-                          setMobileMenuOpen(false); 
-                        }}
-                        className={`flex items-center gap-2.5 p-2.5 rounded-2xl text-xs font-bold transition-all border cursor-pointer active:scale-95 text-left min-h-[48px] ${
-                          active
-                            ? 'bg-gradient-to-r from-indigo-600/30 to-purple-600/30 text-white border-indigo-500/60 shadow-md shadow-indigo-500/20'
-                            : 'bg-white/5 text-white/80 hover:text-white border-white/5 hover:border-white/15 hover:bg-white/10'
-                        }`}
-                      >
-                        <div className={`p-2 rounded-xl shrink-0 ${active ? 'bg-indigo-500 text-white' : 'bg-white/5 ' + item.iconColor}`}>
-                          <Icon className="w-4 h-4 shrink-0" />
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <div className="notranslate leading-snug break-words" translate="no">{item.label}</div>
-                          {item.badge && (
-                            <span className={`inline-block mt-0.5 px-1.5 py-0.2 rounded-full text-[8px] font-black uppercase tracking-wider ${item.badgeClass}`}>
-                              {item.badge}
+                {/* 6 Consolidated Mobile Category Groups / Direct Links */}
+                <div className="space-y-1.5">
+                  {mobileMenuGroups.map((group) => {
+                    const GroupIcon = group.icon;
+                    if (group.directItem) {
+                      const active = isItemActive(group.directItem);
+                      return (
+                        <button
+                          key={group.id}
+                          type="button"
+                          onClick={() => {
+                            handleMenuClick(group.directItem!);
+                            setMobileMenuOpen(false);
+                          }}
+                          className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-extrabold transition-all border cursor-pointer ${
+                            active
+                              ? 'bg-gradient-to-r from-indigo-600/35 to-purple-600/35 text-white border-indigo-400/60 shadow-md'
+                              : 'bg-white/5 text-white/90 hover:bg-white/10 border-white/10'
+                          }`}
+                        >
+                          <span className="flex items-center gap-2.5">
+                            <GroupIcon className={`w-4 h-4 shrink-0 ${group.iconColor}`} />
+                            <span className="notranslate" translate="no">{group.directItem.label}</span>
+                          </span>
+                          {group.directItem.badge && (
+                            <span className={`px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider ${group.directItem.badgeClass}`}>
+                              {group.directItem.badge}
                             </span>
                           )}
-                        </div>
-                      </button>
+                        </button>
+                      );
+                    }
+
+                    const hasActiveChild = group.items?.some(item => isItemActive(item));
+                    const isExpanded = expandedMobileGroup === group.id;
+
+                    return (
+                      <div key={group.id} className="rounded-xl border border-white/10 bg-white/[0.03] overflow-hidden">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            playSound('click');
+                            setExpandedMobileGroup(isExpanded ? null : group.id);
+                          }}
+                          className={`w-full flex items-center justify-between px-3.5 py-2.5 text-xs font-extrabold transition-all cursor-pointer ${
+                            hasActiveChild
+                              ? 'bg-indigo-500/20 text-indigo-200'
+                              : 'text-white/90 hover:bg-white/5'
+                          }`}
+                        >
+                          <span className="flex items-center gap-2.5">
+                            <GroupIcon className={`w-4 h-4 shrink-0 ${group.iconColor}`} />
+                            <span className="notranslate" translate="no">{group.label}</span>
+                            <span className="text-[10px] text-white/40 font-semibold">({group.items?.length})</span>
+                          </span>
+                          <ChevronDown className={`w-4 h-4 text-white/50 transition-transform duration-200 ${isExpanded ? 'rotate-180 text-indigo-300' : ''}`} />
+                        </button>
+
+                        <AnimatePresence initial={false}>
+                          {isExpanded && (
+                            <motion.div
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: 'auto', opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
+                              className="border-t border-white/10 bg-[#060a15] p-2 grid grid-cols-2 gap-1.5"
+                            >
+                              {group.items?.map((item) => {
+                                const active = isItemActive(item);
+                                const ItemIcon = item.icon;
+                                return (
+                                  <button
+                                    key={item.id}
+                                    type="button"
+                                    onClick={() => {
+                                      handleMenuClick(item);
+                                      setMobileMenuOpen(false);
+                                    }}
+                                    className={`flex items-center gap-2 p-2 rounded-xl text-xs font-bold transition-all border cursor-pointer text-left ${
+                                      active
+                                        ? 'bg-indigo-600/30 text-white border-indigo-400/60 shadow-sm'
+                                        : 'bg-white/5 text-white/80 hover:text-white border-white/5 hover:bg-white/10'
+                                    }`}
+                                  >
+                                    <ItemIcon className={`w-3.5 h-3.5 shrink-0 ${active ? 'text-white' : item.iconColor}`} />
+                                    <span className="notranslate truncate flex-1" translate="no">{item.label}</span>
+                                  </button>
+                                );
+                              })}
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
                     );
                   })}
                 </div>
@@ -733,7 +783,6 @@ export const Navbar: React.FC = () => {
           </AnimatePresence>
         </div>
       </>
-    )}
     </>
   );
 };

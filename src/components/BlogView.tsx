@@ -79,14 +79,35 @@ export const BlogView: React.FC<BlogViewProps> = ({ onBack, initialCategory = 'A
         </div>
       </div>
 
-      {/* Category Filter Tabs (visible when list is shown) */}
+      {/* Category Filter Tabs (Dropdown on Mobile < 768px, Buttons on Laptop/Desktop >= 768px) */}
       {!selectedArticle && (
         <div className="mb-10">
           <div className="flex items-center gap-2 mb-3 text-white/50 text-xs font-black uppercase tracking-widest">
             <Filter className="w-3.5 h-3.5 text-cheerful-yellow" />
             <span>Filter By Category</span>
           </div>
-          <div className="flex flex-wrap gap-2.5">
+
+          {/* Mobile Only (< 768px): Compact Category Select Dropdown */}
+          <div className="md:hidden">
+            <select
+              aria-label="Filter Stories by Category"
+              value={activeCategory}
+              onChange={(e) => {
+                playSound('click');
+                setActiveCategory(e.target.value);
+              }}
+              className="w-full bg-slate-900/90 border border-cheerful-yellow/40 rounded-2xl px-3.5 py-2.5 text-xs font-black text-white focus:outline-none focus:border-cheerful-yellow"
+            >
+              {CATEGORIES.map((cat) => (
+                <option key={cat} value={cat}>
+                  {cat}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Laptop/Desktop (>= 768px): Original Category Buttons Untouched */}
+          <div className="hidden md:flex flex-wrap gap-2.5">
             {CATEGORIES.map(cat => {
               const isActive = activeCategory.trim().toLowerCase() === cat.trim().toLowerCase();
               return (

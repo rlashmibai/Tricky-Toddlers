@@ -258,9 +258,33 @@ export const NutriBandView: React.FC<NutriBandViewProps> = ({
             </span>
           </h1>
 
-          {/* In-Page Navigation Buttons */}
+          {/* In-Page Navigation: Dropdown on Mobile (< 768px), Buttons on Laptop/Desktop (>= 768px) */}
           <div className="w-full py-2">
-            <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center justify-center gap-2 sm:gap-2.5 mx-auto px-1 sm:px-2">
+            <div className="md:hidden max-w-xs mx-auto flex items-center gap-2 bg-slate-900/90 p-2 rounded-2xl border border-cyan-500/30">
+              <span className="text-[10px] font-black uppercase tracking-wider text-cyan-300 pl-1 shrink-0">
+                Jump To:
+              </span>
+              <select
+                aria-label="Jump to NutriBand Section"
+                defaultValue=""
+                onChange={(e) => {
+                  const id = e.target.value;
+                  if (!id) return;
+                  playSound('pop');
+                  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  e.target.value = '';
+                }}
+                className="flex-1 min-w-0 bg-slate-800/95 border border-white/15 rounded-xl px-2.5 py-1.5 text-xs font-bold text-white focus:outline-none focus:border-cyan-400"
+              >
+                <option value="" disabled>Select Section...</option>
+                <option value="how-it-works">✨ How it Works</option>
+                <option value="six-signals">📡 Six Signals</option>
+                <option value="product-comparison">🛡️ Why Nutriband</option>
+                <option value="integrated-ecosystem">🔗 Nutriband Ecosystem</option>
+              </select>
+            </div>
+
+            <div className="hidden md:flex md:flex-wrap items-center justify-center gap-2.5 mx-auto px-2">
               <a 
                 href="#how-it-works" 
                 onClick={(e) => {

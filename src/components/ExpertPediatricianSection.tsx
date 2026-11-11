@@ -1247,8 +1247,29 @@ export const ExpertPediatricianSection: React.FC = () => {
         </div>
       </div>
 
-      {/* Grid of 4 Separate High-Fidelity Interactive Tabs (Compact Row) */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3 mb-3 relative z-10">
+      {/* Mobile Only (< 768px): Compact Pediatric Section Dropdown */}
+      <div className="md:hidden mb-3 bg-slate-900/90 p-2.5 rounded-2xl border border-indigo-500/30 shadow-lg flex items-center gap-2.5 relative z-10">
+        <span className="text-[11px] font-black uppercase tracking-wider text-indigo-300 shrink-0">
+          Section:
+        </span>
+        <select
+          aria-label="Select Pediatric Care Section"
+          value={activeTab}
+          onChange={(e) => {
+            playSound('click');
+            setActiveTab(e.target.value as typeof activeTab);
+          }}
+          className="flex-1 min-w-0 bg-slate-800/95 border border-white/15 rounded-xl px-3 py-2 text-xs font-extrabold text-white focus:outline-none focus:border-indigo-400"
+        >
+          <option value="consults">🩺 {gt('tabConsults')}</option>
+          <option value="live">📺 {gt('tabLive')}</option>
+          <option value="chat">💬 {gt('tabChat')}</option>
+          <option value="reports">📄 {gt('tabReports')}</option>
+        </select>
+      </div>
+
+      {/* Laptop/Desktop (>= 768px): Grid of 4 Separate High-Fidelity Interactive Tabs (100% Untouched) */}
+      <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3 mb-3 relative z-10">
         {/* Tab 1: Pediatric Consults */}
         <button
           onClick={() => { setActiveTab('consults'); playSound('click'); }}

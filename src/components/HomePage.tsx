@@ -31,10 +31,13 @@ import {
   MessageSquare,
   FileText,
   Compass,
-  Languages
+  Languages,
+  UserPlus,
+  LogIn
 } from 'lucide-react';
 import { playSound } from '../lib/sounds';
 import { useLanguage, LanguageCode } from '../lib/LanguageContext';
+import { useAuth } from '../lib/AuthContext';
 
 interface HomePageProps {
   onNavigate: (tab: string, subTab?: string) => void;
@@ -49,9 +52,24 @@ export const HomePage: React.FC<HomePageProps> = ({
 }) => {
   const navigate = useNavigate();
   const { language, setLanguage, t } = useLanguage();
+  const { isSessionActive, setSessionActive, loginAsGuest } = useAuth();
   const [premiumActivated] = useState<boolean>(() => {
     return localStorage.getItem('tricky_toddlers_premium_unlocked') === 'true' || localStorage.getItem('user_plan') === 'comprehensive' || localStorage.getItem('user_plan') === 'essential';
   });
+
+  const handleEnterAsGuest = async () => {
+    playSound('glass');
+    setLanguage('en');
+    setSessionActive(true);
+    localStorage.removeItem('user_logged_out');
+    if (!localStorage.getItem('parent_name')) localStorage.setItem('parent_name', 'Lashmi');
+    if (!localStorage.getItem('baby_name')) localStorage.setItem('baby_name', 'Ashwath');
+    try {
+      await loginAsGuest();
+    } catch (err) {
+      console.warn('Guest access initialized:', err);
+    }
+  };
 
   const handleGoToUpgradePlans = () => {
     playSound('glass');
@@ -415,6 +433,44 @@ export const HomePage: React.FC<HomePageProps> = ({
           <p className="text-xs sm:text-sm md:text-base text-slate-300 w-full max-w-3xl mx-auto px-2 font-normal leading-relaxed text-balance">
             The all-in-one parenting co-pilot that decodes nutrition, crafts personalized AI recipes, provides certified parenting guidance, and puts trusted pediatric doctors just a tap away  -  all integrated in one ecosystem.
           </p>
+
+          {/* Primary Entry CTAs on Landing Page: Guest or Create Account */}
+          {!isSessionActive && (
+            <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3.5 pt-2 pb-1">
+              <button
+                type="button"
+                onClick={handleEnterAsGuest}
+                className="px-5 py-2.5 sm:px-6 sm:py-3 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black text-xs sm:text-sm tracking-wide shadow-lg shadow-emerald-500/25 transition-all transform hover:scale-[1.02] active:scale-95 flex items-center gap-2 cursor-pointer"
+              >
+                <Sparkles className="w-4 h-4 text-slate-950 shrink-0" />
+                <span>Guest Account (Instant Access)</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  playSound('glass');
+                  navigate('/register');
+                }}
+                className="px-5 py-2.5 sm:px-6 sm:py-3 rounded-2xl bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-600 hover:from-indigo-400 hover:to-purple-500 text-white font-black text-xs sm:text-sm tracking-wide shadow-lg shadow-indigo-500/25 transition-all transform hover:scale-[1.02] active:scale-95 flex items-center gap-2 cursor-pointer"
+              >
+                <UserPlus className="w-4 h-4 text-white shrink-0" />
+                <span>Create Account</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  playSound('click');
+                  navigate('/login');
+                }}
+                className="px-4 py-2.5 sm:px-5 sm:py-3 rounded-2xl bg-white/10 hover:bg-white/15 border border-white/20 text-white font-bold text-xs sm:text-sm tracking-wide transition-all transform hover:scale-[1.02] active:scale-95 flex items-center gap-1.5 cursor-pointer"
+              >
+                <LogIn className="w-3.5 h-3.5 text-indigo-300 shrink-0" />
+                <span>Sign In</span>
+              </button>
+            </div>
+          )}
 
           {/* Customer Journey In-Page Navigation Buttons */}
           <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 pt-1 max-w-6xl mx-auto">

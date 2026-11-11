@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Lock, LogIn, AlertCircle, Loader2, User, Sparkles, Mail, X, CheckCircle2, KeyRound } from 'lucide-react';
 
 export const LoginForm: React.FC = () => {
-  const { loginAsGuest } = useAuth();
+  const { loginAsGuest, setSessionActive } = useAuth();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -24,6 +24,7 @@ export const LoginForm: React.FC = () => {
     setGuestLoading(true);
     setError(null);
     try {
+      setSessionActive(true);
       localStorage.removeItem('user_logged_out');
       if (!localStorage.getItem('parent_name')) localStorage.setItem('parent_name', 'Lashmi');
       if (!localStorage.getItem('baby_name')) localStorage.setItem('baby_name', 'Ashwath');
@@ -46,6 +47,7 @@ export const LoginForm: React.FC = () => {
       // Use internal dummy email for Firebase Auth
       const internalEmail = `${username.toLowerCase().trim()}@securepass.internal`;
       await signInWithEmailAndPassword(auth, internalEmail, password);
+      setSessionActive(true);
       navigate('/');
     } catch (err: any) {
       if (err.code === 'auth/invalid-credential' || err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password') {

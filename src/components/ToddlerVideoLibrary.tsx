@@ -749,8 +749,29 @@ export const ToddlerVideoLibrary: React.FC<ToddlerVideoLibraryProps> = ({ onGoHo
           </div>
         </div>
 
-        {/* Category Pills */}
-        <div className="flex flex-wrap items-center gap-2">
+        {/* Category Filter: Dropdown on Mobile (< 768px), Buttons on Laptop/Desktop (>= 768px) */}
+        <div className="md:hidden flex items-center gap-2">
+          <span className="text-[11px] font-black uppercase tracking-wider text-purple-300 shrink-0">
+            Category:
+          </span>
+          <select
+            aria-label="Filter Videos by Category"
+            value={selectedCategory}
+            onChange={(e) => {
+              playSound('click');
+              setSelectedCategory(e.target.value);
+            }}
+            className="flex-1 min-w-0 bg-slate-900/90 border border-purple-400/40 rounded-xl px-3 py-2 text-xs font-black text-white focus:outline-none focus:border-purple-400"
+          >
+            {CATEGORIES.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="hidden md:flex flex-wrap items-center gap-2">
           {CATEGORIES.map((cat) => (
             <button
               key={cat}

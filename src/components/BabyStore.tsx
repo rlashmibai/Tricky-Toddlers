@@ -937,7 +937,7 @@ export const BabyStore: React.FC<BabyStoreProps> = ({ onGoHome, initialView = 'c
         </div>
       </div>
 
-      {/* Age Group Selector Tabs */}
+      {/* Age Group Selector Tabs: Dropdown on Mobile (< 768px), Grid Buttons on Laptop/Desktop (>= 768px) */}
       <div className="mb-4 sm:mb-5">
         <div className="flex items-center justify-between mb-2">
           <h3 className="text-xs sm:text-sm font-black text-white uppercase tracking-wider flex items-center gap-1.5">
@@ -947,7 +947,27 @@ export const BabyStore: React.FC<BabyStoreProps> = ({ onGoHome, initialView = 'c
           <span className="text-[11px] text-white/60 font-medium">Showing {filteredProducts.length} items</span>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-1.5 sm:gap-2">
+        {/* Mobile Only (< 768px): Compact Age Group Dropdown */}
+        <div className="md:hidden">
+          <select
+            aria-label="Select Baby Age Group"
+            value={selectedAge}
+            onChange={(e) => {
+              playSound('click');
+              setSelectedAge(e.target.value);
+            }}
+            className="w-full bg-slate-900/90 border border-emerald-400/40 rounded-xl px-3.5 py-2.5 text-xs font-extrabold text-white focus:outline-none focus:border-emerald-400"
+          >
+            {AGE_FILTERS.map((age) => (
+              <option key={age.id} value={age.id}>
+                {age.label}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Laptop/Desktop (>= 768px): 6-Column Age Filter Buttons Untouched */}
+        <div className="hidden md:grid md:grid-cols-6 gap-2">
           {AGE_FILTERS.map((age) => {
             const isSelected = selectedAge === age.id;
             return (
@@ -972,8 +992,30 @@ export const BabyStore: React.FC<BabyStoreProps> = ({ onGoHome, initialView = 'c
 
       {/* Search, Category & Sort Filter Bar */}
       <div className="mb-8 flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4 bg-slate-900/70 p-4 rounded-2xl border border-white/10 shadow-lg">
-        {/* Category Pills */}
-        <div className="flex flex-wrap items-center gap-1.5">
+        {/* Mobile Only (< 768px): Compact Category Dropdown */}
+        <div className="md:hidden flex items-center gap-2">
+          <span className="text-[11px] font-black uppercase tracking-wider text-cheerful-yellow shrink-0">
+            Category:
+          </span>
+          <select
+            aria-label="Filter Products by Category"
+            value={selectedCategory}
+            onChange={(e) => {
+              playSound('click');
+              setSelectedCategory(e.target.value);
+            }}
+            className="flex-1 min-w-0 bg-slate-800/95 border border-white/15 rounded-xl px-3 py-2 text-xs font-bold text-white focus:outline-none focus:border-cheerful-yellow"
+          >
+            {CATEGORIES.map((category) => (
+              <option key={category} value={category}>
+                {category}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Laptop/Desktop (>= 768px): Category Buttons Untouched */}
+        <div className="hidden md:flex flex-wrap items-center gap-1.5">
           {CATEGORIES.map((category) => {
             const isSelected = selectedCategory === category;
             return (

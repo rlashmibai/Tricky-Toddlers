@@ -40,6 +40,8 @@ interface AuthContextType {
   profile: any | null;
   loading: boolean;
   needsProfileSetup: boolean;
+  isSessionActive: boolean;
+  setSessionActive: (active: boolean) => void;
   refreshProfile: () => Promise<void>;
   loginAsGuest: () => Promise<User | null>;
   activeChildIndex: 1 | 2;
@@ -53,6 +55,24 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [isSessionActive, setIsSessionActiveState] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      return sessionStorage.getItem('tt_session_active') === 'true';
+    }
+    return false;
+  });
+
+  const setSessionActive = (active: boolean) => {
+    setIsSessionActiveState(active);
+    if (typeof window !== 'undefined') {
+      if (active) {
+        sessionStorage.setItem('tt_session_active', 'true');
+      } else {
+        sessionStorage.removeItem('tt_session_active');
+      }
+    }
+  };
+
   const [child2NotApplicable, setChild2NotApplicableState] = useState<boolean>(() => {
     if (typeof window !== 'undefined') {
       return localStorage.getItem('child_2_not_applicable') === 'true';
@@ -71,9 +91,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   });
 
   const [user, setUser] = useState<User | null>(() => {
-    if (typeof window !== 'undefined' && localStorage.getItem('user_logged_out') === 'true') {
-      return null;
-    }
     const cachedUid = typeof window !== 'undefined' ? localStorage.getItem('cached_user_uid') : null;
     let cachedEmail = typeof window !== 'undefined' ? localStorage.getItem('cached_user_email') : null;
     if (!cachedEmail || cachedEmail === 'guest_instant@securepass.internal' || cachedEmail.includes('securepass.internal') || cachedEmail === 'guest@instant.internal') {
@@ -115,9 +132,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
   });
 
-  const [loading, setLoading] = useState(() => {
-    return typeof window !== 'undefined' && localStorage.getItem('user_logged_out') === 'true';
-  });
+  const [loading, setLoading] = useState(false);
 
   const fetchProfile = async (uid: string) => {
     if (!db) {
@@ -221,6 +236,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const loginAsGuest = async (): Promise<User | null> => {
+    setSessionActive(true);
     if (!auth) return null;
     setLoading(true);
     try {
@@ -353,19 +369,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         await fetchProfile(currentUser.uid);
         setLoading(false);
       } else {
-        // If not logged in and user hasn't explicitly clicked Logout,
-        // automatically grant seamless guest access so anyone can explore right away!
-        const userLoggedOut = localStorage.getItem('user_logged_out') === 'true';
-        if (!userLoggedOut) {
-          try {
-            await loginAsGuest();
-            return;
-          } catch (e) {
-            console.warn("Auto-guest access fallback:", e);
-          }
-        }
-        setUser(null);
-        setProfile(null);
+        // Keep a visitor fallback user so the Landing Page (/?tab=home) and 14 features
+        // remain accessible before clicking Guest or Create Account
+        const fallbackVisitor = {
+          uid: 'guest_instant_user',
+          email: 'lashmi@gmail.com',
+          isAnonymous: true,
+        } as unknown as User;
+        setUser(fallbackVisitor);
         setLoading(false);
       }
     });
@@ -561,6 +572,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       profile, 
       loading, 
       needsProfileSetup, 
+      isSessionActive,
+      setSessionActive,
       refreshProfile, 
       loginAsGuest,
       activeChildIndex: effectiveActiveIndex,

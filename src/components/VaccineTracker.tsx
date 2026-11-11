@@ -1217,8 +1217,30 @@ export const VaccineTracker: React.FC = () => {
           </div>
         </div>
 
-        {/* Age Group Quick Filter Bar */}
-        <div className="flex flex-wrap items-center gap-2 text-xs">
+        {/* Age Group Quick Filter Bar: Dropdown on Mobile (< 768px), Buttons on Laptop/Desktop (>= 768px) */}
+        <div className="md:hidden flex items-center gap-2 bg-white/[0.03] p-2.5 rounded-2xl border border-white/10">
+          <span className="text-slate-400 font-bold uppercase tracking-wider text-[10px] shrink-0 pl-1">
+            Age Stage:
+          </span>
+          <select
+            aria-label="Filter Vaccines by Age Stage"
+            value={activeAgeFilter}
+            onChange={(e) => {
+              playSound('click');
+              setActiveAgeFilter(e.target.value);
+            }}
+            className="flex-1 min-w-0 bg-[#09111e] border border-cyan-400/30 rounded-xl px-3 py-2 text-xs font-bold text-white focus:outline-none focus:border-cyan-400"
+          >
+            <option value="All">All Ages (Birth - 12y)</option>
+            <option value="birth">At Birth</option>
+            <option value="infant">Infancy (6w - 7m)</option>
+            <option value="toddler">Toddler (9m - 24m)</option>
+            <option value="preschool">Preschool (4 - 6y)</option>
+            <option value="school">School Age (9 - 14y)</option>
+          </select>
+        </div>
+
+        <div className="hidden md:flex flex-wrap items-center gap-2 text-xs">
           <span className="text-slate-400 font-bold uppercase tracking-wider text-[10px] shrink-0 pl-1">
             Age Stage:
           </span>
