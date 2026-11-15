@@ -125,7 +125,7 @@ export const AboutPage: React.FC<{ embedded?: boolean }> = ({ embedded = false }
                   <li>One child profile holding routines, growth, and foods</li>
                   <li>Fine-tuned AI giving verified answers in 10 seconds</li>
                   <li>NutriBand sensor &amp; FoodLens camera feeding the same profile</li>
-                  <li>WHO, Indian IAP and FSSAI verified pediatric guidelines</li>
+                  <li>Indian IAP, ICMR-NIN and FSSAI verified pediatric guidelines</li>
                 </ul>
               </div>
             </div>

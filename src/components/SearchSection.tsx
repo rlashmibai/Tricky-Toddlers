@@ -4,7 +4,8 @@ import {
   Search, Sparkles, Loader2, Baby, MessageCircle, 
   HelpCircle, ChevronRight, RotateCcw, Send, User, 
   Mic, MicOff, RefreshCw, AlertTriangle, ShieldCheck,
-  CheckCircle2, Info, ArrowRight, BookOpen, Check
+  CheckCircle2, Info, ArrowRight, BookOpen, Check,
+  PhoneCall, Stethoscope, HeartPulse
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import Markdown from 'react-markdown';
@@ -36,24 +37,120 @@ interface ParsedResponse {
   medicalDisclaimer?: string;
 }
 
+export interface EmergencyDetectionResult {
+  isEmergency: boolean;
+  type: 'choking' | 'severe_illness';
+  matchedKeyword?: string;
+}
+
+export function detectEmergencyCondition(queryText: string, responseText: string = ''): EmergencyDetectionResult {
+  const combinedQuery = (queryText || '').toLowerCase();
+  const combinedAll = `${combinedQuery} ${(responseText || '').toLowerCase()}`;
+
+  const chokingKeywords = [
+    'choking',
+    'choke',
+    'choked',
+    'gagging',
+    'swallowed a coin',
+    'swallowed a battery',
+    'button battery',
+    'swallowed a',
+    'stuck in throat',
+    'object in throat',
+    'airway blocked',
+    'back blows',
+    'heimlich'
+  ];
+
+  const severeIllnessKeywords = [
+    'high fever',
+    'severe fever',
+    '102',
+    '103',
+    '104',
+    'trouble breathing',
+    'difficulty breathing',
+    'breathing difficulty',
+    'not breathing',
+    'can\'t breathe',
+    'cannot breathe',
+    'fast breathing',
+    'wheezing',
+    'stridor',
+    'blue lips',
+    'turning blue',
+    'seizure',
+    'convulsion',
+    'fits',
+    'unresponsive',
+    'unconscious',
+    'fainted',
+    'lethargic',
+    'limp',
+    'severe dehydration',
+    'dehydrated',
+    'sunken fontanelle',
+    'sunken eyes',
+    'projectile vomiting',
+    'vomiting blood',
+    'blood in stool',
+    'blood in vomit',
+    'anaphylaxis',
+    'swollen tongue',
+    'head injury',
+    'poison',
+    'severe illness'
+  ];
+
+  for (const kw of chokingKeywords) {
+    if (combinedQuery.includes(kw) || combinedAll.includes(kw)) {
+      return { isEmergency: true, type: 'choking', matchedKeyword: kw };
+    }
+  }
+
+  for (const kw of severeIllnessKeywords) {
+    if (combinedQuery.includes(kw) || combinedAll.includes('immediate emergency first-aid')) {
+      return { isEmergency: true, type: 'severe_illness', matchedKeyword: kw };
+    }
+  }
+
+  return { isEmergency: false, type: 'severe_illness' };
+}
+
 function getExplainabilityLinksMarkdown(contextText: string): string {
   const lq = (contextText || '').toLowerCase();
+  if (
+    lq.includes('chok') ||
+    lq.includes('gag') ||
+    lq.includes('swallow') ||
+    lq.includes('breath') ||
+    lq.includes('wheez') ||
+    lq.includes('stridor') ||
+    lq.includes('seizure') ||
+    lq.includes('convuls') ||
+    lq.includes('high fever') ||
+    lq.includes('emergency') ||
+    lq.includes('first aid')
+  ) {
+    return `\n\n### 🔗 Explainability & Reference Links\n* [Indian Academy of Pediatrics (IAP) Parental Guidelines on Choking & Pediatric First Aid](https://iapindia.org/parental-guidelines/) - Official Indian pediatric protocol for infant/child choking relief (5 back blows and 5 chest/abdominal thrusts), febrile care, and emergency hospital triage.\n* [FSSAI & ICMR-NIN Safe Infant Feeding & Choking Prevention Guidelines](https://www.nin.res.in) - Evidence-based Indian food texture preparation and airway safety standards.`;
+  }
   if (lq.includes('potty') || lq.includes('toilet') || lq.includes('diaper') || lq.includes('pee') || lq.includes('poop')) {
-    return `\n\n### 🔗 Explainability & Reference Links\n* [IAP Parental Guidelines on Toilet Training Readiness](https://iapindia.org/parental-guidelines/) - Explains neuromuscular bladder/bowel readiness cues, footstool posture for pelvic floor relaxation, and gentle accident management.\n* [AAP HealthyChildren - Toilet Training Clinical Guide](https://www.healthychildren.org/English/ages-stages/toddler/toilet-training/Pages/default.aspx) - Details post-meal gastrocolic timing and positive reinforcement strategies.`;
+    return `\n\n### 🔗 Explainability & Reference Links\n* [IAP Parental Guidelines on Toilet Training Readiness](https://iapindia.org/parental-guidelines/) - Explains neuromuscular bladder/bowel readiness cues, footstool posture for pelvic floor relaxation, and gentle accident management.\n* [ICMR-NIN Child Hygiene & Sanitation Guidelines](https://www.nin.res.in) - Details post-meal gastrocolic timing, hydration, and positive reinforcement strategies.`;
   }
   if (lq.includes('colic') || lq.includes('gas') || (lq.includes('cry') && !lq.includes('public'))) {
-    return `\n\n### 🔗 Explainability & Reference Links\n* [IAP Parental Guideline on Excessive Crying & Infantile Colic](https://iapindia.org/parental-guidelines/) - Explains why immature gut motility and evening sensory fatigue trigger colic and how rhythmic soothing calms the vagus nerve.\n* [AAP HealthyChildren - Calming a Fussy Baby & Colic Relief](https://www.healthychildren.org/English/ages-stages/baby/crying-colic/Pages/default.aspx) - Clinical rationale behind the 5 S's soothing protocol, bicycle leg exercises, and red-flag symptoms.`;
+    return `\n\n### 🔗 Explainability & Reference Links\n* [IAP Parental Guideline on Excessive Crying & Infantile Colic](https://iapindia.org/parental-guidelines/) - Explains why immature gut motility and evening sensory fatigue trigger colic and how rhythmic soothing calms the vagus nerve.\n* [ICMR-NIN Infant Digestive & Feeding Guidelines](https://www.nin.res.in) - Clinical rationale behind burping positions, bicycle leg exercises, and red-flag symptoms.`;
   }
   if (lq.includes('sleep') || lq.includes('nap') || lq.includes('wake') || lq.includes('bedtime') || lq.includes('night') || lq.includes('regression')) {
-    return `\n\n### 🔗 Explainability & Reference Links\n* [IAP Parental Guidelines on Infant & Child Sleep Hygiene](https://iapindia.org/parental-guidelines/) - Explains how age-appropriate wake windows and screen-free wind-down routines regulate melatonin and prevent overtired cortisol spikes.\n* [WHO Guidelines on Sleep & Physical Activity for Children Under 5](https://www.who.int/publications/i/item/9789241550536) - Global clinical benchmarks for 24-hour sleep duration and safe sleep practices.`;
+    return `\n\n### 🔗 Explainability & Reference Links\n* [IAP Parental Guidelines on Infant & Child Sleep Hygiene](https://iapindia.org/parental-guidelines/) - Explains how age-appropriate wake windows and screen-free wind-down routines regulate melatonin and prevent overtired cortisol spikes.\n* [ICMR-NIN & IAP Child Rest and Growth Guidelines](https://iapindia.org/parental-guidelines/) - Indian clinical benchmarks for 24-hour sleep duration and safe sleep practices.`;
   }
   if (lq.includes('feed') || lq.includes('milk') || lq.includes('eat') || lq.includes('food') || lq.includes('picky') || lq.includes('ragi') || lq.includes('khichdi') || lq.includes('wean') || lq.includes('solid')) {
-    return `\n\n### 🔗 Explainability & Reference Links\n* [ICMR-National Institute of Nutrition (NIN) Dietary Guidelines](https://www.nin.res.in) - Evidence-based rationale for exclusive milk feeding (0-6 months), iron-rich complementary foods, and balanced Indian child nutrition.\n* [IAP Guidelines on Infant and Young Child Feeding (IYCF)](https://iapindia.org/parental-guidelines/) - Explains responsive feeding, division of responsibility at mealtime, and safe textures to prevent choking.`;
+    return `\n\n### 🔗 Explainability & Reference Links\n* [ICMR-National Institute of Nutrition (NIN) Dietary Guidelines](https://www.nin.res.in) - Evidence-based rationale for exclusive milk feeding (0-6 months), iron-rich complementary foods, and balanced Indian child nutrition.\n* [FSSAI Eat Right India & IAP Infant Feeding (IYCF) Guidelines](https://fssai.gov.in) - Explains responsive feeding, division of responsibility at mealtime, and safe textures to prevent choking.`;
   }
   if (lq.includes('tantrum') || lq.includes('meltdown') || lq.includes('hit') || lq.includes('bite') || lq.includes('kick') || lq.includes('script') || lq.includes('aggress') || lq.includes('sibling') || lq.includes('share')) {
-    return `\n\n### 🔗 Explainability & Reference Links\n* [IAP Positive Parenting & Managing Toddler Tantrums Guide](https://iapindia.org/parental-guidelines/) - Explains why toddler prefrontal brain development leads to big emotional storms and why calm co-regulation works faster than punishment.\n* [UNICEF Parenting - How to Handle Tantrums & Big Emotions](https://www.unicef.org/parenting/child-care/how-handle-tantrums) - Evidence-based strategies on emotion naming, gentle physical boundaries, and connection-first scripts.`;
+    return `\n\n### 🔗 Explainability & Reference Links\n* [IAP Positive Parenting & Managing Toddler Tantrums Guide](https://iapindia.org/parental-guidelines/) - Explains why toddler prefrontal brain development leads to big emotional storms and why calm co-regulation works faster than punishment.\n* [IAP Behavioral & Emotional Development Guidelines](https://iapindia.org/parental-guidelines/) - Evidence-based Indian pediatric strategies on emotion naming, gentle physical boundaries, and connection-first scripts.`;
   }
-  return `\n\n### 🔗 Explainability & Reference Links\n* [WHO Child Growth & Developmental Milestones Standards](https://www.who.int/tools/child-growth-standards) - Clinical benchmarks for motor, sensory, cognitive, and expressive language development.\n* [UNICEF Parenting - Early Childhood Development & Play](https://www.unicef.org/parenting/child-development) - Explains how responsive interactions and age-appropriate play strengthen neural pathways.`;
+  return `\n\n### 🔗 Explainability & Reference Links\n* [Indian Academy of Pediatrics (IAP) Growth & Developmental Milestones Standards](https://iapindia.org/parental-guidelines/) - Clinical benchmarks for motor, sensory, cognitive, and expressive language development.\n* [FSSAI & ICMR-NIN Child Nutrition and Development Standards](https://www.nin.res.in) - Explains how balanced nutrition, responsive interactions, and age-appropriate play strengthen neural pathways.`;
 }
 
 function parseAIResponse(
@@ -320,8 +417,67 @@ export const getAgeSpecificTopics = (
   childName: string, 
   childAgeStr?: string | null, 
   birthDateStr?: string | null,
-  childId?: number
+  childId?: number | 'general'
 ): AgeTopicItem[] => {
+  if (childId === 'general') {
+    return [
+      {
+        badge: "Sleep & Routine",
+        title: "Healthy sleep schedules across growing years",
+        query: "What are the recommended sleep hours and calm bedtime routines for infants, toddlers, and growing children?",
+        color: "border-purple-500/30 bg-purple-500/10 text-purple-200 hover:border-purple-400"
+      },
+      {
+        badge: "Indian Nutrition",
+        title: "Balanced iron & protein-rich home meals",
+        query: "What are the best everyday Indian vegetarian and home-cooked meals to boost iron, calcium, and immunity in children?",
+        color: "border-emerald-500/30 bg-emerald-500/10 text-emerald-200 hover:border-emerald-400"
+      },
+      {
+        badge: "Emotional Care",
+        title: "Calming scripts for big emotions & meltdowns",
+        query: "What gentle, connection-first parenting scripts work best when a child is overwhelmed or having a meltdown?",
+        color: "border-amber-500/30 bg-amber-500/10 text-amber-200 hover:border-amber-400"
+      },
+      {
+        badge: "Picky Eating",
+        title: "Overcoming mealtime refusal without screens",
+        query: "How can we encourage picky eaters to try vegetables and lentils without using mobile screens or pressure?",
+        color: "border-rose-500/30 bg-rose-500/10 text-rose-200 hover:border-rose-400"
+      },
+      {
+        badge: "Safety & First Aid",
+        title: "Choking first-aid & home safety checklist",
+        query: "What are the essential Indian IAP choking first-aid steps and home safety tips every parent should know?",
+        color: "border-cyan-500/30 bg-cyan-500/10 text-cyan-200 hover:border-cyan-400"
+      },
+      {
+        badge: "Brain & Speech",
+        title: "Screen-free activities for language & focus",
+        query: "What simple daily play activities and storytelling habits build strong vocabulary, memory, and focus?",
+        color: "border-indigo-500/30 bg-indigo-500/10 text-indigo-200 hover:border-indigo-400"
+      },
+      {
+        badge: "Immunity & Care",
+        title: "Seasonal weather changes & natural comfort",
+        query: "How can parents protect children during monsoon and winter weather changes using safe pediatric practices?",
+        color: "border-teal-500/30 bg-teal-500/10 text-teal-200 hover:border-teal-400"
+      },
+      {
+        badge: "Sibling & Social",
+        title: "Fostering sharing, empathy & sibling bonding",
+        query: "What daily strategies reduce sibling rivalry and help children learn empathy and cooperative sharing?",
+        color: "border-pink-500/30 bg-pink-500/10 text-pink-200 hover:border-pink-400"
+      },
+      {
+        badge: "Milestones & Growth",
+        title: "Key developmental milestones & red flags",
+        query: "How can parents track motor, cognitive, and speech milestones according to Indian IAP standards?",
+        color: "border-blue-500/30 bg-blue-500/10 text-blue-200 hover:border-blue-400"
+      }
+    ];
+  }
+
   const months = getChildAgeInMonths(birthDateStr, childAgeStr, childName, childId);
 
   // 1. Young Infant: 0 to 5 Months (e.g. 3-4 months)
@@ -626,13 +782,14 @@ export const getAgeSpecificTopics = (
 export const SearchSection: React.FC = () => {
   const { profile, childProfiles, activeChildIndex } = useAuth();
   const { t, getAIPromptModifier } = useLanguage();
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  // Scoped to AI Assistant page (defaults to active child or child 1)
-  const [pageChildId, setPageChildId] = useState<1 | 2>(() => (activeChildIndex === 2 ? 2 : 1));
+  // Scoped to AI Assistant page (defaults to active child or child 1, or 'general')
+  const [pageChildId, setPageChildId] = useState<1 | 2 | 'general'>(() => (activeChildIndex === 2 ? 2 : 1));
 
   useEffect(() => {
-    if (activeChildIndex) {
+    if (activeChildIndex && pageChildId !== 'general') {
       setPageChildId(activeChildIndex);
     }
   }, [activeChildIndex]);
@@ -651,18 +808,24 @@ export const SearchSection: React.FC = () => {
   const responseContainerRef = useRef<HTMLDivElement>(null);
   const recognitionRef = useRef<any>(null);
 
-  // Dynamic Child Profile for AI Assistant
-  const activeChild = childProfiles.find(cp => cp.id === pageChildId) || childProfiles[0];
+  // Dynamic Child Profile or General Mode for AI Assistant
+  const isGeneralMode = pageChildId === 'general';
+  const activeChild = isGeneralMode ? undefined : (childProfiles.find(cp => cp.id === pageChildId) || childProfiles[0]);
   const parentName = profile?.parentName || profile?.firstName || profile?.name || (typeof window !== 'undefined' ? localStorage.getItem('parent_name') : null) || 'Lashmi';
-  const childName = activeChild?.name || profile?.babyName || profile?.childName || (pageChildId === 2 ? 'Ananya' : 'Ashwath');
-  const childAge = activeChild?.age || profile?.babyAge || (pageChildId === 2 ? '3 Months' : '2 Years 6 Months');
+  const childName = isGeneralMode
+    ? 'your child'
+    : (activeChild?.name || profile?.babyName || profile?.childName || (pageChildId === 2 ? 'Ananya' : 'Ashwath'));
+  const childAge = isGeneralMode
+    ? 'All Ages'
+    : (activeChild?.age || profile?.babyAge || (pageChildId === 2 ? '3 Months' : '2 Years 6 Months'));
 
   // Accurate age calculation for stage determination
   const childAgeMonths = useMemo(() => {
-    return getChildAgeInMonths(activeChild?.birthDate, childAge, childName, pageChildId);
-  }, [activeChild?.birthDate, childAge, childName, pageChildId]);
+    if (isGeneralMode) return 30;
+    return getChildAgeInMonths(activeChild?.birthDate, childAge, childName, pageChildId as number);
+  }, [isGeneralMode, activeChild?.birthDate, childAge, childName, pageChildId]);
 
-  const isInfant = childAgeMonths < 12;
+  const isInfant = !isGeneralMode && childAgeMonths < 12;
 
   const starterTopics = useMemo(() => {
     return getAgeSpecificTopics(childName, childAge, activeChild?.birthDate, pageChildId);
@@ -955,12 +1118,13 @@ export const SearchSection: React.FC = () => {
           </span>
         </h1>
 
-        {/* Child Profile Selector & Session Controls (Scoped to AI Assistant) */}
-        <div className="flex flex-col items-center justify-center gap-3 pt-2 w-full max-w-2xl mx-auto">
+        {/* Child Profile & General Selector (Scoped to AI Assistant) */}
+        <div className="flex flex-col items-center justify-center gap-3 pt-2 w-full max-w-4xl mx-auto">
           <ChildProfileSelector
             selectedChildId={pageChildId}
             onSelectChild={(id) => setPageChildId(id)}
             sectionContextName="AI Assistant"
+            allowGeneral={true}
           />
 
           {hasSearched && (
@@ -1000,7 +1164,9 @@ export const SearchSection: React.FC = () => {
                   }
                 }}
                 placeholder={
-                  isInfant
+                  isGeneralMode
+                    ? `Ask any general parenting, nutrition, sleep, health, or milestone question - e.g. "What are healthy iron-rich Indian snacks?" or "What are the first-aid steps for choking?"`
+                    : isInfant
                     ? `Ask any question about ${childName} (${childAge || '3 Months'}) - e.g. "What is an ideal wake window for a 3-month-old?" or "How to soothe evening colic & trapped gas?"`
                     : `Ask any question about ${childName} (${childAge || '2 yrs 6 mos'}) - e.g. "What calming scripts work best during a public tantrum?" or "Sensory meltdown vs boundary tantrum"`
                 }
@@ -1056,10 +1222,14 @@ export const SearchSection: React.FC = () => {
           <div className="flex flex-wrap items-center justify-between gap-2 mb-3.5 px-1">
             <span className="text-xs font-black uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
               <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
-              <span>Explore Everyday Topics for {childName} ({childAge})</span>
+              <span>
+                {isGeneralMode
+                  ? 'Explore Everyday Parenting Topics (General)'
+                  : `Explore Everyday Topics for ${childName} (${childAge})`}
+              </span>
             </span>
             <span className="text-[11px] font-bold text-indigo-300 bg-indigo-500/15 border border-indigo-500/30 px-2.5 py-0.5 rounded-full">
-              {starterTopics.length} Age-Matched Questions
+              {isGeneralMode ? `${starterTopics.length} General Questions` : `${starterTopics.length} Age-Matched Questions`}
             </span>
           </div>
 
@@ -1140,7 +1310,11 @@ export const SearchSection: React.FC = () => {
                     <div className="flex items-center justify-between gap-2 pb-3 mb-4 border-b border-white/10 text-xs text-slate-400">
                       <span className="font-bold text-indigo-300 flex items-center gap-1.5">
                         <Baby className="w-3.5 h-3.5 text-indigo-400" />
-                        <span>Guidance for {childName} ({childAge})</span>
+                        <span>
+                          {isGeneralMode
+                            ? 'General Parenting & Pediatric Guidance'
+                            : `Guidance for ${childName} (${childAge})`}
+                        </span>
                       </span>
                       <span className="text-[10px]">{msg.timestamp}</span>
                     </div>
@@ -1297,6 +1471,102 @@ export const SearchSection: React.FC = () => {
                           <span className="inline-block w-2 h-4 bg-indigo-400 animate-pulse ml-1 align-middle" />
                         )}
 
+                        {/* Prominent Emergency First Aid Card when Choking or Severe Illness is Detected */}
+                        {(() => {
+                          const prevUserMsg = index > 0 && messages[index - 1]?.role === 'user' ? messages[index - 1].content : '';
+                          const queryTextToCheck = msg.failedQuery || prevUserMsg || '';
+                          const emergencyInfo = detectEmergencyCondition(queryTextToCheck, msg.content);
+                          if (!emergencyInfo.isEmergency) return null;
+
+                          const isChoking = emergencyInfo.type === 'choking';
+                          const pediatricianPhone = profile?.pediatricianPhone || '108';
+
+                          return (
+                            <div className="mt-6 rounded-2xl border-2 border-rose-500/70 bg-gradient-to-br from-rose-950/90 via-[#1f0913]/95 to-slate-950 p-4 sm:p-6 shadow-2xl shadow-rose-500/20 space-y-4">
+                              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-rose-500/30 pb-3.5">
+                                <div className="flex items-center gap-3">
+                                  <div className="w-11 h-11 rounded-2xl bg-rose-500/25 border border-rose-400/50 flex items-center justify-center text-rose-300 shrink-0 shadow-inner">
+                                    <HeartPulse className="w-6 h-6 text-rose-400 animate-pulse" />
+                                  </div>
+                                  <div>
+                                    <div className="flex items-center gap-2 flex-wrap">
+                                      <span className="px-2.5 py-0.5 rounded-full bg-rose-500 text-white text-[10px] font-black uppercase tracking-widest">
+                                        Urgent Action Required
+                                      </span>
+                                      <span className="text-[11px] font-bold text-rose-300">
+                                        Indian IAP Emergency Protocol
+                                      </span>
+                                    </div>
+                                    <h3 className="text-base sm:text-lg font-black text-white tracking-tight mt-0.5">
+                                      Emergency First Aid
+                                    </h3>
+                                  </div>
+                                </div>
+
+                                <div className="flex flex-wrap items-center gap-2">
+                                  <a
+                                    href={`tel:${pediatricianPhone}`}
+                                    onClick={() => playSound('pop')}
+                                    className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-rose-500 hover:bg-rose-400 text-white font-black text-xs sm:text-sm uppercase tracking-wider shadow-lg shadow-rose-500/30 transition-all active:scale-95 cursor-pointer no-underline"
+                                  >
+                                    <PhoneCall className="w-4 h-4" />
+                                    <span>Call Pediatrician</span>
+                                  </a>
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      playSound('click');
+                                      navigate('/?tab=pediatric&sub=consults');
+                                    }}
+                                    className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold text-xs transition-all active:scale-95 cursor-pointer"
+                                  >
+                                    <Stethoscope className="w-3.5 h-3.5 text-rose-300" />
+                                    <span>Pediatric Care Hub</span>
+                                  </button>
+                                </div>
+                              </div>
+
+                              <div className="space-y-2.5 text-xs sm:text-sm text-rose-100/95 leading-relaxed">
+                                <p className="font-bold text-rose-200">
+                                  {isChoking
+                                    ? 'Immediate Choking & Airway Relief Steps (Do Not Delay):'
+                                    : 'Immediate Severe Illness First-Aid Steps (While Contacting Your Doctor):'}
+                                </p>
+                                {isChoking ? (
+                                  <ol className="list-decimal pl-5 space-y-1.5 text-slate-100">
+                                    <li>
+                                      <strong>5 Firm Back Blows:</strong> Position the child face-down along your forearm (for infants) or leaning forward (for toddlers/children) with head lower than chest, and deliver 5 firm blows between the shoulder blades with the heel of your hand.
+                                    </li>
+                                    <li>
+                                      <strong>5 Chest or Abdominal Thrusts:</strong> For infants under 1 year, turn face-up and give 5 two-finger chest thrusts in the center of the breastbone. For children over 1 year, perform 5 quick inward-and-upward abdominal thrusts (Heimlich).
+                                    </li>
+                                    <li>
+                                      <strong>Repeat 5 &amp; 5 Cycles &amp; Avoid Blind Finger Sweeps:</strong> Alternate 5 back blows and 5 thrusts until the object is expelled. Never sweep the mouth blindly unless you clearly see a loose object.
+                                    </li>
+                                  </ol>
+                                ) : (
+                                  <ol className="list-decimal pl-5 space-y-1.5 text-slate-100">
+                                    <li>
+                                      <strong>Airway &amp; Safe Positioning:</strong> Keep your child upright for breathing difficulty. If a seizure occurs, place them gently on their side (recovery position) on a flat surface and keep the mouth clear.
+                                    </li>
+                                    <li>
+                                      <strong>Temperature &amp; Hydration Care:</strong> Dress in one light cotton layer and sponge gently with lukewarm water for high fever (never use ice water). Offer small sips of Indian IAP-approved ORS or breastmilk if awake and alert.
+                                    </li>
+                                    <li>
+                                      <strong>Watch for Critical Red Flags:</strong> Seek immediate hospital care for chest retractions (ribs pulling in), blue lips, extreme drowsiness/lethargy, or fever in an infant under 3 months.
+                                    </li>
+                                  </ol>
+                                )}
+                              </div>
+
+                              <div className="pt-2.5 border-t border-rose-500/25 flex flex-wrap items-center justify-between gap-2 text-[11px] text-rose-200/90 font-semibold">
+                                <span>🚨 National Emergency Helpline: <strong>112</strong> · Ambulance: <strong>108 / 102</strong></span>
+                                <span>Proceed to the nearest pediatric emergency hospital if symptoms persist.</span>
+                              </div>
+                            </div>
+                          );
+                        })()}
+
                         {/* In-Chat Responsible AI Trust Badges */}
                         {!loading && (
                           <div className="mt-4 pt-3.5 border-t border-white/10 flex flex-wrap items-center justify-between gap-2 text-xs">
@@ -1307,7 +1577,7 @@ export const SearchSection: React.FC = () => {
                               </span>
                               <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-[11px] font-bold">
                                 <CheckCircle2 className="w-3.5 h-3.5 text-indigo-400" />
-                                <span>WHO &amp; FSSAI Standards</span>
+                                <span>ICMR-NIN &amp; FSSAI Standards</span>
                               </span>
                               <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white/5 border border-white/10 text-slate-400 text-[10px] font-mono">
                                 🔒 Zero Ad Selling · 100% Private
@@ -1506,7 +1776,7 @@ export const SearchSection: React.FC = () => {
               </button>
 
               <span className="italic text-[11px] text-slate-400">
-                Pediatric guidance aligned with IAP, ICMR-NIN &amp; WHO
+                Pediatric guidance aligned with Indian IAP, ICMR-NIN &amp; FSSAI
               </span>
             </div>
           </motion.div>

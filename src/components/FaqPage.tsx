@@ -154,14 +154,14 @@ export const ALL_FAQ_ITEMS: FaqQuestionItem[] = [
     category: 'ai-trackers',
     question: 'Is the AI Parenting Assistant a replacement for my pediatrician?',
     answer:
-      'No. The AI Parenting Assistant provides 24/7 educational guidance for everyday parenting questions and automatically flags clinical red-flag symptoms (such as persistent high fever, breathing difficulty, or dehydration) so you know when to consult your pediatrician immediately.'
+      'No. The AI Parenting Assistant provides 24/7 educational guidance for everyday parenting questions and automatically flags urgent symptoms (such as choking, persistent high fever, breathing difficulty, or dehydration) with immediate step-by-step first-aid tips and emergency helpline numbers while directing you to consult your pediatrician immediately.'
   },
   {
     id: 'ai-3',
     category: 'ai-trackers',
-    question: 'Are the Milestone Tracker and Vaccine Tracker aligned with Indian and global pediatric standards?',
+    question: 'Are the Milestone Tracker and Vaccine Tracker aligned with Indian pediatric standards?',
     answer:
-      'Yes. Our Milestone Tracker (motor, speech, cognitive, and social milestones) and Vaccine Tracker follow recognized WHO and Indian Academy of Pediatrics (IAP) immunization schedules, with due-date reminders and downloadable PDF reports you can share with your doctor.'
+      'Yes. Our Milestone Tracker (motor, speech, cognitive, and social milestones) and Vaccine Tracker follow recognized Indian Academy of Pediatrics (IAP), ICMR-NIN, and FSSAI immunization and developmental schedules, with due-date reminders and downloadable PDF reports you can share with your doctor.'
   },
   {
     id: 'ai-4',
@@ -177,7 +177,7 @@ export const ALL_FAQ_ITEMS: FaqQuestionItem[] = [
     category: 'pediatric-care',
     question: 'What are the 4 features included inside the Pediatric Care section?',
     answer:
-      'The Pediatric Care hub brings together 4 dedicated clinical and developmental tools in one place: (1) 1:1 Pediatric Consultations for booking telehealth or in-clinic doctor visits, (2) Live Sessions for interactive weekly specialist webinars and Q&A, (3) Doctor Chat for 24/7 on-demand clinical chat guidance, and (4) Growth Reports for monthly WHO, Indian IAP, and FSSAI developmental progress summaries and exportable PDFs.'
+      'The Pediatric Care hub brings together 4 dedicated clinical and developmental tools in one place: (1) 1:1 Pediatric Consultations for booking telehealth or in-clinic doctor visits, (2) Live Sessions for interactive weekly specialist webinars and Q&A, (3) Doctor Chat for 24/7 on-demand clinical chat guidance, and (4) Growth Reports for monthly Indian IAP, ICMR-NIN, and FSSAI developmental progress summaries and exportable PDFs.'
   },
   {
     id: 'ped-2',
@@ -205,7 +205,7 @@ export const ALL_FAQ_ITEMS: FaqQuestionItem[] = [
     category: 'pediatric-care',
     question: 'What is included in the Monthly Growth Reports feature?',
     answer:
-      'Growth Reports compiles your child’s logged milestones, immunization records, sleep/routine adherence, and nutritional progress into a structured monthly developmental summary benchmarked against WHO, Indian IAP, and FSSAI standards, complete with one-click PDF export to share with your pediatrician.'
+      'Growth Reports compiles your child’s logged milestones, immunization records, sleep/routine adherence, and nutritional progress into a structured monthly developmental summary benchmarked against Indian IAP, ICMR-NIN, and FSSAI standards, complete with one-click PDF export to share with your pediatrician.'
   },
 
   // ================= 3. AI NUTRICHEF & MEAL PLANNING =================

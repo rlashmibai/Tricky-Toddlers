@@ -88,7 +88,7 @@ const localT: Record<string, Record<string, string>> = {
     allRecipes: 'All Recipes',
     aiCustomizerTitle: 'AI Recipe Maker: Custom Ingredient Cooker',
     aiCustomizerDesc: '250+ Age-Matched Indian Recipes & Custom Ingredient Cooker. Blends scientific pediatric nutrition with cooking ease for all ages.',
-    childAgeLabel: 'Child Age (in Years)',
+    childAgeLabel: 'Age (in Years)',
     ingredientsLabel: 'Ingredients you have (e.g., banana, rice, carrot)',
     dietaryLabel: 'Dietary Preferences / Restrictions',
     noRestrictions: 'None (Regular)',
@@ -500,11 +500,12 @@ export const FoodGuide: React.FC<FoodGuideProps> = ({ onNavigateToFoodLens }) =>
     return currentT[key] || localT['en'][key] || key;
   };
 
-  // Scoped child selection for AI Recipe Maker
-  const [pageChildId, setPageChildId] = useState<1 | 2>(1);
-  const currentChild = childProfiles?.find(cp => cp.id === pageChildId) || childProfiles?.[0];
-  const childName = currentChild?.name || profile?.childName || profile?.babyName || profile?.toddlerName || 'Ashwath';
-  const profileAge = currentChild?.age || profile?.toddlerAge || profile?.babyAge || profile?.childAge || '1 - 2 Years';
+  // Scoped child selection for AI Recipe Maker ('general' | 1 | 2)
+  const [pageChildId, setPageChildId] = useState<1 | 2 | 'general'>(1);
+  const isGeneralMode = pageChildId === 'general';
+  const currentChild = isGeneralMode ? undefined : (childProfiles?.find(cp => cp.id === pageChildId) || childProfiles?.[0]);
+  const childName = isGeneralMode ? 'General' : (currentChild?.name || profile?.childName || profile?.babyName || profile?.toddlerName || 'Ashwath');
+  const profileAge = isGeneralMode ? 'All Ages' : (currentChild?.age || profile?.toddlerAge || profile?.babyAge || profile?.childAge || '1 - 2 Years');
   const indianState = profile?.indianState || (typeof window !== 'undefined' ? localStorage.getItem('user_indian_state') : null) || 'Karnataka';
   const userRegion = getStateRegion(indianState);
   const childStageId = getStageFromProfileAge(profileAge);
@@ -1098,19 +1099,22 @@ Each object must have these exact keys:
             </div>
           </div>
 
-          {/* Child Profile Selector (Scoped to AI Recipe Maker) */}
-          <div className="flex justify-center mb-6 max-w-2xl mx-auto">
+          {/* Child Profile & General Selector (Scoped to AI Recipe Maker) */}
+          <div className="flex justify-center mb-6 max-w-4xl mx-auto">
             <ChildProfileSelector
               selectedChildId={pageChildId}
               onSelectChild={(id) => {
                 setPageChildId(id);
-                if (id === 2) {
+                if (id === 'general') {
+                  setCustomAgeYears('All Ages');
+                } else if (id === 2) {
                   setCustomAgeYears('0.3');
                 } else {
                   setCustomAgeYears('2.5');
                 }
               }}
               sectionContextName="AI Recipe Maker"
+              allowGeneral={true}
             />
           </div>
 
@@ -1119,17 +1123,17 @@ Each object must have these exact keys:
             <div>
               <label className="block text-xs font-bold text-white/70 uppercase tracking-wider mb-1.5 flex items-center justify-between">
                 <span>{gt('childAgeLabel')}</span>
-                <span className="text-[10px] font-mono text-emerald-400 font-semibold">Enter child age in years</span>
+                <span className="text-[10px] font-mono text-emerald-400 font-semibold">Age in years</span>
               </label>
               <input
                 type="text"
                 value={customAgeYears}
                 onChange={(e) => setCustomAgeYears(e.target.value)}
-                placeholder="Enter child age in yrs (e.g. 2.5)"
+                placeholder="Age in years (e.g. 2.5)"
                 className="w-full bg-white/5 border border-white/10 rounded-2xl px-4 py-3 text-white focus:outline-none focus:border-emerald-400 font-bold text-sm placeholder:text-white/30"
               />
               <p className="text-[11px] text-white/50 mt-1.5 font-medium">
-                Enter child age in yrs (e.g. 0.5 for 6 months, 1.5 for 18 months, or 2.5 for toddlers).
+                Age in years (e.g. 0.5 for 6 months, 1.5 for 18 months, or 2.5).
               </p>
             </div>
 

@@ -864,7 +864,7 @@ export const VaccineTracker: React.FC = () => {
       const dtEnd = formatICSDate(endDate);
       const uid = `${vac.id}-${Date.now()}@trickytoddlers.in`;
       const cleanSummary = `Vaccine: ${vac.vaccineName} (${vac.doseNumber}) - ${childName}`;
-      const cleanDescription = `Pediatric Immunization Reminder for ${childName}\\n\\nVaccine: ${vac.vaccineName}\\nDose: ${vac.doseNumber}\\nTarget Disease: ${vac.diseaseProtected}\\nRecommended Window: ${vac.recommendedWindow}\\nCategory: ${vac.category}\\nOfficial Guideline: WHO, Indian IAP and FSSAI Pediatric Schedule\\nNotes: ${vac.description}`;
+      const cleanDescription = `Pediatric Immunization Reminder for ${childName}\\n\\nVaccine: ${vac.vaccineName}\\nDose: ${vac.doseNumber}\\nTarget Disease: ${vac.diseaseProtected}\\nRecommended Window: ${vac.recommendedWindow}\\nCategory: ${vac.category}\\nOfficial Guideline: Indian IAP, UIP and FSSAI Pediatric Schedule\\nNotes: ${vac.description}`;
 
       return [
         'BEGIN:VEVENT',
@@ -964,7 +964,7 @@ export const VaccineTracker: React.FC = () => {
         <body>
           <div class="header">
             <h1>Official Child Immunization Record Card</h1>
-            <div class="subtitle">WHO, Indian IAP and FSSAI Universal National Schedule</div>
+            <div class="subtitle">Indian IAP, UIP and FSSAI Universal National Schedule</div>
           </div>
           <div class="meta-grid">
             <div class="meta-item"><strong>Child Name</strong>${profile?.babyName || localStorage.getItem('baby_name') || 'Ashwath'}</div>
@@ -1088,7 +1088,7 @@ export const VaccineTracker: React.FC = () => {
               </span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/20 border border-blue-400/30 text-blue-300 text-xs font-bold tracking-wide">
                 <Stethoscope className="w-3.5 h-3.5" />
-                <span>WHO, Indian IAP and FSSAI Immunization Standards</span>
+                <span>Indian IAP, UIP and FSSAI Immunization Standards</span>
               </span>
               {saveStatus && (
                 <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-400 text-slate-950 text-xs font-bold animate-pulse">
@@ -1646,7 +1646,7 @@ export const VaccineTracker: React.FC = () => {
                       Child Immunization & Vaccine Card
                     </h2>
                     <p className="text-xs sm:text-sm text-slate-600 font-medium">
-                      WHO, Indian IAP and FSSAI Universal Child Health Standards
+                      Indian IAP, UIP and FSSAI Universal Child Health Standards
                     </p>
                   </div>
                   <div className="px-3 py-1.5 rounded-xl bg-sky-100 border border-sky-300 text-sky-800 text-xs font-bold shrink-0 self-start sm:self-auto">

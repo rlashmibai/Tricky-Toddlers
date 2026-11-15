@@ -323,7 +323,7 @@ export const ProfilePage: React.FC = () => {
           <div>
             <h1 class="title">Tricky Toddlers · Clinical Health Summary</h1>
             <div class="subtitle">Prepared for Pediatric Consultation &amp; Primary Healthcare Provider</div>
-            <div class="badge">WHO &amp; IAP Guidelines Aligned</div>
+            <div class="badge">Indian IAP &amp; FSSAI Guidelines Aligned</div>
           </div>
           <div class="stamp">
             <div><strong>Report Date:</strong> ${printDate}</div>

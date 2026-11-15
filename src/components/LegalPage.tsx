@@ -206,7 +206,7 @@ export const LegalModal: React.FC<LegalModalProps> = ({ isOpen, onClose, initial
                   <h3 className="text-base font-black text-white">2. Essential Cookies We Use</h3>
                   <ul className="list-disc pl-5 space-y-1.5 text-white/70">
                     <li><strong>Authentication & Guest Session:</strong> Keeps your session active securely across app views without requiring re-login.</li>
-                    <li><strong>Language Selection:</strong> Remembers your chosen vernacular dialect (English, Hindi, Tamil, Telugu, Marathi, Bengali, Kannada, Gujarati, Malayalam, Punjabi).</li>
+                    <li><strong>Language Selection:</strong> Remembers your chosen vernacular dialect across all 12 supported Indian languages (English, Hindi, Tamil, Telugu, Marathi, Bengali, Kannada, Gujarati, Malayalam, Punjabi, Assamese, Odia).</li>
                     <li><strong>Sound & Accessibility:</strong> Preserves your interactive audio feedback and dark mode preferences.</li>
                     <li><strong>Offline State Cache:</strong> Caches recipe collections, developmental milestones, and habit checkboxes for rapid loading.</li>
                   </ul>

@@ -499,7 +499,7 @@ export const NutriBandCartPage: React.FC<NutriBandCartPageProps> = ({ onBack }) 
                   <div>• BPA & Phthalate Free</div>
                   <div>• RoHS Electronics Compliant</div>
                   <div>• IP67 Waterproof Rating</div>
-                  <div>• WHO Percentile Compatible</div>
+                  <div>• Indian IAP Percentile Compatible</div>
                 </div>
               </div>
             </div>

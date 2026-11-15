@@ -160,7 +160,7 @@ export const INDIAN_BABY_FOODS: IndianBabyFood[] = [
     benefits: 'Complete brain myelinization, gut immunity colonization, and zero renal solute overload.',
     allergyCheck: 'Hypoallergenic natural human proteins. Zero introduced allergens.',
     score: '10.0 / 10',
-    pediatricTip: 'WHO, Indian IAP and FSSAI strictly recommend exclusive breastfeeding for the first 6 months. No water, ghutti, or animal milk is needed.'
+    pediatricTip: 'Indian IAP, ICMR-NIN and FSSAI strictly recommend exclusive breastfeeding for the first 6 months. No water, ghutti, or animal milk is needed.'
   },
   {
     id: 'food-0-2',

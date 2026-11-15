@@ -232,22 +232,37 @@ function isOutOfScopeQuery(query: string): boolean {
 }
 
 function getTopicExplainabilityMarkdown(lq: string): string {
+  if (
+    lq.includes('chok') ||
+    lq.includes('gag') ||
+    lq.includes('swallow') ||
+    lq.includes('breath') ||
+    lq.includes('wheez') ||
+    lq.includes('stridor') ||
+    lq.includes('seizure') ||
+    lq.includes('convuls') ||
+    lq.includes('high fever') ||
+    lq.includes('emergency') ||
+    lq.includes('first aid')
+  ) {
+    return `\n\n### 🔗 Explainability & Reference Links\n* [Indian Academy of Pediatrics (IAP) Parental Guidelines on Choking & Pediatric First Aid](https://iapindia.org/parental-guidelines/) - Official Indian pediatric protocol for infant/child choking relief (5 back blows and 5 chest/abdominal thrusts), febrile care, and emergency hospital triage.\n* [FSSAI & ICMR-NIN Safe Infant Feeding & Choking Prevention Guidelines](https://www.nin.res.in) - Evidence-based Indian food texture preparation and airway safety standards.`;
+  }
   if (lq.includes('potty') || lq.includes('toilet') || lq.includes('diaper') || lq.includes('pee') || lq.includes('poop')) {
-    return `\n\n### 🔗 Explainability & Reference Links\n* [IAP Parental Guidelines on Toilet Training Readiness](https://iapindia.org/parental-guidelines/) - Explains neuromuscular bladder/bowel readiness cues, footstool posture for pelvic floor relaxation, and gentle accident management.\n* [AAP HealthyChildren - Toilet Training Clinical Guide](https://www.healthychildren.org/English/ages-stages/toddler/toilet-training/Pages/default.aspx) - Details post-meal gastrocolic timing and positive reinforcement strategies.`;
+    return `\n\n### 🔗 Explainability & Reference Links\n* [IAP Parental Guidelines on Toilet Training Readiness](https://iapindia.org/parental-guidelines/) - Explains neuromuscular bladder/bowel readiness cues, footstool posture for pelvic floor relaxation, and gentle accident management.\n* [ICMR-NIN Child Hygiene & Sanitation Guidelines](https://www.nin.res.in) - Details post-meal gastrocolic timing, hydration, and positive reinforcement strategies.`;
   }
   if (lq.includes('colic') || lq.includes('gas') || (lq.includes('cry') && !lq.includes('public'))) {
-    return `\n\n### 🔗 Explainability & Reference Links\n* [IAP Parental Guideline on Excessive Crying & Infantile Colic](https://iapindia.org/parental-guidelines/) - Explains why immature gut motility and evening sensory fatigue trigger colic and how rhythmic soothing calms the vagus nerve.\n* [AAP HealthyChildren - Calming a Fussy Baby & Colic Relief](https://www.healthychildren.org/English/ages-stages/baby/crying-colic/Pages/default.aspx) - Clinical rationale behind the 5 S's soothing protocol, bicycle leg exercises, and red-flag symptoms.`;
+    return `\n\n### 🔗 Explainability & Reference Links\n* [IAP Parental Guideline on Excessive Crying & Infantile Colic](https://iapindia.org/parental-guidelines/) - Explains why immature gut motility and evening sensory fatigue trigger colic and how rhythmic soothing calms the vagus nerve.\n* [ICMR-NIN Infant Digestive & Feeding Guidelines](https://www.nin.res.in) - Clinical rationale behind burping positions, bicycle leg exercises, and red-flag symptoms.`;
   }
   if (lq.includes('sleep') || lq.includes('nap') || lq.includes('wake') || lq.includes('bedtime') || lq.includes('night') || lq.includes('regression')) {
-    return `\n\n### 🔗 Explainability & Reference Links\n* [IAP Parental Guidelines on Infant & Child Sleep Hygiene](https://iapindia.org/parental-guidelines/) - Explains how age-appropriate wake windows and screen-free wind-down routines regulate melatonin and prevent overtired cortisol spikes.\n* [WHO Guidelines on Sleep & Physical Activity for Children Under 5](https://www.who.int/publications/i/item/9789241550536) - Global clinical benchmarks for 24-hour sleep duration and safe sleep practices.`;
+    return `\n\n### 🔗 Explainability & Reference Links\n* [IAP Parental Guidelines on Infant & Child Sleep Hygiene](https://iapindia.org/parental-guidelines/) - Explains how age-appropriate wake windows and screen-free wind-down routines regulate melatonin and prevent overtired cortisol spikes.\n* [ICMR-NIN & IAP Child Rest and Growth Guidelines](https://iapindia.org/parental-guidelines/) - Indian clinical benchmarks for 24-hour sleep duration and safe sleep practices.`;
   }
   if (lq.includes('feed') || lq.includes('milk') || lq.includes('eat') || lq.includes('food') || lq.includes('picky') || lq.includes('ragi') || lq.includes('khichdi') || lq.includes('wean') || lq.includes('solid')) {
-    return `\n\n### 🔗 Explainability & Reference Links\n* [ICMR-National Institute of Nutrition (NIN) Dietary Guidelines](https://www.nin.res.in) - Evidence-based rationale for exclusive milk feeding (0-6 months), iron-rich complementary foods, and balanced Indian child nutrition.\n* [IAP Guidelines on Infant and Young Child Feeding (IYCF)](https://iapindia.org/parental-guidelines/) - Explains responsive feeding, division of responsibility at mealtime, and safe textures to prevent choking.`;
+    return `\n\n### 🔗 Explainability & Reference Links\n* [ICMR-National Institute of Nutrition (NIN) Dietary Guidelines](https://www.nin.res.in) - Evidence-based rationale for exclusive milk feeding (0-6 months), iron-rich complementary foods, and balanced Indian child nutrition.\n* [FSSAI Eat Right India & IAP Infant Feeding (IYCF) Guidelines](https://fssai.gov.in) - Explains responsive feeding, division of responsibility at mealtime, and safe textures to prevent choking.`;
   }
   if (lq.includes('tantrum') || lq.includes('meltdown') || lq.includes('hit') || lq.includes('bite') || lq.includes('kick') || lq.includes('script') || lq.includes('aggress') || lq.includes('sibling') || lq.includes('share')) {
-    return `\n\n### 🔗 Explainability & Reference Links\n* [IAP Positive Parenting & Managing Toddler Tantrums Guide](https://iapindia.org/parental-guidelines/) - Explains why toddler prefrontal brain development leads to big emotional storms and why calm co-regulation works faster than punishment.\n* [UNICEF Parenting - How to Handle Tantrums & Big Emotions](https://www.unicef.org/parenting/child-care/how-handle-tantrums) - Evidence-based strategies on emotion naming, gentle physical boundaries, and connection-first scripts.`;
+    return `\n\n### 🔗 Explainability & Reference Links\n* [IAP Positive Parenting & Managing Toddler Tantrums Guide](https://iapindia.org/parental-guidelines/) - Explains why toddler prefrontal brain development leads to big emotional storms and why calm co-regulation works faster than punishment.\n* [IAP Behavioral & Emotional Development Guidelines](https://iapindia.org/parental-guidelines/) - Evidence-based Indian pediatric strategies on emotion naming, gentle physical boundaries, and connection-first scripts.`;
   }
-  return `\n\n### 🔗 Explainability & Reference Links\n* [WHO Child Growth & Developmental Milestones Standards](https://www.who.int/tools/child-growth-standards) - Clinical benchmarks for motor, sensory, cognitive, and expressive language development.\n* [UNICEF Parenting - Early Childhood Development & Play](https://www.unicef.org/parenting/child-development) - Explains how responsive interactions and age-appropriate play strengthen neural pathways.`;
+  return `\n\n### 🔗 Explainability & Reference Links\n* [Indian Academy of Pediatrics (IAP) Growth & Developmental Milestones Standards](https://iapindia.org/parental-guidelines/) - Clinical benchmarks for motor, sensory, cognitive, and expressive language development.\n* [FSSAI & ICMR-NIN Child Nutrition and Development Standards](https://www.nin.res.in) - Explains how balanced nutrition, responsive interactions, and age-appropriate play strengthen neural pathways.`;
 }
 
 function generateTailoredFallback(q: string, parentName?: string, childName?: string, childAge?: string, isFollowUp: boolean = false): string {
@@ -287,6 +302,73 @@ function generateTailoredFallbackRaw(q: string, pName: string, cName: string, ag
   const lq = (q || '').toLowerCase();
   const { bracket } = parseChildAgeBracket(age);
   const isInfant = bracket === 'infant';
+
+  // ==========================================
+  // TOP PRIORITY: EMERGENCY FIRST-AID & PEDIATRICIAN TRIAGE (CHOKING, BREATHING, HIGH FEVER, SEIZURES)
+  // ==========================================
+  if (
+    lq.includes('chok') ||
+    lq.includes('gagging') ||
+    lq.includes('swallowed a coin') ||
+    lq.includes('swallowed a') ||
+    lq.includes('stuck in throat') ||
+    lq.includes('trouble breathing') ||
+    lq.includes('difficulty breathing') ||
+    lq.includes('not breathing') ||
+    lq.includes('blue lips') ||
+    lq.includes('stridor') ||
+    lq.includes('seizure') ||
+    lq.includes('convulsion') ||
+    lq.includes('unresponsive') ||
+    lq.includes('high fever')
+  ) {
+    const isChokingSpecific = lq.includes('chok') || lq.includes('gagging') || lq.includes('swallowed') || lq.includes('stuck in throat');
+    if (isChokingSpecific) {
+      return `Hello ${pName}, here are immediate emergency first-aid steps and pediatrician triage instructions for ${cName} (Age: ${age}):
+
+### 🚨 Immediate Emergency Action & Helplines
+* **If ${cName} cannot cry, cough, make sounds, or is turning pale/blue**: Shout for someone nearby to call **National Emergency 112** or **Ambulance 108 / 102** immediately while you begin first-aid below.
+* **If ${cName} is coughing forcefully or crying**: Do **NOT** slap the back yet; encourage coughing and stay right beside ${cName} while preparing to go to your **Pediatrician or nearest Emergency Room**.
+
+### 🆘 Step-by-Step Choking First-Aid Tips (Indian IAP Protocol)
+1. **5 Firm Back Blows**: ${isInfant ? `Lay ${cName} face-down along your forearm, supporting the head and jaw with your hand so the head is lower than the chest.` : `Lean ${cName} forward across your lap or support the chest with one hand so the head is angled downward.`} Deliver **5 firm blows between the shoulder blades** using the heel of your hand.
+2. **5 Chest / Abdominal Thrusts**: ${isInfant ? `For infants under 1 year, turn ${cName} face-up on your forearm and give **5 two-finger chest thrusts** in the center of the breastbone (just below the nipple line). Never do abdominal thrusts on an infant under 1 year.` : `For children over 1 year, stand or kneel behind ${cName}, wrap your arms around the waist, place a fist just above the navel, and give **5 quick inward-and-upward abdominal thrusts** (Heimlich maneuver).`}
+3. **Repeat Cycles of 5 & 5**: Alternate **5 back blows** and **5 thrusts** continuously until the object is dislodged or emergency medical help takes over.
+4. **Never Do a Blind Finger Sweep**: Do **NOT** reach into ${cName}'s mouth unless you can clearly see the loose object, as blind sweeping can push the item deeper into the airway.
+
+### 🩺 Consult Your Pediatrician Immediately
+* **Even after the object comes out**, take ${cName} to your **Pediatrician or nearest hospital** right away to examine the airway for residual irritation, swelling, or micro-aspiration.
+* You can also open the **Pediatric Care** tab in Tricky Toddlers for follow-up doctor consultation once ${cName} is stabilized.
+
+⚠️ *Medical Information Note: For educational guidance only. In any acute emergency, call 112 / 108 and consult your pediatrician or nearest hospital emergency department immediately.*
+
+---RELATED_QUESTIONS---
+- [What is the difference between normal gagging on solid foods and true choking?]
+- [How should I cut and prepare foods according to Indian IAP & FSSAI guidelines to prevent choking?]
+- [What symptoms should I watch for in the 24 hours after a mild choking episode?]`;
+    }
+
+    return `Hello ${pName}, here are immediate emergency first-aid steps and pediatrician referral instructions for ${cName} (Age: ${age}):
+
+### 🚨 EmergencyHelpline & Hospital Triage
+* **Call Emergency Services Immediately**: If ${cName} has labored breathing, ribs pulling in (retractions), blue lips, lethargy, or a seizure, call **National Emergency 112** or **Ambulance 108 / 102** and proceed to the nearest pediatric emergency hospital.
+* **Contact Your Pediatrician Right Away**: For any infant under 3 months with a fever above 100.4°F (38°C), or an older child with a persistent high fever above 102°F (38.9°C), consult your **Pediatrician** immediately.
+
+### 🩹 Immediate First-Aid Tips While Arranging Pediatric Care
+1. **Airway & Positioning**: Keep ${cName} upright or in a comfortable semi-reclined position for breathing distress. If a febrile seizure occurs, lay ${cName} gently on their **side (recovery position)** on a flat surface, clear nearby hard objects, and time the episode; never put anything inside the mouth.
+2. **Safe Fever Comfort (Indian IAP Guidelines)**: Dress ${cName} in a single breathable cotton layer and sponge gently with **lukewarm water** (never use ice-cold water or alcohol rubs, which cause shivering and spike core temperature).
+3. **Frequent Sips of Fluids**: Offer small, frequent sips of breast milk, formula, or Indian IAP-approved ORS solution (for children over 6 months) if ${cName} is fully awake and able to swallow safely.
+
+### 🩺 Direct Pediatrician Evaluation
+* Please take ${cName} to your **Pediatrician** for an in-person clinical examination (chest auscultation, hydration check, and exact weight-based treatment). Never self-medicate without a doctor's evaluation.
+
+⚠️ *Medical Information Note: For educational guidance only. Please consult your pediatrician or nearest hospital immediately for clinical evaluation.*
+
+---RELATED_QUESTIONS---
+- [What are the warning signs of dehydration in a child with a fever?]
+- [How do I accurately measure ${cName}'s temperature at home?]
+- [What should I pack when taking ${cName} to the pediatrician or emergency clinic?]`;
+  }
 
   // ==========================================
   // INFANT BRACKET (0–12 MONTHS / e.g. 3 Months)
@@ -372,7 +454,7 @@ Around 14–18 weeks, infant sleep biology permanently matures from 2 stages int
       return `Hello ${pName}, here is pediatric infant feeding guidance for ${cName} (Age: ${age}):
 
 ### 🍼 Exclusive Milk Nutrition (0–6 Months Standards)
-* **WHO & IAP Gold Standard**: At age ${age}, ${cName} must be fed **exclusively on breast milk or infant formula**. No cow's milk, animal milk, solid food purees, honey, or water should be given before 6 months.
+* **Indian IAP & FSSAI Gold Standard**: At age ${age}, ${cName} must be fed **exclusively on breast milk or infant formula**. No cow's milk, animal milk, solid food purees, honey, or water should be given before 6 months.
 * **Immature Digestive Barrier**: Before 6 months, an infant's gut lining is open and kidneys cannot filter high solute loads. Introducing ragi porridge or solid purees at 3 months increases allergy and gastrointestinal infection risks.
 
 ### ⏱️ The 3-Month Growth Spurt & Cluster Feeding
@@ -782,7 +864,7 @@ ${languagePromptModifier}
     : `- **FIRST CONVERSATION GREETING RULE (STRICT)**: This is the first message of a new conversation session. Start your very first sentence with EXACTLY: "Namaste ${pName}! " followed by your warm, helpful response.`;
 
   return `${langHeader}
-You are Tricky Toddler AI, an elite Pediatric Clinical Assistant, Child Safety Specialist, and Developmental Parenting Companion aligned with the Indian Academy of Pediatrics (IAP), ICMR-NIN, and WHO child health standards.
+You are Tricky Toddler AI, an elite Pediatric Clinical Assistant, Child Safety Specialist, and Developmental Parenting Companion aligned with the Indian Academy of Pediatrics (IAP), ICMR-NIN, and FSSAI child health standards.
 Current Parent: ${pName}
 Current Child: ${cName} (Age: ${age} · ${ageBracketLabel})
 Session Turn Type: ${isFollowUp ? 'FOLLOW-UP TURN IN ONGOING CONVERSATION (Do NOT repeat Namaste)' : 'FIRST TURN OF NEW CONVERSATION (Start with "Namaste ' + pName + '! ")'}
@@ -806,9 +888,10 @@ Session Turn Type: ${isFollowUp ? 'FOLLOW-UP TURN IN ONGOING CONVERSATION (Do NO
 
 ### 3. PEDIATRIC MEDICAL & CHILD SAFETY GUARDRAILS (CRITICAL)
 - **General Educational Guidance Only**: Never claim to diagnose a medical condition from a text description or photo.
+- **Emergency First-Aid Tips & Pediatrician Referral**: When a parent mentions an urgent situation such as **choking**, **gagging/swallowed object**, **high fever**, **trouble breathing**, or **seizures**, you MUST immediately provide **clear, step-by-step emergency first-aid instructions** (e.g. 5 back blows and 5 chest/abdominal thrusts for choking per Indian IAP guidelines, recovery positioning for seizures, lukewarm sponging for fever) AND **explicitly direct the parent to consult their pediatrician or nearest hospital immediately**.
 - **Red-Flag Warning Signs**: Proactively identify urgent symptoms (e.g. infant fever under 3 months, respiratory distress/stridor, sunken fontanelle/dehydration, lethargy, blue lips, severe allergic reaction) and communicate high clinical urgency immediately. Never minimize serious symptoms to offer false reassurance.
 - **No Medication Dosing**: Never calculate or recommend medication dosages without verified clinical evaluation.
-- **Indian Emergency Care**: For acute emergencies in India, instruct the parent to immediately call National Emergency **112**, Ambulance **108** / **102**, or proceed directly to the nearest pediatric emergency hospital.
+- **Indian Emergency Care**: For acute emergencies in India, instruct the parent to immediately call National Emergency **112**, Ambulance **108** / **102**, and consult their **pediatrician** or proceed directly to the nearest pediatric emergency hospital.
 - **Contextual Medical Disclaimer**: When symptoms, illness, or medical concerns are discussed, append this single line at the very end:
   ⚠️ *Medical Information Note: For educational guidance only. Please consult your pediatrician for individual clinical diagnosis.*
   *(Do NOT include this medical disclaimer for non-medical topics like games, play, stories, toys, or daily crafts).*
@@ -830,12 +913,10 @@ Session Turn Type: ${isFollowUp ? 'FOLLOW-UP TURN IN ONGOING CONVERSATION (Do NO
 ### 5. EXPLAINABILITY & REFERENCE LINKS AT THE END OF THE POST (STRICT REQUIREMENT)
 - At the end of your main guidance (immediately BEFORE ---CLARIFICATION_OPTIONS--- or ---RELATED_QUESTIONS---), you MUST include a section titled:
   ### 🔗 Explainability & Reference Links
-- Inside this section, provide **1 or 2 clickable Markdown links** (\`[Source Title](URL)\`) related to the answer from trusted pediatric authorities, such as:
+- Inside this section, provide **1 or 2 clickable Markdown links** (\`[Source Title](URL)\`) related to the answer from trusted Indian pediatric and nutrition authorities, such as:
   * \`[Indian Academy of Pediatrics (IAP) Parental Guidelines](https://iapindia.org/parental-guidelines/)\`
-  * \`[WHO Child Health & Growth Standards](https://www.who.int/health-topics/child-health)\`
-  * \`[ICMR–National Institute of Nutrition (NIN)](https://www.nin.res.in)\`
-  * \`[UNICEF Parenting Hub](https://www.unicef.org/parenting)\`
-  * \`[AAP HealthyChildren Guidance](https://www.healthychildren.org)\`
+  * \`[ICMR-National Institute of Nutrition (NIN)](https://www.nin.res.in)\`
+  * \`[FSSAI Eat Right India & Child Nutrition Standards](https://fssai.gov.in)\`
 - Include a brief 1-sentence explanation next to each link describing how that clinical source explains or supports the answer.
 
 ### 6. CONVERSATIONAL CONTINUITY & MULTI-TURN MEMORY

@@ -61,6 +61,7 @@ const DEFAULT_VACCINES: VaccineRecord[] = ALL_VACCINES.map(v => ({
 
 export const DIET_TYPES = [
   'Vegetarian',
+  'Vegan',
   'Vegetarian + Eggs',
   'Non-Vegetarian'
 ] as const;

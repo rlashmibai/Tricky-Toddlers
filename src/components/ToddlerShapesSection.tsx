@@ -555,7 +555,7 @@ export const ShapeGraphic: React.FC<{
         <path d="M 12 68 A 38 38 0 0 1 88 68 Z" fill={color} />
       )}
       {shapeId === 'crescent' && (
-        <path d="M 62 12 A 38 38 0 1 0 62 88 A 28 28 0 0 1 62 12 Z" fill={color} />
+        <path d="M 66 12 C 30 12 12 30 12 50 C 12 70 30 88 66 88 C 44 76 34 63 34 50 C 34 37 44 24 66 12 Z" fill={color} />
       )}
       {shapeId === 'star' && (
         <polygon points="50,10 61,35 89,35 67,52 75,78 50,62 25,78 33,52 11,35 39,35" fill={color} />

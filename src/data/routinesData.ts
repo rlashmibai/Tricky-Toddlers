@@ -39,7 +39,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-amber-400/10 to-amber-400/5 border-amber-400/20 text-amber-300',
         glowClass: 'shadow-amber-400/10',
         indicatorColor: 'bg-amber-400',
-        whoReference: 'WHO Nutrition Standard'
+        whoReference: 'Indian IAP Nutrition Standard'
       },
       {
         id: '0_6_m_sun',
@@ -49,7 +49,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-yellow-400/10 to-yellow-400/5 border-yellow-400/20 text-yellow-300',
         glowClass: 'shadow-yellow-400/10',
         indicatorColor: 'bg-yellow-400',
-        whoReference: 'WHO Circadian Rhythm Benchmark'
+        whoReference: 'Indian IAP Circadian Rhythm Benchmark'
       },
       {
         id: '0_6_m_diaper',
@@ -59,7 +59,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-sky-400/10 to-sky-400/5 border-sky-400/20 text-sky-300',
         glowClass: 'shadow-sky-400/10',
         indicatorColor: 'bg-sky-400',
-        whoReference: 'WHO Pediatric Skin Safety'
+        whoReference: 'Indian IAP Pediatric Skin Safety'
       },
       {
         id: '0_6_m_tummy',
@@ -69,7 +69,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-emerald-400/10 to-emerald-400/5 border-emerald-400/20 text-emerald-300',
         glowClass: 'shadow-emerald-400/10',
         indicatorColor: 'bg-emerald-400',
-        whoReference: 'WHO Physical Activity Standard'
+        whoReference: 'Indian IAP Physical Activity Standard'
       },
       {
         id: '0_6_m_talk',
@@ -79,7 +79,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-indigo-400/10 to-indigo-400/5 border-indigo-400/20 text-indigo-300',
         glowClass: 'shadow-indigo-400/10',
         indicatorColor: 'bg-indigo-400',
-        whoReference: 'WHO Cognitive Pathway Standard'
+        whoReference: 'Indian IAP Cognitive Pathway Standard'
       },
       {
         id: '0_6_m_stretch',
@@ -89,7 +89,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-teal-400/10 to-teal-400/5 border-teal-400/20 text-teal-300',
         glowClass: 'shadow-teal-400/10',
         indicatorColor: 'bg-teal-400',
-        whoReference: 'WHO Pediatric Comfort Guide'
+        whoReference: 'Indian IAP Pediatric Comfort Guide'
       },
       {
         id: '0_6_m_music',
@@ -99,7 +99,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-purple-400/10 to-purple-400/5 border-purple-400/20 text-purple-300',
         glowClass: 'shadow-purple-400/10',
         indicatorColor: 'bg-purple-400',
-        whoReference: 'WHO Auditory Integration Guide'
+        whoReference: 'Indian IAP Auditory Integration Guide'
       },
       {
         id: '0_6_m_nap1',
@@ -109,7 +109,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-blue-400/10 to-blue-400/5 border-blue-400/20 text-blue-300',
         glowClass: 'shadow-blue-400/10',
         indicatorColor: 'bg-blue-400',
-        whoReference: 'WHO Wake-Window Guideline'
+        whoReference: 'Indian IAP Wake-Window Guideline'
       }
     ],
     evening: [
@@ -121,7 +121,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-amber-400/10 to-amber-400/5 border-amber-400/20 text-amber-300',
         glowClass: 'shadow-amber-400/10',
         indicatorColor: 'bg-amber-400',
-        whoReference: 'WHO Feeding & Digestion Standard'
+        whoReference: 'Indian IAP Feeding & Digestion Standard'
       },
       {
         id: '0_6_e_nap',
@@ -131,7 +131,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-blue-400/10 to-blue-400/5 border-blue-400/20 text-blue-300',
         glowClass: 'shadow-blue-400/10',
         indicatorColor: 'bg-blue-400',
-        whoReference: 'WHO Sleep Standard'
+        whoReference: 'Indian IAP Sleep Standard'
       },
       {
         id: '0_6_e_stroll',
@@ -141,7 +141,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-green-400/10 to-green-400/5 border-green-400/20 text-green-300',
         glowClass: 'shadow-green-400/10',
         indicatorColor: 'bg-green-400',
-        whoReference: 'WHO Environmental Health Standard'
+        whoReference: 'Indian IAP Environmental Health Standard'
       },
       {
         id: '0_6_e_massage',
@@ -161,7 +161,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-rose-400/10 to-rose-400/5 border-rose-400/20 text-rose-300',
         glowClass: 'shadow-rose-400/10',
         indicatorColor: 'bg-rose-400',
-        whoReference: 'WHO Sensory Integration Guideline'
+        whoReference: 'Indian IAP Sensory Integration Guideline'
       },
       {
         id: '0_6_e_rattle',
@@ -171,7 +171,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-violet-400/10 to-violet-400/5 border-violet-400/20 text-violet-300',
         glowClass: 'shadow-violet-400/10',
         indicatorColor: 'bg-violet-400',
-        whoReference: 'WHO Motor Skill Protocol'
+        whoReference: 'Indian IAP Motor Skill Protocol'
       },
       {
         id: '0_6_e_babble',
@@ -181,7 +181,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-indigo-400/10 to-indigo-400/5 border-indigo-400/20 text-indigo-300',
         glowClass: 'shadow-indigo-400/10',
         indicatorColor: 'bg-indigo-400',
-        whoReference: 'WHO Language Initiation Standard'
+        whoReference: 'Indian IAP Language Initiation Standard'
       },
       {
         id: '0_6_e_bridge',
@@ -191,7 +191,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-cyan-400/10 to-cyan-400/5 border-cyan-400/20 text-cyan-300',
         glowClass: 'shadow-cyan-400/10',
         indicatorColor: 'bg-cyan-400',
-        whoReference: 'WHO Infant Sleep Hygiene'
+        whoReference: 'Indian IAP Infant Sleep Hygiene'
       }
     ],
     bedtime: [
@@ -203,7 +203,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-cyan-400/10 to-cyan-400/5 border-cyan-400/20 text-cyan-300',
         glowClass: 'shadow-cyan-400/10',
         indicatorColor: 'bg-cyan-400',
-        whoReference: 'WHO Hygiene & Thermoregulation'
+        whoReference: 'Indian IAP Hygiene & Thermoregulation'
       },
       {
         id: '0_6_b_cotton',
@@ -213,7 +213,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-sky-400/10 to-sky-400/5 border-sky-400/20 text-sky-300',
         glowClass: 'shadow-sky-400/10',
         indicatorColor: 'bg-sky-400',
-        whoReference: 'WHO Safe Infant Clothing'
+        whoReference: 'Indian IAP Safe Infant Clothing'
       },
       {
         id: '0_6_b_dim',
@@ -233,7 +233,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-orange-400/10 to-orange-400/5 border-orange-400/20 text-orange-300',
         glowClass: 'shadow-orange-400/10',
         indicatorColor: 'bg-orange-400',
-        whoReference: 'WHO Nighttime Satiety Standard'
+        whoReference: 'Indian IAP Nighttime Satiety Standard'
       },
       {
         id: '0_6_b_noise',
@@ -253,7 +253,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-purple-400/10 to-purple-400/5 border-purple-400/20 text-purple-300',
         glowClass: 'shadow-purple-400/10',
         indicatorColor: 'bg-purple-400',
-        whoReference: 'WHO Co-Regulation Protocol'
+        whoReference: 'Indian IAP Co-Regulation Protocol'
       },
       {
         id: '0_6_b_swaddle',
@@ -273,7 +273,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-violet-500/10 to-violet-500/5 border-violet-500/20 text-violet-400',
         glowClass: 'shadow-violet-500/10',
         indicatorColor: 'bg-violet-500',
-        whoReference: 'WHO Sudden Death Prevention Standard'
+        whoReference: 'Indian IAP Sudden Death Prevention Standard'
       }
     ]
   },
@@ -296,7 +296,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-orange-400/10 to-orange-400/5 border-orange-400/20 text-orange-300',
         glowClass: 'shadow-orange-400/10',
         indicatorColor: 'bg-orange-400',
-        whoReference: 'WHO Solid Feed Introduction'
+        whoReference: 'Indian IAP Solid Feed Introduction'
       },
       {
         id: '6_12_m_water',
@@ -306,7 +306,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-cyan-400/10 to-cyan-400/5 border-cyan-400/20 text-cyan-300',
         glowClass: 'shadow-cyan-400/10',
         indicatorColor: 'bg-cyan-400',
-        whoReference: 'WHO Oral Motor Development'
+        whoReference: 'Indian IAP Oral Motor Development'
       },
       {
         id: '6_12_m_reach',
@@ -316,7 +316,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-emerald-400/10 to-emerald-400/5 border-emerald-400/20 text-emerald-300',
         glowClass: 'shadow-emerald-400/10',
         indicatorColor: 'bg-emerald-400',
-        whoReference: 'WHO Gross Motor Development'
+        whoReference: 'Indian IAP Gross Motor Development'
       },
       {
         id: '6_12_m_gum',
@@ -326,7 +326,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-pink-400/10 to-pink-400/5 border-pink-400/20 text-pink-300',
         glowClass: 'shadow-pink-400/10',
         indicatorColor: 'bg-pink-400',
-        whoReference: 'WHO Oral Hygiene Protocol'
+        whoReference: 'Indian IAP Oral Hygiene Protocol'
       },
       {
         id: '6_12_m_peek',
@@ -336,7 +336,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-indigo-400/10 to-indigo-400/5 border-indigo-400/20 text-indigo-300',
         glowClass: 'shadow-indigo-400/10',
         indicatorColor: 'bg-indigo-400',
-        whoReference: 'WHO Cognitive Standard'
+        whoReference: 'Indian IAP Cognitive Standard'
       },
       {
         id: '6_12_m_sun',
@@ -346,7 +346,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-yellow-400/10 to-yellow-400/5 border-yellow-400/20 text-yellow-300',
         glowClass: 'shadow-yellow-400/10',
         indicatorColor: 'bg-yellow-400',
-        whoReference: 'WHO Sensory Integration Guideline'
+        whoReference: 'Indian IAP Sensory Integration Guideline'
       },
       {
         id: '6_12_m_pincer',
@@ -356,7 +356,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-rose-400/10 to-rose-400/5 border-rose-400/20 text-rose-300',
         glowClass: 'shadow-rose-400/10',
         indicatorColor: 'bg-rose-400',
-        whoReference: 'WHO Fine Motor Milestone'
+        whoReference: 'Indian IAP Fine Motor Milestone'
       },
       {
         id: '6_12_m_nap1',
@@ -366,7 +366,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-blue-400/10 to-blue-400/5 border-blue-400/20 text-blue-300',
         glowClass: 'shadow-blue-400/10',
         indicatorColor: 'bg-blue-400',
-        whoReference: 'WHO Sleep Consolidation Standard'
+        whoReference: 'Indian IAP Sleep Consolidation Standard'
       }
     ],
     evening: [
@@ -378,7 +378,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-amber-400/10 to-amber-400/5 border-amber-400/20 text-amber-300',
         glowClass: 'shadow-amber-400/10',
         indicatorColor: 'bg-amber-400',
-        whoReference: 'WHO Responsive Feeding Guide'
+        whoReference: 'Indian IAP Responsive Feeding Guide'
       },
       {
         id: '6_12_e_naps',
@@ -388,7 +388,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-blue-400/10 to-blue-400/5 border-blue-400/20 text-blue-300',
         glowClass: 'shadow-blue-400/10',
         indicatorColor: 'bg-blue-400',
-        whoReference: 'WHO Sleep Standard'
+        whoReference: 'Indian IAP Sleep Standard'
       },
       {
         id: '6_12_e_stroll',
@@ -398,7 +398,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-green-400/10 to-green-400/5 border-green-400/20 text-green-300',
         glowClass: 'shadow-green-400/10',
         indicatorColor: 'bg-green-400',
-        whoReference: 'WHO Environmental Exploration'
+        whoReference: 'Indian IAP Environmental Exploration'
       },
       {
         id: '6_12_e_blocks',
@@ -408,7 +408,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-purple-400/10 to-purple-400/5 border-purple-400/20 text-purple-300',
         glowClass: 'shadow-purple-400/10',
         indicatorColor: 'bg-purple-400',
-        whoReference: 'WHO Bilateral Coordination'
+        whoReference: 'Indian IAP Bilateral Coordination'
       },
       {
         id: '6_12_e_snack',
@@ -418,7 +418,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-rose-400/10 to-rose-400/5 border-rose-400/20 text-rose-300',
         glowClass: 'shadow-rose-400/10',
         indicatorColor: 'bg-rose-400',
-        whoReference: 'WHO Micronutrient Standards'
+        whoReference: 'Indian IAP Micronutrient Standards'
       },
       {
         id: '6_12_e_music',
@@ -428,7 +428,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-teal-400/10 to-teal-400/5 border-teal-400/20 text-teal-300',
         glowClass: 'shadow-teal-400/10',
         indicatorColor: 'bg-teal-400',
-        whoReference: 'WHO Social-Emotional Milestone'
+        whoReference: 'Indian IAP Social-Emotional Milestone'
       },
       {
         id: '6_12_e_hydration',
@@ -438,7 +438,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-sky-400/10 to-sky-400/5 border-sky-400/20 text-sky-300',
         glowClass: 'shadow-sky-400/10',
         indicatorColor: 'bg-sky-400',
-        whoReference: 'WHO Infant Fluid Intake'
+        whoReference: 'Indian IAP Infant Fluid Intake'
       },
       {
         id: '6_12_e_clean',
@@ -448,7 +448,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-indigo-400/10 to-indigo-400/5 border-indigo-400/20 text-indigo-300',
         glowClass: 'shadow-indigo-400/10',
         indicatorColor: 'bg-indigo-400',
-        whoReference: 'WHO Hygiene Benchmark'
+        whoReference: 'Indian IAP Hygiene Benchmark'
       }
     ],
     bedtime: [
@@ -460,7 +460,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-sky-400/10 to-sky-400/5 border-sky-400/20 text-sky-300',
         glowClass: 'shadow-sky-400/10',
         indicatorColor: 'bg-sky-400',
-        whoReference: 'WHO Pediatric Bathing Safety'
+        whoReference: 'Indian IAP Pediatric Bathing Safety'
       },
       {
         id: '6_12_b_massage',
@@ -480,7 +480,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-pink-400/10 to-pink-400/5 border-pink-400/20 text-pink-300',
         glowClass: 'shadow-pink-400/10',
         indicatorColor: 'bg-pink-400',
-        whoReference: 'WHO Early Dental Care Protocol'
+        whoReference: 'Indian IAP Early Dental Care Protocol'
       },
       {
         id: '6_12_b_pajamas',
@@ -490,7 +490,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-indigo-400/10 to-indigo-400/5 border-indigo-400/20 text-indigo-300',
         glowClass: 'shadow-indigo-400/10',
         indicatorColor: 'bg-indigo-400',
-        whoReference: 'WHO Thermal Comfort Standard'
+        whoReference: 'Indian IAP Thermal Comfort Standard'
       },
       {
         id: '6_12_b_dim',
@@ -500,7 +500,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-violet-500/10 to-violet-500/5 border-violet-500/20 text-violet-400',
         glowClass: 'shadow-violet-500/10',
         indicatorColor: 'bg-violet-500',
-        whoReference: 'WHO Melatonin Protection'
+        whoReference: 'Indian IAP Melatonin Protection'
       },
       {
         id: '6_12_b_read',
@@ -510,7 +510,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-purple-400/10 to-purple-400/5 border-purple-400/20 text-purple-300',
         glowClass: 'shadow-purple-400/10',
         indicatorColor: 'bg-purple-400',
-        whoReference: 'WHO Pre-Literacy Standard'
+        whoReference: 'Indian IAP Pre-Literacy Standard'
       },
       {
         id: '6_12_b_lullaby',
@@ -520,7 +520,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-rose-400/10 to-rose-400/5 border-rose-400/20 text-rose-300',
         glowClass: 'shadow-rose-400/10',
         indicatorColor: 'bg-rose-400',
-        whoReference: 'WHO Self-Soothing Guidelines'
+        whoReference: 'Indian IAP Self-Soothing Guidelines'
       },
       {
         id: '6_12_b_sleep',
@@ -553,7 +553,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-amber-400/10 to-amber-400/5 border-amber-400/20 text-amber-300',
         glowClass: 'shadow-amber-400/10',
         indicatorColor: 'bg-amber-400',
-        whoReference: 'WHO Daily Nutrition Target'
+        whoReference: 'Indian IAP Daily Nutrition Target'
       },
       {
         id: '12_18_m_brush',
@@ -563,7 +563,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-pink-400/10 to-pink-400/5 border-pink-400/20 text-pink-300',
         glowClass: 'shadow-pink-400/10',
         indicatorColor: 'bg-pink-400',
-        whoReference: 'WHO Pediatric Dental Standard'
+        whoReference: 'Indian IAP Pediatric Dental Standard'
       },
       {
         id: '12_18_m_walk',
@@ -573,7 +573,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-emerald-400/10 to-emerald-400/5 border-emerald-400/20 text-emerald-300',
         glowClass: 'shadow-emerald-400/10',
         indicatorColor: 'bg-emerald-400',
-        whoReference: 'WHO Daily Activity Guide'
+        whoReference: 'Indian IAP Daily Activity Guide'
       },
       {
         id: '12_18_m_vocab',
@@ -583,7 +583,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-indigo-400/10 to-indigo-400/5 border-indigo-400/20 text-indigo-300',
         glowClass: 'shadow-indigo-400/10',
         indicatorColor: 'bg-indigo-400',
-        whoReference: 'WHO Early Language Standard'
+        whoReference: 'Indian IAP Early Language Standard'
       },
       {
         id: '12_18_m_sun',
@@ -593,7 +593,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-yellow-400/10 to-yellow-400/5 border-yellow-400/20 text-yellow-300',
         glowClass: 'shadow-yellow-400/10',
         indicatorColor: 'bg-yellow-400',
-        whoReference: 'WHO Gross Motor Benchmark'
+        whoReference: 'Indian IAP Gross Motor Benchmark'
       },
       {
         id: '12_18_m_stack',
@@ -603,7 +603,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-teal-400/10 to-teal-400/5 border-teal-400/20 text-teal-300',
         glowClass: 'shadow-teal-400/10',
         indicatorColor: 'bg-teal-400',
-        whoReference: 'WHO Cognitive Spatial Standard'
+        whoReference: 'Indian IAP Cognitive Spatial Standard'
       },
       {
         id: '12_18_m_water',
@@ -613,7 +613,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-cyan-400/10 to-cyan-400/5 border-cyan-400/20 text-cyan-300',
         glowClass: 'shadow-cyan-400/10',
         indicatorColor: 'bg-cyan-400',
-        whoReference: 'WHO Fluid Balance Target'
+        whoReference: 'Indian IAP Fluid Balance Target'
       },
       {
         id: '12_18_m_hands',
@@ -623,7 +623,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-blue-400/10 to-blue-400/5 border-blue-400/20 text-blue-300',
         glowClass: 'shadow-blue-400/10',
         indicatorColor: 'bg-blue-400',
-        whoReference: 'WHO Hygiene Habit Benchmark'
+        whoReference: 'Indian IAP Hygiene Habit Benchmark'
       }
     ],
     evening: [
@@ -635,7 +635,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-amber-400/10 to-amber-400/5 border-amber-400/20 text-amber-300',
         glowClass: 'shadow-amber-400/10',
         indicatorColor: 'bg-amber-400',
-        whoReference: 'WHO Self-Feeding Independence'
+        whoReference: 'Indian IAP Self-Feeding Independence'
       },
       {
         id: '12_18_e_nap',
@@ -645,7 +645,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-blue-400/10 to-blue-400/5 border-blue-400/20 text-blue-300',
         glowClass: 'shadow-blue-400/10',
         indicatorColor: 'bg-blue-400',
-        whoReference: 'WHO Sleep Consolidation Standard'
+        whoReference: 'Indian IAP Sleep Consolidation Standard'
       },
       {
         id: '12_18_e_snack',
@@ -655,7 +655,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-rose-400/10 to-rose-400/5 border-rose-400/20 text-rose-300',
         glowClass: 'shadow-rose-400/10',
         indicatorColor: 'bg-rose-400',
-        whoReference: 'WHO Nutritional Diversity Protocol'
+        whoReference: 'Indian IAP Nutritional Diversity Protocol'
       },
       {
         id: '12_18_e_park',
@@ -665,7 +665,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-green-400/10 to-green-400/5 border-green-400/20 text-green-300',
         glowClass: 'shadow-green-400/10',
         indicatorColor: 'bg-green-400',
-        whoReference: 'WHO Sensory Integration Guideline'
+        whoReference: 'Indian IAP Sensory Integration Guideline'
       },
       {
         id: '12_18_e_scribble',
@@ -675,7 +675,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-purple-400/10 to-purple-400/5 border-purple-400/20 text-purple-300',
         glowClass: 'shadow-purple-400/10',
         indicatorColor: 'bg-purple-400',
-        whoReference: 'WHO Fine Motor Milestone'
+        whoReference: 'Indian IAP Fine Motor Milestone'
       },
       {
         id: '12_18_e_help',
@@ -685,7 +685,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-orange-400/10 to-orange-400/5 border-orange-400/20 text-orange-300',
         glowClass: 'shadow-orange-400/10',
         indicatorColor: 'bg-orange-400',
-        whoReference: 'WHO Social-Emotional Behavior'
+        whoReference: 'Indian IAP Social-Emotional Behavior'
       },
       {
         id: '12_18_e_dance',
@@ -695,7 +695,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-teal-400/10 to-teal-400/5 border-teal-400/20 text-teal-300',
         glowClass: 'shadow-teal-400/10',
         indicatorColor: 'bg-teal-400',
-        whoReference: 'WHO Physical Coordination Guide'
+        whoReference: 'Indian IAP Physical Coordination Guide'
       },
       {
         id: '12_18_e_potty',
@@ -705,7 +705,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-indigo-400/10 to-indigo-400/5 border-indigo-400/20 text-indigo-300',
         glowClass: 'shadow-indigo-400/10',
         indicatorColor: 'bg-indigo-400',
-        whoReference: 'WHO Potty Readiness Protocol'
+        whoReference: 'Indian IAP Potty Readiness Protocol'
       }
     ],
     bedtime: [
@@ -717,7 +717,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-amber-400/10 to-amber-400/5 border-amber-400/20 text-amber-300',
         glowClass: 'shadow-amber-400/10',
         indicatorColor: 'bg-amber-400',
-        whoReference: 'WHO Evening Nutrition Protocol'
+        whoReference: 'Indian IAP Evening Nutrition Protocol'
       },
       {
         id: '12_18_b_bath',
@@ -727,7 +727,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-sky-400/10 to-sky-400/5 border-sky-400/20 text-sky-300',
         glowClass: 'shadow-sky-400/10',
         indicatorColor: 'bg-sky-400',
-        whoReference: 'WHO Pediatric Hygiene Standard'
+        whoReference: 'Indian IAP Pediatric Hygiene Standard'
       },
       {
         id: '12_18_b_brush',
@@ -737,7 +737,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-pink-400/10 to-pink-400/5 border-pink-400/20 text-pink-300',
         glowClass: 'shadow-pink-400/10',
         indicatorColor: 'bg-pink-400',
-        whoReference: 'WHO Dental Health Guidelines'
+        whoReference: 'Indian IAP Dental Health Guidelines'
       },
       {
         id: '12_18_b_pajamas',
@@ -747,7 +747,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-indigo-400/10 to-indigo-400/5 border-indigo-400/20 text-indigo-300',
         glowClass: 'shadow-indigo-400/10',
         indicatorColor: 'bg-indigo-400',
-        whoReference: 'WHO Infant Sleep Attire'
+        whoReference: 'Indian IAP Infant Sleep Attire'
       },
       {
         id: '12_18_b_lights',
@@ -767,7 +767,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-purple-400/10 to-purple-400/5 border-purple-400/20 text-purple-300',
         glowClass: 'shadow-purple-400/10',
         indicatorColor: 'bg-purple-400',
-        whoReference: 'WHO Pre-Literacy Benchmark'
+        whoReference: 'Indian IAP Pre-Literacy Benchmark'
       },
       {
         id: '12_18_b_cuddle',
@@ -777,7 +777,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-teal-400/10 to-teal-400/5 border-teal-400/20 text-teal-300',
         glowClass: 'shadow-teal-400/10',
         indicatorColor: 'bg-teal-400',
-        whoReference: 'WHO Emotional Security Guide'
+        whoReference: 'Indian IAP Emotional Security Guide'
       },
       {
         id: '12_18_b_sleep',
@@ -787,7 +787,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-violet-500/10 to-violet-500/5 border-violet-500/20 text-violet-400',
         glowClass: 'shadow-violet-500/10',
         indicatorColor: 'bg-violet-500',
-        whoReference: 'WHO Independent Sleep Standard'
+        whoReference: 'Indian IAP Independent Sleep Standard'
       }
     ]
   },
@@ -810,7 +810,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-amber-400/10 to-amber-400/5 border-amber-400/20 text-amber-300',
         glowClass: 'shadow-amber-400/10',
         indicatorColor: 'bg-amber-400',
-        whoReference: 'WHO Healthy Nutrition Standard'
+        whoReference: 'Indian IAP Healthy Nutrition Standard'
       },
       {
         id: '18_24_m_potty',
@@ -820,7 +820,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-blue-400/10 to-blue-400/5 border-blue-400/20 text-blue-300',
         glowClass: 'shadow-blue-400/10',
         indicatorColor: 'bg-blue-400',
-        whoReference: 'WHO Potty Habit Formation'
+        whoReference: 'Indian IAP Potty Habit Formation'
       },
       {
         id: '18_24_m_teeth',
@@ -830,7 +830,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-pink-400/10 to-pink-400/5 border-pink-400/20 text-pink-300',
         glowClass: 'shadow-pink-400/10',
         indicatorColor: 'bg-pink-400',
-        whoReference: 'WHO Oral Hygiene Protocol'
+        whoReference: 'Indian IAP Oral Hygiene Protocol'
       },
       {
         id: '18_24_m_active',
@@ -840,7 +840,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-emerald-400/10 to-emerald-400/5 border-emerald-400/20 text-emerald-300',
         glowClass: 'shadow-emerald-400/10',
         indicatorColor: 'bg-emerald-400',
-        whoReference: 'WHO Daily Activity Standard'
+        whoReference: 'Indian IAP Daily Activity Standard'
       },
       {
         id: '18_24_m_fine',
@@ -850,7 +850,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-indigo-400/10 to-indigo-400/5 border-indigo-400/20 text-indigo-300',
         glowClass: 'shadow-indigo-400/10',
         indicatorColor: 'bg-indigo-400',
-        whoReference: 'WHO Fine Motor Skill Standard'
+        whoReference: 'Indian IAP Fine Motor Skill Standard'
       },
       {
         id: '18_24_m_puzzle',
@@ -860,7 +860,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-teal-400/10 to-teal-400/5 border-teal-400/20 text-teal-300',
         glowClass: 'shadow-teal-400/10',
         indicatorColor: 'bg-teal-400',
-        whoReference: 'WHO Cognitive Problem-Solving'
+        whoReference: 'Indian IAP Cognitive Problem-Solving'
       },
       {
         id: '18_24_m_speech',
@@ -870,7 +870,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-purple-400/10 to-purple-400/5 border-purple-400/20 text-purple-300',
         glowClass: 'shadow-purple-400/10',
         indicatorColor: 'bg-purple-400',
-        whoReference: 'WHO Language Milestones'
+        whoReference: 'Indian IAP Language Milestones'
       },
       {
         id: '18_24_m_shoes',
@@ -880,7 +880,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-rose-400/10 to-rose-400/5 border-rose-400/20 text-rose-300',
         glowClass: 'shadow-rose-400/10',
         indicatorColor: 'bg-rose-400',
-        whoReference: 'WHO Self-Care Autonomy'
+        whoReference: 'Indian IAP Self-Care Autonomy'
       }
     ],
     evening: [
@@ -892,7 +892,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-amber-400/10 to-amber-400/5 border-amber-400/20 text-amber-300',
         glowClass: 'shadow-amber-400/10',
         indicatorColor: 'bg-amber-400',
-        whoReference: 'WHO Responsive Feeding'
+        whoReference: 'Indian IAP Responsive Feeding'
       },
       {
         id: '18_24_e_hands',
@@ -902,7 +902,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-cyan-400/10 to-cyan-400/5 border-cyan-400/20 text-cyan-300',
         glowClass: 'shadow-cyan-400/10',
         indicatorColor: 'bg-cyan-400',
-        whoReference: 'WHO Hygiene & Safety Protocol'
+        whoReference: 'Indian IAP Hygiene & Safety Protocol'
       },
       {
         id: '18_24_e_nap',
@@ -912,7 +912,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-blue-400/10 to-blue-400/5 border-blue-400/20 text-blue-300',
         glowClass: 'shadow-blue-400/10',
         indicatorColor: 'bg-blue-400',
-        whoReference: 'WHO Sleep Quality Standard'
+        whoReference: 'Indian IAP Sleep Quality Standard'
       },
       {
         id: '18_24_e_snack',
@@ -922,7 +922,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-rose-400/10 to-rose-400/5 border-rose-400/20 text-rose-300',
         glowClass: 'shadow-rose-400/10',
         indicatorColor: 'bg-rose-400',
-        whoReference: 'WHO Healthy Snack Guidelines'
+        whoReference: 'Indian IAP Healthy Snack Guidelines'
       },
       {
         id: '18_24_e_playground',
@@ -932,7 +932,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-green-400/10 to-green-400/5 border-green-400/20 text-green-300',
         glowClass: 'shadow-green-400/10',
         indicatorColor: 'bg-green-400',
-        whoReference: 'WHO Outdoor Physical Activity'
+        whoReference: 'Indian IAP Outdoor Physical Activity'
       },
       {
         id: '18_24_e_parallel',
@@ -942,7 +942,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-indigo-400/10 to-indigo-400/5 border-indigo-400/20 text-indigo-300',
         glowClass: 'shadow-indigo-400/10',
         indicatorColor: 'bg-indigo-400',
-        whoReference: 'WHO Social Interaction Milestones'
+        whoReference: 'Indian IAP Social Interaction Milestones'
       },
       {
         id: '18_24_e_tidy',
@@ -952,7 +952,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-teal-400/10 to-teal-400/5 border-teal-400/20 text-teal-300',
         glowClass: 'shadow-teal-400/10',
         indicatorColor: 'bg-teal-400',
-        whoReference: 'WHO Cooperative Behavior Standard'
+        whoReference: 'Indian IAP Cooperative Behavior Standard'
       },
       {
         id: '18_24_e_potty2',
@@ -962,7 +962,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-purple-400/10 to-purple-400/5 border-purple-400/20 text-purple-300',
         glowClass: 'shadow-purple-400/10',
         indicatorColor: 'bg-purple-400',
-        whoReference: 'WHO Toileting Cue Recognition'
+        whoReference: 'Indian IAP Toileting Cue Recognition'
       }
     ],
     bedtime: [
@@ -974,7 +974,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-amber-400/10 to-amber-400/5 border-amber-400/20 text-amber-300',
         glowClass: 'shadow-amber-400/10',
         indicatorColor: 'bg-amber-400',
-        whoReference: 'WHO Family Mealtime Standards'
+        whoReference: 'Indian IAP Family Mealtime Standards'
       },
       {
         id: '18_24_b_bubble',
@@ -984,7 +984,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-sky-400/10 to-sky-400/5 border-sky-400/20 text-sky-300',
         glowClass: 'shadow-sky-400/10',
         indicatorColor: 'bg-sky-400',
-        whoReference: 'WHO Hygiene & Sleep Readiness'
+        whoReference: 'Indian IAP Hygiene & Sleep Readiness'
       },
       {
         id: '18_24_b_potty',
@@ -994,7 +994,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-purple-400/10 to-purple-400/5 border-purple-400/20 text-purple-300',
         glowClass: 'shadow-purple-400/10',
         indicatorColor: 'bg-purple-400',
-        whoReference: 'WHO Potty Readiness Guide'
+        whoReference: 'Indian IAP Potty Readiness Guide'
       },
       {
         id: '18_24_b_brush',
@@ -1004,7 +1004,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-pink-400/10 to-pink-400/5 border-pink-400/20 text-pink-300',
         glowClass: 'shadow-pink-400/10',
         indicatorColor: 'bg-pink-400',
-        whoReference: 'WHO Dental Caries Prevention'
+        whoReference: 'Indian IAP Dental Caries Prevention'
       },
       {
         id: '18_24_b_pajamas',
@@ -1014,7 +1014,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-teal-400/10 to-teal-400/5 border-teal-400/20 text-teal-300',
         glowClass: 'shadow-teal-400/10',
         indicatorColor: 'bg-teal-400',
-        whoReference: 'WHO Autonomy & Choice Standard'
+        whoReference: 'Indian IAP Autonomy & Choice Standard'
       },
       {
         id: '18_24_b_story',
@@ -1024,7 +1024,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-indigo-400/10 to-indigo-400/5 border-indigo-400/20 text-indigo-300',
         glowClass: 'shadow-indigo-400/10',
         indicatorColor: 'bg-indigo-400',
-        whoReference: 'WHO Dialogic Reading Protocol'
+        whoReference: 'Indian IAP Dialogic Reading Protocol'
       },
       {
         id: '18_24_b_candle',
@@ -1044,7 +1044,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-violet-500/10 to-violet-500/5 border-violet-500/20 text-violet-400',
         glowClass: 'shadow-violet-500/10',
         indicatorColor: 'bg-violet-500',
-        whoReference: 'WHO Emotional Health Standard'
+        whoReference: 'Indian IAP Emotional Health Standard'
       }
     ]
   },
@@ -1067,7 +1067,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-blue-400/10 to-blue-400/5 border-blue-400/20 text-blue-300',
         glowClass: 'shadow-blue-400/10',
         indicatorColor: 'bg-blue-400',
-        whoReference: 'WHO Independent Toileting Protocol'
+        whoReference: 'Indian IAP Independent Toileting Protocol'
       },
       {
         id: '2_3_m_wash',
@@ -1077,7 +1077,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-cyan-400/10 to-cyan-400/5 border-cyan-400/20 text-cyan-300',
         glowClass: 'shadow-cyan-400/10',
         indicatorColor: 'bg-cyan-400',
-        whoReference: 'WHO Hygiene Routine Benchmark'
+        whoReference: 'Indian IAP Hygiene Routine Benchmark'
       },
       {
         id: '2_3_m_cereal',
@@ -1087,7 +1087,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-amber-400/10 to-amber-400/5 border-amber-400/20 text-amber-300',
         glowClass: 'shadow-amber-400/10',
         indicatorColor: 'bg-amber-400',
-        whoReference: 'WHO Behavioral Independence'
+        whoReference: 'Indian IAP Behavioral Independence'
       },
       {
         id: '2_3_m_teeth',
@@ -1097,7 +1097,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-pink-400/10 to-pink-400/5 border-pink-400/20 text-pink-300',
         glowClass: 'shadow-pink-400/10',
         indicatorColor: 'bg-pink-400',
-        whoReference: 'WHO Dental Standard'
+        whoReference: 'Indian IAP Dental Standard'
       },
       {
         id: '2_3_m_clothes',
@@ -1107,7 +1107,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-teal-400/10 to-teal-400/5 border-teal-400/20 text-teal-300',
         glowClass: 'shadow-teal-400/10',
         indicatorColor: 'bg-teal-400',
-        whoReference: 'WHO Self-Care Skill Development'
+        whoReference: 'Indian IAP Self-Care Skill Development'
       },
       {
         id: '2_3_m_emotion',
@@ -1117,7 +1117,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-emerald-400/10 to-emerald-400/5 border-emerald-400/20 text-emerald-300',
         glowClass: 'shadow-emerald-400/10',
         indicatorColor: 'bg-emerald-400',
-        whoReference: 'WHO Mental & Emotional Standard'
+        whoReference: 'Indian IAP Mental & Emotional Standard'
       },
       {
         id: '2_3_m_preschool',
@@ -1127,7 +1127,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-indigo-400/10 to-indigo-400/5 border-indigo-400/20 text-indigo-300',
         glowClass: 'shadow-indigo-400/10',
         indicatorColor: 'bg-indigo-400',
-        whoReference: 'WHO Early Cognitive Standard'
+        whoReference: 'Indian IAP Early Cognitive Standard'
       },
       {
         id: '2_3_m_run',
@@ -1137,7 +1137,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-yellow-400/10 to-yellow-400/5 border-yellow-400/20 text-yellow-300',
         glowClass: 'shadow-yellow-400/10',
         indicatorColor: 'bg-yellow-400',
-        whoReference: 'WHO 60-Minute Physical Guideline'
+        whoReference: 'Indian IAP 60-Minute Physical Guideline'
       }
     ],
     evening: [
@@ -1149,7 +1149,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-amber-400/10 to-amber-400/5 border-amber-400/20 text-amber-300',
         glowClass: 'shadow-amber-400/10',
         indicatorColor: 'bg-amber-400',
-        whoReference: 'WHO Social Mealtime Modeling'
+        whoReference: 'Indian IAP Social Mealtime Modeling'
       },
       {
         id: '2_3_e_potty',
@@ -1159,7 +1159,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-blue-400/10 to-blue-400/5 border-blue-400/20 text-blue-300',
         glowClass: 'shadow-blue-400/10',
         indicatorColor: 'bg-blue-400',
-        whoReference: 'WHO Potty Timing Standard'
+        whoReference: 'Indian IAP Potty Timing Standard'
       },
       {
         id: '2_3_e_nap',
@@ -1169,7 +1169,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-indigo-400/10 to-indigo-400/5 border-indigo-400/20 text-indigo-300',
         glowClass: 'shadow-indigo-400/10',
         indicatorColor: 'bg-indigo-400',
-        whoReference: 'WHO Daily Rest Guidelines'
+        whoReference: 'Indian IAP Daily Rest Guidelines'
       },
       {
         id: '2_3_e_snack',
@@ -1179,7 +1179,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-green-400/10 to-green-400/5 border-green-400/20 text-green-300',
         glowClass: 'shadow-green-400/10',
         indicatorColor: 'bg-green-400',
-        whoReference: 'WHO Habit Formation Standard'
+        whoReference: 'Indian IAP Habit Formation Standard'
       },
       {
         id: '2_3_e_playground',
@@ -1189,7 +1189,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-teal-400/10 to-teal-400/5 border-teal-400/20 text-teal-300',
         glowClass: 'shadow-teal-400/10',
         indicatorColor: 'bg-teal-400',
-        whoReference: 'WHO Social-Emotional Milestone'
+        whoReference: 'Indian IAP Social-Emotional Milestone'
       },
       {
         id: '2_3_e_creative',
@@ -1199,7 +1199,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-orange-400/10 to-orange-400/5 border-orange-400/20 text-orange-300',
         glowClass: 'shadow-orange-400/10',
         indicatorColor: 'bg-orange-400',
-        whoReference: 'WHO Fine Motor Skill Standard'
+        whoReference: 'Indian IAP Fine Motor Skill Standard'
       },
       {
         id: '2_3_e_reading',
@@ -1209,7 +1209,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-purple-400/10 to-purple-400/5 border-purple-400/20 text-purple-300',
         glowClass: 'shadow-purple-400/10',
         indicatorColor: 'bg-purple-400',
-        whoReference: 'WHO Pretend Play Development'
+        whoReference: 'Indian IAP Pretend Play Development'
       },
       {
         id: '2_3_e_tidy',
@@ -1219,7 +1219,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-rose-400/10 to-rose-400/5 border-rose-400/20 text-rose-300',
         glowClass: 'shadow-rose-400/10',
         indicatorColor: 'bg-rose-400',
-        whoReference: 'WHO Executive Functioning Protocol'
+        whoReference: 'Indian IAP Executive Functioning Protocol'
       }
     ],
     bedtime: [
@@ -1231,7 +1231,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-amber-400/10 to-amber-400/5 border-amber-400/20 text-amber-300',
         glowClass: 'shadow-amber-400/10',
         indicatorColor: 'bg-amber-400',
-        whoReference: 'WHO Family Routine Standard'
+        whoReference: 'Indian IAP Family Routine Standard'
       },
       {
         id: '2_3_b_bath',
@@ -1241,7 +1241,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-sky-400/10 to-sky-400/5 border-sky-400/20 text-sky-300',
         glowClass: 'shadow-sky-400/10',
         indicatorColor: 'bg-sky-400',
-        whoReference: 'WHO Evening Hygiene Standard'
+        whoReference: 'Indian IAP Evening Hygiene Standard'
       },
       {
         id: '2_3_b_potty',
@@ -1251,7 +1251,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-blue-400/10 to-blue-400/5 border-blue-400/20 text-blue-300',
         glowClass: 'shadow-blue-400/10',
         indicatorColor: 'bg-blue-400',
-        whoReference: 'WHO Overnight Dryness Practice'
+        whoReference: 'Indian IAP Overnight Dryness Practice'
       },
       {
         id: '2_3_b_brush',
@@ -1261,7 +1261,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-pink-400/10 to-pink-400/5 border-pink-400/20 text-pink-300',
         glowClass: 'shadow-pink-400/10',
         indicatorColor: 'bg-pink-400',
-        whoReference: 'WHO Oral Hygiene Protocol'
+        whoReference: 'Indian IAP Oral Hygiene Protocol'
       },
       {
         id: '2_3_b_pajamas',
@@ -1271,7 +1271,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-teal-400/10 to-teal-400/5 border-teal-400/20 text-teal-300',
         glowClass: 'shadow-teal-400/10',
         indicatorColor: 'bg-teal-400',
-        whoReference: 'WHO Daily Autonomy Protocol'
+        whoReference: 'Indian IAP Daily Autonomy Protocol'
       },
       {
         id: '2_3_b_books',
@@ -1281,7 +1281,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-purple-400/10 to-purple-400/5 border-purple-400/20 text-purple-300',
         glowClass: 'shadow-purple-400/10',
         indicatorColor: 'bg-purple-400',
-        whoReference: 'WHO Pre-Literacy Standard'
+        whoReference: 'Indian IAP Pre-Literacy Standard'
       },
       {
         id: '2_3_b_breathing',
@@ -1291,7 +1291,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-violet-500/10 to-violet-500/5 border-violet-500/20 text-violet-400',
         glowClass: 'shadow-violet-500/10',
         indicatorColor: 'bg-violet-500',
-        whoReference: 'WHO Pediatric Relaxation Standard'
+        whoReference: 'Indian IAP Pediatric Relaxation Standard'
       },
       {
         id: '2_3_b_sleep',
@@ -1301,7 +1301,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-indigo-500/10 to-indigo-500/5 border-indigo-500/20 text-indigo-400',
         glowClass: 'shadow-indigo-500/10',
         indicatorColor: 'bg-indigo-500',
-        whoReference: 'WHO Consolidated Sleep Health'
+        whoReference: 'Indian IAP Consolidated Sleep Health'
       }
     ]
   },
@@ -1313,7 +1313,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
     label: '3 - 4 Years',
     emoji: '🎨',
     rangeDesc: 'Preschool Independence, language explosion & self-care agency.',
-    whoAesthetic: 'WHO Early Childhood Development standard for preschool motor coordination, emotional regulation, and autonomy.',
+    whoAesthetic: 'Indian IAP Early Childhood Development standard for preschool motor coordination, emotional regulation, and autonomy.',
     morning: [
       {
         id: '3_4_m_wake',
@@ -1323,7 +1323,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-amber-400/10 to-amber-400/5 border-amber-400/20 text-amber-300',
         glowClass: 'shadow-amber-400/10',
         indicatorColor: 'bg-amber-400',
-        whoReference: 'WHO Circadian & Motor Vitality'
+        whoReference: 'Indian IAP Circadian & Motor Vitality'
       },
       {
         id: '3_4_m_potty',
@@ -1333,7 +1333,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-sky-400/10 to-sky-400/5 border-sky-400/20 text-sky-300',
         glowClass: 'shadow-sky-400/10',
         indicatorColor: 'bg-sky-400',
-        whoReference: 'WHO Pediatric Hygiene Standard'
+        whoReference: 'Indian IAP Pediatric Hygiene Standard'
       },
       {
         id: '3_4_m_brush',
@@ -1343,7 +1343,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-teal-400/10 to-teal-400/5 border-teal-400/20 text-teal-300',
         glowClass: 'shadow-teal-400/10',
         indicatorColor: 'bg-teal-400',
-        whoReference: 'WHO Oral Health Protocol'
+        whoReference: 'Indian IAP Oral Health Protocol'
       },
       {
         id: '3_4_m_dress',
@@ -1353,7 +1353,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-indigo-400/10 to-indigo-400/5 border-indigo-400/20 text-indigo-300',
         glowClass: 'shadow-indigo-400/10',
         indicatorColor: 'bg-indigo-400',
-        whoReference: 'WHO Autonomy & Executive Function'
+        whoReference: 'Indian IAP Autonomy & Executive Function'
       },
       {
         id: '3_4_m_breakfast',
@@ -1363,7 +1363,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-emerald-400/10 to-emerald-400/5 border-emerald-400/20 text-emerald-300',
         glowClass: 'shadow-emerald-400/10',
         indicatorColor: 'bg-emerald-400',
-        whoReference: 'WHO Preschool Nutrition Guideline'
+        whoReference: 'Indian IAP Preschool Nutrition Guideline'
       },
       {
         id: '3_4_m_bag',
@@ -1373,7 +1373,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-purple-400/10 to-purple-400/5 border-purple-400/20 text-purple-300',
         glowClass: 'shadow-purple-400/10',
         indicatorColor: 'bg-purple-400',
-        whoReference: 'WHO Early Responsibility Benchmark'
+        whoReference: 'Indian IAP Early Responsibility Benchmark'
       },
       {
         id: '3_4_m_feelings',
@@ -1383,7 +1383,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-pink-400/10 to-pink-400/5 border-pink-400/20 text-pink-300',
         glowClass: 'shadow-pink-400/10',
         indicatorColor: 'bg-pink-400',
-        whoReference: 'WHO Socio-Emotional Framework'
+        whoReference: 'Indian IAP Socio-Emotional Framework'
       },
       {
         id: '3_4_m_goodbye',
@@ -1393,7 +1393,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-rose-400/10 to-rose-400/5 border-rose-400/20 text-rose-300',
         glowClass: 'shadow-rose-400/10',
         indicatorColor: 'bg-rose-400',
-        whoReference: 'WHO Attachment & Security Standard'
+        whoReference: 'Indian IAP Attachment & Security Standard'
       }
     ],
     evening: [
@@ -1405,7 +1405,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-cyan-400/10 to-cyan-400/5 border-cyan-400/20 text-cyan-300',
         glowClass: 'shadow-cyan-400/10',
         indicatorColor: 'bg-cyan-400',
-        whoReference: 'WHO Preventive Health Benchmark'
+        whoReference: 'Indian IAP Preventive Health Benchmark'
       },
       {
         id: '3_4_e_snack',
@@ -1415,7 +1415,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-amber-400/10 to-amber-400/5 border-amber-400/20 text-amber-300',
         glowClass: 'shadow-amber-400/10',
         indicatorColor: 'bg-amber-400',
-        whoReference: 'WHO Balanced Energy Standard'
+        whoReference: 'Indian IAP Balanced Energy Standard'
       },
       {
         id: '3_4_e_outdoor',
@@ -1425,7 +1425,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-emerald-400/10 to-emerald-400/5 border-emerald-400/20 text-emerald-300',
         glowClass: 'shadow-emerald-400/10',
         indicatorColor: 'bg-emerald-400',
-        whoReference: 'WHO Physical Activity Guidelines (Preschool)'
+        whoReference: 'Indian IAP Physical Activity Guidelines (Preschool)'
       },
       {
         id: '3_4_e_creative',
@@ -1435,7 +1435,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-indigo-400/10 to-indigo-400/5 border-indigo-400/20 text-indigo-300',
         glowClass: 'shadow-indigo-400/10',
         indicatorColor: 'bg-indigo-400',
-        whoReference: 'WHO Cognitive & Fine Motor Pathway'
+        whoReference: 'Indian IAP Cognitive & Fine Motor Pathway'
       },
       {
         id: '3_4_e_tidy',
@@ -1445,7 +1445,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-purple-400/10 to-purple-400/5 border-purple-400/20 text-purple-300',
         glowClass: 'shadow-purple-400/10',
         indicatorColor: 'bg-purple-400',
-        whoReference: 'WHO Executive Function Protocol'
+        whoReference: 'Indian IAP Executive Function Protocol'
       },
       {
         id: '3_4_e_dinner_help',
@@ -1455,7 +1455,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-teal-400/10 to-teal-400/5 border-teal-400/20 text-teal-300',
         glowClass: 'shadow-teal-400/10',
         indicatorColor: 'bg-teal-400',
-        whoReference: 'WHO Family Routine Engagement'
+        whoReference: 'Indian IAP Family Routine Engagement'
       },
       {
         id: '3_4_e_dinner',
@@ -1465,7 +1465,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-yellow-400/10 to-yellow-400/5 border-yellow-400/20 text-yellow-300',
         glowClass: 'shadow-yellow-400/10',
         indicatorColor: 'bg-yellow-400',
-        whoReference: 'WHO Pediatric Nutrition & Appetite Control'
+        whoReference: 'Indian IAP Pediatric Nutrition & Appetite Control'
       },
       {
         id: '3_4_e_screen_free',
@@ -1475,7 +1475,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-rose-400/10 to-rose-400/5 border-rose-400/20 text-rose-300',
         glowClass: 'shadow-rose-400/10',
         indicatorColor: 'bg-rose-400',
-        whoReference: 'WHO Screen Time & Melatonin Protection'
+        whoReference: 'Indian IAP Screen Time & Melatonin Protection'
       }
     ],
     bedtime: [
@@ -1487,7 +1487,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-blue-400/10 to-blue-400/5 border-blue-400/20 text-blue-300',
         glowClass: 'shadow-blue-400/10',
         indicatorColor: 'bg-blue-400',
-        whoReference: 'WHO Sleep Hygiene Protocol'
+        whoReference: 'Indian IAP Sleep Hygiene Protocol'
       },
       {
         id: '3_4_b_pajamas',
@@ -1497,7 +1497,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-teal-400/10 to-teal-400/5 border-teal-400/20 text-teal-300',
         glowClass: 'shadow-teal-400/10',
         indicatorColor: 'bg-teal-400',
-        whoReference: 'WHO Autonomy & Self-Help'
+        whoReference: 'Indian IAP Autonomy & Self-Help'
       },
       {
         id: '3_4_b_brush',
@@ -1507,7 +1507,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-emerald-400/10 to-emerald-400/5 border-emerald-400/20 text-emerald-300',
         glowClass: 'shadow-emerald-400/10',
         indicatorColor: 'bg-emerald-400',
-        whoReference: 'WHO Pediatric Dental Guideline'
+        whoReference: 'Indian IAP Pediatric Dental Guideline'
       },
       {
         id: '3_4_b_potty',
@@ -1517,7 +1517,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-sky-400/10 to-sky-400/5 border-sky-400/20 text-sky-300',
         glowClass: 'shadow-sky-400/10',
         indicatorColor: 'bg-sky-400',
-        whoReference: 'WHO Bladder Training Benchmark'
+        whoReference: 'Indian IAP Bladder Training Benchmark'
       },
       {
         id: '3_4_b_books',
@@ -1527,7 +1527,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-purple-400/10 to-purple-400/5 border-purple-400/20 text-purple-300',
         glowClass: 'shadow-purple-400/10',
         indicatorColor: 'bg-purple-400',
-        whoReference: 'WHO Literacy & Cognitive Readiness'
+        whoReference: 'Indian IAP Literacy & Cognitive Readiness'
       },
       {
         id: '3_4_b_gratitude',
@@ -1537,7 +1537,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-amber-400/10 to-amber-400/5 border-amber-400/20 text-amber-300',
         glowClass: 'shadow-amber-400/10',
         indicatorColor: 'bg-amber-400',
-        whoReference: 'WHO Mental Well-being Framework'
+        whoReference: 'Indian IAP Mental Well-being Framework'
       },
       {
         id: '3_4_b_breathing',
@@ -1547,7 +1547,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-indigo-400/10 to-indigo-400/5 border-indigo-400/20 text-indigo-300',
         glowClass: 'shadow-indigo-400/10',
         indicatorColor: 'bg-indigo-400',
-        whoReference: 'WHO Pediatric Relaxation Standard'
+        whoReference: 'Indian IAP Pediatric Relaxation Standard'
       },
       {
         id: '3_4_b_sleep',
@@ -1557,7 +1557,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-violet-500/10 to-violet-500/5 border-violet-500/20 text-violet-400',
         glowClass: 'shadow-violet-500/10',
         indicatorColor: 'bg-violet-500',
-        whoReference: 'WHO Sleep Duration Recommendation'
+        whoReference: 'Indian IAP Sleep Duration Recommendation'
       }
     ]
   },
@@ -1569,7 +1569,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
     label: '4 - 5 Years',
     emoji: '🎒',
     rangeDesc: 'Kindergarten Mastery, peer cooperation & executive function.',
-    whoAesthetic: 'WHO & UNICEF school-readiness standard for physical endurance, self-help mastery, and restorative rest.',
+    whoAesthetic: 'Indian IAP & FSSAI school-readiness standard for physical endurance, self-help mastery, and restorative rest.',
     morning: [
       {
         id: '4_5_m_wake',
@@ -1579,7 +1579,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-amber-400/10 to-amber-400/5 border-amber-400/20 text-amber-300',
         glowClass: 'shadow-amber-400/10',
         indicatorColor: 'bg-amber-400',
-        whoReference: 'WHO Executive Function & Responsibility'
+        whoReference: 'Indian IAP Executive Function & Responsibility'
       },
       {
         id: '4_5_m_toilet',
@@ -1589,7 +1589,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-sky-400/10 to-sky-400/5 border-sky-400/20 text-sky-300',
         glowClass: 'shadow-sky-400/10',
         indicatorColor: 'bg-sky-400',
-        whoReference: 'WHO School-Readiness Hygiene Protocol'
+        whoReference: 'Indian IAP School-Readiness Hygiene Protocol'
       },
       {
         id: '4_5_m_brush',
@@ -1599,7 +1599,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-teal-400/10 to-teal-400/5 border-teal-400/20 text-teal-300',
         glowClass: 'shadow-teal-400/10',
         indicatorColor: 'bg-teal-400',
-        whoReference: 'WHO Pediatric Dental Independence'
+        whoReference: 'Indian IAP Pediatric Dental Independence'
       },
       {
         id: '4_5_m_dress',
@@ -1609,7 +1609,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-emerald-400/10 to-emerald-400/5 border-emerald-400/20 text-emerald-300',
         glowClass: 'shadow-emerald-400/10',
         indicatorColor: 'bg-emerald-400',
-        whoReference: 'WHO Motor Coordination Benchmark'
+        whoReference: 'Indian IAP Motor Coordination Benchmark'
       },
       {
         id: '4_5_m_breakfast',
@@ -1619,7 +1619,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-yellow-400/10 to-yellow-400/5 border-yellow-400/20 text-yellow-300',
         glowClass: 'shadow-yellow-400/10',
         indicatorColor: 'bg-yellow-400',
-        whoReference: 'WHO Nutrition for Cognitive Focus'
+        whoReference: 'Indian IAP Nutrition for Cognitive Focus'
       },
       {
         id: '4_5_m_bag_check',
@@ -1639,7 +1639,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-pink-400/10 to-pink-400/5 border-pink-400/20 text-pink-300',
         glowClass: 'shadow-pink-400/10',
         indicatorColor: 'bg-pink-400',
-        whoReference: 'WHO Positive Self-Concept Standard'
+        whoReference: 'Indian IAP Positive Self-Concept Standard'
       },
       {
         id: '4_5_m_depart',
@@ -1649,7 +1649,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-rose-400/10 to-rose-400/5 border-rose-400/20 text-rose-300',
         glowClass: 'shadow-rose-400/10',
         indicatorColor: 'bg-rose-400',
-        whoReference: 'WHO Social Routine Benchmark'
+        whoReference: 'Indian IAP Social Routine Benchmark'
       }
     ],
     evening: [
@@ -1661,7 +1661,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-cyan-400/10 to-cyan-400/5 border-cyan-400/20 text-cyan-300',
         glowClass: 'shadow-cyan-400/10',
         indicatorColor: 'bg-cyan-400',
-        whoReference: 'WHO Self-Management Skill'
+        whoReference: 'Indian IAP Self-Management Skill'
       },
       {
         id: '4_5_e_snack',
@@ -1671,7 +1671,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-amber-400/10 to-amber-400/5 border-amber-400/20 text-amber-300',
         glowClass: 'shadow-amber-400/10',
         indicatorColor: 'bg-amber-400',
-        whoReference: 'WHO Pediatric Energy Recovery'
+        whoReference: 'Indian IAP Pediatric Energy Recovery'
       },
       {
         id: '4_5_e_park',
@@ -1681,7 +1681,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-emerald-400/10 to-emerald-400/5 border-emerald-400/20 text-emerald-300',
         glowClass: 'shadow-emerald-400/10',
         indicatorColor: 'bg-emerald-400',
-        whoReference: 'WHO Physical Activity Guidelines (5-Year Milestone)'
+        whoReference: 'Indian IAP Physical Activity Guidelines (5-Year Milestone)'
       },
       {
         id: '4_5_e_stem',
@@ -1691,7 +1691,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-indigo-400/10 to-indigo-400/5 border-indigo-400/20 text-indigo-300',
         glowClass: 'shadow-indigo-400/10',
         indicatorColor: 'bg-indigo-400',
-        whoReference: 'WHO Cognitive Spatial Development'
+        whoReference: 'Indian IAP Cognitive Spatial Development'
       },
       {
         id: '4_5_e_tidy',
@@ -1701,7 +1701,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-purple-400/10 to-purple-400/5 border-purple-400/20 text-purple-300',
         glowClass: 'shadow-purple-400/10',
         indicatorColor: 'bg-purple-400',
-        whoReference: 'WHO Executive Functioning Standard'
+        whoReference: 'Indian IAP Executive Functioning Standard'
       },
       {
         id: '4_5_e_dinner_prep',
@@ -1711,7 +1711,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-teal-400/10 to-teal-400/5 border-teal-400/20 text-teal-300',
         glowClass: 'shadow-teal-400/10',
         indicatorColor: 'bg-teal-400',
-        whoReference: 'WHO Social Contribution & Empathy'
+        whoReference: 'Indian IAP Social Contribution & Empathy'
       },
       {
         id: '4_5_e_dinner',
@@ -1721,7 +1721,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-yellow-400/10 to-yellow-400/5 border-yellow-400/20 text-yellow-300',
         glowClass: 'shadow-yellow-400/10',
         indicatorColor: 'bg-yellow-400',
-        whoReference: 'WHO Family Health & Nutrition Standard'
+        whoReference: 'Indian IAP Family Health & Nutrition Standard'
       },
       {
         id: '4_5_e_screens_off',
@@ -1731,7 +1731,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-rose-400/10 to-rose-400/5 border-rose-400/20 text-rose-300',
         glowClass: 'shadow-rose-400/10',
         indicatorColor: 'bg-rose-400',
-        whoReference: 'WHO Melatonin Preservation Benchmark'
+        whoReference: 'Indian IAP Melatonin Preservation Benchmark'
       }
     ],
     bedtime: [
@@ -1743,7 +1743,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-blue-400/10 to-blue-400/5 border-blue-400/20 text-blue-300',
         glowClass: 'shadow-blue-400/10',
         indicatorColor: 'bg-blue-400',
-        whoReference: 'WHO Pediatric Hygiene & Relaxation'
+        whoReference: 'Indian IAP Pediatric Hygiene & Relaxation'
       },
       {
         id: '4_5_b_prep_clothes',
@@ -1753,7 +1753,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-teal-400/10 to-teal-400/5 border-teal-400/20 text-teal-300',
         glowClass: 'shadow-teal-400/10',
         indicatorColor: 'bg-teal-400',
-        whoReference: 'WHO Proactive Planning Skill'
+        whoReference: 'Indian IAP Proactive Planning Skill'
       },
       {
         id: '4_5_b_brush',
@@ -1763,7 +1763,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-emerald-400/10 to-emerald-400/5 border-emerald-400/20 text-emerald-300',
         glowClass: 'shadow-emerald-400/10',
         indicatorColor: 'bg-emerald-400',
-        whoReference: 'WHO Dental Health Guideline'
+        whoReference: 'Indian IAP Dental Health Guideline'
       },
       {
         id: '4_5_b_toilet',
@@ -1773,7 +1773,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-sky-400/10 to-sky-400/5 border-sky-400/20 text-sky-300',
         glowClass: 'shadow-sky-400/10',
         indicatorColor: 'bg-sky-400',
-        whoReference: 'WHO Nocturnal Bladder Comfort'
+        whoReference: 'Indian IAP Nocturnal Bladder Comfort'
       },
       {
         id: '4_5_b_chapter_book',
@@ -1783,7 +1783,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-purple-400/10 to-purple-400/5 border-purple-400/20 text-purple-300',
         glowClass: 'shadow-purple-400/10',
         indicatorColor: 'bg-purple-400',
-        whoReference: 'WHO Advanced Pre-Literacy Benchmark'
+        whoReference: 'Indian IAP Advanced Pre-Literacy Benchmark'
       },
       {
         id: '4_5_b_reflection',
@@ -1793,7 +1793,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-pink-400/10 to-pink-400/5 border-pink-400/20 text-pink-300',
         glowClass: 'shadow-pink-400/10',
         indicatorColor: 'bg-pink-400',
-        whoReference: 'WHO Socio-Emotional Reflection'
+        whoReference: 'Indian IAP Socio-Emotional Reflection'
       },
       {
         id: '4_5_b_breath',
@@ -1803,7 +1803,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-indigo-400/10 to-indigo-400/5 border-indigo-400/20 text-indigo-300',
         glowClass: 'shadow-indigo-400/10',
         indicatorColor: 'bg-indigo-400',
-        whoReference: 'WHO Pediatric Nervous System Balance'
+        whoReference: 'Indian IAP Pediatric Nervous System Balance'
       },
       {
         id: '4_5_b_sleep',
@@ -1813,7 +1813,7 @@ export const AGE_GROUPS: AgeGroupData[] = [
         colorClass: 'from-violet-500/10 to-violet-500/5 border-violet-500/20 text-violet-400',
         glowClass: 'shadow-violet-500/10',
         indicatorColor: 'bg-violet-500',
-        whoReference: 'WHO Child Sleep Duration Standard'
+        whoReference: 'Indian IAP Child Sleep Duration Standard'
       }
     ]
   }

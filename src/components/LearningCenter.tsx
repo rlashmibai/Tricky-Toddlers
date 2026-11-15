@@ -240,117 +240,117 @@ export interface FirstWordItem {
 }
 
 const FIRST_WORDS: FirstWordItem[] = [
-  // 👨‍👩‍👧 Family & Dear Ones (1-9)
-  { word: 'MOM', category: 'family', emoji: '👩‍🍼', color: 'bg-rose-500/10 border-rose-500/20 text-rose-400 font-black', translations: { hi: 'माँ', ta: 'அம்மா', te: 'అమ్మ', kn: 'ಅಮ್ಮ', ml: 'അമ്മ', mr: 'आई', bn: 'মা', gu: 'મમ્મી', pa: 'ਮਾਂ', as: 'মা', or: 'মা' } },
+  // 👨‍👩‍👧 Family & Dear Ones (1-9) - Easy 3 & 4 Letter Words
+  { word: 'MOM', category: 'family', emoji: '👩‍🍼', color: 'bg-rose-500/10 border-rose-500/20 text-rose-400 font-black', translations: { hi: 'माँ', ta: 'அம்மா', te: 'అమ్మ', kn: 'ಅಮ್ಮ', ml: 'അമ്മ', mr: 'आई', bn: 'মা', gu: 'મમ્મી', pa: 'ਮਾਂ', as: 'মা', or: 'ମା' } },
   { word: 'DAD', category: 'family', emoji: '👨‍🍼', color: 'bg-sky-500/10 border-sky-500/20 text-sky-400 font-black', translations: { hi: 'पापा', ta: 'அப்பா', te: 'నాన్న', kn: 'ಅಪ್ಪ', ml: 'അച്ഛൻ', mr: 'बाबा', bn: 'বাবা', gu: 'પપ્પા', pa: 'ਪਾਪਾ', as: 'দেউতা', or: 'ବାପା' } },
-  { word: 'GRANDMA', category: 'family', emoji: '👵', color: 'bg-amber-500/10 border-amber-500/20 text-amber-400 font-black', translations: { hi: 'दादी', ta: 'பாட்டி', te: 'నానమ్మ', kn: 'ಅಜ್ಜಿ', ml: 'മുത്തശ്ശി', mr: 'आजी', bn: 'ঠাকুমা', gu: 'દાદી', pa: 'ਦਾਦੀ', as: 'আইতা', or: 'ଜେଜେମା' } },
-  { word: 'GRANDPA', category: 'family', emoji: '👴', color: 'bg-indigo-500/10 border-indigo-500/20 text-indigo-400 font-black', translations: { hi: 'दादा', ta: 'தாத்தா', te: 'తాతయ్య', kn: 'ತಾತ', ml: 'മുത്തച്ഛൻ', mr: 'आजोबा', bn: 'দাদু', gu: 'દાદા', pa: 'ਦਾਦਾ', as: 'ককা', or: 'ଜେଜେବାପା' } },
-  { word: 'AUNT', category: 'family', emoji: '👩', color: 'bg-pink-500/10 border-pink-500/20 text-pink-400 font-black', translations: { hi: 'मौसी', ta: 'சித்தி', te: 'పిన్ని', kn: 'ಚಿಕ್ಕಮ್ಮ', ml: 'ചിറ്റമ്മ', mr: 'मावशी', bn: 'মাসি', gu: 'માસી', pa: 'ਮਾਸੀ', as: 'মাহী', or: 'ମାଉସୀ' } },
-  { word: 'UNCLE', category: 'family', emoji: '👨', color: 'bg-purple-500/10 border-purple-500/20 text-purple-400 font-black', translations: { hi: 'चाचा', ta: 'மாமா', te: 'మామయ్య', kn: 'ಮಾವ', ml: 'അമ്മാവൻ', mr: 'काका', bn: 'কাকা', gu: 'કાકા', pa: 'ਚਾਚਾ', as: 'খুড়া', or: 'ଦାଦା' } },
-  { word: 'SISTER', category: 'family', emoji: '👧', color: 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400 font-black', translations: { hi: 'बहन', ta: 'அக்கா', te: 'అక్క', kn: 'ಅಕ್ಕ', ml: 'ചേച്ചി', mr: 'बहीण', bn: 'দিদি', gu: 'બહેન', pa: 'ਭੈਣ', as: 'ভনী', or: 'ଭଉଣୀ' } },
-  { word: 'BROTHER', category: 'family', emoji: '👦', color: 'bg-blue-500/10 border-blue-500/20 text-blue-400 font-black', translations: { hi: 'भाई', ta: 'அண்ணா', te: 'అన్నయ్య', kn: 'ಅಣ್ಣ', ml: 'ചേട്ടൻ', mr: 'भाऊ', bn: 'দাদা', gu: 'ભાઈ', pa: 'ਭਰਾ', as: 'ভাই', or: 'ଭାଇ' } },
+  { word: 'MAMA', category: 'family', emoji: '🤱', color: 'bg-pink-500/10 border-pink-500/20 text-pink-400 font-black', translations: { hi: 'मम्मा', ta: 'அம்மா', te: 'అమ్మ', kn: 'ಅಮ್ಮ', ml: 'അമ്മ', mr: 'आई', bn: 'মা', gu: 'મમ્મી', pa: 'ਮੰਮੀ', as: 'মা', or: 'ମା' } },
+  { word: 'PAPA', category: 'family', emoji: '👨', color: 'bg-indigo-500/10 border-indigo-500/20 text-indigo-400 font-black', translations: { hi: 'पापा', ta: 'அப்பா', te: 'నాన్న', kn: 'ಅಪ್ಪ', ml: 'അച്ഛൻ', mr: 'बाबा', bn: 'বাবা', gu: 'પપ્પા', pa: 'ਪਾਪਾ', as: 'দেউতা', or: 'ବାପା' } },
+  { word: 'NANI', category: 'family', emoji: '👵', color: 'bg-amber-500/10 border-amber-500/20 text-amber-400 font-black', translations: { hi: 'नानी', ta: 'பாட்டி', te: 'అమ్మమ్మ', kn: 'ಅಜ್ಜಿ', ml: 'മുത്തശ്ശി', mr: 'आजी', bn: 'দিদা', gu: 'નાની', pa: 'ਨਾਨੀ', as: 'আইতা', or: 'ଆଈ' } },
+  { word: 'DADI', category: 'family', emoji: '🧓', color: 'bg-purple-500/10 border-purple-500/20 text-purple-400 font-black', translations: { hi: 'दादी', ta: 'பாட்டி', te: 'నానమ్మ', kn: 'ಅಜ್ಜಿ', ml: 'മുത്തശ്ശി', mr: 'आजी', bn: 'ঠাকুমা', gu: 'દાદી', pa: 'ਦਾਦੀ', as: 'আইতা', or: 'ଜେଜେମା' } },
+  { word: 'AUNT', category: 'family', emoji: '👩', color: 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400 font-black', translations: { hi: 'मौसी', ta: 'சித்தி', te: 'పిన్ని', kn: 'ಚಿಕ್ಕಮ್ಮ', ml: 'ചിറ്റമ്മ', mr: 'मावशी', bn: 'মাসি', gu: 'માસી', pa: 'ਮਾਸੀ', as: 'মাহী', or: 'ମାଉସୀ' } },
   { word: 'BABY', category: 'family', emoji: '👶', color: 'bg-orange-500/10 border-orange-500/20 text-orange-400 font-black', translations: { hi: 'बच्चा', ta: 'குழந்தை', te: 'పాప', kn: 'ಮಗು', ml: 'കുഞ്ഞ്', mr: 'बाळ', bn: 'শিশু', gu: 'બાળક', pa: 'ਬੱਚਾ', as: 'কেঁচুৱা', or: 'ଶିଶୁ' } },
+  { word: 'GIRL', category: 'family', emoji: '👧', color: 'bg-blue-500/10 border-blue-500/20 text-blue-400 font-black', translations: { hi: 'बिटिया', ta: 'சிறுமி', te: 'అమ్మాయి', kn: 'ಹುಡುಗಿ', ml: 'പെൺകുട്ടി', mr: 'मुलगी', bn: 'মেয়ে', gu: 'છોકરી', pa: 'ਕੁੜੀ', as: 'ছোৱালী', or: 'ଝିଅ' } },
 
-  // 🍛 Food & Drinks (10-26)
-  { word: 'WATER', category: 'food', emoji: '💧', color: 'bg-cyan-500/10 border-cyan-500/20 text-cyan-400 font-black', translations: { hi: 'पानी', ta: 'தண்ணீர்', te: 'నీరు', kn: 'ನೀರು', ml: 'വെള്ളം', mr: 'पाणी', bn: 'জল', gu: 'પાણી', pa: 'ਪਾਣੀ', as: 'পানী', or: 'ପାଣି' } },
+  // 🍛 Food & Drinks (10-26) - Easy 3 & 4 Letter Words
   { word: 'MILK', category: 'food', emoji: '🥛', color: 'bg-slate-300/10 border-slate-300/20 text-slate-200 font-black', translations: { hi: 'दूध', ta: 'பால்', te: 'పాలు', kn: 'ಹಾಲು', ml: 'പാൽ', mr: 'दूध', bn: 'দুধ', gu: 'દૂધ', pa: 'ਦੁੱਧ', as: 'গাখীৰ', or: 'କ୍ଷୀର' } },
-  { word: 'BREAD', category: 'food', emoji: '🍞', color: 'bg-amber-600/10 border-amber-600/20 text-amber-500 font-black', translations: { hi: 'रोटी', ta: 'ரொட்டி', te: 'రొట్టె', kn: 'ರೊಟ್ಟಿ', ml: 'റൊട്ടി', mr: 'पोळी', bn: 'রুটি', gu: 'રોટલી', pa: 'ਰੋਟੀ', as: 'ৰুটি', or: 'ରୁଟି' } },
   { word: 'RICE', category: 'food', emoji: '🍚', color: 'bg-zinc-300/10 border-zinc-300/20 text-zinc-300 font-black', translations: { hi: 'चावल', ta: 'சாதம்', te: 'అన్నం', kn: 'ಅನ್ನ', ml: 'ചോറ്', mr: 'भात', bn: 'ভাত', gu: 'ભાત', pa: 'ਚੌਲ', as: 'ভাত', or: 'ଭାତ' } },
   { word: 'SOUP', category: 'food', emoji: '🍲', color: 'bg-yellow-500/10 border-yellow-500/20 text-yellow-400 font-black', translations: { hi: 'सूप', ta: 'சூப்', te: 'సూప్', kn: 'ಸೂಪ್', ml: 'സൂപ്പ്', mr: 'सूप', bn: 'স্যুপ', gu: 'સૂપ', pa: 'ਸੂਪ', as: 'চুপ', or: 'ସୁପ୍' } },
-  { word: 'BANANA', category: 'food', emoji: '🍌', color: 'bg-yellow-400/10 border-yellow-400/20 text-yellow-300 font-black', translations: { hi: 'केला', ta: 'வாழைப்பழம்', te: 'అరటిపండు', kn: 'ಬಾಳೆಹಣ್ಣು', ml: 'പഴം', mr: 'केळी', bn: 'কলা', gu: 'કેળું', pa: 'ਕੇਲਾ', as: 'কল', or: 'କଦଳୀ' } },
-  { word: 'APPLE', category: 'food', emoji: '🍎', color: 'bg-red-500/10 border-red-500/20 text-red-400 font-black', translations: { hi: 'सेब', ta: 'ஆப்பிள்', te: 'ఆపిల్', kn: 'ಸೇಬು', ml: 'ആപ്പിൾ', mr: 'सफरचंद', bn: 'আপেল', gu: 'સફરજન', pa: 'ਸੇਬ', as: 'আপেল', or: 'ସେଓ' } },
-  { word: 'MANGO', category: 'food', emoji: '🥭', color: 'bg-amber-500/10 border-amber-500/20 text-amber-400 font-black', translations: { hi: 'आम', ta: 'மாம்பழம்', te: 'మామిడి', kn: 'ಮಾವಿನಹಣ್ಣು', ml: 'മാമ്പഴം', mr: 'आंबा', bn: 'আম', gu: 'કેરી', pa: 'ਅੰਬ', as: 'আম', or: 'ଆମ୍ବ' } },
-  { word: 'YOGURT', category: 'food', emoji: '🥣', color: 'bg-teal-500/10 border-teal-500/20 text-teal-300 font-black', translations: { hi: 'दही', ta: 'தயிர்', te: 'పెరుగు', kn: 'ಮೊಸರು', ml: 'തൈര്', mr: 'दही', bn: 'দই', gu: 'દહીં', pa: 'ਦਹੀਂ', as: 'দৈ', or: 'ଦହି' } },
-  { word: 'ORANGE', category: 'food', emoji: '🍊', color: 'bg-orange-400/10 border-orange-400/20 text-orange-300 font-black', translations: { hi: 'संतरा', ta: 'ஆரஞ்சு', te: 'నారింజ', kn: 'ಕಿತ್ತಳೆ', ml: 'ഓറഞ്ച്', mr: 'संत्री', bn: 'কমলা', gu: 'નારંગી', pa: 'ਸੰਤਰਾ', as: 'কমলা', or: 'କମଳା' } },
-  { word: 'GRAPES', category: 'food', emoji: '🍇', color: 'bg-purple-500/10 border-purple-500/20 text-purple-400 font-black', translations: { hi: 'अंगूर', ta: 'திராட்சை', te: 'ద్రాక్ష', kn: 'ದ್ರಾಕ್ಷಿ', ml: 'മുന്തിരി', mr: 'द्राक्षे', bn: 'আঙুর', gu: 'દ્રાક્ષ', pa: 'ਅੰਗੂਰ', as: 'আঙুৰ', or: 'ଅଙ୍ଗୁର' } },
-  { word: 'PORRIDGE', category: 'food', emoji: '🥣', color: 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400 font-black', translations: { hi: 'दलिया', ta: 'கஞ்சி', te: 'జావ', kn: 'ಗಂಜಿ', ml: 'കഞ്ഞി', mr: 'पेज', bn: 'খুদের জাউ', gu: 'ખીચડી', pa: 'ਦਲੀਆ', as: 'খীচিৰি', or: 'ଖିଚୁଡ଼ି' } },
-  { word: 'COOKIE', category: 'food', emoji: '🍪', color: 'bg-amber-700/10 border-amber-700/20 text-amber-500 font-black', translations: { hi: 'बिस्कुट', ta: 'பிஸ்கட்', te: 'బిస్కెట్', kn: 'ಬಿಸ್ಕತ್ತು', ml: 'ബിസ്കറ്റ്', mr: 'बिस्किट', bn: 'বিস্কুট', gu: 'બિસ્કિટ', pa: 'ਬਿਸਕੁਟ', as: 'বিস্কুট', or: 'ବିସ୍କୁଟ୍' } },
-  { word: 'PUDDING', category: 'food', emoji: '🍮', color: 'bg-rose-500/10 border-rose-500/20 text-rose-400 font-black', translations: { hi: 'खीर', ta: 'பாயசம்', te: 'పాయసం', kn: 'ಪಾಯಸ', ml: 'പായസം', mr: 'खीर', bn: 'পায়েস', gu: 'ખીર', pa: 'ਖੀਰ', as: 'পায়স', or: 'କ୍ଷୀରି' } },
-  { word: 'BUTTER', category: 'food', emoji: '🧈', color: 'bg-yellow-500/10 border-yellow-500/20 text-yellow-400 font-black', translations: { hi: 'मक्खन', ta: 'வெண்ணெய்', te: 'వెన్న', kn: 'ಬೆಣ್ಣೆ', ml: 'വെണ്ണ', mr: 'लोणी', bn: 'মাখন', gu: 'માખણ', pa: 'ਮੱਖਣ', as: 'মাখন', or: 'ଲହୁଣୀ' } },
-  { word: 'SWEET', category: 'food', emoji: '🍬', color: 'bg-amber-400/10 border-amber-400/20 text-amber-400 font-black', translations: { hi: 'मिठाई', ta: 'இனிப்பு', te: 'మిఠాయి', kn: 'ಸಿಹಿ', ml: 'മധുരം', mr: 'खाऊ', bn: 'মিষ্টি', gu: 'મીઠાઈ', pa: 'ਮਿਠਾਈ', as: 'মিঠাই', or: 'ମିଠା' } },
-  { word: 'JUICE', category: 'food', emoji: '🧃', color: 'bg-amber-600/10 border-amber-600/20 text-amber-600 font-black', translations: { hi: 'जूस', ta: 'பழச்சாறு', te: 'పండ్ల రసం', kn: 'ಹಣ್ಣಿನ ರಸ', ml: 'ജ്യൂസ്', mr: 'फळांचा रस', bn: 'ফলের রস', gu: 'જ્યુસ', pa: 'ਜੂਸ', as: 'ফলৰ ৰস', or: 'ଫଳ ରସ' } },
+  { word: 'ROTI', category: 'food', emoji: '🫓', color: 'bg-amber-600/10 border-amber-600/20 text-amber-500 font-black', translations: { hi: 'रोटी', ta: 'சப்பாத்தி', te: 'రొట్టె', kn: 'ರೊಟ್ಟಿ', ml: 'ചപ്പാത്തി', mr: 'पोळी', bn: 'রুটি', gu: 'રોટલી', pa: 'ਰੋਟੀ', as: 'ৰুটি', or: 'ରୁଟି' } },
+  { word: 'CURD', category: 'food', emoji: '🥣', color: 'bg-teal-500/10 border-teal-500/20 text-teal-300 font-black', translations: { hi: 'दही', ta: 'தயிர்', te: 'పెరుగు', kn: 'ಮೊಸರು', ml: 'തൈര്', mr: 'दही', bn: 'দই', gu: 'દહીં', pa: 'ਦਹੀਂ', as: 'দৈ', or: 'ଦହି' } },
+  { word: 'DAL', category: 'food', emoji: '🥘', color: 'bg-amber-500/10 border-amber-500/20 text-amber-400 font-black', translations: { hi: 'दाल', ta: 'பருப்பு', te: 'పప్పు', kn: 'ಬೇಳೆ', ml: 'പരിപ്പ്', mr: 'वरण', bn: 'ডাল', gu: 'દાળ', pa: 'ਦਾਲ', as: 'দাইল', or: 'ଡାଲି' } },
+  { word: 'IDLI', category: 'food', emoji: '⚪', color: 'bg-cyan-500/10 border-cyan-500/20 text-cyan-400 font-black', translations: { hi: 'इडली', ta: 'இட்லி', te: 'ఇడ్లీ', kn: 'ಇಡ್ಲಿ', ml: 'ഇഡ്ഡലി', mr: 'इडली', bn: 'ইডলি', gu: 'ઈડલી', pa: 'ਇਡਲੀ', as: 'ইডলি', or: 'ഇଡଲି' } },
+  { word: 'DOSA', category: 'food', emoji: '🥞', color: 'bg-orange-400/10 border-orange-400/20 text-orange-300 font-black', translations: { hi: 'डोसा', ta: 'தோசை', te: 'దోశ', kn: 'ದೋಸೆ', ml: 'ദോശ', mr: 'डोसा', bn: 'ধোসা', gu: 'ઢોસા', pa: 'ਡੋਸਾ', as: 'ডোচা', or: 'ଦୋସା' } },
+  { word: 'GHEE', category: 'food', emoji: '🧈', color: 'bg-yellow-500/10 border-yellow-500/20 text-yellow-400 font-black', translations: { hi: 'घी', ta: 'நெய்', te: 'నెయ్యి', kn: 'ತುಪ್ಪ', ml: 'നെയ്യ്', mr: 'तूप', bn: 'ঘি', gu: 'ઘી', pa: 'ਘਿਓ', as: 'ঘিউ', or: 'ଘିଅ' } },
+  { word: 'PEAR', category: 'food', emoji: '🍐', color: 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400 font-black', translations: { hi: 'नाशपाती', ta: 'பேரிக்காய்', te: 'పియర్', kn: 'ಪೇರಳೆ', ml: 'പിയർ', mr: 'नासपती', bn: 'নাশপাতি', gu: 'નાશপাती', pa: 'ਨਾਸ਼ਪਾਤੀ', as: 'নাচপতি', or: 'നാସପାତି' } },
+  { word: 'PLUM', category: 'food', emoji: '🍑', color: 'bg-purple-500/10 border-purple-500/20 text-purple-400 font-black', translations: { hi: 'आलूबुखारा', ta: 'பிளம்', te: 'ప్లమ్', kn: 'ಪ್ಲಮ್', ml: 'പ്ലം', mr: 'आलूबुखार', bn: 'আলুবোখারা', gu: 'આલુબુખારા', pa: 'ਆਲੂਬੁਖਾਰਾ', as: 'প্লাম', or: 'ପ୍ଲମ୍' } },
+  { word: 'CORN', category: 'food', emoji: '🌽', color: 'bg-yellow-400/10 border-yellow-400/20 text-yellow-300 font-black', translations: { hi: 'भुट्टा', ta: 'சோளம்', te: 'మొక్కజొన్న', kn: 'ಮೆಕ್ಕೆಜೋಳ', ml: 'ചോളം', mr: 'मका', bn: 'ভুট্টা', gu: 'મકાઈ', pa: 'ਮੱਕੀ', as: 'মাকৈ', or: 'ମକା' } },
+  { word: 'CAKE', category: 'food', emoji: '🍰', color: 'bg-rose-500/10 border-rose-500/20 text-rose-400 font-black', translations: { hi: 'केक', ta: 'கேக்', te: 'కేక్', kn: 'ಕೇಕ್', ml: 'കേക്ക്', mr: 'केक', bn: 'কেক', gu: 'કેક', pa: 'ਕੇਕ', as: 'কেক', or: 'କେକ୍' } },
+  { word: 'EGG', category: 'food', emoji: '🥚', color: 'bg-amber-400/10 border-amber-400/20 text-amber-300 font-black', translations: { hi: 'अंडा', ta: 'முட்டை', te: 'గుడ్డు', kn: 'ಮೊಟ್ಟೆ', ml: 'മുട്ട', mr: 'अंडे', bn: 'ডিম', gu: 'ઈંડું', pa: 'ਅੰਡਾ', as: 'কণী', or: 'ଅଣ୍ଡା' } },
+  { word: 'BUN', category: 'food', emoji: '🥯', color: 'bg-amber-700/10 border-amber-700/20 text-amber-500 font-black', translations: { hi: 'बन', ta: 'பன்', te: 'బన్', kn: 'ಬನ್', ml: 'ബൺ', mr: 'बन', bn: 'বান', gu: 'બન', pa: 'ਬਨ', as: 'বান', or: 'ବନ୍' } },
+  { word: 'JAM', category: 'food', emoji: '🍓', color: 'bg-red-500/10 border-red-500/20 text-red-400 font-black', translations: { hi: 'जैम', ta: 'ஜாம்', te: 'జామ్', kn: 'ಜಾಮ್', ml: 'ജാം', mr: 'जॅम', bn: 'জ্যাম', gu: 'જામ', pa: 'ਜੈਮ', as: 'جام', or: 'ଜାମ୍' } },
+  { word: 'OATS', category: 'food', emoji: '🌾', color: 'bg-amber-600/10 border-amber-600/20 text-amber-500 font-black', translations: { hi: 'ओट्स', ta: 'ஓட்ஸ்', te: 'ఓట్స్', kn: 'ಓಟ್ಸ್', ml: 'ഓട്സ്', mr: 'ओट्स', bn: 'ওটস', gu: 'ઓટ્સ', pa: 'ਓਟਸ', as: 'ওটচ', or: 'ଓଟ୍ସ' } },
 
-  // 🌿 Nature & Wonders (27-34)
-  { word: 'FLOWER', category: 'nature', emoji: '🌸', color: 'bg-pink-400/10 border-pink-400/20 text-pink-300 font-black', translations: { hi: 'फूल', ta: 'பூ', te: 'పువ్వు', kn: 'ಹೂವು', ml: 'പൂവ്', mr: 'फूल', bn: 'ফুল', gu: 'ફૂલ', pa: 'ਫੁੱਲ', as: 'ফুল', or: 'ଫୁଲ' } },
+  // 🌿 Nature & Wonders (27-34) - Easy 3 & 4 Letter Words
   { word: 'SUN', category: 'nature', emoji: '☀️', color: 'bg-yellow-400/10 border-yellow-400/20 text-yellow-400 font-black', translations: { hi: 'सूरज', ta: 'சூரியன்', te: 'సూర్యుడు', kn: 'ಸೂರ್ಯ', ml: 'സൂര്യൻ', mr: 'सूर्य', bn: 'সূর্য', gu: 'સૂરજ', pa: 'ਸੂਰਜ', as: 'সূৰ্য', or: 'ସୂର୍ଯ୍ୟ' } },
   { word: 'MOON', category: 'nature', emoji: '🌙', color: 'bg-indigo-300/10 border-indigo-300/20 text-indigo-300 font-black', translations: { hi: 'चाँद', ta: 'நிலா', te: 'చంద్రుడు', kn: 'ಚಂದ್ರ', ml: 'ചന്ദ്രൻ', mr: 'चंद्र', bn: 'চাঁদ', gu: 'ચાંદો', pa: 'ਚੰਨ', as: 'জোন', or: 'ଜହ୍ନ' } },
   { word: 'STAR', category: 'nature', emoji: '⭐', color: 'bg-yellow-500/10 border-yellow-500/20 text-yellow-400 font-black', translations: { hi: 'तारा', ta: 'நட்சத்திரம்', te: 'నక్షత్రం', kn: 'ನಕ್ಷತ್ರ', ml: 'നക്ഷത്രം', mr: 'चांदणी', bn: 'তারা', gu: 'તારો', pa: 'ਤਾਰਾ', as: 'তৰা', or: 'ତାରା' } },
   { word: 'RAIN', category: 'nature', emoji: '🌧️', color: 'bg-sky-400/10 border-sky-400/20 text-sky-400 font-black', translations: { hi: 'बारिश', ta: 'மழை', te: 'వర్షం', kn: 'ಮಳೆ', ml: 'മഴ', mr: 'पाऊस', bn: 'বৃষ্টি', gu: 'વરસાદ', pa: 'ਮੀਂਹ', as: 'বৰষুণ', or: 'ବର୍ଷା' } },
-  { word: 'CLOUD', category: 'nature', emoji: '☁️', color: 'bg-blue-300/10 border-blue-300/20 text-blue-300 font-black', translations: { hi: 'बादल', ta: 'மேகம்', te: 'మేఘం', kn: 'ಮೋಡ', ml: 'മേഘം', mr: 'ढग', bn: 'মেঘ', gu: 'વાદળ', pa: 'ਬੱਦਲ', as: 'ডাৱৰ', or: 'ମେଘ' } },
+  { word: 'SKY', category: 'nature', emoji: '🌤️', color: 'bg-blue-300/10 border-blue-300/20 text-blue-300 font-black', translations: { hi: 'आसमान', ta: 'வானம்', te: 'ఆకాశం', kn: 'ಆಕಾಶ', ml: 'ആകാശം', mr: 'आकाश', bn: 'আকাশ', gu: 'આકાશ', pa: 'ਆسमान', as: 'আকাশ', or: 'ଆକାଶ' } },
   { word: 'TREE', category: 'nature', emoji: '🌳', color: 'bg-emerald-600/10 border-emerald-600/20 text-emerald-400 font-black', translations: { hi: 'पेड़', ta: 'மரம்', te: 'చెట్టు', kn: 'ಮರ', ml: 'മരം', mr: 'झाड', bn: 'গাছ', gu: 'ઝાડ', pa: 'ਰੁੱਖ', as: 'গছ', or: 'ଗଛ' } },
   { word: 'LEAF', category: 'nature', emoji: '🍃', color: 'bg-green-500/10 border-green-500/20 text-green-400 font-black', translations: { hi: 'पत्ता', ta: 'இலை', te: 'ఆకు', kn: 'ಎಲೆ', ml: 'ഇല', mr: 'पान', bn: 'পাতা', gu: 'પાંદડું', pa: 'ਪੱਤਾ', as: 'পাত', or: 'ପତ୍ର' } },
+  { word: 'ROSE', category: 'nature', emoji: '🌹', color: 'bg-pink-400/10 border-pink-400/20 text-pink-300 font-black', translations: { hi: 'गुलाब', ta: 'ரோஜா', te: 'గులాబీ', kn: 'ಗುಲಾಬಿ', ml: 'റോസാപ്പൂ', mr: 'गुलाब', bn: 'গোলাপ', gu: 'ગુલાબ', pa: 'ਗੁਲਾਬ', as: 'গোলাপ', or: 'ଗୋଲାପ' } },
 
-  // 🐾 Animals & Birds (35-52)
+  // 🐾 Animals & Birds (35-52) - Easy 3 & 4 Letter Words
   { word: 'COW', category: 'animals', emoji: '🐮', color: 'bg-amber-500/10 border-amber-500/20 text-amber-400 font-black', translations: { hi: 'गाय', ta: 'பசு', te: 'ఆవు', kn: 'ಹಸು', ml: 'പശു', mr: 'गाय', bn: 'গরু', gu: 'ગાય', pa: 'ਗਾਂ', as: 'গৰু', or: 'ଗାଈ' } },
   { word: 'DOG', category: 'animals', emoji: '🐶', color: 'bg-yellow-500/10 border-yellow-500/20 text-yellow-400 font-black', translations: { hi: 'कुत्ता', ta: 'நாய்', te: 'కుక్క', kn: 'ನಾಯಿ', ml: 'നായ', mr: 'कुत्रा', bn: 'কুকুর', gu: 'કૂતરો', pa: 'ਕੁੱਤਾ', as: 'কুকুৰ', or: 'କୁକୁର' } },
   { word: 'CAT', category: 'animals', emoji: '🐱', color: 'bg-orange-400/10 border-orange-400/20 text-orange-400 font-black', translations: { hi: 'बिल्ली', ta: 'பூனை', te: 'పిల్లి', kn: 'ಬೆಕ್ಕು', ml: 'പൂച്ച', mr: 'मांजर', bn: 'বিড়াল', gu: 'બિલાડી', pa: 'ਬਿੱਲੀ', as: 'মেকুৰী', or: 'ବିରାଡ଼ି' } },
-  { word: 'ELEPHANT', category: 'animals', emoji: '🐘', color: 'bg-slate-400/10 border-slate-400/20 text-slate-300 font-black', translations: { hi: 'हाथी', ta: 'யானை', te: 'ఏనుగు', kn: 'ಆನೆ', ml: 'ആന', mr: 'हत्ती', bn: 'হাতি', gu: 'હાથી', pa: 'ਹਾਥੀ', as: 'হাতী', or: 'ହାତୀ' } },
-  { word: 'MONKEY', category: 'animals', emoji: '🐒', color: 'bg-amber-600/10 border-amber-600/20 text-amber-500 font-black', translations: { hi: 'बंदर', ta: 'குரங்கு', te: 'కోతి', kn: 'ಕೋತಿ', ml: 'കുരങ്ങ്', mr: 'माकड', bn: 'বানর', gu: 'વાંદરો', pa: 'ਬਾਂਦਰ', as: 'বান্দৰ', or: 'ମାଙ୍କଡ଼' } },
-  { word: 'PARROT', category: 'animals', emoji: '🦜', color: 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400 font-black', translations: { hi: 'तोता', ta: 'கிளி', te: 'చిలుక', kn: 'ಗಿಳಿ', ml: 'തത്ത', mr: 'पोपट', bn: 'টিয়া', gu: 'પોપટ', pa: 'ਤੋਤਾ', as: 'ভাটৌ', or: 'ଶୁଆ' } },
-  { word: 'PEACOCK', category: 'animals', emoji: '🦚', color: 'bg-teal-500/10 border-teal-500/20 text-teal-400 font-black', translations: { hi: 'मोर', ta: 'மயில்', te: 'నెమలి', kn: 'ನವಿಲು', ml: 'മയിൽ', mr: 'मोर', bn: 'ময়ূর', gu: 'મોર', pa: 'ਮੋਰ', as: 'ময়ূৰ', or: 'ମୟୂର' } },
-  { word: 'BIRD', category: 'animals', emoji: '🐦', color: 'bg-sky-400/10 border-sky-400/20 text-sky-400 font-black', translations: { hi: 'चिड़िया', ta: 'பறவை', te: 'పక్షి', kn: 'ಹಕ್ಕಿ', ml: 'പക്ഷി', mr: 'चिमणी', bn: 'পাখি', gu: 'પક્ષી', pa: 'ਪੰਛੀ', as: 'চৰাই', or: 'ଚଢ଼େଇ' } },
-  { word: 'GOAT', category: 'animals', emoji: '🐐', color: 'bg-stone-400/10 border-stone-400/20 text-stone-300 font-black', translations: { hi: 'बकरी', ta: 'ஆடு', te: 'మేక', kn: 'ಮೇಕೆ', ml: 'ആട്', mr: 'शेळी', bn: 'ছাগল', gu: 'બકરી', pa: 'ਬੱਕਰੀ', as: 'ছাগলী', or: 'ଛେଳି' } },
-  { word: 'HORSE', category: 'animals', emoji: '🐴', color: 'bg-amber-700/10 border-amber-700/20 text-amber-500 font-black', translations: { hi: 'घोड़ा', ta: 'குதிரை', te: 'గుర్రం', kn: 'ಕುದುರೆ', ml: 'കുതിര', mr: 'घोडा', bn: 'ঘোড়া', gu: 'ઘોડો', pa: 'ਘੋੜਾ', as: 'ঘোঁৰা', or: 'ଘୋଡ଼ା' } },
-  { word: 'LION', category: 'animals', emoji: '🦁', color: 'bg-yellow-500/10 border-yellow-500/20 text-yellow-500 font-black', translations: { hi: 'शेर', ta: 'சிங்கம்', te: 'సింహం', kn: 'ಸಿಂಹ', ml: 'സിംഹം', mr: 'सिंह', bn: 'সিংহ', gu: 'સિંહ', pa: 'ਸ਼ੇਰ', as: 'সিংহ', or: 'ସିଂହ' } },
-  { word: 'BUTTERFLY', category: 'animals', emoji: '🦋', color: 'bg-pink-500/10 border-pink-500/20 text-pink-400 font-black', translations: { hi: 'तितली', ta: 'வண்ணத்துப்பூச்சி', te: 'సీతాకోకచిలుక', kn: 'ಚಿಟ್ಟೆ', ml: 'പൂമ്പാറ്റ', mr: 'फुलपाखरू', bn: 'প্রজাপতি', gu: 'પતંગિયું', pa: 'ਤਿਤਲੀ', as: 'পখিলা', or: 'ପ୍ରଜାପତି' } },
-  { word: 'FISH', category: 'animals', emoji: '🐟', color: 'bg-blue-400/10 border-blue-400/20 text-blue-400 font-black', translations: { hi: 'मछली', ta: 'மீன்', te: 'చేప', kn: 'ಮೀನು', ml: 'മീൻ', mr: 'मासा', bn: 'মাছ', gu: 'માછલી', pa: 'ਮੱਛੀ', as: 'মাছ', or: 'ମାଛ' } },
-  { word: 'CROW', category: 'animals', emoji: '🐦‍⬛', color: 'bg-zinc-500/10 border-zinc-500/20 text-zinc-300 font-black', translations: { hi: 'कौआ', ta: 'காகம்', te: 'కాకి', kn: 'ಕಾಗೆ', ml: 'കാക്ക', mr: 'कावळा', bn: 'কাক', gu: 'કાગડો', pa: 'ਕਾਂ', as: 'কাউৰী', or: 'କାଉ' } },
-  { word: 'CAMEL', category: 'animals', emoji: '🐪', color: 'bg-amber-500/10 border-amber-500/20 text-amber-400 font-black', translations: { hi: 'ऊँट', ta: 'ஒட்டகம்', te: 'ఒంటె', kn: 'ಒಂಟೆ', ml: 'ഒട്ടകം', mr: 'उंट', bn: 'উট', gu: 'ઊંટ', pa: 'ਊਠ', as: 'উট', or: 'ଓଟ' } },
-  { word: 'BEAR', category: 'animals', emoji: '🐻', color: 'bg-amber-800/10 border-amber-800/20 text-amber-600 font-black', translations: { hi: 'भालू', ta: 'கரடி', te: 'ఎలుగుబంటి', kn: 'ಕರಡಿ', ml: 'കരടി', mr: 'अस्वल', bn: 'ভাল্লুক', gu: 'રીંછ', pa: 'ਰਿੱਛ', as: 'ভালুক', or: 'ଭାଲୁ' } },
-  { word: 'RABBIT', category: 'animals', emoji: '🐰', color: 'bg-rose-300/10 border-rose-300/20 text-rose-300 font-black', translations: { hi: 'खरगोश', ta: 'முயல்', te: 'కుందేలు', kn: 'ಮೊಲ', ml: 'മുയൽ', mr: 'ससा', bn: 'খরগোশ', gu: 'સસલું', pa: 'ਖਰਗੋਸ਼', as: 'শহা', or: 'ଠେକୁଆ' } },
+  { word: 'HEN', category: 'animals', emoji: '🐔', color: 'bg-red-400/10 border-red-400/20 text-red-300 font-black', translations: { hi: 'मुर्गी', ta: 'கோழி', te: 'కోడి', kn: 'ಕೋಳಿ', ml: 'കോഴി', mr: 'कोंबडी', bn: 'মুরগি', gu: 'મરઘી', pa: 'ਮੁਰਗੀ', as: 'কুকুৰা', or: 'କୁକୁଡ଼ା' } },
   { word: 'DUCK', category: 'animals', emoji: '🦆', color: 'bg-yellow-400/10 border-yellow-400/20 text-yellow-400 font-black', translations: { hi: 'बत्तख', ta: 'வாத்து', te: 'బాతు', kn: 'ಬಾತುಕೋಳಿ', ml: 'താറാവ്', mr: 'बदक', bn: 'হাঁস', gu: 'બતક', pa: 'ਬੱਤਖ', as: 'হাঁহ', or: 'ବତକ' } },
+  { word: 'GOAT', category: 'animals', emoji: '🐐', color: 'bg-stone-400/10 border-stone-400/20 text-stone-300 font-black', translations: { hi: 'बकरी', ta: 'ஆடு', te: 'మేక', kn: 'ಮೇಕೆ', ml: 'ആട്', mr: 'शेळी', bn: 'ছাগল', gu: 'બકરી', pa: 'ਬੱਕਰੀ', as: 'ছাগলী', or: 'ଛେଳି' } },
+  { word: 'LION', category: 'animals', emoji: '🦁', color: 'bg-yellow-500/10 border-yellow-500/20 text-yellow-500 font-black', translations: { hi: 'शेर', ta: 'சிங்கம்', te: 'సింహం', kn: 'ಸಿಂಹ', ml: 'സിംഹം', mr: 'सिंह', bn: 'সিংহ', gu: 'સિંહ', pa: 'ਸ਼ੇਰ', as: 'সিংহ', or: 'ସିଂହ' } },
+  { word: 'BEAR', category: 'animals', emoji: '🐻', color: 'bg-amber-800/10 border-amber-800/20 text-amber-600 font-black', translations: { hi: 'भालू', ta: 'கரடி', te: 'ఎలుగుబంటి', kn: 'ಕರಡಿ', ml: 'കരടി', mr: 'अस्वल', bn: 'ভাল্লুক', gu: 'રીંછ', pa: 'ਰਿੱਛ', as: 'ভালুক', or: 'ଭାଲୁ' } },
+  { word: 'DEER', category: 'animals', emoji: '🦌', color: 'bg-amber-600/10 border-amber-600/20 text-amber-500 font-black', translations: { hi: 'हिरण', ta: 'மான்', te: 'జింక', kn: 'ಜಿಂಕೆ', ml: 'മാൻ', mr: 'हरीण', bn: 'হরিণ', gu: 'હરણ', pa: 'ਹਿਰਨ', as: 'হৰিণ', or: 'ହରିଣ' } },
+  { word: 'FROG', category: 'animals', emoji: '🐸', color: 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400 font-black', translations: { hi: 'मेंढक', ta: 'தவளை', te: 'కప్ప', kn: 'ಕಪ್ಪೆ', ml: 'തവള', mr: 'बेडूक', bn: 'ব্যাঙ', gu: 'દેડકો', pa: 'ਡੱਡੂ', as: 'ভেকুলী', or: 'ବେଙ୍ଗ' } },
+  { word: 'FISH', category: 'animals', emoji: '🐟', color: 'bg-blue-400/10 border-blue-400/20 text-blue-400 font-black', translations: { hi: 'मछली', ta: 'மீன்', te: 'చేప', kn: 'ಮೀನು', ml: 'മീൻ', mr: 'मासा', bn: 'মাছ', gu: 'માછલી', pa: 'ਮੱਛੀ', as: 'মাছ', or: 'ମାଛ' } },
+  { word: 'BIRD', category: 'animals', emoji: '🐦', color: 'bg-sky-400/10 border-sky-400/20 text-sky-400 font-black', translations: { hi: 'चिड़िया', ta: 'பறவை', te: 'పక్షి', kn: 'ಹಕ್ಕಿ', ml: 'പക്ഷി', mr: 'चिमणी', bn: 'পাখি', gu: 'પક્ષી', pa: 'ਪੰਛੀ', as: 'চৰাই', or: 'ଚଢ଼େଇ' } },
+  { word: 'CROW', category: 'animals', emoji: '🐦‍⬛', color: 'bg-zinc-500/10 border-zinc-500/20 text-zinc-300 font-black', translations: { hi: 'कौआ', ta: 'காகம்', te: 'కాకి', kn: 'ಕಾಗೆ', ml: 'കാക്ക', mr: 'कावळा', bn: 'কাক', gu: 'કાગડો', pa: 'ਕਾਂ', as: 'কাউৰী', or: 'କାଉ' } },
+  { word: 'OWL', category: 'animals', emoji: '🦉', color: 'bg-amber-700/10 border-amber-700/20 text-amber-400 font-black', translations: { hi: 'उल्लू', ta: 'ஆந்தை', te: 'గుడ్లగూబ', kn: 'ಗೂಬೆ', ml: 'മൂങ്ങ', mr: 'घुबड', bn: 'পেঁচা', gu: 'ઘુવડ', pa: 'ਉੱਲੂ', as: 'ফেঁচা', or: 'ପେଚା' } },
+  { word: 'BEE', category: 'animals', emoji: '🐝', color: 'bg-yellow-400/10 border-yellow-400/20 text-yellow-300 font-black', translations: { hi: 'मधुमक्खी', ta: 'தேனீ', te: 'తేనెటీగ', kn: 'ಜೇನುನೊಣ', ml: 'തേനീച്ച', mr: 'मधमाशी', bn: 'মৌমাছি', gu: 'મધમાખી', pa: 'ਮਧੂਮੱਖੀ', as: 'মৌমাখি', or: 'ମହୁମାଛି' } },
+  { word: 'ANT', category: 'animals', emoji: '🐜', color: 'bg-rose-400/10 border-rose-400/20 text-rose-300 font-black', translations: { hi: 'चींटी', ta: 'எறும்பு', te: 'చీమ', kn: 'ಇರುವೆ', ml: 'ഉറുമ്പ്', mr: 'मुंगी', bn: 'পিঁপড়ে', gu: 'કીડી', pa: 'ਕੀੜੀ', as: 'পৰুৱা', or: 'ପିମ୍ପୁଡ଼ି' } },
+  { word: 'FOX', category: 'animals', emoji: '🦊', color: 'bg-orange-500/10 border-orange-500/20 text-orange-400 font-black', translations: { hi: 'लोमड़ी', ta: 'நரி', te: 'నక్క', kn: 'ನರಿ', ml: 'കുറുക്കൻ', mr: 'कोल्हा', bn: 'শিয়াল', gu: 'શિયાળ', pa: 'ਲੂੰਬੜੀ', as: 'শিয়াল', or: 'коଲିଆ' } },
+  { word: 'PIG', category: 'animals', emoji: '🐷', color: 'bg-pink-400/10 border-pink-400/20 text-pink-300 font-black', translations: { hi: 'सूअर', ta: 'பன்றி', te: 'పంది', kn: 'ಹಂದಿ', ml: 'പന്നി', mr: 'डुक्कर', bn: 'শূকর', gu: 'ભૂંડ', pa: 'ਸੂਰ', as: 'গাহৰি', or: 'ଘୁଷୁରି' } },
 
-  // 🏠 Home, Vehicles & Everyday Toys (53-88)
+  // 🏠 Home, Vehicles & Everyday Toys (53-88) - Easy 3 & 4 Letter Words
   { word: 'CAR', category: 'home', emoji: '🚗', color: 'bg-red-500/10 border-red-500/20 text-red-500 font-black', translations: { hi: 'गाड़ी', ta: 'கார்', te: 'కారు', kn: 'ಕಾರು', ml: 'കാർ', mr: 'गाडी', bn: 'গাড়ি', gu: 'ગાડી', pa: 'ਕਾਰ', as: 'গাড়ী', or: 'ଗାଡ଼ି' } },
-  { word: 'SCOOTER', category: 'home', emoji: '🛵', color: 'bg-yellow-500/10 border-yellow-500/20 text-yellow-400 font-black', translations: { hi: 'स्कूटर', ta: 'ஸ்கூட்டர்', te: 'స్కూటర్', kn: 'ಸ್ಕೂಟರ್', ml: 'സ്കൂട്ടർ', mr: 'स्कूटर', bn: 'স্কুটার', gu: 'સ્કૂટર', pa: 'ਸਕੂਟਰ', as: 'স্কুটাৰ', or: 'ସ୍କୁଟର' } },
   { word: 'BUS', category: 'home', emoji: '🚌', color: 'bg-amber-500/10 border-amber-500/20 text-amber-400 font-black', translations: { hi: 'बस', ta: 'பேருந்து', te: 'బస్సు', kn: 'ಬಸ್ಸು', ml: 'ബസ്', mr: 'बस', bn: 'বাস', gu: 'બસ', pa: 'ਬੱਸ', as: 'বাছ', or: 'ବସ୍' } },
-  { word: 'TRAIN', category: 'home', emoji: '🚂', color: 'bg-zinc-400/10 border-zinc-400/20 text-zinc-300 font-black', translations: { hi: 'रेलगाड़ी', ta: 'ரயில்', te: 'రైలు', kn: 'ರೈಲು', ml: 'തീവണ്ടി', mr: 'रेल्वे', bn: 'রেলগাড়ি', gu: 'ટ્રેન', pa: 'ਰੇਲਗੱਡੀ', as: 'ৰেলগাড়ী', or: 'ରେଳଗାଡ଼ି' } },
-  { word: 'BICYCLE', category: 'home', emoji: '🚲', color: 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400 font-black', translations: { hi: 'साइकिल', ta: 'மிதிவண்டி', te: 'సైకిల్', kn: 'ಸೈಕಲ್', ml: 'സൈക്കിൾ', mr: 'सायकल', bn: 'সাইকেল', gu: 'સાયકલ', pa: 'ਸਾਈਕਲ', as: 'চাইকেল', or: 'ସାଇକେଲ' } },
-  { word: 'AIRPLANE', category: 'home', emoji: '✈️', color: 'bg-sky-500/10 border-sky-500/20 text-sky-400 font-black', translations: { hi: 'हवाई जहाज़', ta: 'விமானம்', te: 'విమానం', kn: 'ವಿಮಾನ', ml: 'വിമാനം', mr: 'विमान', bn: 'বিমান', gu: 'વિમાન', pa: 'ਹਵਾਈ ਜਹਾਜ਼', as: 'বিমান', or: 'ବିମାନ' } },
+  { word: 'VAN', category: 'home', emoji: '🚐', color: 'bg-yellow-500/10 border-yellow-500/20 text-yellow-400 font-black', translations: { hi: 'वैन', ta: 'வேன்', te: 'వ్యాన్', kn: 'ವ್ಯಾನ್', ml: 'വാൻ', mr: 'व्हॅन', bn: 'ভ্যান', gu: 'વાન', pa: 'ਵੈਨ', as: 'ভেন', or: 'ଭ୍ୟାନ୍' } },
+  { word: 'JEEP', category: 'home', emoji: '🚙', color: 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400 font-black', translations: { hi: 'जीप', ta: 'ஜீப்', te: 'జీప్', kn: 'ಜೀಪ್', ml: 'ജീപ്പ്', mr: 'जीप', bn: 'জিপ', gu: 'જીપ', pa: 'ਜੀਪ', as: 'জীপ', or: 'ଜିପ୍' } },
+  { word: 'BIKE', category: 'home', emoji: '🚲', color: 'bg-sky-500/10 border-sky-500/20 text-sky-400 font-black', translations: { hi: 'साइकिल', ta: 'மிதிவண்டி', te: 'సైకిల్', kn: 'ಸೈಕಲ್', ml: 'സൈക്കിൾ', mr: 'सायकल', bn: 'সাইকেল', gu: 'સાયકલ', pa: 'ਸਾਈਕਲ', as: 'চাইকেল', or: 'ସାଇକେଲ' } },
   { word: 'BOAT', category: 'home', emoji: '⛵', color: 'bg-cyan-500/10 border-cyan-500/20 text-cyan-400 font-black', translations: { hi: 'नाव', ta: 'படகு', te: 'పడవ', kn: 'ದೋಣಿ', ml: 'വള്ളം', mr: 'होडी', bn: 'নৌকা', gu: 'હોડી', pa: 'ਕਿਸ਼ਤੀ', as: 'নাও', or: 'ଡଙ୍ଗା' } },
+  { word: 'SHIP', category: 'home', emoji: '🚢', color: 'bg-blue-400/10 border-blue-400/20 text-blue-300 font-black', translations: { hi: 'जहाज़', ta: 'கப்பல்', te: 'ఓడ', kn: 'ಹಡಗು', ml: 'കപ്പൽ', mr: 'जहाज', bn: 'জাহাজ', gu: 'જહાજ', pa: 'ਜਹਾਜ਼', as: 'জাহাজ', or: 'ଜାହାଜ' } },
   { word: 'BALL', category: 'home', emoji: '⚽', color: 'bg-indigo-500/10 border-indigo-500/20 text-indigo-400 font-black', translations: { hi: 'गेंद', ta: 'பந்து', te: 'బంతి', kn: 'ಚೆಂಡು', ml: 'പന്ത്', mr: 'चेंडू', bn: 'বল', gu: 'દડો', pa: 'ਗੇਂਦ', as: 'বল', or: 'ବଲ୍' } },
   { word: 'DOLL', category: 'home', emoji: '🪆', color: 'bg-pink-500/10 border-pink-500/20 text-pink-400 font-black', translations: { hi: 'गुड़िया', ta: 'பொம்மை', te: 'బొమ్మ', kn: 'ಗೊಂಬೆ', ml: 'പാവ', mr: 'बाहुली', bn: 'পুতুল', gu: 'ઢીંગલી', pa: 'ਗੁੱਡੀ', as: 'পুতলা', or: 'କଣ୍ଢେଇ' } },
-  { word: 'BALLOON', category: 'home', emoji: '🎈', color: 'bg-rose-500/10 border-rose-500/20 text-rose-500 font-black', translations: { hi: 'गुब्बारा', ta: 'பலூன்', te: 'బెలూన్', kn: 'ಬಲೂನು', ml: 'ബലൂൺ', mr: 'फुगा', bn: 'বেলুন', gu: 'ફુગ્ગો', pa: 'ਗੁਬਾਰਾ', as: 'বেলুন', or: 'ବେଲୁନ୍' } },
-  { word: 'TOY', category: 'home', emoji: '🧸', color: 'bg-amber-600/10 border-amber-600/20 text-amber-400 font-black', translations: { hi: 'खिलौना', ta: 'விளையாட்டு பொம்மை', te: 'ఆటబొమ్మ', kn: 'ಆಟಿಕೆ', ml: 'കളിപ്പാട്ടം', mr: 'खेळणी', bn: 'খেলনা', gu: 'રમકડું', pa: 'ਖਿਡੌਣਾ', as: 'পুতলা', or: 'ଖେଳଣା' } },
-  { word: 'SWING', category: 'home', emoji: '🎠', color: 'bg-purple-500/10 border-purple-500/20 text-purple-400 font-black', translations: { hi: 'झूला', ta: 'ஊஞ்சல்', te: 'ఊయల', kn: 'ಉಯ್ಯಾಲೆ', ml: 'ഊഞ്ഞാൽ', mr: 'झोका', bn: 'দোলনা', gu: 'હિંચકો', pa: 'ਪੀਂਘ', as: 'দোলনা', or: 'ଦୋଳି' } },
+  { word: 'KITE', category: 'home', emoji: '🪁', color: 'bg-rose-500/10 border-rose-500/20 text-rose-500 font-black', translations: { hi: 'पतंग', ta: 'பட்டம்', te: 'గాలిపటం', kn: 'ಗಾಳಿಪಟ', ml: 'പട്ടം', mr: 'पतंग', bn: 'ঘুড়ি', gu: 'પતંગ', pa: 'ਪਤੰਗ', as: 'চিলা', or: 'ଗୁଡ଼ି' } },
+  { word: 'TOY', category: 'home', emoji: '🧸', color: 'bg-amber-600/10 border-amber-600/20 text-amber-400 font-black', translations: { hi: 'खिलौना', ta: 'பொம்மை', te: 'ఆటబొమ్మ', kn: 'ಆಟಿಕೆ', ml: 'കളിപ്പാട്ടം', mr: 'खेळणी', bn: 'খেলনা', gu: 'રમકડું', pa: 'ਖਿਡੌਣਾ', as: 'পুতলা', or: 'ଖେଳଣା' } },
+  { word: 'DRUM', category: 'home', emoji: '🥁', color: 'bg-purple-500/10 border-purple-500/20 text-purple-400 font-black', translations: { hi: 'ढोल', ta: 'மேளம்', te: 'డప్పు', kn: 'ಡೋಲು', ml: 'ചെണ്ട', mr: 'ढोल', bn: 'ঢোল', gu: 'ઢોલ', pa: 'ਢੋਲ', as: 'ঢোল', or: 'ଢୋଲ' } },
   { word: 'HOME', category: 'home', emoji: '🏠', color: 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400 font-black', translations: { hi: 'घर', ta: 'வீடு', te: 'ఇల్లు', kn: 'ಮನೆ', ml: 'വീട്', mr: 'घर', bn: 'বাড়ি', gu: 'ઘર', pa: 'ਘਰ', as: 'ঘৰ', or: 'ଘର' } },
   { word: 'DOOR', category: 'home', emoji: '🚪', color: 'bg-amber-700/10 border-amber-700/20 text-amber-500 font-black', translations: { hi: 'दरवाज़ा', ta: 'கதவு', te: 'తలుపు', kn: 'ಬಾಗಿಲು', ml: 'വാതിൽ', mr: 'दार', bn: 'দরজা', gu: 'દરવાજો', pa: 'ਦਰਵਾਜ਼ਾ', as: 'দুৱাৰ', or: 'କବାଟ' } },
-  { word: 'WINDOW', category: 'home', emoji: '🪟', color: 'bg-sky-400/10 border-sky-400/20 text-sky-400 font-black', translations: { hi: 'खिड़की', ta: 'ஜன்னல்', te: 'కిటికీ', kn: 'ಕಿಟಕಿ', ml: 'ജനൽ', mr: 'खिडकी', bn: 'জানালা', gu: 'બારી', pa: 'ਖਿੜਕੀ', as: 'খিৰিকী', or: 'ଝରକା' } },
+  { word: 'ROOF', category: 'home', emoji: '🏡', color: 'bg-sky-400/10 border-sky-400/20 text-sky-400 font-black', translations: { hi: 'छत', ta: 'கூரை', te: 'పైకప్పు', kn: 'ಛಾವಣಿ', ml: 'മേൽക്കൂര', mr: 'छप्पर', bn: 'ছাদ', gu: 'છત', pa: 'ਛੱਤ', as: 'চাল', or: 'ଛାତ' } },
   { word: 'FAN', category: 'home', emoji: '🪭', color: 'bg-teal-400/10 border-teal-400/20 text-teal-300 font-black', translations: { hi: 'पंखा', ta: 'மின்விசிறி', te: 'ఫ్యాన్', kn: 'ಫ್ಯಾನ್', ml: 'ഫാൻ', mr: 'पंखा', bn: 'পাখা', gu: 'પંખો', pa: 'ਪੱਖਾ', as: 'বিচনী', or: 'ପଙ୍ଖା' } },
-  { word: 'CLOCK', category: 'home', emoji: '⏰', color: 'bg-rose-400/10 border-rose-400/20 text-rose-400 font-black', translations: { hi: 'घड़ी', ta: 'கடிகாரம்', te: 'గడియారం', kn: 'ಗಡಿಯಾರ', ml: 'ഘടികാരം', mr: 'घड्याळ', bn: 'ঘড়ি', gu: 'ઘડિયાળ', pa: 'ਘੜੀ', as: 'ঘড়ী', or: 'ଘଣ୍ଟା' } },
-  { word: 'LIGHT', category: 'home', emoji: '💡', color: 'bg-yellow-400/10 border-yellow-400/20 text-yellow-300 font-black', translations: { hi: 'बत्ती', ta: 'விளக்கு', te: 'దీపం', kn: 'ದೀಪ', ml: 'വിളക്ക്', mr: 'दिवा', bn: 'আলো', gu: 'લાઈટ', pa: 'ਬੱਤੀ', as: 'চাকি', or: 'ଆଲୁଅ' } },
+  { word: 'BELL', category: 'home', emoji: '🔔', color: 'bg-rose-400/10 border-rose-400/20 text-rose-400 font-black', translations: { hi: 'घंटी', ta: 'மணி', te: 'గంట', kn: 'ಗಂಟೆ', ml: 'മണി', mr: 'घंटा', bn: 'ঘণ্টা', gu: 'ઘંટડી', pa: 'ਘੰਟੀ', as: 'ঘণ্টা', or: 'ଘଣ୍ଟି' } },
+  { word: 'LAMP', category: 'home', emoji: '💡', color: 'bg-yellow-400/10 border-yellow-400/20 text-yellow-300 font-black', translations: { hi: 'दीया', ta: 'விளக்கு', te: 'దీపం', kn: 'ದೀಪ', ml: 'വിളക്ക്', mr: 'दिवा', bn: 'প্রদীপ', gu: 'દીવો', pa: 'ਦੀਵਾ', as: 'চাকি', or: 'ଦୀପ' } },
   { word: 'KEY', category: 'home', emoji: '🔑', color: 'bg-yellow-500/10 border-yellow-500/20 text-yellow-400 font-black', translations: { hi: 'चाबी', ta: 'சாவி', te: 'తాళంచెవి', kn: 'ಕೀಲಿ', ml: 'താക്കോൽ', mr: 'किल्ली', bn: 'চাবি', gu: 'ચાવી', pa: 'ਚਾਬੀ', as: 'চাবি', or: 'ଚାବି' } },
+  { word: 'LOCK', category: 'home', emoji: '🔒', color: 'bg-amber-500/10 border-amber-500/20 text-amber-400 font-black', translations: { hi: 'ताला', ta: 'பூட்டு', te: 'తాళం', kn: 'ಬೀಗ', ml: 'പൂട്ട്', mr: 'कुलूप', bn: 'তালা', gu: 'તાળું', pa: 'ਤਾਲਾ', as: 'তলা', or: 'ତାଲା' } },
   { word: 'BED', category: 'home', emoji: '🛏️', color: 'bg-indigo-400/10 border-indigo-400/20 text-indigo-400 font-black', translations: { hi: 'बिस्तर', ta: 'படுக்கை', te: 'మంచం', kn: 'ಹಾಸಿಗೆ', ml: 'കിടക്ക', mr: 'पलंग', bn: 'বিছানা', gu: 'પથારી', pa: 'ਬਿਸਤਰਾ', as: 'বিছনা', or: 'ବିଛଣା' } },
-  { word: 'BLANKET', category: 'home', emoji: '🛋️', color: 'bg-purple-400/10 border-purple-400/20 text-purple-400 font-black', translations: { hi: 'कंबल', ta: 'போர்வை', te: 'దుప్పటి', kn: 'ಹೊದಿಕೆ', ml: 'പുതപ്പ്', mr: 'पांघरूण', bn: 'কম্বল', gu: 'ધાબળો', pa: 'ਕੰਬਲ', as: 'কম্বল', or: 'କମ୍ବଳ' } },
-  { word: 'PLATE', category: 'home', emoji: '🍽️', color: 'bg-slate-300/10 border-slate-300/20 text-slate-200 font-black', translations: { hi: 'थाली', ta: 'தட்டு', te: 'పళ్లెం', kn: 'ತಟ್ಟೆ', ml: 'പാത്രം', mr: 'ताट', bn: 'থালা', gu: 'થાળી', pa: 'ਥਾਲੀ', as: 'কাহী', or: 'ଥାଳି' } },
+  { word: 'SOFA', category: 'home', emoji: '🛋️', color: 'bg-purple-400/10 border-purple-400/20 text-purple-400 font-black', translations: { hi: 'सोफ़ा', ta: 'சோபா', te: 'సోఫా', kn: 'ಸೋಫಾ', ml: 'സോഫ', mr: 'सोफा', bn: 'সোফা', gu: 'સોફા', pa: 'ਸੋਫ਼ਾ', as: 'চোফা', or: 'ସୋଫା' } },
   { word: 'CUP', category: 'home', emoji: '🥛', color: 'bg-cyan-400/10 border-cyan-400/20 text-cyan-300 font-black', translations: { hi: 'कप', ta: 'கோப்பை', te: 'కప్పు', kn: 'ಲೋಟ', ml: 'കപ്പ്', mr: 'पेला', bn: 'কাপ', gu: 'કપ', pa: 'ਕੱਪ', as: 'কাপ', or: 'କପ୍' } },
-  { word: 'SPOON', category: 'home', emoji: '🥄', color: 'bg-zinc-400/10 border-zinc-400/20 text-zinc-300 font-black', translations: { hi: 'चम्मच', ta: 'கரண்டி', te: 'చెంచా', kn: 'ಚಮಚ', ml: 'സ്പൂൺ', mr: 'चमचा', bn: 'চামচ', gu: 'ચમચી', pa: 'ਚਮਚਾ', as: 'চামুচ', or: 'ଚାମଚ' } },
+  { word: 'MUG', category: 'home', emoji: '☕', color: 'bg-slate-300/10 border-slate-300/20 text-slate-200 font-black', translations: { hi: 'मग', ta: 'குவளை', te: 'మగ్', kn: 'ಮಗ್', ml: 'മഗ്ഗ്', mr: 'मग', bn: 'মগ', gu: 'મગ', pa: 'ਮੱਗ', as: 'মগ', or: 'ମଗ୍' } },
+  { word: 'FORK', category: 'home', emoji: '🍴', color: 'bg-zinc-400/10 border-zinc-400/20 text-zinc-300 font-black', translations: { hi: 'काँटा', ta: 'முள்கரண்டி', te: 'ఫోర్క్', kn: 'ಫೋರ್ಕ್', ml: 'ഫോർക്ക്', mr: 'काटा', bn: 'কাঁটাচামচ', gu: 'કાંટો', pa: 'ਕਾਂਟਾ', as: 'কাঁটাচামুচ', or: 'କଣ୍ଟାଚାମଚ' } },
   { word: 'BOWL', category: 'home', emoji: '🥣', color: 'bg-amber-400/10 border-amber-400/20 text-amber-400 font-black', translations: { hi: 'कटोरी', ta: 'கிண்ணம்', te: 'గిన్నె', kn: 'ಬಟ್ಟಲು', ml: 'കിണ്ണം', mr: 'वाटी', bn: 'বাটি', gu: 'વાટકી', pa: 'ਕੌਲੀ', as: 'বাতি', or: 'ଗିନା' } },
-  { word: 'BOTTLE', category: 'home', emoji: '🍼', color: 'bg-sky-400/10 border-sky-400/20 text-sky-400 font-black', translations: { hi: 'बोतल', ta: 'பாட்டில்', te: 'సీసా', kn: 'ಬಾಟಲಿ', ml: 'കുപ്പി', mr: 'बाटली', bn: 'বোতল', gu: 'બોટલ', pa: 'ਬੋਤਲ', as: 'বটল', or: 'ବୋତଲ' } },
+  { word: 'JUG', category: 'home', emoji: '🫗', color: 'bg-sky-400/10 border-sky-400/20 text-sky-400 font-black', translations: { hi: 'जग', ta: 'ஜக்', te: 'జగ్గు', kn: 'ಜಗ್', ml: 'ജഗ്ഗ്', mr: 'जग', bn: 'জগ', gu: 'જગ', pa: 'ਜੱਗ', as: 'জগ', or: 'ଜଗ୍' } },
+  { word: 'POT', category: 'home', emoji: '🏺', color: 'bg-orange-400/10 border-orange-400/20 text-orange-300 font-black', translations: { hi: 'मटका', ta: 'பானை', te: 'కుండ', kn: 'ಮಡಕೆ', ml: 'കലം', mr: 'माठ', bn: 'কলসি', gu: 'માટલું', pa: 'ਘੜਾ', as: 'কলহ', or: 'ମାଠିଆ' } },
+  { word: 'BOX', category: 'home', emoji: '📦', color: 'bg-amber-600/10 border-amber-600/20 text-amber-400 font-black', translations: { hi: 'डिब्बा', ta: 'பெட்டி', te: 'పెట్టె', kn: 'ಪೆಟ್ಟಿಗೆ', ml: 'പെട്ടി', mr: 'डबा', bn: 'বাক্স', gu: 'ડબ્બો', pa: 'ਡੱਬਾ', as: 'বাকচ', or: 'ବାକ୍ସ' } },
   { word: 'SHOE', category: 'home', emoji: '👟', color: 'bg-blue-500/10 border-blue-500/20 text-blue-400 font-black', translations: { hi: 'जूता', ta: 'காலணி', te: 'బూట్లు', kn: 'ಶೂ', ml: 'ഷൂസ്', mr: 'बूट', bn: 'জুতো', gu: 'બૂટ', pa: 'ਜੁੱਤੀ', as: 'জোতা', or: 'ଜୋତା' } },
-  { word: 'SLIPPER', category: 'home', emoji: '🩴', color: 'bg-teal-500/10 border-teal-500/20 text-teal-400 font-black', translations: { hi: 'चप्पल', ta: 'செருப்பு', te: 'చెప్పులు', kn: 'ಚಪ್ಪಲಿ', ml: 'ചെരിപ്പ്', mr: 'चप्पल', bn: 'চপ্পল', gu: 'ચંપલ', pa: 'ਚੱਪਲ', as: 'চেণ্ডেল', or: 'ଚପଲ' } },
-  { word: 'SOCKS', category: 'home', emoji: '🧦', color: 'bg-rose-400/10 border-rose-400/20 text-rose-400 font-black', translations: { hi: 'मोज़ा', ta: 'காலுறை', te: 'సాక్స్', kn: 'ಕಾಲುಚೀಲ', ml: 'സോക്സ്', mr: 'मोजे', bn: 'মোজা', gu: 'મોજાં', pa: 'ਜੁਰਾਬਾਂ', as: 'মোজা', or: 'ମୋଜା' } },
+  { word: 'SOCK', category: 'home', emoji: '🧦', color: 'bg-rose-400/10 border-rose-400/20 text-rose-400 font-black', translations: { hi: 'मोज़ा', ta: 'காலுறை', te: 'సాక్స్', kn: 'ಕಾಲುಚೀಲ', ml: 'സോക്സ്', mr: 'मोजे', bn: 'মোজা', gu: 'મોજાં', pa: 'ਜੁਰਾਬ', as: 'মোজা', or: 'ମୋଜା' } },
   { word: 'HAT', category: 'home', emoji: '🧢', color: 'bg-amber-500/10 border-amber-500/20 text-amber-400 font-black', translations: { hi: 'टोपी', ta: 'தொப்பி', te: 'టోపీ', kn: 'ಟೋಪಿ', ml: 'തൊപ്പി', mr: 'टोपी', bn: 'টুপি', gu: 'ટોપી', pa: 'ਟੋਪੀ', as: 'টুপী', or: 'ଟୋପି' } },
-  { word: 'DRESS', category: 'home', emoji: '👗', color: 'bg-pink-500/10 border-pink-500/20 text-pink-400 font-black', translations: { hi: 'कपड़े', ta: 'ஆடை', te: 'దుస్తులు', kn: 'ಉಡುಪು', ml: 'വസ്ത്രം', mr: 'कपडे', bn: 'জামা', gu: 'કપડાં', pa: 'ਕੱਪੜੇ', as: 'কাপোৰ', or: 'ପୋଷାକ' } },
+  { word: 'COAT', category: 'home', emoji: '🧥', color: 'bg-pink-500/10 border-pink-500/20 text-pink-400 font-black', translations: { hi: 'कोट', ta: 'கோட்', te: 'కోటు', kn: 'ಕೋಟು', ml: 'കോട്ട്', mr: 'कोट', bn: 'কোট', gu: 'કોટ', pa: 'ਕੋਟ', as: 'কোট', or: 'କୋଟ୍' } },
   { word: 'BAG', category: 'home', emoji: '🎒', color: 'bg-indigo-500/10 border-indigo-500/20 text-indigo-400 font-black', translations: { hi: 'बस्ता', ta: 'பை', te: 'సంచి', kn: 'ಚೀಲ', ml: 'ബാഗ്', mr: 'दफ्तर', bn: 'ব্যাগ', gu: 'દફતર', pa: 'ਬਸਤਾ', as: 'মোনা', or: 'ବ୍ୟାଗ୍' } },
   { word: 'COMB', category: 'home', emoji: '🪮', color: 'bg-yellow-600/10 border-yellow-600/20 text-yellow-500 font-black', translations: { hi: 'कंघी', ta: 'சீப்பு', te: 'దువ్వెన', kn: 'ಬಾಚಣಿಗೆ', ml: 'ചീപ്പ്', mr: 'फणी', bn: 'চিরুনি', gu: 'કાંસકો', pa: 'ਕੰਘੀ', as: 'ফণি', or: 'ପାନିଆ' } },
   { word: 'SOAP', category: 'home', emoji: '🧼', color: 'bg-emerald-400/10 border-emerald-400/20 text-emerald-300 font-black', translations: { hi: 'साबुन', ta: 'சோப்பு', te: 'సబ్బు', kn: 'ಸಾಬೂನು', ml: 'സോപ്പ്', mr: 'साबण', bn: 'সাবান', gu: 'સાબુ', pa: 'ਸਾਬਣ', as: 'চাবোন', or: 'ସାବୁନ' } },
-  { word: 'TOWEL', category: 'home', emoji: '🧖', color: 'bg-cyan-500/10 border-cyan-500/20 text-cyan-400 font-black', translations: { hi: 'तौलिया', ta: 'துண்டு', te: 'తువ్వాలు', kn: 'ಟವೆಲ್', ml: 'തോർത്ത്', mr: 'टॉवेल', bn: 'তোয়ালে', gu: 'ટુવાલ', pa: 'ਤੌਲੀਆ', as: 'গামোচা', or: 'ଗାମୁଛା' } },
-  { word: 'BRUSH', category: 'home', emoji: '🪥', color: 'bg-teal-500/10 border-teal-500/20 text-teal-400 font-black', translations: { hi: 'ब्रश', ta: 'பல் துலக்கி', te: 'బ్రష్', kn: 'ಬ್ರಷ್', ml: 'ബ്രഷ്', mr: 'ब्रश', bn: 'ব্রাশ', gu: 'બ્રશ', pa: 'ਬੁਰਸ਼', as: 'ব্ৰাছ', or: 'ବ୍ରଶ୍' } },
 
-  // 🎨 Learning & Daily Actions (89-100)
+  // 🎨 Learning & Daily Actions (89-100) - Easy 3 & 4 Letter Words
   { word: 'BOOK', category: 'actions', emoji: '📖', color: 'bg-teal-500/10 border-teal-500/20 text-teal-400 font-black', translations: { hi: 'किताब', ta: 'புத்தகம்', te: 'పుస్తకం', kn: 'ಪುಸ್ತಕ', ml: 'പുസ്തകം', mr: 'पुस्तक', bn: 'বই', gu: 'ચોપડી', pa: 'ਕਿਤਾਬ', as: 'কিতাপ', or: 'ବହି' } },
-  { word: 'PENCIL', category: 'actions', emoji: '✏️', color: 'bg-yellow-500/10 border-yellow-500/20 text-yellow-400 font-black', translations: { hi: 'पेंसिल', ta: 'பென்சில்', te: 'పెన్సిల్', kn: 'ಪೆನ್ಸಿಲ್', ml: 'പെൻസിൽ', mr: 'पेन्सिल', bn: 'পেন্সিল', gu: 'પેન્સિલ', pa: 'ਪੈਨਸਿਲ', as: 'পেঞ্চিল', or: 'ପେନସିଲ୍' } },
-  { word: 'COLOR', category: 'actions', emoji: '🎨', color: 'bg-purple-500/10 border-purple-500/20 text-purple-400 font-black', translations: { hi: 'रंग', ta: 'நிறம்', te: 'రంగు', kn: 'ಬಣ್ಣ', ml: 'നിറം', mr: 'रंग', bn: 'রঙ', gu: 'રંગ', pa: 'ਰੰਗ', as: 'ৰং', or: 'ରଙ୍ଗ' } },
+  { word: 'PEN', category: 'actions', emoji: '🖊️', color: 'bg-yellow-500/10 border-yellow-500/20 text-yellow-400 font-black', translations: { hi: 'कलम', ta: 'பேனா', te: 'పెన్ను', kn: 'ಪೆನ್ನು', ml: 'പേന', mr: 'पेन', bn: 'কলম', gu: 'પેન', pa: 'ਪੈੱਨ', as: 'কলম', or: 'କଲମ' } },
+  { word: 'PLAY', category: 'actions', emoji: '🎨', color: 'bg-purple-500/10 border-purple-500/20 text-purple-400 font-black', translations: { hi: 'खेल', ta: 'விளையாட்டு', te: 'ఆట', kn: 'ಆಟ', ml: 'കളി', mr: 'खेळ', bn: 'খেলা', gu: 'રમત', pa: 'ਖੇਡ', as: 'খেল', or: 'ଖେଳ' } },
   { word: 'SONG', category: 'actions', emoji: '🎵', color: 'bg-rose-500/10 border-rose-500/20 text-rose-400 font-black', translations: { hi: 'गाना', ta: 'பாடல்', te: 'పాట', kn: 'ಹಾಡು', ml: 'പാട്ട്', mr: 'गाणे', bn: 'গান', gu: 'ગીત', pa: 'ਗੀਤ', as: 'গান', or: 'ଗୀତ' } },
   { word: 'CLAP', category: 'actions', emoji: '👏', color: 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400 font-black', translations: { hi: 'ताली', ta: 'கைதட்டு', te: 'చప్పట్లు', kn: 'ಚಪ್ಪಾಳೆ', ml: 'കൈയ്യടി', mr: 'टाळी', bn: 'হাততালি', gu: 'તાળી', pa: 'ਤਾੜੀ', as: 'হাতচাপৰি', or: 'ତାଳି' } },
-  { word: 'HELLO', category: 'actions', emoji: '🙏', color: 'bg-amber-400/10 border-amber-400/20 text-amber-300 font-black', translations: { hi: 'नमस्ते', ta: 'வணக்கம்', te: 'నమస్కారం', kn: 'ನಮಸ್ಕಾರ', ml: 'നമസ്കാരം', mr: 'नमस्कार', bn: 'নমস্কার', gu: 'નમસ્તે', pa: 'ਸਤ ਸ੍ਰੀ ਅਕਾਲ', as: 'নমস্কাৰ', or: 'ନମସ୍କାର' } },
-  { word: 'GOODBYE', category: 'actions', emoji: '👋', color: 'bg-yellow-400/10 border-yellow-400/20 text-yellow-400 font-black', translations: { hi: 'बाय-बाय', ta: 'போய் வருகிறேன்', te: 'వెళ్ళొస్తా', kn: 'ಟಾಟಾ', ml: 'ടാറ്റാ', mr: 'टाटा', bn: 'টাটা', gu: 'આવજો', pa: 'ਬਾਏ-ਬਾਏ', as: 'বিদায়', or: 'ଟାଟା' } },
-  { word: 'SLEEP', category: 'actions', emoji: '😴', color: 'bg-indigo-400/10 border-indigo-400/20 text-indigo-300 font-black', translations: { hi: 'सोना', ta: 'தூக்கம்', te: 'నిద్ర', kn: 'ನಿದ್ದೆ', ml: 'ഉറക്കം', mr: 'झोप', bn: 'ঘুম', gu: 'ઊંઘ', pa: 'ਸੌਣਾ', as: 'টোপনি', or: 'ନିଦ' } },
+  { word: 'WAVE', category: 'actions', emoji: '👋', color: 'bg-amber-400/10 border-amber-400/20 text-amber-300 font-black', translations: { hi: 'टाटा', ta: 'கை அசை', te: 'టాటా', kn: 'ಟಾಟಾ', ml: 'ടാറ്റാ', mr: 'टाटा', bn: 'টাটা', gu: 'આવજો', pa: 'ਟਾਟਾ', as: 'টাটা', or: 'ଟାଟା' } },
+  { word: 'JUMP', category: 'actions', emoji: '🦘', color: 'bg-yellow-400/10 border-yellow-400/20 text-yellow-400 font-black', translations: { hi: 'कूदना', ta: 'குதி', te: 'దూకు', kn: 'ಜಿಗಿ', ml: 'ചാടുക', mr: 'उडी', bn: 'লাফ', gu: 'કૂદકો', pa: 'ਛਾਲ', as: 'জঁপিওৱা', or: 'ଡିଆଁ' } },
+  { word: 'WALK', category: 'actions', emoji: '🚶', color: 'bg-indigo-400/10 border-indigo-400/20 text-indigo-300 font-black', translations: { hi: 'चलना', ta: 'நடை', te: 'నడక', kn: 'ನಡಿಗೆ', ml: 'നടത്തം', mr: 'चालणे', bn: 'হাঁটা', gu: 'ચાલવું', pa: 'ਤੁਰਨਾ', as: 'খোজ', or: 'ଚାলিବା' } },
   { word: 'BATH', category: 'actions', emoji: '🛁', color: 'bg-cyan-400/10 border-cyan-400/20 text-cyan-300 font-black', translations: { hi: 'नहाना', ta: 'குளியல்', te: 'స్నానం', kn: 'ಸ್ನಾನ', ml: 'കുളി', mr: 'आंघोळ', bn: 'স্নান', gu: 'સ્નાન', pa: 'ਨਹਾਉਣਾ', as: 'গা ধোৱা', or: 'ଗାଧୋଇବା' } },
-  { word: 'SMILE', category: 'actions', emoji: '😄', color: 'bg-yellow-500/10 border-yellow-500/20 text-yellow-400 font-black', translations: { hi: 'हँसना', ta: 'புன்னகை', te: 'చిరునవ్వు', kn: 'ನಗು', ml: 'പുഞ്ചിരി', mr: 'हसू', bn: 'হাসি', gu: 'સ્મિત', pa: 'ਮੁਸਕਾਨ', as: 'হাঁহি', or: 'ହସ' } },
+  { word: 'HUG', category: 'actions', emoji: '🤗', color: 'bg-yellow-500/10 border-yellow-500/20 text-yellow-400 font-black', translations: { hi: 'गले लगना', ta: 'அணைப்பு', te: 'కౌగిలి', kn: 'ಅಪ್ಪುಗೆ', ml: 'കെട്ടിപ്പിടുത്തം', mr: 'मिठी', bn: 'আলিঙ্গন', gu: 'ભેટવું', pa: 'ਜੱਫੀ', as: 'সাৱটি', or: 'କୁଣ୍ଢାଇବା' } },
   { word: 'LOVE', category: 'actions', emoji: '❤️', color: 'bg-rose-500/10 border-rose-500/20 text-rose-400 font-black', translations: { hi: 'प्यार', ta: 'அன்பு', te: 'ప్రేమ', kn: 'ಪ್ರೀತಿ', ml: 'സ്നേഹം', mr: 'प्रेम', bn: 'ভালোবাসা', gu: 'પ્રેમ', pa: 'ਪਿਆਰ', as: 'মৰম', or: 'ଭଲପାଇବା' } },
-  { word: 'BRAVO', category: 'actions', emoji: '🌟', color: 'bg-amber-300/10 border-amber-300/20 text-amber-300 font-black', translations: { hi: 'शाबाश', ta: 'பாராட்டு', te: 'శభాష్', kn: 'ಶಹಬ್ಬಾಸ್', ml: 'മിടുക്കൻ', mr: 'शाब्बास', bn: 'সাবাশ', gu: 'શાબાશ', pa: 'ਸ਼ਾਬਾਸ਼', as: 'চাব্বাছ', or: 'ସାବାସ୍' } }
+  { word: 'SING', category: 'actions', emoji: '🎤', color: 'bg-amber-300/10 border-amber-300/20 text-amber-300 font-black', translations: { hi: 'गाना', ta: 'பாடு', te: 'పాడు', kn: 'ಹಾಡು', ml: 'പാടുക', mr: 'गाणे', bn: 'গাওয়া', gu: 'ગાવું', pa: 'ਗਾਉਣਾ', as: 'গোৱা', or: 'ଗାଇବା' } }
 ];
 
 const ROUTINES: any[] = [];
@@ -741,7 +741,7 @@ export const LearningCenter: React.FC = () => {
   const [waitingForOperand, setWaitingForOperand] = useState(false);
 
   // Count-With-Me State (Toddler Academy #1)
-  const [selectedObject, setSelectedObject] = useState<'star' | 'cookie' | 'heart' | 'smile'>('star');
+  const [selectedObject, setSelectedObject] = useState<'star' | 'chocolate' | 'icecream' | 'cookie' | 'apple' | 'balloon' | 'heart' | 'smile'>('star');
   const [countedIndices, setCountedIndices] = useState<number[]>([]);
 
   // Color Mix State
@@ -844,8 +844,18 @@ export const LearningCenter: React.FC = () => {
       setCountedIndices(prev => [...prev, index]);
       speakIndianEnglish(String(nextCount));
       if (nextCount === activeNumber && activeNumber > 0) {
+        const objPluralMap: Record<typeof selectedObject, string> = {
+          star: 'stars',
+          chocolate: 'chocolates',
+          icecream: 'ice creams',
+          cookie: 'cookies',
+          apple: 'apples',
+          balloon: 'balloons',
+          heart: 'hearts',
+          smile: 'smiles'
+        };
         setTimeout(() => {
-          speakIndianEnglish(`Great job! You counted all ${activeNumber} ${selectedObject}s!`);
+          speakIndianEnglish(`Great job! You counted all ${activeNumber} ${objPluralMap[selectedObject]}!`);
         }, 600);
       }
     }
@@ -960,195 +970,203 @@ export const LearningCenter: React.FC = () => {
     setSentence(prev => prev.slice(0, -1));
   };
 
+  const academyModules: Array<{
+    id: typeof activeMode;
+    label: string;
+    subtitle: string;
+    icon: React.ComponentType<{ className?: string }>;
+    activeBg: string;
+    iconBg: string;
+    iconColor: string;
+  }> = [
+    // Top Row (5 Buttons)
+    {
+      id: 'timers',
+      label: 'Habit Timers',
+      subtitle: 'Potty, Brush, Wash & Bath',
+      icon: Clock,
+      activeBg: 'bg-gradient-to-r from-teal-400 to-emerald-400 text-slate-950 border-teal-300 shadow-lg shadow-teal-500/25',
+      iconBg: 'bg-teal-500/20 border-teal-400/30',
+      iconColor: 'text-teal-300'
+    },
+    {
+      id: 'numbers',
+      label: 'Numbers',
+      subtitle: 'Talking Math & Calculator',
+      icon: Hash,
+      activeBg: 'bg-gradient-to-r from-amber-300 to-yellow-400 text-slate-950 border-amber-200 shadow-lg shadow-amber-400/25',
+      iconBg: 'bg-amber-500/20 border-amber-400/30',
+      iconColor: 'text-amber-300'
+    },
+    {
+      id: 'counting',
+      label: 'Counting',
+      subtitle: 'Tap & Count Objects',
+      icon: Star,
+      activeBg: 'bg-gradient-to-r from-pink-400 to-rose-400 text-slate-950 border-pink-300 shadow-lg shadow-pink-500/25',
+      iconBg: 'bg-pink-500/20 border-pink-400/30',
+      iconColor: 'text-pink-300'
+    },
+    {
+      id: 'words',
+      label: 'First Words',
+      subtitle: '100 Essential Words',
+      icon: BookOpen,
+      activeBg: 'bg-gradient-to-r from-sky-400 to-cyan-400 text-slate-950 border-sky-300 shadow-lg shadow-sky-500/25',
+      iconBg: 'bg-sky-500/20 border-sky-400/30',
+      iconColor: 'text-sky-300'
+    },
+    {
+      id: 'alphabet',
+      label: 'Sentence Builder',
+      subtitle: 'A–Z Phonics & Words',
+      icon: Keyboard,
+      activeBg: 'bg-gradient-to-r from-indigo-400 to-blue-400 text-slate-950 border-indigo-300 shadow-lg shadow-indigo-500/25',
+      iconBg: 'bg-indigo-500/20 border-indigo-400/30',
+      iconColor: 'text-indigo-300'
+    },
+    // Bottom Row (5 Buttons)
+    {
+      id: 'colors',
+      label: 'Colors',
+      subtitle: 'Color Studio & Mixing',
+      icon: Palette,
+      activeBg: 'bg-gradient-to-r from-purple-500 to-fuchsia-500 text-white border-purple-300 shadow-lg shadow-purple-500/25',
+      iconBg: 'bg-purple-500/20 border-purple-400/30',
+      iconColor: 'text-purple-300'
+    },
+    {
+      id: 'emotions',
+      label: 'Emotions',
+      subtitle: 'Feelings & Calming Guide',
+      icon: Heart,
+      activeBg: 'bg-gradient-to-r from-rose-400 to-pink-500 text-slate-950 border-rose-300 shadow-lg shadow-rose-500/25',
+      iconBg: 'bg-rose-500/20 border-rose-400/30',
+      iconColor: 'text-rose-300'
+    },
+    {
+      id: 'bodyparts',
+      label: 'Body Parts',
+      subtitle: 'Interactive Body Explorer',
+      icon: Smile,
+      activeBg: 'bg-gradient-to-r from-cyan-400 to-blue-400 text-slate-950 border-cyan-300 shadow-lg shadow-cyan-500/25',
+      iconBg: 'bg-cyan-500/20 border-cyan-400/30',
+      iconColor: 'text-cyan-300'
+    },
+    {
+      id: 'shapes',
+      label: 'Shapes',
+      subtitle: '2D & 3D Shape Discovery',
+      icon: Sparkles,
+      activeBg: 'bg-gradient-to-r from-amber-400 to-orange-400 text-slate-950 border-amber-300 shadow-lg shadow-amber-500/25',
+      iconBg: 'bg-orange-500/20 border-orange-400/30',
+      iconColor: 'text-amber-300'
+    },
+    {
+      id: 'animals',
+      label: 'Animal Sounds',
+      subtitle: 'Real Calls & Fun Facts',
+      icon: Volume2,
+      activeBg: 'bg-gradient-to-r from-emerald-400 to-green-400 text-slate-950 border-emerald-300 shadow-lg shadow-emerald-500/25',
+      iconBg: 'bg-emerald-500/20 border-emerald-400/30',
+      iconColor: 'text-emerald-300'
+    }
+  ];
+
   return (
-    <div className="w-full max-w-[1640px] mx-auto px-2 sm:px-3 flex flex-col gap-3">
-      {/* Ultra-Thin Horizontal Navigation Bar (All 9 Modules on Laptop >=768px, Compact Grouped Dropdown on Mobile <768px + Voice Toggle) */}
-      <nav className="w-full bg-slate-900/90 px-2.5 py-1.5 rounded-2xl border border-white/10 shadow-xl backdrop-blur-md flex flex-wrap items-center justify-between gap-1.5">
-        {/* Mobile Only (< 768px): Compact Topic Selector Dropdown Grouped by Category */}
-        <div className="flex md:hidden items-center gap-2 flex-1 min-w-0">
-          <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 shrink-0">
-            Topic:
-          </span>
-          <select
-            aria-label="Select Learning Module"
-            value={activeMode}
-            onChange={(e) => handleModeChange(e.target.value as typeof activeMode)}
-            className="flex-1 min-w-0 bg-slate-800/95 border border-white/15 rounded-xl px-2.5 py-1.5 text-xs font-extrabold text-white focus:outline-none focus:border-cheerful-yellow"
-          >
-            <optgroup label="Daily Habit Timers">
-              <option value="timers">⏱️ Habit Timers</option>
-            </optgroup>
-            <optgroup label="Math & Logic">
-              <option value="numbers">🔢 Numbers</option>
-              <option value="counting">⭐ Counting</option>
-              <option value="shapes">✨ Shapes</option>
-            </optgroup>
-            <optgroup label="Language & Words">
-              <option value="words">📖 First Words</option>
-              <option value="alphabet">⌨️ Sentence Builder</option>
-            </optgroup>
-            <optgroup label="Discovery & Play">
-              <option value="colors">🎨 Colors</option>
-              <option value="emotions">💖 Emotions</option>
-              <option value="bodyparts">😊 Body Parts</option>
-              <option value="animals">🔊 Animal Sounds</option>
-            </optgroup>
-          </select>
-        </div>
+    <div className="w-full max-w-[1640px] mx-auto px-3 sm:px-5 py-2 sm:py-4 flex flex-col gap-7 sm:gap-9">
+      {/* Dedicated Separate Section: 5 Buttons on Top Row + 5 Buttons on Bottom Row */}
+      <section
+        aria-label="Toddler Academy Learning Hub"
+        className="w-full rounded-3xl border border-indigo-500/25 bg-gradient-to-b from-[#0f172a]/95 via-[#0b1224]/95 to-[#070b16]/95 p-4 sm:p-6 shadow-2xl space-y-4"
+      >
+        {/* Section Header Row */}
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-3.5">
+          <div className="flex items-center gap-2.5">
+            <div className="w-9 h-9 rounded-xl bg-indigo-500/20 border border-indigo-400/35 flex items-center justify-center text-indigo-300 shrink-0">
+              <Palette className="w-4 h-4" />
+            </div>
+            <div className="text-left">
+              <h2 className="text-sm sm:text-base font-black text-white tracking-tight">
+                Toddler Academy Learning Hub
+              </h2>
+              <p className="text-[11px] sm:text-xs text-slate-400">
+                Choose from 10 interactive voice-guided modules and daily habit timers
+              </p>
+            </div>
+          </div>
 
-        {/* Laptop/Desktop (>= 768px): Horizontal Module Buttons with Thin Height */}
-        <div className="hidden md:flex flex-wrap items-center gap-1.5 flex-1">
+          {/* Voice Toggle Button */}
           <button
-            id="btn-mode-timers"
-            onClick={() => handleModeChange('timers')}
-            className={`inline-flex items-center justify-center gap-1.5 px-2.5 py-1.5 rounded-xl transition-all duration-200 font-extrabold text-xs tracking-wide cursor-pointer shadow-sm select-none whitespace-nowrap ${
-              activeMode === 'timers'
-                ? 'bg-teal-400 text-black shadow-md shadow-teal-400/20 ring-1 ring-teal-300/50'
-                : 'bg-white/5 text-white/70 border border-white/10 hover:bg-white/10 hover:text-white'
+            type="button"
+            id="toddler-academy-voice-toggle"
+            onClick={handleToggleVoice}
+            className={`inline-flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl font-extrabold text-xs uppercase tracking-wider transition-all duration-200 cursor-pointer shadow-sm active:scale-95 select-none whitespace-nowrap shrink-0 ${
+              isMuted
+                ? 'bg-rose-950/80 hover:bg-rose-900/80 text-rose-300 border border-rose-500/60 hover:border-rose-400'
+                : 'bg-emerald-950/80 hover:bg-emerald-900/80 text-emerald-300 border border-emerald-500/60 hover:border-emerald-400'
             }`}
+            title={isMuted ? 'Voice is Muted - Click to turn voice ON' : 'Voice is Active - Click to turn voice OFF'}
           >
-            <Clock className="w-3.5 h-3.5 shrink-0" />
-            <span>Habit Timers</span>
-          </button>
-          <button
-            id="btn-mode-numbers"
-            onClick={() => handleModeChange('numbers')}
-            className={`inline-flex items-center justify-center gap-1.5 px-2.5 py-1.5 rounded-xl transition-all duration-200 font-extrabold text-xs tracking-wide cursor-pointer shadow-sm select-none whitespace-nowrap ${
-              activeMode === 'numbers' 
-                ? 'bg-cheerful-yellow text-black shadow-md shadow-cheerful-yellow/20 ring-1 ring-cheerful-yellow/50' 
-                : 'bg-white/5 text-white/70 border border-white/10 hover:bg-white/10 hover:text-white'
-            }`}
-          >
-            <Hash className="w-3.5 h-3.5 shrink-0" />
-            <span>Numbers</span>
-          </button>
-          <button
-            id="btn-mode-counting"
-            onClick={() => handleModeChange('counting')}
-            className={`inline-flex items-center justify-center gap-1.5 px-2.5 py-1.5 rounded-xl transition-all duration-200 font-extrabold text-xs tracking-wide cursor-pointer shadow-sm select-none whitespace-nowrap ${
-              activeMode === 'counting' 
-                ? 'bg-cheerful-pink text-black shadow-md shadow-cheerful-pink/20 ring-1 ring-cheerful-pink/50' 
-                : 'bg-white/5 text-white/70 border border-white/10 hover:bg-white/10 hover:text-white'
-            }`}
-          >
-            <Star className="w-3.5 h-3.5 shrink-0" />
-            <span>Counting</span>
-          </button>
-          <button
-            id="btn-mode-words"
-            onClick={() => handleModeChange('words')}
-            className={`inline-flex items-center justify-center gap-1.5 px-2.5 py-1.5 rounded-xl transition-all duration-200 font-extrabold text-xs tracking-wide cursor-pointer shadow-sm select-none whitespace-nowrap ${
-              activeMode === 'words' 
-                ? 'bg-cheerful-blue text-black shadow-md shadow-cheerful-blue/20 ring-1 ring-cheerful-blue/50' 
-                : 'bg-white/5 text-white/70 border border-white/10 hover:bg-white/10 hover:text-white'
-            }`}
-          >
-            <BookOpen className="w-3.5 h-3.5 shrink-0" />
-            <span>First Words</span>
-          </button>
-          <button
-            id="btn-mode-alphabet"
-            onClick={() => handleModeChange('alphabet')}
-            className={`inline-flex items-center justify-center gap-1.5 px-2.5 py-1.5 rounded-xl transition-all duration-200 font-extrabold text-xs tracking-wide cursor-pointer shadow-sm select-none whitespace-nowrap ${
-              activeMode === 'alphabet' 
-                ? 'bg-indigo-400 text-black shadow-md shadow-indigo-400/20 ring-1 ring-indigo-400/50' 
-                : 'bg-white/5 text-white/70 border border-white/10 hover:bg-white/10 hover:text-white'
-            }`}
-          >
-            <Keyboard className="w-3.5 h-3.5 shrink-0" />
-            <span>Sentence Builder</span>
-          </button>
-          <button
-            id="btn-mode-colors"
-            onClick={() => handleModeChange('colors')}
-            className={`inline-flex items-center justify-center gap-1.5 px-2.5 py-1.5 rounded-xl transition-all duration-200 font-extrabold text-xs tracking-wide cursor-pointer shadow-sm select-none whitespace-nowrap ${
-              activeMode === 'colors' 
-                ? 'bg-purple-500 text-white shadow-md shadow-purple-500/20 ring-1 ring-purple-400/50' 
-                : 'bg-white/5 text-white/70 border border-white/10 hover:bg-white/10 hover:text-white'
-            }`}
-          >
-            <Palette className="w-3.5 h-3.5 shrink-0" />
-            <span>Colors</span>
-          </button>
-          <button
-            id="btn-mode-emotions"
-            onClick={() => handleModeChange('emotions')}
-            className={`inline-flex items-center justify-center gap-1.5 px-2.5 py-1.5 rounded-xl transition-all duration-200 font-extrabold text-xs tracking-wide cursor-pointer shadow-sm select-none whitespace-nowrap ${
-              activeMode === 'emotions' 
-                ? 'bg-rose-400 text-black shadow-md shadow-rose-400/20 ring-1 ring-rose-300/50' 
-                : 'bg-white/5 text-white/70 border border-white/10 hover:bg-white/10 hover:text-white'
-            }`}
-          >
-            <Heart className="w-3.5 h-3.5 text-pink-300 shrink-0" />
-            <span>Emotions</span>
-          </button>
-          <button
-            id="btn-mode-bodyparts"
-            onClick={() => handleModeChange('bodyparts')}
-            className={`inline-flex items-center justify-center gap-1.5 px-2.5 py-1.5 rounded-xl transition-all duration-200 font-extrabold text-xs tracking-wide cursor-pointer shadow-sm select-none whitespace-nowrap ${
-              activeMode === 'bodyparts' 
-                ? 'bg-sky-400 text-black shadow-md shadow-sky-400/20 ring-1 ring-sky-300/50' 
-                : 'bg-white/5 text-white/70 border border-white/10 hover:bg-white/10 hover:text-white'
-            }`}
-          >
-            <Smile className="w-3.5 h-3.5 text-sky-300 shrink-0" />
-            <span>Body Parts</span>
-          </button>
-          <button
-            id="btn-mode-shapes"
-            onClick={() => handleModeChange('shapes')}
-            className={`inline-flex items-center justify-center gap-1.5 px-2.5 py-1.5 rounded-xl transition-all duration-200 font-extrabold text-xs tracking-wide cursor-pointer shadow-sm select-none whitespace-nowrap ${
-              activeMode === 'shapes' 
-                ? 'bg-amber-400 text-black shadow-md shadow-amber-400/20 ring-1 ring-amber-300/50' 
-                : 'bg-white/5 text-white/70 border border-white/10 hover:bg-white/10 hover:text-white'
-            }`}
-          >
-            <Sparkles className="w-3.5 h-3.5 text-amber-300 shrink-0" />
-            <span>Shapes</span>
-          </button>
-          <button
-            id="btn-mode-animals"
-            onClick={() => handleModeChange('animals')}
-            className={`inline-flex items-center justify-center gap-1.5 px-2.5 py-1.5 rounded-xl transition-all duration-200 font-extrabold text-xs tracking-wide cursor-pointer shadow-sm select-none whitespace-nowrap ${
-              activeMode === 'animals' 
-                ? 'bg-emerald-400 text-black shadow-md shadow-emerald-400/20 ring-1 ring-emerald-300/50' 
-                : 'bg-white/5 text-white/70 border border-white/10 hover:bg-white/10 hover:text-white'
-            }`}
-          >
-            <Volume2 className="w-3.5 h-3.5 text-emerald-300 shrink-0" />
-            <span>Animal Sounds</span>
+            {isMuted ? (
+              <>
+                <VolumeX className="w-4 h-4 text-rose-400 shrink-0" />
+                <span>Voice On</span>
+              </>
+            ) : (
+              <>
+                <Volume2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                <span>Voice Off</span>
+              </>
+            )}
           </button>
         </div>
 
-        {/* Compact Voice Toggle Button */}
-        <button
-          type="button"
-          id="toddler-academy-voice-toggle"
-          onClick={handleToggleVoice}
-          className={`inline-flex items-center justify-center gap-1.5 px-2.5 py-1.5 rounded-xl font-bold text-[11px] uppercase tracking-wider transition-all duration-200 cursor-pointer shadow-sm active:scale-95 select-none whitespace-nowrap shrink-0 ${
-            isMuted
-              ? 'bg-rose-950/70 hover:bg-rose-900/70 text-rose-300 border border-rose-500/60 hover:border-rose-400'
-              : 'bg-emerald-950/70 hover:bg-emerald-900/70 text-emerald-300 border border-emerald-500/60 hover:border-emerald-400'
-          }`}
-          title={isMuted ? 'Voice is Muted - Click to turn voice ON' : 'Voice is Active - Click to turn voice OFF'}
-        >
-          {isMuted ? (
-            <>
-              <VolumeX className="w-3.5 h-3.5 text-rose-400 shrink-0" />
-              <span>Voice On</span>
-            </>
-          ) : (
-            <>
-              <Volume2 className="w-3.5 h-3.5 text-emerald-400 animate-pulse shrink-0" />
-              <span>Voice Off</span>
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.9)] shrink-0" />
-            </>
-          )}
-        </button>
-      </nav>
+        {/* 10 Module Buttons: 5 at Top + 5 at Bottom on Laptop/Tablet (sm:grid-cols-5), 2-Column Large Buttons on Mobile (grid-cols-2) */}
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5 sm:gap-3.5">
+          {academyModules.map((mod) => {
+            const Icon = mod.icon;
+            const isActive = activeMode === mod.id;
 
-      {/* Active Module Content - Starts immediately below the thin horizontal bar */}
-      <div className="w-full min-w-0 mt-0 pt-0">
+            return (
+              <button
+                key={mod.id}
+                id={`btn-mode-${mod.id}`}
+                type="button"
+                onClick={() => handleModeChange(mod.id)}
+                className={`group w-full min-h-[50px] sm:min-h-[56px] px-3 sm:px-4 py-2.5 sm:py-3 rounded-2xl border text-left transition-all duration-200 cursor-pointer select-none flex items-center gap-2.5 sm:gap-3 ${
+                  isActive
+                    ? `${mod.activeBg} scale-[1.01]`
+                    : 'bg-white/[0.04] hover:bg-white/[0.09] border-white/10 hover:border-white/25 text-white'
+                }`}
+              >
+                <div
+                  className={`w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center shrink-0 border transition-colors ${
+                    isActive
+                      ? 'bg-black/20 border-black/20 text-current'
+                      : `${mod.iconBg} ${mod.iconColor}`
+                  }`}
+                >
+                  <Icon className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
+                </div>
+
+                <div className="min-w-0 flex-1">
+                  <div
+                    className={`text-xs sm:text-sm font-black leading-tight truncate ${
+                      isActive ? 'text-current' : 'text-white'
+                    }`}
+                  >
+                    {mod.label}
+                  </div>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* Active Module Content Section - Generous separation below the menu card */}
+      <div className="w-full min-w-0 pt-1">
       <AnimatePresence mode="wait">
           {activeMode === 'timers' ? (
             <ToddlerHabitTimerSection />
@@ -1341,29 +1359,40 @@ export const LearningCenter: React.FC = () => {
 
               {/* Top Controls Bar: Object Selector Tabs + Quick Status */}
               <div className="w-full flex flex-wrap items-center justify-between gap-3 relative z-10 pb-3 border-b border-white/10">
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2">
                   <span className="text-xs font-black uppercase tracking-wider text-pink-300 flex items-center gap-1.5">
                     <Sparkles className="w-3.5 h-3.5 text-amber-300" />
                     Count Object:
                   </span>
-                  <div className="flex gap-1.5 bg-white/5 p-1 rounded-xl border border-white/10 select-none">
-                    {(['star', 'cookie', 'heart', 'smile'] as const).map((obj) => (
+                  <div className="flex flex-wrap gap-1.5 bg-white/5 p-1.5 rounded-xl border border-white/10 select-none">
+                    {(
+                      [
+                        { id: 'star', label: 'Stars', emoji: '⭐' },
+                        { id: 'chocolate', label: 'Chocolates', emoji: '🍫' },
+                        { id: 'icecream', label: 'Ice Creams', emoji: '🍦' },
+                        { id: 'cookie', label: 'Cookies', emoji: '🍪' },
+                        { id: 'apple', label: 'Apples', emoji: '🍎' },
+                        { id: 'balloon', label: 'Balloons', emoji: '🎈' },
+                        { id: 'heart', label: 'Hearts', emoji: '💖' },
+                        { id: 'smile', label: 'Smiles', emoji: '😊' }
+                      ] as const
+                    ).map((obj) => (
                       <button
-                        key={obj}
+                        key={obj.id}
+                        type="button"
                         onClick={() => {
                           playSound('click');
-                          setSelectedObject(obj);
-                          const objNames = { star: 'Stars', cookie: 'Cookies', heart: 'Hearts', smile: 'Smiles' };
-                          speakIndianEnglish(objNames[obj]);
+                          setSelectedObject(obj.id);
+                          speakIndianEnglish(obj.label);
                         }}
-                        className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1 ${
-                          selectedObject === obj 
-                            ? 'bg-white/20 text-white shadow-md font-black ring-1 ring-white/30' 
-                            : 'text-white/40 hover:text-white/80'
+                        className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                          selectedObject === obj.id
+                            ? 'bg-white/20 text-white shadow-md font-black ring-1 ring-white/30'
+                            : 'text-white/50 hover:text-white/90 hover:bg-white/10'
                         }`}
                       >
-                        <span>{obj === 'star' ? '⭐' : obj === 'cookie' ? '🍪' : obj === 'heart' ? '💖' : '😊'}</span>
-                        <span className="hidden sm:inline capitalize">{obj}</span>
+                        <span className="text-sm">{obj.emoji}</span>
+                        <span>{obj.label}</span>
                       </button>
                     ))}
                   </div>
@@ -1423,8 +1452,8 @@ export const LearningCenter: React.FC = () => {
                 </div>
               </div>
 
-              {/* Arena Stage: Immediately visible right below the numbers */}
-              <div className="w-full bg-black/35 rounded-2xl p-4 sm:p-5 min-h-[170px] flex flex-wrap items-center justify-center gap-3 relative z-10 border border-white/10 shadow-inner">
+              {/* Arena Stage: Strictly Aligned in 2 Readable Lines (e.g., 10->5+5, 18->10+8, 20->10+10) */}
+              <div className="w-full bg-black/35 rounded-2xl p-4 sm:p-6 min-h-[180px] flex flex-col items-center justify-center gap-3.5 relative z-10 border border-white/10 shadow-inner">
                 {activeNumber === 0 ? (
                   <div className="text-center py-6 select-none">
                     <p className="text-white/40 text-sm font-bold uppercase tracking-wider">
@@ -1432,54 +1461,80 @@ export const LearningCenter: React.FC = () => {
                     </p>
                   </div>
                 ) : (
-                  <AnimatePresence>
-                    {Array.from({ length: activeNumber }).map((_, index) => {
-                      const isCounted = countedIndices.includes(index);
-                      const countedNum = countedIndices.indexOf(index) + 1;
-                      return (
-                        <motion.button
-                          key={`${selectedObject}-${index}`}
-                          initial={{ scale: 0, rotate: -30 }}
-                          animate={{ scale: 1, rotate: isCounted ? [0, 12, -12, 0] : 0 }}
-                          exit={{ scale: 0, rotate: 30 }}
-                          whileHover={{ scale: 1.15 }}
-                          whileTap={{ scale: 0.9 }}
-                          onClick={() => handleObjectTap(index)}
-                          className={`w-12 h-12 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center relative cursor-pointer border-2 transition-all shadow-md select-none ${
-                            isCounted 
-                              ? 'bg-white/25 border-white text-white shadow-xl ring-2 ring-amber-300/70 scale-105' 
-                              : 'bg-white/10 border-white/20 hover:border-white/40 hover:bg-white/15'
-                          }`}
-                        >
-                          <div className={`transition-transform duration-300 flex items-center justify-center ${isCounted ? 'scale-110' : 'opacity-90'}`}>
-                            {selectedObject === 'star' && (
-                              <span className="text-2xl sm:text-3xl filter drop-shadow-md leading-none">⭐</span>
-                            )}
-                            {selectedObject === 'cookie' && (
-                              <span className="text-2xl sm:text-3xl filter drop-shadow-md leading-none">🍪</span>
-                            )}
-                            {selectedObject === 'heart' && (
-                              <span className="text-2xl sm:text-3xl filter drop-shadow-md leading-none">💖</span>
-                            )}
-                            {selectedObject === 'smile' && (
-                              <span className="text-2xl sm:text-3xl filter drop-shadow-md leading-none">😊</span>
-                            )}
-                          </div>
+                  (() => {
+                    const allIndices = Array.from({ length: activeNumber }, (_, i) => i);
+                    const firstRowCount =
+                      activeNumber <= 5
+                        ? activeNumber
+                        : activeNumber <= 10
+                        ? 5
+                        : 10;
+                    const rows = [
+                      allIndices.slice(0, firstRowCount),
+                      ...(activeNumber > firstRowCount
+                        ? [allIndices.slice(firstRowCount)]
+                        : [])
+                    ];
+                    const objectEmojiMap: Record<typeof selectedObject, string> = {
+                      star: '⭐',
+                      chocolate: '🍫',
+                      icecream: '🍦',
+                      cookie: '🍪',
+                      apple: '🍎',
+                      balloon: '🎈',
+                      heart: '💖',
+                      smile: '😊'
+                    };
 
-                          {/* Sequential Counting Number Badge */}
-                          {isCounted && (
-                            <motion.span
-                              initial={{ scale: 0 }}
-                              animate={{ scale: 1 }}
-                              className="absolute -top-1.5 -right-1.5 bg-cheerful-pink text-white font-black text-[10px] w-5 h-5 rounded-full flex items-center justify-center border-2 border-slate-950 shadow-md"
+                    return rows.map((rowIndices, rowIdx) => (
+                      <div
+                        key={`count-row-${rowIdx}`}
+                        className="w-full flex flex-wrap sm:flex-nowrap items-center justify-center gap-2 sm:gap-3"
+                      >
+                        {rowIndices.map((index) => {
+                          const isCounted = countedIndices.includes(index);
+                          const countedNum = countedIndices.indexOf(index) + 1;
+                          return (
+                            <motion.button
+                              key={`${selectedObject}-${index}`}
+                              initial={{ scale: 0, rotate: -30 }}
+                              animate={{ scale: 1, rotate: isCounted ? [0, 12, -12, 0] : 0 }}
+                              exit={{ scale: 0, rotate: 30 }}
+                              whileHover={{ scale: 1.12 }}
+                              whileTap={{ scale: 0.9 }}
+                              onClick={() => handleObjectTap(index)}
+                              className={`w-12 h-12 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center relative cursor-pointer border-2 transition-all shadow-md select-none shrink-0 ${
+                                isCounted
+                                  ? 'bg-white/25 border-white text-white shadow-xl ring-2 ring-amber-300/70 scale-105'
+                                  : 'bg-white/10 border-white/20 hover:border-white/40 hover:bg-white/15'
+                              }`}
                             >
-                              {countedNum}
-                            </motion.span>
-                          )}
-                        </motion.button>
-                      );
-                    })}
-                  </AnimatePresence>
+                              <div
+                                className={`transition-transform duration-300 flex items-center justify-center ${
+                                  isCounted ? 'scale-110' : 'opacity-90'
+                                }`}
+                              >
+                                <span className="text-2xl sm:text-3xl filter drop-shadow-md leading-none">
+                                  {objectEmojiMap[selectedObject]}
+                                </span>
+                              </div>
+
+                              {/* Sequential Counting Number Badge */}
+                              {isCounted && (
+                                <motion.span
+                                  initial={{ scale: 0 }}
+                                  animate={{ scale: 1 }}
+                                  className="absolute -top-1.5 -right-1.5 bg-cheerful-pink text-white font-black text-[10px] w-5 h-5 rounded-full flex items-center justify-center border-2 border-slate-950 shadow-md"
+                                >
+                                  {countedNum}
+                                </motion.span>
+                              )}
+                            </motion.button>
+                          );
+                        })}
+                      </div>
+                    ));
+                  })()
                 )}
               </div>
 

@@ -509,7 +509,7 @@ export const NutriBandView: React.FC<NutriBandViewProps> = ({
                   <Moon className="w-5 h-5" />
                 </div>
                 <span className="px-2.5 py-1 rounded-full bg-indigo-500/20 text-indigo-300 text-[10px] font-black tracking-wider border border-indigo-500/30">
-                  WHO 11–14h
+                  IAP 11–14h
                 </span>
               </div>
               <div>

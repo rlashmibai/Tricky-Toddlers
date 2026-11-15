@@ -457,16 +457,16 @@ const localT: Record<string, Record<string, string>> = {
     heroTitle: "Milestone Tracker",
     heroDesc: "Celebrate every magical step!",
     aiCoach: "AI Development Coach",
-    aiTitle: "Generate WHO, Indian IAP & FSSAI Developmental Assessment",
-    aiDesc: "Based on the milestones you log, our pediatric AI engine compares your child's timeline with standard WHO, Indian IAP and FSSAI ranges to deliver helpful, positive guidelines and personalized play ideas.",
+    aiTitle: "Generate Indian IAP, ICMR-NIN & FSSAI Developmental Assessment",
+    aiDesc: "Based on the milestones you log, our pediatric AI engine compares your child's timeline with standard Indian IAP, ICMR-NIN and FSSAI ranges to deliver helpful, positive guidelines and personalized play ideas.",
     loggedReady: "Milestone(s) logged and ready for analysis!",
     logUnlock: "Log a milestone below to unlock a personalized timeline analysis!",
     analyzing: "Analyzing Timelines...",
     analyzeBtn: "Analyze with AI Guide",
-    reportTitle: "WHO, Indian IAP & FSSAI Development Coach Report",
+    reportTitle: "Indian IAP, ICMR-NIN & FSSAI Development Coach Report",
     reportLoading: "The Coach is drafting a tailored developmental blueprint for your child...",
     majorMilestones: "Major Developmental Milestones",
-    expectedRange: "Expected WHO, IAP & FSSAI Range:",
+    expectedRange: "Expected Indian IAP & FSSAI Range:",
     months: "Months",
     month: "Month",
     recordedAt: "Recorded at",
@@ -491,16 +491,16 @@ const localT: Record<string, Record<string, string>> = {
     heroTitle: "मील का पत्थर ट्रैकर",
     heroDesc: "हर जादुई कदम का जश्न मनाएं!",
     aiCoach: "एआई विकास कोच",
-    aiTitle: "डब्ल्यूएचओ विकास मूल्यांकन जनरेट करें",
-    aiDesc: "आपके द्वारा रिकॉर्ड किए गए मील के पत्थरों के आधार पर, हमारा पीडियाट्रिक एआई इंजन मददगार, सकारात्मक दिशानिर्देश और व्यक्तिगत खेल विचार प्रदान करने के लिए डब्ल्यूएचओ श्रेणियों के साथ तुलना करता है।",
+    aiTitle: "भारतीय आईएपी (IAP) और एफएसएसएआई विकास मूल्यांकन जनरेट करें",
+    aiDesc: "आपके द्वारा रिकॉर्ड किए गए मील के पत्थरों के आधार पर, हमारा पीडियाट्रिक एआई इंजन मददगार, सकारात्मक दिशानिर्देश और व्यक्तिगत खेल विचार प्रदान करने के लिए भारतीय आईएपी (IAP) श्रेणियों के साथ तुलना करता है।",
     loggedReady: "मील के पत्थर रिकॉर्ड किए गए हैं और विश्लेषण के लिए तैयार हैं!",
     logUnlock: "व्यक्तिगत समयरेखा विश्लेषण अनलॉक करने के लिए नीचे एक मील का पत्थर रिकॉर्ड करें!",
     analyzing: "समयरेखा का विश्लेषण किया जा रहा है...",
     analyzeBtn: "एआई गाइड के साथ विश्लेषण करें",
-    reportTitle: "डब्ल्यूएचओ विकास कोच रिपोर्ट",
+    reportTitle: "भारतीय आईएपी (IAP) विकास कोच रिपोर्ट",
     reportLoading: "कोच आपके बच्चे के लिए एक अनुकूलित विकास खाका तैयार कर रहा है...",
     majorMilestones: "प्रमुख विकासात्मक मील के पत्थर",
-    expectedRange: "अपेक्षित डब्ल्यूएचओ सीमा:",
+    expectedRange: "अपेक्षित आईएपी (IAP) सीमा:",
     months: "महीने",
     month: "महीना",
     recordedAt: "पर रिकॉर्ड किया गया",
@@ -525,16 +525,16 @@ const localT: Record<string, Record<string, string>> = {
     heroTitle: "மைல்கல் ட்ராக்கர்",
     heroDesc: "ஒவ்வொரு மாயாஜால படியையும் கொண்டாடுங்கள்!",
     aiCoach: "AI வளர்ச்சிப் பயிற்சியாளர்",
-    aiTitle: "WHO வளர்ச்சி மதிப்பீட்டை உருவாக்குங்கள்",
-    aiDesc: "நீங்கள் பதிவு செய்யும் மைல்கற்களின் அடிப்படையில், எங்களது குழந்தை நல AI இயந்திரம் உங்கள் குழந்தையின் காலவரிசையை WHO தரநிலைகளுடன் ஒப்பிட்டு, பயனுள்ள, நேர்மறையான வழிகாட்டுதல்கள் மற்றும் தனிப்பயனாக்கப்பட்ட விளையாட்டு யோசனைகளை வழங்குகிறது.",
+    aiTitle: "இந்திய IAP & FSSAI வளர்ச்சி மதிப்பீட்டை உருவாக்குங்கள்",
+    aiDesc: "நீங்கள் பதிவு செய்யும் மைல்கற்களின் அடிப்படையில், எங்களது குழந்தை நல AI இயந்திரம் உங்கள் குழந்தையின் காலவரிசையை இந்திய IAP தரநிலைகளுடன் ஒப்பிட்டு, பயனுள்ள, நேர்மறையான வழிகாட்டுதல்கள் மற்றும் தனிப்பயனாக்கப்பட்ட விளையாட்டு யோசனைகளை வழங்குகிறது.",
     loggedReady: "மைல்கற்கள் பதிவு செய்யப்பட்டு பகுப்பாய்விற்கு தயாராக உள்ளன!",
     logUnlock: "தனிப்பயனாக்கப்பட்ட காலவரிசை பகுப்பாய்வைத் திறக்க கீழே ஒரு மைல்கல்லைப் பதிவுசெய்க!",
     analyzing: "காலவரிசைகளை பகுப்பாய்வு செய்கிறது...",
     analyzeBtn: "AI வழிகாட்டியுடன் பகுப்பாய்வு செய்",
-    reportTitle: "WHO வளர்ச்சி பயிற்சியாளர் அறிக்கை",
+    reportTitle: "இந்திய IAP வளர்ச்சி பயிற்சியாளர் அறிக்கை",
     reportLoading: "பயிற்சியாளர் உங்கள் குழந்தைக்காக வடிவமைக்கப்பட்ட வளர்ச்சி திட்டத்தை தயாரித்து வருகிறார்...",
     majorMilestones: "முக்கிய வளர்ச்சி மைல்கற்கள்",
-    expectedRange: "எதிர்பார்க்கப்படும் WHO வரம்பு:",
+    expectedRange: "எதிர்பார்க்கப்படும் IAP வரம்பு:",
     months: "மாதங்கள்",
     month: "மாதம்",
     recordedAt: "பதிவு செய்யப்பட்ட வயது",
@@ -559,16 +559,16 @@ const localT: Record<string, Record<string, string>> = {
     heroTitle: "మైలురాళ్ళ ట్రాకర్",
     heroDesc: "ప్రతి మాయా అడుగును వేడుక చేసుకోండి!",
     aiCoach: "AI అభివృద్ధి కోచ్",
-    aiTitle: "WHO అభివృద్ధి అంచనాను రూపొందించండి",
-    aiDesc: "మీరు నమోదు చేసిన మైలురాళ్ల ఆధారంగా, మా పీడియాట్రిక్ AI ఇంజిన్ మీ శిశువు అభివృద్ధిని WHO ప్రమాణాలతో పోల్చి, సహాయకరమైన, సానుకూల మార్గదర్శకాలను మరియు వ్యక్తిగతీకరించిన ఆటల ఆలోచనలను అందిస్తుంది.",
+    aiTitle: "భారతీయ IAP & FSSAI అభివృద్ధి అంచనాను రూపొందించండి",
+    aiDesc: "మీరు నమోదు చేసిన మైలురాళ్ల ఆధారంగా, మా పీడియాట్రిక్ AI ఇంజిన్ మీ శిశువు అభివృద్ధిని భారతీయ IAP ప్రమాణాలతో పోల్చి, సహాయకరమైన, సానుకూల మార్గదర్శకాలను మరియు వ్యక్తిగతీకరించిన ఆటల ఆలోచనలను అందిస్తుంది.",
     loggedReady: "మైలురాళ్లు నమోదు చేయబడ్డాయి మరియు విశ్లేషణకు సిద్ధంగా ఉన్నాయి!",
     logUnlock: "వ్యక్తిగతీకరించిన విశ్లేషణను అన్‌లాక్ చేయడానికి క్రింద ఒక మైలురాయిని నమోదు చేయండి!",
     analyzing: "విశ్లేషిస్తోంది...",
     analyzeBtn: "AI గైడ్‌తో విశ్లేషించండి",
-    reportTitle: "WHO అభివృద్ధి కోచ్ నివేదిక",
+    reportTitle: "భారతీయ IAP అభివృద్ధి కోచ్ నివేదిక",
     reportLoading: "కోచ్ మీ శిశువు కోసం ప్రత్యేక అభివృద్ధి ప్రణాళికను సిద్ధం చేస్తున్నారు...",
     majorMilestones: "ప్రధాన అభివృద్ధి మైలురాళ్లు",
-    expectedRange: "ఆశించిన WHO పరిధి:",
+    expectedRange: "ఆశించిన IAP పరిధి:",
     months: "నెలలు",
     month: "నెల",
     recordedAt: "నమోదు చేసిన వయస్సు",
@@ -1344,7 +1344,7 @@ export const MilestoneTracker: React.FC = () => {
     });
 
     if (loggedArray.length === 0) {
-      setAiReport("**No milestones logged yet!**\n\nPlease log at least one milestone achievement in the list below (click on any milestone card and click 'Record Achievement') to generate your personalized WHO, Indian IAP & FSSAI developmental assessment.");
+      setAiReport("**No milestones logged yet!**\n\nPlease log at least one milestone achievement in the list below (click on any milestone card and click 'Record Achievement') to generate your personalized Indian IAP, ICMR-NIN & FSSAI developmental assessment.");
       return;
     }
 
@@ -1395,7 +1395,7 @@ export const MilestoneTracker: React.FC = () => {
           className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-white/50 mb-2.5"
         >
           <Baby className="w-4 h-4 text-cheerful-blue animate-pulse" />
-          <span className="text-[10px] sm:text-xs font-black uppercase tracking-[0.25em] text-white/80">WHO Standards · Personalized for {childName}</span>
+          <span className="text-[10px] sm:text-xs font-black uppercase tracking-[0.25em] text-white/80">Indian IAP &amp; FSSAI Standards · Personalized for {childName}</span>
         </motion.div>
         <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-white mb-1.5 tracking-tight uppercase">
           {lt('heroTitle')}

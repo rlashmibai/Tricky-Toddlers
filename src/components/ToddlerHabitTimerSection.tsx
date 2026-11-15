@@ -81,7 +81,7 @@ export const HABIT_TIMER_ACTIVITIES: HabitTimerActivity[] = [
     suggestedLabel: '20 Seconds',
     durationSeconds: 20,
     emoji: '🧼',
-    tagline: 'WHO-recommended 20-second soap scrub to wash away germs',
+    tagline: 'IAP-recommended 20-second soap scrub to wash away germs',
     color: 'from-emerald-400 to-teal-500',
     ringStroke: '#34d399',
     badgeClass: 'bg-emerald-500/20 text-emerald-300 border-emerald-400/40',
@@ -355,32 +355,6 @@ export const ToddlerHabitTimerSection: React.FC = () => {
                   </button>
                 );
               })}
-            </div>
-
-            {/* Quick Summary Table matching Parent Reference */}
-            <div className="rounded-2xl bg-black/30 border border-white/10 p-3.5 space-y-2">
-              <div className="flex items-center justify-between text-[11px] font-black uppercase tracking-wider text-slate-400 border-b border-white/10 pb-1.5">
-                <span>Activity</span>
-                <span>Suggested Timer</span>
-              </div>
-              <div className="space-y-1.5 text-xs">
-                {HABIT_TIMER_ACTIVITIES.map((act) => (
-                  <div
-                    key={act.id}
-                    className={`flex items-center justify-between py-1 px-2 rounded-lg ${
-                      act.id === selectedId ? 'bg-white/10 text-white font-bold' : 'text-slate-300'
-                    }`}
-                  >
-                    <span className="flex items-center gap-2">
-                      <span>{act.emoji}</span>
-                      <span>{act.name}</span>
-                    </span>
-                    <span className="font-mono font-bold text-indigo-300">
-                      {act.suggestedLabel}
-                    </span>
-                  </div>
-                ))}
-              </div>
             </div>
           </div>
         </div>

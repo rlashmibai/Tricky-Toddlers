@@ -97,7 +97,7 @@ export const HomePage: React.FC<HomePageProps> = ({
       id: 'milestones',
       name: 'Milestone Tracker',
       category: 'learning',
-      tag: 'WHO, Indian IAP & FSSAI Standards',
+      tag: 'Indian IAP, ICMR-NIN & FSSAI Standards',
       desc: 'Monitor developmental leaps, motor skills and speech growth.',
       icon: Baby,
       color: 'from-blue-400 to-indigo-500',
@@ -122,7 +122,7 @@ export const HomePage: React.FC<HomePageProps> = ({
       name: 'Vaccine Tracker',
       category: 'care',
       tag: 'Universal Immunization',
-      desc: 'WHO, Indian IAP & FSSAI schedules, dose milestone alerts, and verified records.',
+      desc: 'Indian IAP & UIP schedules, dose milestone alerts, and verified records.',
       icon: Syringe,
       color: 'from-teal-400 to-cyan-500',
       textColor: 'text-teal-300',
@@ -202,12 +202,12 @@ export const HomePage: React.FC<HomePageProps> = ({
       name: 'Growth Reports',
       category: 'care',
       tag: 'Monthly development PDF',
-      desc: 'Monthly developmental progress summaries, WHO, Indian IAP & FSSAI percentiles and exportable PDFs.',
+      desc: 'Monthly developmental progress summaries, Indian IAP, ICMR-NIN & FSSAI percentiles and exportable PDFs.',
       icon: FileText,
       color: 'from-teal-500 to-cyan-600',
       textColor: 'text-teal-300',
       bgColor: 'bg-teal-500/10 border-teal-500/30',
-      badge: 'WHO, IAP & FSSAI'
+      badge: 'IAP, ICMR & FSSAI'
     },
     {
       id: 'learning',
@@ -307,7 +307,7 @@ export const HomePage: React.FC<HomePageProps> = ({
       borderColor: 'border-amber-500/30',
       iconColor: 'text-amber-400',
       iconBg: 'bg-amber-500/15 border-amber-400/30',
-      howWeApply: 'Every meal recommendation and sleep suggestion explains clearly why it helps your baby, backed by trusted health organizations (WHO, Indian IAP and FSSAI).'
+      howWeApply: 'Every meal recommendation and sleep suggestion explains clearly why it helps your baby, backed by trusted Indian health organizations (Indian IAP, ICMR-NIN and FSSAI).'
     },
     {
       title: 'Accountability',
@@ -355,7 +355,7 @@ export const HomePage: React.FC<HomePageProps> = ({
       borderColor: 'border-rose-500/30',
       iconColor: 'text-rose-400',
       iconBg: 'bg-rose-500/15 border-rose-400/30',
-      howWeApply: 'If you ever mention serious symptoms like high fever or trouble breathing, our app immediately shows emergency hotline numbers and directs you to a hospital.'
+      howWeApply: 'If you ever mention serious emergencies like choking, high fever, or trouble breathing, our app immediately provides emergency first-aid tips, shows emergency hotline numbers, and directs you to a pediatrician or hospital.'
     },
     {
       title: 'Bias',
@@ -379,7 +379,7 @@ export const HomePage: React.FC<HomePageProps> = ({
       borderColor: 'border-teal-500/30',
       iconColor: 'text-teal-400',
       iconBg: 'bg-teal-500/15 border-teal-400/30',
-      howWeApply: 'Built strictly to match WHO, Indian IAP and FSSAI feeding, nutrition and growth milestones, keeping every stage safe.'
+      howWeApply: 'Built strictly to match Indian IAP, ICMR-NIN and FSSAI feeding, nutrition and growth milestones, keeping every stage safe.'
     },
     {
       title: 'Data Protection',
@@ -986,9 +986,9 @@ export const HomePage: React.FC<HomePageProps> = ({
         <div className="w-full space-y-3">
           {[
             {
-              question: 'What age group is Tricky Toddlers designed for, and can I track more than one child?',
+              question: 'Which features are designed specifically for toddlers, and can I track more than one child?',
               answer:
-                'Tricky Toddlers is tailored for babies and toddlers from 0 to 5 years old (Newborn through 60 months). Yes, you can manage up to two child profiles (for example, an older toddler and a younger infant) and switch between them anytime to get age-specific milestones, vaccine schedules, and meal ideas for each child.'
+                'While interactive play tabs like Toddler Academy, Toddler Tales, and Toddler TV are specially designed for toddlers, all other features, including the AI Parenting Assistant, AI NutriChef, FoodLens AI, Pediatric Care, and Health Trackers, are common and support children across all growing stages. Yes, you can manage up to two child profiles and switch between them anytime to get personalized milestones, vaccine schedules, and meal ideas for each child.'
             },
             {
               question: 'How do AI NutriChef and FoodLens AI help with picky eaters and food allergies?',
@@ -996,9 +996,9 @@ export const HomePage: React.FC<HomePageProps> = ({
                 'AI NutriChef generates custom, age-appropriate recipes based on the ingredients you have at home and automatically respects your saved Dietary Preferences (such as Vegetarian, Jain, Eggitarian, zero refined sugar, or specific allergies). FoodLens AI lets you snap or upload a photo of any meal to get an instant nutritional breakdown, choking-hazard check, and toddler-friendly serving tips.'
             },
             {
-              question: 'Are the developmental milestones and immunization schedules aligned with pediatric standards?',
+              question: 'Are the developmental milestones and immunization schedules aligned with Indian pediatric standards?',
               answer:
-                'Yes. Our Milestone Tracker (covering motor, cognitive, speech, and social skills) and Vaccine Tracker follow standard IAP (Indian Academy of Pediatrics) and WHO guidelines, complete with due-date tracking and downloadable PDF health summaries for your pediatrician visits.'
+                'Yes. Our Milestone Tracker (covering motor, cognitive, speech, and social skills) and Vaccine Tracker follow standard Indian Academy of Pediatrics (IAP), ICMR-NIN, and FSSAI guidelines, complete with due-date tracking and downloadable PDF health summaries for your pediatrician visits.'
             },
             {
               question: 'Is the AI Parenting Assistant a replacement for my child’s pediatrician?',
@@ -1013,7 +1013,7 @@ export const HomePage: React.FC<HomePageProps> = ({
             {
               question: 'Can I use Tricky Toddlers in Indian regional languages?',
               answer:
-                'Yes! You can switch the app interface and AI guidance across 10 supported languages, including English, Hindi, Tamil, Telugu, Kannada, Malayalam, Marathi, Gujarati, Bengali, and Punjabi, from the top language selector.'
+                'Yes! You can switch the app interface and AI guidance across 12 supported Indian languages, including English, Hindi, Tamil, Telugu, Kannada, Malayalam, Marathi, Gujarati, Bengali, Punjabi, Assamese, and Odia, from the top language selector.'
             },
             {
               question: 'How does Instant Guest Access work, and is my family’s data private?',

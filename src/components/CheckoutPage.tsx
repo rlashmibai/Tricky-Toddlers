@@ -195,7 +195,7 @@ export const CheckoutPage: React.FC = () => {
 
                   <div className="pt-3 border-t border-white/10 flex items-center justify-between text-[11px] text-slate-400">
                     <span></span>
-                    <span className="text-emerald-400 font-bold">Compliant with WHO & IAP</span>
+                    <span className="text-emerald-400 font-bold">Compliant with Indian IAP & FSSAI</span>
                   </div>
                 </div>
               </div>

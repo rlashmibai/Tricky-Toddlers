@@ -1250,7 +1250,7 @@ export const FoodLensView: React.FC<FoodLensViewProps> = ({
                     <FoodNutritionMetricsDisplay food={scanResult} />
                   </div>
 
-                  {/* Authoritative Indian Compliance & WHO References */}
+                  {/* Authoritative Indian Compliance References */}
                   <div className="p-4.5 rounded-2xl bg-[#0d1829] border border-emerald-400/25 space-y-3">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-white/10 pb-2.5">
                       <div className="flex items-center gap-2 text-emerald-300 text-xs font-black tracking-wide uppercase">
@@ -1258,7 +1258,7 @@ export const FoodLensView: React.FC<FoodLensViewProps> = ({
                         <span>Official Pediatric & Indian Compliance Portals</span>
                       </div>
                       <span className="text-[11px] text-slate-400 font-medium">
-                        Verified against Indian & WHO complementary feeding statutes
+                        Verified against Indian IAP, ICMR-NIN & FSSAI feeding statutes
                       </span>
                     </div>
 
@@ -1304,22 +1304,22 @@ export const FoodLensView: React.FC<FoodLensViewProps> = ({
                       </a>
 
                       <a
-                        href="https://www.who.int/news-room/fact-sheets/detail/infant-and-young-child-feeding"
+                        href="https://fssai.gov.in"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="p-3 rounded-xl bg-white/[0.03] hover:bg-blue-500/10 border border-white/5 hover:border-blue-500/30 transition-all group flex flex-col justify-between sm:col-span-2 lg:col-span-1"
                       >
                         <div>
                           <div className="flex items-center justify-between text-blue-300 font-bold mb-1">
-                            <span>🌐 WHO Child Growth & IYCF</span>
+                            <span>🇮🇳 FSSAI Eat Right & IYCF</span>
                             <ExternalLink className="w-3.5 h-3.5 text-blue-400 opacity-60 group-hover:opacity-100" />
                           </div>
                           <p className="text-[11px] text-slate-300 leading-relaxed font-normal">
-                            World Health Organization Global Strategy for Infant and Young Child Feeding & complementary standards.
+                            Food Safety and Standards Authority of India infant nutrition, allergen labeling, and complementary food safety standards.
                           </p>
                         </div>
                         <span className="mt-2 text-[10px] text-blue-400 font-semibold flex items-center gap-1">
-                          Read WHO Article →
+                          Read FSSAI Guidelines →
                         </span>
                       </a>
                     </div>

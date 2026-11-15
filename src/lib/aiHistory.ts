@@ -70,7 +70,7 @@ Here is simple, caring guidance to help Ashwath fall asleep peacefully:
 
 ### 🌐 Trusted Health Guidelines
 - [Indian Academy of Pediatrics (IAP) - Child Sleep Guidelines](https://iapindia.org)
-- [World Health Organization (WHO) - Child Health](https://www.who.int/health-topics/child-health)`,
+- [ICMR - National Institute of Nutrition (NIN)](https://www.nin.res.in)`,
     date: '18 Sep 2026',
     time: '08:45 PM',
     month: 'September 2026',
@@ -130,7 +130,7 @@ Here is simple, caring guidance to help Ashwath fall asleep peacefully:
 
 ### 🌐 Trusted Health Guidelines
 - [Indian Academy of Pediatrics (IAP) - Positive Parenting](https://iapindia.org)
-- [World Health Organization (WHO) - Child Care](https://www.who.int/health-topics/child-health)`,
+- [FSSAI - Eat Right India Child Care Standards](https://fssai.gov.in)`,
     date: '03 Sep 2026',
     time: '04:15 PM',
     month: 'September 2026',
@@ -160,7 +160,7 @@ Here is simple, caring guidance to help Ashwath fall asleep peacefully:
 
 ### 🌐 Trusted Health Guidelines
 - [Indian Academy of Pediatrics (IAP) - Child Health](https://iapindia.org)
-- [World Health Organization (WHO) - Early Childhood Development](https://www.who.int/health-topics/child-health)`,
+- [ICMR - National Institute of Nutrition (NIN)](https://www.nin.res.in)`,
     date: '24 Aug 2026',
     time: '10:00 AM',
     month: 'August 2026',
@@ -190,7 +190,7 @@ Here is simple, caring guidance to help Ashwath fall asleep peacefully:
 
 ### 🌐 Trusted Health Guidelines
 - [Indian Academy of Pediatrics (IAP) - Positive Parenting](https://iapindia.org)
-- [World Health Organization (WHO) - Nurturing Care](https://www.who.int/health-topics/child-health)`,
+- [FSSAI - Eat Right India Nurturing Care](https://fssai.gov.in)`,
     date: '12 Aug 2026',
     time: '03:20 PM',
     month: 'August 2026',
@@ -222,7 +222,7 @@ Here is simple, caring guidance to help Ashwath fall asleep peacefully:
 
 ### 🌐 Trusted Health Guidelines
 - [Indian Academy of Pediatrics (IAP) - Child Speech & Development](https://iapindia.org)
-- [World Health Organization (WHO) - Child Health](https://www.who.int/health-topics/child-health)`,
+- [ICMR - National Institute of Nutrition (NIN)](https://www.nin.res.in)`,
     date: '28 Jul 2026',
     time: '11:10 AM',
     month: 'July 2026',
@@ -252,7 +252,7 @@ Here is simple, caring guidance to help Ashwath fall asleep peacefully:
 
 ### 🌐 Trusted Health Guidelines
 - [Indian Academy of Pediatrics (IAP) - Child Sleep](https://iapindia.org)
-- [World Health Organization (WHO) - Child Health](https://www.who.int/health-topics/child-health)`,
+- [ICMR - National Institute of Nutrition (NIN)](https://www.nin.res.in)`,
     date: '16 Jul 2026',
     time: '09:40 PM',
     month: 'July 2026',

@@ -6,6 +6,7 @@ import { useAuth } from '../lib/AuthContext';
 import { db, handleFirestoreError } from '../lib/firebase';
 import { playSound } from '../lib/sounds';
 import { INDIAN_CITIES_BY_STATE } from '../data/indianCitiesData';
+import { detectEmergencyCondition } from './SearchSection';
 import { 
   Sparkles, 
   Stethoscope, 
@@ -1202,7 +1203,7 @@ export const ExpertPediatricianSection: React.FC = () => {
     setReportProgress(10);
     
     setTimeout(() => {
-      setReportStep("Comparing weight and height curves to standard WHO child percentiles...");
+      setReportStep("Comparing weight and height curves to standard Indian IAP child percentiles...");
       setReportProgress(40);
       playSound('pop');
     }, 800);
@@ -2370,6 +2371,10 @@ export const ExpertPediatricianSection: React.FC = () => {
 
                     {chatMessages.map((msg, i) => {
                       const isDoc = msg.sender === 'doctor';
+                      const prevUserMsg = i > 0 && chatMessages[i - 1]?.sender === 'user' ? chatMessages[i - 1].text : '';
+                      const emergencyInfo = isDoc && i > 0 ? detectEmergencyCondition(prevUserMsg, msg.text) : { isEmergency: false, type: 'severe_illness' as const };
+                      const isChoking = emergencyInfo.type === 'choking';
+
                       return (
                         <div key={i} className={`flex ${isDoc ? 'justify-start' : 'justify-end'}`}>
                           <div className={`flex items-start gap-2.5 max-w-[88%] ${isDoc ? '' : 'flex-row-reverse'}`}>
@@ -2378,8 +2383,48 @@ export const ExpertPediatricianSection: React.FC = () => {
                                 {activeChatDoc.image}
                               </div>
                             )}
-                            <div className={`p-4 rounded-2xl text-xs md:text-sm leading-relaxed whitespace-pre-wrap text-left ${isDoc ? 'bg-white/5 text-white/90 rounded-tl-none border border-white/5' : 'bg-indigo-500 text-white rounded-tr-none shadow-md'}`}>
-                              {msg.text}
+                            <div className="space-y-3">
+                              <div className={`p-4 rounded-2xl text-xs md:text-sm leading-relaxed whitespace-pre-wrap text-left ${isDoc ? 'bg-white/5 text-white/90 rounded-tl-none border border-white/5' : 'bg-indigo-500 text-white rounded-tr-none shadow-md'}`}>
+                                {msg.text}
+                              </div>
+
+                              {isDoc && emergencyInfo.isEmergency && (
+                                <div className="rounded-2xl border-2 border-rose-500/70 bg-gradient-to-br from-rose-950/90 via-[#1f0913]/95 to-slate-950 p-4 shadow-xl space-y-3 text-left">
+                                  <div className="flex flex-wrap items-center justify-between gap-2 border-b border-rose-500/30 pb-2.5">
+                                    <div>
+                                      <span className="px-2 py-0.5 rounded-full bg-rose-500 text-white text-[9px] font-black uppercase tracking-widest">
+                                        Urgent Action Required
+                                      </span>
+                                      <h4 className="text-sm font-black text-white mt-1">
+                                        Emergency First Aid
+                                      </h4>
+                                    </div>
+                                    <a
+                                      href="tel:108"
+                                      onClick={() => playSound('pop')}
+                                      className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-rose-500 hover:bg-rose-400 text-white font-black text-xs uppercase tracking-wider shadow-md transition-all no-underline"
+                                    >
+                                      <Phone className="w-3.5 h-3.5" />
+                                      <span>Call Pediatrician</span>
+                                    </a>
+                                  </div>
+                                  <div className="text-xs text-rose-100/95 space-y-1.5 leading-relaxed">
+                                    {isChoking ? (
+                                      <ol className="list-decimal pl-4 space-y-1 text-slate-100">
+                                        <li><strong>5 Firm Back Blows:</strong> Hold infant face-down along forearm (or lean older child forward) and give 5 firm blows between shoulder blades.</li>
+                                        <li><strong>5 Chest / Abdominal Thrusts:</strong> Give 5 two-finger chest thrusts (under 1 yr) or 5 abdominal thrusts (over 1 yr). Repeat cycles of 5 &amp; 5.</li>
+                                        <li><strong>No Blind Finger Sweep:</strong> Never reach inside the mouth unless you clearly see a loose object.</li>
+                                      </ol>
+                                    ) : (
+                                      <ol className="list-decimal pl-4 space-y-1 text-slate-100">
+                                        <li><strong>Airway &amp; Positioning:</strong> Keep child upright for breathing distress, or on their side (recovery position) during a seizure.</li>
+                                        <li><strong>Temperature &amp; Hydration:</strong> Sponge with lukewarm water for high fever and offer small sips of Indian IAP-approved ORS if awake.</li>
+                                        <li><strong>Immediate Hospital Triage:</strong> Call <strong>112 / 108</strong> immediately for blue lips, chest retractions, or lethargy.</li>
+                                      </ol>
+                                    )}
+                                  </div>
+                                </div>
+                              )}
                             </div>
                           </div>
                         </div>
@@ -2617,7 +2662,7 @@ export const ExpertPediatricianSection: React.FC = () => {
                       <div className="absolute top-1 right-1 w-6 h-6 bg-amber-500/10 rounded-full blur-md" />
                       <div className="text-[10px] text-white/40 uppercase font-black tracking-wider">Weight Percentile</div>
                       <div className="text-2xl font-black text-amber-400 mt-1">{weightPercentile}th</div>
-                      <div className="text-[10px] text-white/40 mt-1">WHO Healthy Range</div>
+                      <div className="text-[10px] text-white/40 mt-1">IAP Healthy Range</div>
                     </div>
 
                     {/* Height percentile */}
@@ -2642,7 +2687,7 @@ export const ExpertPediatricianSection: React.FC = () => {
                     <div className="flex items-center justify-between mb-4">
                       <h4 className="text-xs font-black text-white/70 uppercase tracking-widest flex items-center gap-1.5">
                         <Activity className="w-4 h-4 text-indigo-400" />
-                        WHO Pediatric Percentile Standard
+                        Indian IAP Pediatric Percentile Standard
                       </h4>
 
                       <div className="flex bg-white/5 p-0.5 rounded-lg border border-white/5 text-[10px] font-black">
@@ -2784,7 +2829,7 @@ export const ExpertPediatricianSection: React.FC = () => {
                 <div className="space-y-1 text-left">
                   <div className="flex items-center gap-2">
                     <span className="px-2 py-0.5 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-bold rounded-md text-[10px] tracking-widest uppercase">CERTIFIED SECURE</span>
-                    <span className="text-white/40 text-xs font-bold">Ref No: TR-WHO-{childAge}M</span>
+                    <span className="text-white/40 text-xs font-bold">Ref No: TR-IAP-{childAge}M</span>
                   </div>
                   <h3 className="text-2xl font-black text-white tracking-tight flex items-center gap-2">
                     <FileText className="w-6 h-6 text-amber-400" />
@@ -2824,7 +2869,7 @@ export const ExpertPediatricianSection: React.FC = () => {
                   </div>
                   <div>
                     <div className="text-[10px] text-white/40 uppercase font-black tracking-wider">Diagnostic Curve</div>
-                    <div className="text-sm font-black text-amber-400 mt-0.5">WHO Percentile</div>
+                    <div className="text-sm font-black text-amber-400 mt-0.5">IAP Percentile</div>
                   </div>
                 </div>
 
