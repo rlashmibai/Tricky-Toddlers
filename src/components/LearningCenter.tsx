@@ -14,6 +14,7 @@ import { ToddlerEmotionsSection } from './ToddlerEmotionsSection';
 import { ToddlerBodyPartsSection } from './ToddlerBodyPartsSection';
 import { ToddlerShapesSection } from './ToddlerShapesSection';
 import { ToddlerAnimalSoundsSection } from './ToddlerAnimalSoundsSection';
+import { ToddlerHabitTimerSection } from './ToddlerHabitTimerSection';
 
 const COLORS = [
   { name: 'Pink', bg: 'bg-cheerful-pink', border: 'border-cheerful-pink/40', glow: 'shadow-cheerful-pink/20' },
@@ -725,8 +726,8 @@ export const LearningCenter: React.FC = () => {
   };
 
   const [activeMode, setActiveMode] = useState<
-    'numbers' | 'counting' | 'words' | 'alphabet' | 'colors' | 'emotions' | 'bodyparts' | 'shapes' | 'animals'
-  >('numbers');
+    'timers' | 'numbers' | 'counting' | 'words' | 'alphabet' | 'colors' | 'emotions' | 'bodyparts' | 'shapes' | 'animals'
+  >('timers');
   const [numberColors, setNumberColors] = useState<number[]>(new Array(10).fill(0));
   const [sentence, setSentence] = useState('');
   const [keyColorIndex, setKeyColorIndex] = useState(0);
@@ -772,6 +773,7 @@ export const LearningCenter: React.FC = () => {
     setActiveMode(mode);
     playSound('glass');
     const modeLabels: Record<string, string> = {
+      timers: 'Habit Timers',
       numbers: 'Numbers',
       counting: 'Counting',
       words: 'First Words',
@@ -973,6 +975,9 @@ export const LearningCenter: React.FC = () => {
             onChange={(e) => handleModeChange(e.target.value as typeof activeMode)}
             className="flex-1 min-w-0 bg-slate-800/95 border border-white/15 rounded-xl px-2.5 py-1.5 text-xs font-extrabold text-white focus:outline-none focus:border-cheerful-yellow"
           >
+            <optgroup label="Daily Habit Timers">
+              <option value="timers">⏱️ Habit Timers</option>
+            </optgroup>
             <optgroup label="Math & Logic">
               <option value="numbers">🔢 Numbers</option>
               <option value="counting">⭐ Counting</option>
@@ -991,8 +996,20 @@ export const LearningCenter: React.FC = () => {
           </select>
         </div>
 
-        {/* Laptop/Desktop (>= 768px): Horizontal Module Buttons with Thin Height (100% Untouched) */}
+        {/* Laptop/Desktop (>= 768px): Horizontal Module Buttons with Thin Height */}
         <div className="hidden md:flex flex-wrap items-center gap-1.5 flex-1">
+          <button
+            id="btn-mode-timers"
+            onClick={() => handleModeChange('timers')}
+            className={`inline-flex items-center justify-center gap-1.5 px-2.5 py-1.5 rounded-xl transition-all duration-200 font-extrabold text-xs tracking-wide cursor-pointer shadow-sm select-none whitespace-nowrap ${
+              activeMode === 'timers'
+                ? 'bg-teal-400 text-black shadow-md shadow-teal-400/20 ring-1 ring-teal-300/50'
+                : 'bg-white/5 text-white/70 border border-white/10 hover:bg-white/10 hover:text-white'
+            }`}
+          >
+            <Clock className="w-3.5 h-3.5 shrink-0" />
+            <span>Habit Timers</span>
+          </button>
           <button
             id="btn-mode-numbers"
             onClick={() => handleModeChange('numbers')}
@@ -1133,7 +1150,9 @@ export const LearningCenter: React.FC = () => {
       {/* Active Module Content - Starts immediately below the thin horizontal bar */}
       <div className="w-full min-w-0 mt-0 pt-0">
       <AnimatePresence mode="wait">
-          {activeMode === 'numbers' ? (
+          {activeMode === 'timers' ? (
+            <ToddlerHabitTimerSection />
+          ) : activeMode === 'numbers' ? (
           <motion.div
             key="numbers-view"
             initial={{ opacity: 0, scale: 0.98 }}

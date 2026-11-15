@@ -153,7 +153,7 @@ const INITIAL_PARENT_ACCOUNTS: ParentAccount[] = [
     isOnline: true,
     messages: [
       { id: 'd1', userId: 'deepa', username: 'Deepa', text: "Hi Lashmi, little Riya is cutting her molars and her gums look red and swollen. She is drooling constantly and refusing warm meals. Any soothing ideas?", createdAt: new Date(Date.now() - 1000 * 60 * 6), timeString: '16:00' },
-      { id: 'd2', userId: 'lashmi', username: 'Lashmi', text: "Hi Deepa! Warm food stings inflamed gums right now. Try chilled thick fresh curd or cool cucumber sticks wrapped in a safe silicone feeder. You can also massage her gums with a clean damp cloth chilled in the fridge for a few minutes — it numbs the throbbing naturally.", createdAt: new Date(Date.now() - 1000 * 60 * 4), timeString: '16:01' },
+      { id: 'd2', userId: 'lashmi', username: 'Lashmi', text: "Hi Deepa! Warm food stings inflamed gums right now. Try chilled thick fresh curd or cool cucumber sticks wrapped in a safe silicone feeder. You can also massage her gums with a clean damp cloth chilled in the fridge for a few minutes, as it numbs the throbbing naturally.", createdAt: new Date(Date.now() - 1000 * 60 * 4), timeString: '16:01' },
       { id: 'd3', userId: 'deepa', username: 'Deepa', text: "The cold damp cloth and chilled curd soothed her instantly! She finally fell asleep for a peaceful 2-hour afternoon nap.", createdAt: new Date(Date.now() - 1000 * 60 * 2), timeString: '16:02' }
     ]
   }

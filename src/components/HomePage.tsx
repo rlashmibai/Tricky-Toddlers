@@ -988,7 +988,7 @@ export const HomePage: React.FC<HomePageProps> = ({
             {
               question: 'What age group is Tricky Toddlers designed for, and can I track more than one child?',
               answer:
-                'Tricky Toddlers is tailored for babies and toddlers from 0 to 5 years old (Newborn through 60 months). Yes—you can manage up to two child profiles (for example, an older toddler and a younger infant) and switch between them anytime to get age-specific milestones, vaccine schedules, and meal ideas for each child.'
+                'Tricky Toddlers is tailored for babies and toddlers from 0 to 5 years old (Newborn through 60 months). Yes, you can manage up to two child profiles (for example, an older toddler and a younger infant) and switch between them anytime to get age-specific milestones, vaccine schedules, and meal ideas for each child.'
             },
             {
               question: 'How do AI NutriChef and FoodLens AI help with picky eaters and food allergies?',
@@ -1003,7 +1003,7 @@ export const HomePage: React.FC<HomePageProps> = ({
             {
               question: 'Is the AI Parenting Assistant a replacement for my child’s pediatrician?',
               answer:
-                'No. The AI Parenting Assistant and Pediatric Care guides provide 24/7 educational support for everyday parenting questions—like sleep regressions, teething relief, and tantrum calming—while highlighting red-flag symptoms so you know when to consult your pediatrician directly.'
+                'No. The AI Parenting Assistant and Pediatric Care guides provide 24/7 educational support for everyday parenting questions, like sleep regressions, teething relief, and tantrum calming, while highlighting red-flag symptoms so you know when to consult your pediatrician directly.'
             },
             {
               question: 'How is screen time kept safe in Toddler Academy, Toddler Tales, and Toddler TV?',
@@ -1013,7 +1013,7 @@ export const HomePage: React.FC<HomePageProps> = ({
             {
               question: 'Can I use Tricky Toddlers in Indian regional languages?',
               answer:
-                'Yes! You can switch the app interface and AI guidance across 10 supported languages—including English, Hindi, Tamil, Telugu, Kannada, Malayalam, Marathi, Gujarati, Bengali, and Punjabi—from the top language selector.'
+                'Yes! You can switch the app interface and AI guidance across 10 supported languages, including English, Hindi, Tamil, Telugu, Kannada, Malayalam, Marathi, Gujarati, Bengali, and Punjabi, from the top language selector.'
             },
             {
               question: 'How does Instant Guest Access work, and is my family’s data private?',
@@ -1081,6 +1081,24 @@ export const HomePage: React.FC<HomePageProps> = ({
               </div>
             );
           })}
+        </div>
+
+        <div className="pt-2 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-t border-white/10">
+          <p className="text-xs sm:text-sm text-slate-300">
+            Want deeper answers by topic? Browse all 32 questions across 8 categories including Pediatric Care, AI NutriChef, FoodLens AI, NutriBand™, and Community Help.
+          </p>
+          <button
+            type="button"
+            onClick={() => {
+              playSound('glass');
+              navigate('/faq');
+            }}
+            className="px-4 py-2.5 rounded-xl bg-indigo-500/20 hover:bg-indigo-500/30 border border-indigo-400/40 text-indigo-200 hover:text-white text-xs sm:text-sm font-bold transition-all flex items-center gap-2 shrink-0 cursor-pointer"
+          >
+            <HelpCircle className="w-4 h-4 text-indigo-300" />
+            <span>View Full Categorized FAQs</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </button>
         </div>
       </section>
 

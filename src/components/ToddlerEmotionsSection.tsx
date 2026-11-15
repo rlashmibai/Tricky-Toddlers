@@ -534,7 +534,7 @@ export const ToddlerCharacterAvatar: React.FC<{
           </>
         )}
 
-        {/* 2. SAD (Downturned quivering pout & sad droopy eyes — NOT screaming newborn!) */}
+        {/* 2. SAD (Downturned quivering pout & sad droopy eyes - NOT screaming newborn!) */}
         {expr === 'sad' && (
           <>
             {/* Inner brows raised in classic sad angle */}
@@ -555,7 +555,7 @@ export const ToddlerCharacterAvatar: React.FC<{
           </>
         )}
 
-        {/* 3. ANGRY (Strong V-brows, narrowed intense eyes, gritted frown & steam puffs — NOT dull!) */}
+        {/* 3. ANGRY (Strong V-brows, narrowed intense eyes, gritted frown & steam puffs - NOT dull!) */}
         {expr === 'angry' && (
           <>
             {/* Deep V-shaped angry eyebrows */}
@@ -583,7 +583,7 @@ export const ToddlerCharacterAvatar: React.FC<{
           </>
         )}
 
-        {/* 4. SCARED (High worried brows, huge wide eyes with small pupils, trembling mouth & hands on cheeks — NOT crying!) */}
+        {/* 4. SCARED (High worried brows, huge wide eyes with small pupils, trembling mouth & hands on cheeks - NOT crying!) */}
         {expr === 'scared' && (
           <>
             {/* High worried eyebrows */}

@@ -30,6 +30,7 @@ import {
   MessageCircle,
   Tv,
   AlertCircle,
+  HelpCircle,
   Menu,
   UserPlus,
   LogIn
@@ -387,7 +388,7 @@ export const Navbar: React.FC = () => {
                     setAboutDropdownOpen(!aboutDropdownOpen);
                   }}
                   className={`flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl border transition-all text-xs font-bold cursor-pointer ${
-                    location.pathname === '/about' || location.pathname === '/contact'
+                    location.pathname === '/about' || location.pathname === '/contact' || location.pathname === '/faq' || location.pathname === '/faqs'
                       ? 'bg-gradient-to-r from-pink-500/20 to-indigo-500/20 text-pink-200 border-pink-400/40 shadow-sm shadow-pink-500/10'
                       : 'bg-white/5 hover:bg-white/10 border-white/10 text-white/80 hover:text-white'
                   }`}
@@ -408,7 +409,7 @@ export const Navbar: React.FC = () => {
                         initial={{ opacity: 0, y: 10, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                        className="absolute right-0 mt-2 w-60 sm:w-64 rounded-2xl bg-[#090d1a]/95 border border-white/15 p-2 shadow-2xl z-50 backdrop-blur-2xl"
+                        className="absolute right-0 mt-2 w-64 sm:w-68 rounded-2xl bg-[#090d1a]/95 border border-white/15 p-2 shadow-2xl z-50 backdrop-blur-2xl"
                       >
                         {/* My Story */}
                         <Link
@@ -426,6 +427,25 @@ export const Navbar: React.FC = () => {
                           <div>
                             <div className="notranslate font-bold text-white group-hover:text-pink-200 transition-colors" translate="no">{t('myStory') || 'My Story'}</div>
                             <div className="notranslate text-[10px] text-slate-400" translate="no">{t('howIStarted') || 'How I started Tricky Toddlers'}</div>
+                          </div>
+                        </Link>
+
+                        {/* FAQs (Categorized FAQ Page) */}
+                        <Link
+                          to="/faq"
+                          onClick={() => {
+                            playSound('glass');
+                            setAboutDropdownOpen(false);
+                            window.scrollTo({ top: 0, behavior: 'instant' });
+                          }}
+                          className="w-full text-left p-2 rounded-xl text-xs transition-all flex items-start gap-2.5 hover:bg-white/5 text-white/90 hover:text-white group border-t border-white/5 mt-1 pt-2"
+                        >
+                          <div className="p-1.5 rounded-lg bg-indigo-500/10 text-indigo-400 mt-0.5 group-hover:bg-indigo-500/20 shrink-0">
+                            <HelpCircle className="w-3.5 h-3.5" />
+                          </div>
+                          <div>
+                            <div className="notranslate font-bold text-white group-hover:text-indigo-200 transition-colors" translate="no">FAQs</div>
+                            <div className="notranslate text-[10px] text-slate-400" translate="no">AI Assistant, FoodLens, NutriBand &amp; Plans</div>
                           </div>
                         </Link>
 

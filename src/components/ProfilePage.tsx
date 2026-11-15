@@ -132,10 +132,10 @@ export const ProfilePage: React.FC = () => {
   });
   const [contactEmail, setContactEmail] = useState<string>(() => {
     const saved = localStorage.getItem('user_contact_email');
-    if (saved && saved !== 'rlashmi086@gmail.com') return saved;
-    if (profile?.contactEmail && profile?.contactEmail !== 'rlashmi086@gmail.com') return profile.contactEmail;
-    if (profile?.email && profile?.email !== 'rlashmi086@gmail.com' && !profile.email.includes('securepass.internal')) return profile.email;
-    if (user?.email && user.email !== 'rlashmi086@gmail.com' && !user.email.includes('securepass.internal')) return user.email;
+    if (saved) return saved;
+    if (profile?.contactEmail) return profile.contactEmail;
+    if (profile?.email && !profile.email.includes('securepass.internal')) return profile.email;
+    if (user?.email && !user.email.includes('securepass.internal')) return user.email;
     return 'lashm@gmail.com';
   });
 
@@ -551,10 +551,10 @@ export const ProfilePage: React.FC = () => {
         setLastName('Ashwath');
       }
 
-      if (profile.contactEmail && profile.contactEmail !== 'rlashmi086@gmail.com') {
+      if (profile.contactEmail) {
         setContactEmail(profile.contactEmail);
         localStorage.setItem('user_contact_email', profile.contactEmail);
-      } else if (profile.email && profile.email !== 'rlashmi086@gmail.com' && !profile.email.includes('securepass.internal')) {
+      } else if (profile.email && !profile.email.includes('securepass.internal')) {
         setContactEmail(profile.email);
         localStorage.setItem('user_contact_email', profile.email);
       } else {

@@ -26,6 +26,7 @@ import { AIRecipeHistoryPage } from './components/AIRecipeHistoryPage';
 import { ConsultationHistoryPage } from './components/ConsultationHistoryPage';
 import { AboutPage } from './components/AboutPage';
 import { ContactFeedbackPage } from './components/ContactFeedbackPage';
+import { FaqPage } from './components/FaqPage';
 import { PlansPremiumPage } from './components/PlansPremiumPage';
 import { CommunityGuidelines } from './components/CommunityGuidelines';
 import { CheckoutPage } from './components/CheckoutPage';
@@ -191,6 +192,9 @@ const AppContent: React.FC = () => {
               <Route path="/tricky-toddlers/checkout" element={<ProtectedRoute><CheckoutPage /></ProtectedRoute>} />
               <Route path="/about" element={<AboutPage />} />
               <Route path="/tricky-toddlers/about" element={<AboutPage />} />
+              <Route path="/faq" element={<FaqPage />} />
+              <Route path="/faqs" element={<FaqPage />} />
+              <Route path="/tricky-toddlers/faq" element={<FaqPage />} />
               <Route path="/contact" element={<ContactFeedbackPage />} />
               <Route path="/feedback" element={<ContactFeedbackPage />} />
               <Route path="/tricky-toddlers/contact" element={<ContactFeedbackPage />} />

@@ -233,21 +233,21 @@ function isOutOfScopeQuery(query: string): boolean {
 
 function getTopicExplainabilityMarkdown(lq: string): string {
   if (lq.includes('potty') || lq.includes('toilet') || lq.includes('diaper') || lq.includes('pee') || lq.includes('poop')) {
-    return `\n\n### 🔗 Explainability & Reference Links\n* [IAP Parental Guidelines on Toilet Training Readiness](https://iapindia.org/parental-guidelines/) — Explains neuromuscular bladder/bowel readiness cues, footstool posture for pelvic floor relaxation, and gentle accident management.\n* [AAP HealthyChildren – Toilet Training Clinical Guide](https://www.healthychildren.org/English/ages-stages/toddler/toilet-training/Pages/default.aspx) — Details post-meal gastrocolic timing and positive reinforcement strategies.`;
+    return `\n\n### 🔗 Explainability & Reference Links\n* [IAP Parental Guidelines on Toilet Training Readiness](https://iapindia.org/parental-guidelines/) - Explains neuromuscular bladder/bowel readiness cues, footstool posture for pelvic floor relaxation, and gentle accident management.\n* [AAP HealthyChildren - Toilet Training Clinical Guide](https://www.healthychildren.org/English/ages-stages/toddler/toilet-training/Pages/default.aspx) - Details post-meal gastrocolic timing and positive reinforcement strategies.`;
   }
   if (lq.includes('colic') || lq.includes('gas') || (lq.includes('cry') && !lq.includes('public'))) {
-    return `\n\n### 🔗 Explainability & Reference Links\n* [IAP Parental Guideline on Excessive Crying & Infantile Colic](https://iapindia.org/parental-guidelines/) — Explains why immature gut motility and evening sensory fatigue trigger colic and how rhythmic soothing calms the vagus nerve.\n* [AAP HealthyChildren – Calming a Fussy Baby & Colic Relief](https://www.healthychildren.org/English/ages-stages/baby/crying-colic/Pages/default.aspx) — Clinical rationale behind the 5 S's soothing protocol, bicycle leg exercises, and red-flag symptoms.`;
+    return `\n\n### 🔗 Explainability & Reference Links\n* [IAP Parental Guideline on Excessive Crying & Infantile Colic](https://iapindia.org/parental-guidelines/) - Explains why immature gut motility and evening sensory fatigue trigger colic and how rhythmic soothing calms the vagus nerve.\n* [AAP HealthyChildren - Calming a Fussy Baby & Colic Relief](https://www.healthychildren.org/English/ages-stages/baby/crying-colic/Pages/default.aspx) - Clinical rationale behind the 5 S's soothing protocol, bicycle leg exercises, and red-flag symptoms.`;
   }
   if (lq.includes('sleep') || lq.includes('nap') || lq.includes('wake') || lq.includes('bedtime') || lq.includes('night') || lq.includes('regression')) {
-    return `\n\n### 🔗 Explainability & Reference Links\n* [IAP Parental Guidelines on Infant & Child Sleep Hygiene](https://iapindia.org/parental-guidelines/) — Explains how age-appropriate wake windows and screen-free wind-down routines regulate melatonin and prevent overtired cortisol spikes.\n* [WHO Guidelines on Sleep & Physical Activity for Children Under 5](https://www.who.int/publications/i/item/9789241550536) — Global clinical benchmarks for 24-hour sleep duration and safe sleep practices.`;
+    return `\n\n### 🔗 Explainability & Reference Links\n* [IAP Parental Guidelines on Infant & Child Sleep Hygiene](https://iapindia.org/parental-guidelines/) - Explains how age-appropriate wake windows and screen-free wind-down routines regulate melatonin and prevent overtired cortisol spikes.\n* [WHO Guidelines on Sleep & Physical Activity for Children Under 5](https://www.who.int/publications/i/item/9789241550536) - Global clinical benchmarks for 24-hour sleep duration and safe sleep practices.`;
   }
   if (lq.includes('feed') || lq.includes('milk') || lq.includes('eat') || lq.includes('food') || lq.includes('picky') || lq.includes('ragi') || lq.includes('khichdi') || lq.includes('wean') || lq.includes('solid')) {
-    return `\n\n### 🔗 Explainability & Reference Links\n* [ICMR–National Institute of Nutrition (NIN) Dietary Guidelines](https://www.nin.res.in) — Evidence-based rationale for exclusive milk feeding (0–6 months), iron-rich complementary foods, and balanced Indian child nutrition.\n* [IAP Guidelines on Infant and Young Child Feeding (IYCF)](https://iapindia.org/parental-guidelines/) — Explains responsive feeding, division of responsibility at mealtime, and safe textures to prevent choking.`;
+    return `\n\n### 🔗 Explainability & Reference Links\n* [ICMR-National Institute of Nutrition (NIN) Dietary Guidelines](https://www.nin.res.in) - Evidence-based rationale for exclusive milk feeding (0-6 months), iron-rich complementary foods, and balanced Indian child nutrition.\n* [IAP Guidelines on Infant and Young Child Feeding (IYCF)](https://iapindia.org/parental-guidelines/) - Explains responsive feeding, division of responsibility at mealtime, and safe textures to prevent choking.`;
   }
   if (lq.includes('tantrum') || lq.includes('meltdown') || lq.includes('hit') || lq.includes('bite') || lq.includes('kick') || lq.includes('script') || lq.includes('aggress') || lq.includes('sibling') || lq.includes('share')) {
-    return `\n\n### 🔗 Explainability & Reference Links\n* [IAP Positive Parenting & Managing Toddler Tantrums Guide](https://iapindia.org/parental-guidelines/) — Explains why toddler prefrontal brain development leads to big emotional storms and why calm co-regulation works faster than punishment.\n* [UNICEF Parenting – How to Handle Tantrums & Big Emotions](https://www.unicef.org/parenting/child-care/how-handle-tantrums) — Evidence-based strategies on emotion naming, gentle physical boundaries, and connection-first scripts.`;
+    return `\n\n### 🔗 Explainability & Reference Links\n* [IAP Positive Parenting & Managing Toddler Tantrums Guide](https://iapindia.org/parental-guidelines/) - Explains why toddler prefrontal brain development leads to big emotional storms and why calm co-regulation works faster than punishment.\n* [UNICEF Parenting - How to Handle Tantrums & Big Emotions](https://www.unicef.org/parenting/child-care/how-handle-tantrums) - Evidence-based strategies on emotion naming, gentle physical boundaries, and connection-first scripts.`;
   }
-  return `\n\n### 🔗 Explainability & Reference Links\n* [WHO Child Growth & Developmental Milestones Standards](https://www.who.int/tools/child-growth-standards) — Clinical benchmarks for motor, sensory, cognitive, and expressive language development.\n* [UNICEF Parenting – Early Childhood Development & Play](https://www.unicef.org/parenting/child-development) — Explains how responsive interactions and age-appropriate play strengthen neural pathways.`;
+  return `\n\n### 🔗 Explainability & Reference Links\n* [WHO Child Growth & Developmental Milestones Standards](https://www.who.int/tools/child-growth-standards) - Clinical benchmarks for motor, sensory, cognitive, and expressive language development.\n* [UNICEF Parenting - Early Childhood Development & Play](https://www.unicef.org/parenting/child-development) - Explains how responsive interactions and age-appropriate play strengthen neural pathways.`;
 }
 
 function generateTailoredFallback(q: string, parentName?: string, childName?: string, childAge?: string, isFollowUp: boolean = false): string {
@@ -301,7 +301,7 @@ function generateTailoredFallbackRaw(q: string, pName: string, cName: string, ag
       return `Hello ${pName}, here is gentle, evidence-based pediatric guidance on soothing ${cName} (Age: ${age}):
 
 ### 💡 Understanding ${cName}'s Crying at 3 Months
-At 3 months, crying is an infant's primary voice—not defiance or behavioral tantrums. The peak of the "witching hour" and immature digestive peristalsis often coincide in the late afternoon and evening.
+At 3 months, crying is an infant's primary voice, not defiance or behavioral tantrums. The peak of the "witching hour" and immature digestive peristalsis often coincide in the late afternoon and evening.
 
 ### ⏱️ The 4-Step Infant Soothing Protocol (The 5 S's)
 1. **Side or Stomach Hold (While Awake & Supervised)**: Hold ${cName} across your forearm in the "reverse football hold" with gentle tummy pressure.
@@ -389,8 +389,8 @@ Around 14–18 weeks, infant sleep biology permanently matures from 2 stages int
 * ❌ Never give honey to an infant under 12 months (severe infant botulism risk).
 
 ---CLARIFICATION_OPTIONS---
-- [${cName} is cluster feeding every hour—is this a normal 3-month growth spurt?]
-- [${cName} spits up frequently after feeds—is this acid reflux or normal spit-up?]
+- [${cName} is cluster feeding every hour, is this a normal 3-month growth spurt?]
+- [${cName} spits up frequently after feeds, is this acid reflux or normal spit-up?]
 - [When can I start introducing first solid food purees or ragi to ${cName}?]
 
 ---RELATED_QUESTIONS---
@@ -407,7 +407,7 @@ Around 14–18 weeks, infant sleep biology permanently matures from 2 stages int
 At 3 months, ${cName} is discovering her hands, smiling responsively at familiar faces, tracking moving objects with both eyes across 180 degrees, and pushing up on her forearms during tummy time.
 
 ### 🧸 5 Simple Developmental 3-Month Activities
-1. **Chest-to-Chest Tummy Time**: Recline slightly on a sofa and place ${cName} tummy-down on your chest. Look into her eyes and talk—she will lift her head to see your face while feeling safe.
+1. **Chest-to-Chest Tummy Time**: Recline slightly on a sofa and place ${cName} tummy-down on your chest. Look into her eyes and talk; she will lift her head to see your face while feeling safe.
 2. **High-Contrast Visual Tracking**: Hold black-and-white geometric pattern cards or red toys 8 to 10 inches from her face and slowly glide them horizontally to stimulate ocular coordination.
 3. **Vocal Mimicry & Coo Duets**: When ${cName} makes a cooing sound ("ahhh", "ooh"), wait 2 seconds, then repeat the exact sound back to her with a warm smile. This builds proto-conversational brain circuits.
 4. **Bicycle Kicking with Sensory Socks**: Put soft patterned baby booties or wrist rattles on ${cName} so she discovers cause-and-effect as she kicks her legs.
@@ -418,7 +418,7 @@ At 3 months, ${cName} is discovering her hands, smiling responsively at familiar
 * If she fusses, place a small rolled towel under her chest or place a baby-safe mirror in front of her.
 
 ---CLARIFICATION_OPTIONS---
-- [${cName} cries after 1 or 2 minutes of tummy time—how do I make it easier?]
+- [${cName} cries after 1 or 2 minutes of tummy time, how do I make it easier?]
 - [What toys and high-contrast cards are best for a 3-month-old's brain?]
 - [When do 3-month-old infants usually start rolling from tummy to back?]
 
@@ -485,7 +485,7 @@ At 3 months, infants undergo the "Fourth Trimester" transition. Their nervous sy
 3. **Offer Deep Pressure or Physical Presence**: Sit beside him with a steady, grounding posture. Offer a firm hug if he allows touch, or keep your hands calm and open if he resists contact.
 
 ### 🛡️ Deflecting Bystander Pressure & Stares
-* **Remember Your Audience**: You are parenting ${cName}, not performing for strangers. An upset 2.5-year-old is developmentally normal—it is not a reflection of your parenting.
+* **Remember Your Audience**: You are parenting ${cName}, not performing for strangers. An upset 2.5-year-old is developmentally normal, and it is not a reflection of your parenting.
 * **Simple Script for Inquisitive Bystanders**: A polite, calm nod and: *"We're just working through big feelings today, thank you."* Then refocus 100% on ${cName}.
 
 ### 🛑 What NOT to Say in the Heat of the Moment
@@ -778,7 +778,7 @@ ${languagePromptModifier}
 ` : '';
 
   const greetingInstruction = isFollowUp
-    ? `- **FOLLOW-UP CONVERSATION RULE (STRICT)**: This is a follow-up question in an ongoing conversation. Do NOT say "Namaste", "Hello", or "Hi" again! Do NOT greet ${pName} as if starting a brand-new conversation. Start naturally and conversationally using ${pName}'s name or a conversational bridge (e.g., "${pName}, building on what we discussed...", "Following up on that for ${cName}, ${pName}—", or "That's a great follow-up question, ${pName}. Here is how...").`
+    ? `- **FOLLOW-UP CONVERSATION RULE (STRICT)**: This is a follow-up question in an ongoing conversation. Do NOT say "Namaste", "Hello", or "Hi" again! Do NOT greet ${pName} as if starting a brand-new conversation. Start naturally and conversationally using ${pName}'s name or a conversational bridge (e.g., "${pName}, building on what we discussed...", "Following up on that for ${cName}, ${pName},", or "That's a great follow-up question, ${pName}. Here is how...").`
     : `- **FIRST CONVERSATION GREETING RULE (STRICT)**: This is the first message of a new conversation session. Start your very first sentence with EXACTLY: "Namaste ${pName}! " followed by your warm, helpful response.`;
 
   return `${langHeader}
@@ -817,7 +817,7 @@ Session Turn Type: ${isFollowUp ? 'FOLLOW-UP TURN IN ONGOING CONVERSATION (Do NO
 - Parents need structured, highly readable guidance that is well-spaced and easy to scan.
 - **EVERY response (both initial questions AND follow-up queries) MUST contain 3 to 4 distinct, engaging, topic-specific sections** crafted dynamically for the exact user question.
 - **MANDATORY SECTION SPACING & MARKDOWN FORMAT**:
-  * Every section title MUST start with \`### \` and an emoji on its own dedicated line, preceded by a blank line (\`\\n\\n\`) and followed by a blank line (\`\\n\\n\`) — for example:
+  * Every section title MUST start with \`### \` and an emoji on its own dedicated line, preceded by a blank line (\`\\n\\n\`) and followed by a blank line (\`\\n\\n\`), for example:
     \`### 🎨 The "Labeling in the Moment" Strategy\`
     (blank line)
     * Bullet or paragraph text...
@@ -830,7 +830,7 @@ Session Turn Type: ${isFollowUp ? 'FOLLOW-UP TURN IN ONGOING CONVERSATION (Do NO
 ### 5. EXPLAINABILITY & REFERENCE LINKS AT THE END OF THE POST (STRICT REQUIREMENT)
 - At the end of your main guidance (immediately BEFORE ---CLARIFICATION_OPTIONS--- or ---RELATED_QUESTIONS---), you MUST include a section titled:
   ### 🔗 Explainability & Reference Links
-- Inside this section, provide **1 or 2 clickable Markdown links** (\`[Source Title](URL)\`) related to the answer from trusted pediatric authorities—such as:
+- Inside this section, provide **1 or 2 clickable Markdown links** (\`[Source Title](URL)\`) related to the answer from trusted pediatric authorities, such as:
   * \`[Indian Academy of Pediatrics (IAP) Parental Guidelines](https://iapindia.org/parental-guidelines/)\`
   * \`[WHO Child Health & Growth Standards](https://www.who.int/health-topics/child-health)\`
   * \`[ICMR–National Institute of Nutrition (NIN)](https://www.nin.res.in)\`
