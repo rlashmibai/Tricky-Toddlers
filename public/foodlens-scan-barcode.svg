@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 720" width="600" height="720" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+  <defs>
+    <linearGradient id="bgGradBarcode" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b1325" />
+      <stop offset="50%" stop-color="#131c38" />
+      <stop offset="100%" stop-color="#091020" />
+    </linearGradient>
+    <linearGradient id="cyanGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.25" />
+      <stop offset="100%" stop-color="#0284c7" stop-opacity="0.05" />
+    </linearGradient>
+    <linearGradient id="laserGlow" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#f43f5e" stop-opacity="0" />
+      <stop offset="50%" stop-color="#ef4444" stop-opacity="0.4" />
+      <stop offset="100%" stop-color="#f43f5e" stop-opacity="0" />
+    </linearGradient>
+    <filter id="softShadowBc" x="-15%" y="-15%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#000000" flood-opacity="0.5" />
+    </filter>
+  </defs>
+
+  <!-- Card Background -->
+  <rect width="600" height="720" rx="36" fill="url(#bgGradBarcode)" stroke="#1e293b" stroke-width="2" />
+  <circle cx="300" cy="310" r="210" fill="url(#cyanGlow)" />
+
+  <!-- Top Step Badge -->
+  <g transform="translate(40, 36)">
+    <rect x="0" y="0" width="136" height="34" rx="17" fill="#0ea5e9" fill-opacity="0.15" stroke="#38bdf8" stroke-width="1.5" />
+    <circle cx="20" cy="17" r="5" fill="#38bdf8" />
+    <text x="34" y="22" font-size="13" font-weight="800" fill="#7dd3fc" letter-spacing="1.2">STEP 02</text>
+  </g>
+
+  <g transform="translate(415, 36)">
+    <rect x="0" y="0" width="145" height="34" rx="17" fill="#8b5cf6" fill-opacity="0.18" stroke="#a78bfa" stroke-width="1.2" />
+    <text x="72" y="22" font-size="12" font-weight="800" fill="#ddd6fe" text-anchor="middle" letter-spacing="0.6">3M+ FOODS DB</text>
+  </g>
+
+  <!-- Smartphone Frame & Barcode Visual -->
+  <g transform="translate(115, 95)" filter="url(#softShadowBc)">
+    <!-- Phone Body -->
+    <rect x="0" y="0" width="370" height="430" rx="38" fill="#0f172a" stroke="#334155" stroke-width="4" />
+    <rect x="12" y="12" width="346" height="406" rx="28" fill="#1e293b" />
+    <rect x="135" y="20" width="100" height="14" rx="7" fill="#0f172a" />
+
+    <!-- Barcode Card Inside Screen -->
+    <g transform="translate(36, 52)">
+      <rect x="0" y="0" width="298" height="186" rx="18" fill="#ffffff" stroke="#cbd5e1" stroke-width="2" />
+      <text x="149" y="26" font-size="12" font-weight="800" fill="#475569" text-anchor="middle" letter-spacing="1">EAN-13 / UPC INSTANT SCAN</text>
+
+      <!-- Crisp Barcode Bars -->
+      <g transform="translate(34, 38)" fill="#0f172a">
+        <rect x="0" y="0" width="5" height="98" />
+        <rect x="9" y="0" width="3" height="98" />
+        <rect x="18" y="0" width="8" height="90" />
+        <rect x="30" y="0" width="3" height="90" />
+        <rect x="39" y="0" width="6" height="90" />
+        <rect x="51" y="0" width="10" height="90" />
+        <rect x="66" y="0" width="3" height="90" />
+        <rect x="74" y="0" width="5" height="90" />
+        <rect x="85" y="0" width="8" height="90" />
+        <rect x="98" y="0" width="3" height="90" />
+        <rect x="106" y="0" width="6" height="90" />
+        <rect x="116" y="0" width="4" height="98" />
+        <rect x="124" y="0" width="4" height="98" />
+        <rect x="134" y="0" width="9" height="90" />
+        <rect x="148" y="0" width="3" height="90" />
+        <rect x="156" y="0" width="7" height="90" />
+        <rect x="168" y="0" width="4" height="90" />
+        <rect x="178" y="0" width="10" height="90" />
+        <rect x="193" y="0" width="3" height="90" />
+        <rect x="201" y="0" width="6" height="90" />
+        <rect x="212" y="0" width="4" height="90" />
+        <rect x="220" y="0" width="5" height="98" />
+        <rect x="228" y="0" width="3" height="98" />
+      </g>
+      <text x="149" y="156" font-size="15" font-weight="900" fill="#0f172a" text-anchor="middle" letter-spacing="4">8 901063 014251</text>
+      <rect x="64" y="164" width="170" height="16" rx="8" fill="#e0f2fe" />
+      <text x="149" y="176" font-size="10" font-weight="800" fill="#0369a1" text-anchor="middle">FSSAI &amp; OPENFOODFACTS VERIFIED</text>
+    </g>
+
+    <!-- Active Red Laser Across Barcode -->
+    <rect x="24" y="120" width="322" height="36" fill="url(#laserGlow)" />
+    <line x1="24" y1="138" x2="346" y2="138" stroke="#f43f5e" stroke-width="3.5" />
+    <circle cx="24" cy="138" r="5" fill="#fda4af" />
+    <circle cx="346" cy="138" r="5" fill="#fda4af" />
+
+    <!-- Instant Product Result Pop-up Card -->
+    <g transform="translate(36, 250)">
+      <rect x="0" y="0" width="298" height="114" rx="16" fill="#0f172a" stroke="#38bdf8" stroke-width="2" />
+      <!-- Score Circle -->
+      <circle cx="46" cy="57" r="28" fill="#10b981" fill-opacity="0.2" stroke="#10b981" stroke-width="3" />
+      <text x="46" y="54" font-size="17" font-weight="900" fill="#34d399" text-anchor="middle">84</text>
+      <text x="46" y="69" font-size="8" font-weight="800" fill="#a7f3d0" text-anchor="middle">SCORE</text>
+
+      <!-- Product Details -->
+      <text x="88" y="34" font-size="14" font-weight="900" fill="#ffffff">Organic Ragi &amp; Oats Bites</text>
+      <text x="88" y="52" font-size="11" font-weight="600" fill="#94a3b8">Stage 2 Toddler Snack · No Maida</text>
+
+      <!-- Badges -->
+      <rect x="88" y="64" width="92" height="22" rx="6" fill="#065f46" />
+      <text x="134" y="79" font-size="10" font-weight="800" fill="#6ee7b7" text-anchor="middle">NOVA Group 1</text>
+
+      <rect x="188" y="64" width="96" height="22" rx="6" fill="#1e3a8a" />
+      <text x="236" y="79" font-size="10" font-weight="800" fill="#93c5fd" text-anchor="middle">Zero Trans Fat</text>
+
+      <text x="88" y="102" font-size="10" font-weight="700" fill="#38bdf8">✓ Safe for 12M+ Child Profile</text>
+    </g>
+
+    <!-- Viewfinder Corners -->
+    <path d="M 28 70 L 28 44 L 54 44" fill="none" stroke="#38bdf8" stroke-width="4" stroke-linecap="round" />
+    <path d="M 342 70 L 342 44 L 316 44" fill="none" stroke="#38bdf8" stroke-width="4" stroke-linecap="round" />
+
+    <!-- Bottom Pill -->
+    <rect x="48" y="376" width="274" height="30" rx="15" fill="#0c4a6e" stroke="#38bdf8" stroke-width="1.5" />
+    <text x="185" y="395" font-size="12" font-weight="800" fill="#bae6fd" text-anchor="middle">⚡ Instant Lookup in 0.4 Seconds</text>
+  </g>
+
+  <!-- Bottom Text Description -->
+  <g transform="translate(40, 560)">
+    <text x="260" y="32" font-size="30" font-weight="900" fill="#ffffff" text-anchor="middle" letter-spacing="-0.5">2. Scan Barcode</text>
+    <text x="260" y="66" font-size="16" font-weight="600" fill="#94a3b8" text-anchor="middle">Point your camera at any packaged food barcode for</text>
+    <text x="260" y="90" font-size="16" font-weight="600" fill="#38bdf8" text-anchor="middle">instant NOVA processing scores &amp; age suitability.</text>
+  </g>
+</svg>

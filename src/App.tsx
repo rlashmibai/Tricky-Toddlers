@@ -60,6 +60,38 @@ const AppContent: React.FC = () => {
   const [showOnboarding, setShowOnboarding] = React.useState(false);
   const [legalModalOpen, setLegalModalOpen] = React.useState(false);
   const [legalPolicyTab, setLegalPolicyTab] = React.useState<LegalPolicyType>('disclaimer');
+  const [quotaExceeded, setQuotaExceeded] = React.useState(false);
+
+  React.useEffect(() => {
+    const handler = () => setQuotaExceeded(true);
+    window.addEventListener('gmp-quota-exceeded', handler);
+    return () => window.removeEventListener('gmp-quota-exceeded', handler);
+  }, []);
+
+  // Preload and decode all core tab visuals immediately on app mount so switching tabs renders images with zero delay
+  React.useEffect(() => {
+    const criticalAssets = [
+      '/child-wellness-journey.svg',
+      '/foodlens-vs-general-ai.png',
+      '/assets/aistudio/Gemini_Generated_Image_ey66ykey66ykey66_5d0c3f3e.png',
+      '/assets/aistudio/Gemini_Generated_Image_wv7k35wv7k35wv7k_a44bd422.png',
+      '/assets/aistudio/Gemini_Generated_Image_c5bssfc5bssfc5bs_4ffd1601.png',
+      '/foodlens-label-scanner.png',
+      '/foodlens-barcode-scanner.png',
+      '/foodlens-meal-scanner.png',
+      '/nutriband_diaper_clip_portrait.svg',
+      '/nutriband_cotton_straps_smart_portrait.svg',
+      '/nutriband-silicone-band.svg',
+      '/nutriband-diaper-clip.jpg',
+      '/nutriband-cotton-straps.jpg',
+      '/nutriband-silicone-band.jpg',
+    ];
+    criticalAssets.forEach((src) => {
+      const img = new Image();
+      img.decoding = 'sync';
+      img.src = src;
+    });
+  }, []);
 
   const handleOpenLegal = (tab: LegalPolicyType) => {
     playSound('click');
@@ -100,6 +132,21 @@ const AppContent: React.FC = () => {
 
   return (
     <div className="glass-container flex flex-col min-h-screen">
+      {quotaExceeded && (
+        <div className="sticky top-0 z-50 bg-amber-50 border-b border-amber-300 px-4 py-2 text-amber-900 text-sm flex items-center justify-between shadow-sm">
+          <span>
+            <strong>Google Maps Platform:</strong> The free demo key has reached its shared quota limit. To restore full functionality, click the <strong>key icon</strong> at the top of AI Studio to connect your own API key.{' '}
+            <a
+              href="https://developers.google.com/maps/ai/ai-studio?utm_campaign=gmp_mcp_codeassist_v1_aistudio#quota_exceeded_errors"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline font-medium hover:text-amber-950"
+            >
+              Learn more
+            </a>
+          </span>
+        </div>
+      )}
       {showOnboarding && (
         <OnboardingScreen onComplete={() => setShowOnboarding(false)} />
       )}

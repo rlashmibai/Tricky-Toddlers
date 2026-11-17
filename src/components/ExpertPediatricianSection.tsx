@@ -7,6 +7,14 @@ import { db, handleFirestoreError } from '../lib/firebase';
 import { playSound } from '../lib/sounds';
 import { INDIAN_CITIES_BY_STATE } from '../data/indianCitiesData';
 import { detectEmergencyCondition } from './SearchSection';
+import { VoiceDictationButton } from './VoiceDictationButton';
+import {
+  APIProvider,
+  Map as GoogleMap,
+  AdvancedMarker,
+  Pin,
+  InfoWindow,
+} from '@vis.gl/react-google-maps';
 import { 
   Sparkles, 
   Stethoscope, 
@@ -874,23 +882,196 @@ export const ExpertPediatricianSection: React.FC = () => {
     }
   }, [chatCity, selectedState]);
 
-  // Memoized hospitals for the current city & state
-  const cityHospitals = React.useMemo(() => {
-    return getHospitalsForCity(selectedCity, selectedState);
-  }, [selectedCity, selectedState]);
+  // Live Google Maps Places API & GPS Geolocation states (Zero Cooked-Up Data)
+  interface GoogleListedHospital {
+    placeId: string;
+    name: string;
+    address: string;
+    location: { lat: number; lng: number };
+    rating: number | null;
+    userRatingCount: number;
+    phone: string;
+    googleMapsUri: string;
+    reviewsUri: string;
+    directionsUri: string;
+    reviews: {
+      authorName: string;
+      authorUri: string;
+      rating: number;
+      relativeTime: string;
+      text: string;
+      googleMapsUri: string;
+    }[];
+    reviewSummary?: string;
+    openNow?: boolean | null;
+  }
 
-  // Filtered hospitals by search query
-  const filteredHospitals = React.useMemo(() => {
-    if (!hospitalSearch.trim()) return cityHospitals;
-    const q = hospitalSearch.toLowerCase();
-    return cityHospitals.filter(h => 
-      h.name.toLowerCase().includes(q) ||
-      h.area.toLowerCase().includes(q) ||
-      h.brand.toLowerCase().includes(q) ||
-      h.specialty.toLowerCase().includes(q) ||
-      h.address.toLowerCase().includes(q)
+  const [mapsApiKey, setMapsApiKey] = useState<string>(() => {
+    return (import.meta as any).env?.VITE_GOOGLE_MAPS_API_KEY || '';
+  });
+  const [googleHospitals, setGoogleHospitals] = useState<GoogleListedHospital[]>([]);
+  const [loadingGoogleHospitals, setLoadingGoogleHospitals] = useState<boolean>(false);
+  const [hospitalsError, setHospitalsError] = useState<string | null>(null);
+  const [gpsLocation, setGpsLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const [gpsLoading, setGpsLoading] = useState<boolean>(false);
+  const [gpsRadiusKm, setGpsRadiusKm] = useState<number>(10);
+  const [lookupMode, setLookupMode] = useState<'city' | 'gps'>('city');
+  const [selectedMapHospital, setSelectedMapHospital] = useState<GoogleListedHospital | null>(null);
+  const [expandedReviewsPlaceId, setExpandedReviewsPlaceId] = useState<string | null>(null);
+
+  // Load Google Maps API Key from server if not injected in Vite client env
+  useEffect(() => {
+    if (!mapsApiKey) {
+      fetch('/api/maps-config')
+        .then((r) => r.json())
+        .then((d) => {
+          if (d?.apiKey) setMapsApiKey(d.apiKey);
+        })
+        .catch(() => {});
+    }
+  }, [mapsApiKey]);
+
+  // Fetch real Google-listed pediatric hospitals for the selected Indian city & state
+  const fetchCityGoogleHospitals = async (city: string, state: string, customQuery?: string) => {
+    setLoadingGoogleHospitals(true);
+    setHospitalsError(null);
+    try {
+      const res = await fetch('/api/hospitals/search', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          city: cleanCityName(city),
+          state,
+          query: customQuery || '',
+        }),
+      });
+
+      if (res.status === 429) {
+        window.dispatchEvent(new CustomEvent('gmp-quota-exceeded'));
+        setHospitalsError('Google Maps Platform demo quota reached. Please connect your API key using the key icon at the top.');
+        setGoogleHospitals([]);
+        return;
+      }
+
+      const data = await res.json();
+      if (data?.status === 'RESOURCE_EXHAUSTED') {
+        window.dispatchEvent(new CustomEvent('gmp-quota-exceeded'));
+        setHospitalsError('Google Maps Platform demo quota reached.');
+        setGoogleHospitals([]);
+        return;
+      }
+
+      if (Array.isArray(data?.hospitals)) {
+        setGoogleHospitals(data.hospitals);
+        if (data.hospitals.length > 0) {
+          setSelectedMapHospital(data.hospitals[0]);
+        }
+      } else {
+        setGoogleHospitals([]);
+      }
+    } catch (err) {
+      console.error('Error fetching Google Places hospitals:', err);
+      setHospitalsError('Unable to reach Google Places service right now.');
+    } finally {
+      setLoadingGoogleHospitals(false);
+    }
+  };
+
+  // Fetch real Google-listed pediatric hospitals near live GPS coordinates
+  const fetchNearbyGpsHospitals = async (lat: number, lng: number, radiusKm: number) => {
+    setLoadingGoogleHospitals(true);
+    setHospitalsError(null);
+    try {
+      const res = await fetch('/api/hospitals/nearby', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          lat,
+          lng,
+          radiusMeters: radiusKm * 1000,
+        }),
+      });
+
+      if (res.status === 429) {
+        window.dispatchEvent(new CustomEvent('gmp-quota-exceeded'));
+        setHospitalsError('Google Maps Platform demo quota reached. Please connect your API key using the key icon at the top.');
+        setGoogleHospitals([]);
+        return;
+      }
+
+      const data = await res.json();
+      if (data?.status === 'RESOURCE_EXHAUSTED') {
+        window.dispatchEvent(new CustomEvent('gmp-quota-exceeded'));
+        setHospitalsError('Google Maps Platform demo quota reached.');
+        setGoogleHospitals([]);
+        return;
+      }
+
+      if (Array.isArray(data?.hospitals)) {
+        setGoogleHospitals(data.hospitals);
+        if (data.hospitals.length > 0) {
+          setSelectedMapHospital(data.hospitals[0]);
+        }
+      } else {
+        setGoogleHospitals([]);
+      }
+    } catch (err) {
+      console.error('Error fetching GPS nearby hospitals:', err);
+      setHospitalsError('Unable to fetch nearby hospitals from Google Places.');
+    } finally {
+      setLoadingGoogleHospitals(false);
+    }
+  };
+
+  // Trigger live city lookup whenever selectedCity or selectedState changes (when in city mode)
+  useEffect(() => {
+    if (lookupMode === 'city') {
+      fetchCityGoogleHospitals(selectedCity, selectedState);
+    }
+  }, [selectedCity, selectedState, lookupMode]);
+
+  const handleUseLiveGps = () => {
+    playSound('pop');
+    if (!navigator.geolocation) {
+      setHospitalsError('Geolocation is not supported by your browser.');
+      return;
+    }
+    setGpsLoading(true);
+    setHospitalsError(null);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const coords = {
+          lat: pos.coords.latitude,
+          lng: pos.coords.longitude,
+        };
+        setGpsLocation(coords);
+        setLookupMode('gps');
+        setGpsLoading(false);
+        fetchNearbyGpsHospitals(coords.lat, coords.lng, gpsRadiusKm);
+      },
+      (err) => {
+        setGpsLoading(false);
+        setHospitalsError(
+          err.code === 1
+            ? 'Location permission denied. Please allow GPS location access in your browser settings or search by City above.'
+            : 'Could not detect live GPS signal. Showing Google-listed hospitals for your selected city.'
+        );
+      },
+      { enableHighAccuracy: true, timeout: 10000 }
     );
-  }, [cityHospitals, hospitalSearch]);
+  };
+
+  // Filter real Google-listed hospitals by search box
+  const filteredGoogleHospitals = React.useMemo(() => {
+    if (!hospitalSearch.trim()) return googleHospitals;
+    const q = hospitalSearch.toLowerCase();
+    return googleHospitals.filter(
+      (h) =>
+        h.name.toLowerCase().includes(q) ||
+        h.address.toLowerCase().includes(q) ||
+        (h.reviewSummary && h.reviewSummary.toLowerCase().includes(q))
+    );
+  }, [googleHospitals, hospitalSearch]);
 
   const [chatMessages, setChatMessages] = useState<{ sender: 'user' | 'doctor'; text: string; timestamp: Date }[]>(() => {
     const doc = getDoctorsForCity(profileCity || 'Bengaluru', initialUserState)[0] || verifiedDoctors[0];
@@ -1144,19 +1325,24 @@ export const ExpertPediatricianSection: React.FC = () => {
     }, 12000);
   };
 
-  // Send message to AI doctor chat
+  // Send message to AI doctor chat with Real-Time Streaming (/api/pediatrician-chat-stream)
   const handleSendChat = async (e?: React.FormEvent) => {
     if (e?.preventDefault) e.preventDefault();
     if (!chatInput.trim() || isChatLoading) return;
 
     const userText = chatInput;
-    setChatMessages(prev => [...prev, { sender: 'user', text: userText, timestamp: new Date() }]);
+    const doctorReplyTimestamp = new Date();
+    setChatMessages(prev => [
+      ...prev,
+      { sender: 'user', text: userText, timestamp: new Date() },
+      { sender: 'doctor', text: '', timestamp: doctorReplyTimestamp },
+    ]);
     setChatInput("");
     setIsChatLoading(true);
     playSound('click');
 
     try {
-      const response = await fetch('/api/pediatrician-chat', {
+      const response = await fetch('/api/pediatrician-chat-stream', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -1177,20 +1363,54 @@ export const ExpertPediatricianSection: React.FC = () => {
         }),
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        if (data.reply) {
-          setChatMessages(prev => [...prev, { sender: 'doctor', text: data.reply, timestamp: new Date() }]);
-          playSound('glass');
-        } else {
-          setChatMessages(prev => [...prev, { sender: 'doctor', text: `I am ${activeChatDoc.name}. I'm sorry, I couldn't process your question at the moment. Please feel free to ask again or reach out to ${activeChatDoc.hospital}.`, timestamp: new Date() }]);
+      if (response.ok && response.body) {
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let accumulated = "";
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          const chunk = decoder.decode(value, { stream: true });
+          if (chunk) {
+            accumulated += chunk;
+            setChatMessages(prev => {
+              const updated = [...prev];
+              const lastIdx = updated.length - 1;
+              if (lastIdx >= 0 && updated[lastIdx].sender === 'doctor') {
+                updated[lastIdx] = { ...updated[lastIdx], text: accumulated };
+              }
+              return updated;
+            });
+          }
         }
+        playSound('glass');
       } else {
-        setChatMessages(prev => [...prev, { sender: 'doctor', text: `I am ${activeChatDoc.name}. I'm sorry, I couldn't process your question at the moment. Please feel free to ask again or reach out to ${activeChatDoc.hospital}.`, timestamp: new Date() }]);
+        setChatMessages(prev => {
+          const updated = [...prev];
+          const lastIdx = updated.length - 1;
+          if (lastIdx >= 0 && updated[lastIdx].sender === 'doctor') {
+            updated[lastIdx] = {
+              ...updated[lastIdx],
+              text: `I am ${activeChatDoc.name}. I'm sorry, I couldn't process your question at the moment. Please feel free to ask again or reach out to ${activeChatDoc.hospital}.`,
+            };
+          }
+          return updated;
+        });
       }
     } catch (err) {
-      console.error("AI Doctor chat error:", err);
-      setChatMessages(prev => [...prev, { sender: 'doctor', text: `Apologies, my system connection is momentarily unstable. Please consult our clinic at ${activeChatDoc.hospital}, ${activeChatDoc.location} directly for urgent advice.`, timestamp: new Date() }]);
+      console.error("AI Doctor chat streaming error:", err);
+      setChatMessages(prev => {
+        const updated = [...prev];
+        const lastIdx = updated.length - 1;
+        if (lastIdx >= 0 && updated[lastIdx].sender === 'doctor') {
+          updated[lastIdx] = {
+            ...updated[lastIdx],
+            text: `Apologies, my system connection is momentarily unstable. Please consult our clinic at ${activeChatDoc.hospital}, ${activeChatDoc.location} directly for urgent advice.`,
+          };
+        }
+        return updated;
+      });
     } finally {
       setIsChatLoading(false);
     }
@@ -1743,10 +1963,10 @@ export const ExpertPediatricianSection: React.FC = () => {
                   </div>
               </div>
 
-              {/* TOP 20 VERIFIED PEDIATRIC HOSPITALS & CLINICS DIRECTORY */}
+              {/* LIVE GOOGLE MAPS & GPS PEDIATRIC HOSPITALS DIRECTORY (REAL GOOGLE-LISTED HOSPITALS ONLY) */}
               <div className="mt-8 bg-white/[0.02] border border-white/10 rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl">
                 <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-6 border-b border-white/10">
-                  <div className="space-y-1">
+                  <div className="space-y-1.5">
                     <div className="flex items-center gap-3">
                       <div className="p-2.5 rounded-2xl bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
                         <Building2 className="w-6 h-6" />
@@ -1754,121 +1974,376 @@ export const ExpertPediatricianSection: React.FC = () => {
                       <div>
                         <div className="flex items-center gap-2.5 flex-wrap">
                           <h3 className="text-xl sm:text-2xl font-black text-white tracking-wide">
-                            Verified Pediatric Hospitals in {selectedCity}
+                            {lookupMode === 'gps' && gpsLocation
+                              ? `Google-Listed Pediatric Hospitals Near Your GPS (${gpsRadiusKm} km)`
+                              : `Google-Listed Pediatric Hospitals in ${cleanCityName(selectedCity)}`}
                           </h3>
                           <span className="px-3 py-1 rounded-full text-xs font-black bg-emerald-500/15 border border-emerald-500/30 text-emerald-300">
-                            {cityHospitals.length} Centers • {selectedState}
+                            {filteredGoogleHospitals.length} Live Google Places Results
                           </span>
                         </div>
-                        <p className="text-xs sm:text-sm text-white/50 mt-1">
-                          Right street addresses verifiable on Google Maps with 24/7 NICU units, contact phone numbers, and accredited pediatric emergency care.
+                        <p className="text-xs sm:text-sm text-white/60 mt-1">
+                          100% real hospitals verified directly from Google Maps Places API (New) with live ratings, street addresses, and authentic Google Reviews.
                         </p>
                       </div>
                     </div>
                   </div>
 
-                  {/* Search within hospitals */}
-                  <div className="relative w-full lg:w-80">
-                    <Search className="w-4 h-4 text-white/40 absolute left-3.5 top-3.5 pointer-events-none" />
-                    <input
-                      type="text"
-                      placeholder={`Filter ${cityHospitals.length} centers by name, area, or specialty...`}
-                      value={hospitalSearch}
-                      onChange={(e) => setHospitalSearch(e.target.value)}
-                      className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-8 py-2.5 text-xs text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-semibold"
-                    />
-                    {hospitalSearch && (
-                      <button 
-                        onClick={() => setHospitalSearch('')}
-                        className="absolute right-3 top-3 text-white/40 hover:text-white text-xs cursor-pointer"
-                      >
-                        <X className="w-3.5 h-3.5" />
-                      </button>
+                  {/* GPS Lookup Controls & Search */}
+                  <div className="flex flex-wrap items-center gap-2.5">
+                    <button
+                      type="button"
+                      onClick={handleUseLiveGps}
+                      disabled={gpsLoading || loadingGoogleHospitals}
+                      className={`px-4 py-2.5 rounded-xl font-black text-xs uppercase tracking-wider flex items-center gap-2 transition-all cursor-pointer shadow-lg ${
+                        lookupMode === 'gps'
+                          ? 'bg-emerald-500 text-slate-950 shadow-emerald-500/25'
+                          : 'bg-indigo-600 hover:bg-indigo-500 text-white shadow-indigo-600/20'
+                      }`}
+                    >
+                      {gpsLoading ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <Navigation className="w-4 h-4" />
+                      )}
+                      <span>{lookupMode === 'gps' ? 'Refresh My GPS Location' : 'Use My Live GPS Location'}</span>
+                    </button>
+
+                    {lookupMode === 'gps' && gpsLocation && (
+                      <>
+                        <select
+                          aria-label="GPS Search Radius"
+                          value={gpsRadiusKm}
+                          onChange={(e) => {
+                            const r = Number(e.target.value) || 10;
+                            setGpsRadiusKm(r);
+                            fetchNearbyGpsHospitals(gpsLocation.lat, gpsLocation.lng, r);
+                          }}
+                          className="bg-neutral-900 border border-white/15 rounded-xl px-3 py-2.5 text-xs font-bold text-white focus:outline-none focus:border-emerald-400 cursor-pointer"
+                        >
+                          <option value={5}>Within 5 km</option>
+                          <option value={10}>Within 10 km</option>
+                          <option value={25}>Within 25 km</option>
+                          <option value={50}>Within 50 km</option>
+                        </select>
+
+                        <button
+                          type="button"
+                          onClick={() => {
+                            playSound('click');
+                            setLookupMode('city');
+                          }}
+                          className="px-3 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 text-xs font-bold text-white cursor-pointer"
+                        >
+                          Switch to {cleanCityName(selectedCity)} City View
+                        </button>
+                      </>
                     )}
                   </div>
                 </div>
 
-                {/* Hospital Cards Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {filteredHospitals.map((hosp, idx) => (
-                    <div 
-                      key={hosp.id}
-                      className="bg-neutral-900/80 border border-white/10 hover:border-indigo-500/40 rounded-2xl p-5 space-y-3.5 transition-all duration-300 hover:shadow-xl hover:shadow-indigo-500/5 group flex flex-col justify-between"
-                    >
-                      <div className="space-y-2.5">
-                        <div className="flex items-start justify-between gap-3">
-                          <div className="flex items-start gap-2.5">
-                            <span className="px-2 py-0.5 rounded-lg bg-indigo-500/20 text-indigo-300 font-mono text-xs font-black border border-indigo-500/30 shrink-0">
-                              #{idx + 1}
-                            </span>
-                            <div>
-                              <h4 className="text-sm font-black text-white group-hover:text-indigo-300 transition-colors leading-snug">
-                                {hosp.name}
-                              </h4>
-                              <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
-                                <span className="text-[10px] px-2 py-0.5 rounded-md bg-white/5 text-white/70 font-semibold border border-white/5">
-                                  {hosp.brand}
-                                </span>
-                                <span className="text-[10px] text-amber-300 font-bold bg-amber-400/10 px-2 py-0.5 rounded-md border border-amber-400/20">
-                                  ★ {hosp.rating} ({hosp.reviewsCount} reviews)
-                                </span>
+                {/* Search & Live Google Query Bar */}
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                  <div className="relative flex-1">
+                    <Search className="w-4 h-4 text-white/40 absolute left-3.5 top-3.5 pointer-events-none" />
+                    <input
+                      type="text"
+                      placeholder="Filter or search Google Places for a specific hospital or locality..."
+                      value={hospitalSearch}
+                      onChange={(e) => setHospitalSearch(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && hospitalSearch.trim()) {
+                          e.preventDefault();
+                          fetchCityGoogleHospitals(selectedCity, selectedState, hospitalSearch.trim());
+                        }
+                      }}
+                      className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-8 py-2.5 text-xs sm:text-sm text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-semibold"
+                    />
+                    {hospitalSearch && (
+                      <button
+                        onClick={() => {
+                          setHospitalSearch('');
+                          if (lookupMode === 'city') {
+                            fetchCityGoogleHospitals(selectedCity, selectedState);
+                          }
+                        }}
+                        className="absolute right-3 top-3 text-white/40 hover:text-white text-xs cursor-pointer"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    )}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => fetchCityGoogleHospitals(selectedCity, selectedState, hospitalSearch.trim())}
+                    disabled={loadingGoogleHospitals}
+                    className="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 text-xs font-black uppercase tracking-wider text-white flex items-center justify-center gap-2 cursor-pointer shrink-0"
+                  >
+                    {loadingGoogleHospitals ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4 text-indigo-400" />}
+                    <span>Search Google Maps</span>
+                  </button>
+                </div>
+
+                {hospitalsError && (
+                  <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-200 text-xs sm:text-sm font-semibold flex items-center gap-2.5">
+                    <AlertCircle className="w-4 h-4 text-amber-400 shrink-0" />
+                    <span>{hospitalsError}</span>
+                  </div>
+                )}
+
+                {/* Interactive Google Map View (@vis.gl/react-google-maps) */}
+                {mapsApiKey && filteredGoogleHospitals.length > 0 && (
+                  <div className="rounded-2xl overflow-hidden border border-white/15 shadow-xl h-[340px] w-full relative bg-slate-900">
+                    <APIProvider apiKey={mapsApiKey}>
+                      <GoogleMap
+                        mapId="DEMO_MAP_ID"
+                        internalUsageAttributionIds={['gmp_mcp_codeassist_v1_aistudio']}
+                        defaultZoom={12}
+                        center={
+                          selectedMapHospital?.location?.lat
+                            ? selectedMapHospital.location
+                            : gpsLocation || filteredGoogleHospitals[0]?.location || { lat: 12.9716, lng: 77.5946 }
+                        }
+                        gestureHandling="greedy"
+                        disableDefaultUI={false}
+                        className="w-full h-full"
+                      >
+                        {gpsLocation && (
+                          <AdvancedMarker position={gpsLocation} title="Your Live GPS Location">
+                            <Pin background="#10b981" borderColor="#064e3b" glyphColor="#ffffff" />
+                          </AdvancedMarker>
+                        )}
+
+                        {filteredGoogleHospitals.map((hosp) =>
+                          hosp.location?.lat && hosp.location?.lng ? (
+                            <AdvancedMarker
+                              key={hosp.placeId}
+                              position={hosp.location}
+                              title={hosp.name}
+                              onClick={() => setSelectedMapHospital(hosp)}
+                            >
+                              <Pin
+                                background={selectedMapHospital?.placeId === hosp.placeId ? '#6366f1' : '#ef4444'}
+                                borderColor="#ffffff"
+                                glyphColor="#ffffff"
+                              />
+                            </AdvancedMarker>
+                          ) : null
+                        )}
+
+                        {selectedMapHospital && selectedMapHospital.location?.lat && (
+                          <InfoWindow
+                            position={selectedMapHospital.location}
+                            onCloseClick={() => setSelectedMapHospital(null)}
+                          >
+                            <div className="text-slate-900 p-1 max-w-[240px] space-y-1">
+                              <div className="font-bold text-xs leading-snug">{selectedMapHospital.name}</div>
+                              <div className="text-[11px] text-slate-600">{selectedMapHospital.address}</div>
+                              {selectedMapHospital.rating && (
+                                <div className="text-[11px] font-bold text-amber-600">
+                                  ★ {selectedMapHospital.rating} ({selectedMapHospital.userRatingCount} Google reviews)
+                                </div>
+                              )}
+                              <div className="pt-1 flex items-center gap-2">
+                                <a
+                                  href={selectedMapHospital.googleMapsUri}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-[11px] font-bold text-indigo-600 underline"
+                                >
+                                  Open Maps
+                                </a>
+                                <a
+                                  href={selectedMapHospital.reviewsUri}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-[11px] font-bold text-amber-700 underline"
+                                >
+                                  Google Reviews
+                                </a>
                               </div>
                             </div>
-                          </div>
-                        </div>
+                          </InfoWindow>
+                        )}
+                      </GoogleMap>
+                    </APIProvider>
+                  </div>
+                )}
 
-                        <div className="space-y-1.5 text-xs">
-                          <div className="flex items-start gap-1.5 text-white/70">
-                            <MapPin className="w-3.5 h-3.5 text-indigo-400 shrink-0 mt-0.5" />
-                            <span className="leading-relaxed">{hosp.address}</span>
-                          </div>
-                          <div className="flex items-center gap-1.5 text-indigo-300 font-medium">
-                            <Stethoscope className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
-                            <span>{hosp.specialty}</span>
-                          </div>
-                        </div>
-
-                        <div className="flex items-center gap-2 flex-wrap text-[10px] font-bold">
-                          <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 flex items-center gap-1">
-                            <ShieldCheck className="w-3 h-3 text-emerald-400" />
-                            24/7 Emergency & Level III NICU
-                          </span>
-                          <a 
-                            href={`tel:${hosp.phone.replace(/[^0-9+]/g, '')}`}
-                            className="px-2.5 py-0.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-white/80 flex items-center gap-1 transition-colors"
-                          >
-                            <Phone className="w-3 h-3 text-emerald-400" />
-                            <span>{hosp.phone}</span>
-                          </a>
-                        </div>
-                      </div>
-
-                      <div className="pt-3 border-t border-white/5 flex items-center justify-between gap-2">
-                        <a
-                          href={hosp.googleMapsUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-xs text-indigo-400 hover:text-indigo-300 font-bold flex items-center gap-1 transition-colors group/link"
-                        >
-                          <span>View on Google Maps</span>
-                          <ExternalLink className="w-3 h-3 group-hover/link:translate-x-0.5 transition-transform" />
-                        </a>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setSelectedClinic(`${hosp.name} - ${hosp.area}`);
-                            playSound('click');
-                            window.scrollTo({ top: 380, behavior: 'smooth' });
-                          }}
-                          className="text-xs px-3 py-1.5 bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-200 border border-indigo-500/30 rounded-xl font-bold transition-all flex items-center gap-1 cursor-pointer"
-                        >
-                          <span>Book Consult</span>
-                          <ArrowRight className="w-3 h-3" />
-                        </button>
-                      </div>
+                {/* Loading state */}
+                {loadingGoogleHospitals ? (
+                  <div className="p-12 rounded-2xl bg-white/[0.02] border border-white/10 flex flex-col items-center justify-center gap-3 text-center">
+                    <Loader2 className="w-8 h-8 animate-spin text-indigo-400" />
+                    <div className="text-sm font-bold text-white">
+                      Fetching live Google-listed hospitals from Google Maps Places API...
                     </div>
-                  ))}
-                </div>
+                  </div>
+                ) : filteredGoogleHospitals.length === 0 ? (
+                  <div className="p-10 rounded-2xl bg-white/[0.02] border border-white/10 text-center space-y-2">
+                    <Building2 className="w-10 h-10 text-white/30 mx-auto" />
+                    <div className="text-sm font-bold text-white">No Google-listed hospitals matched your filter</div>
+                    <p className="text-xs text-white/50">
+                      Try clearing the search box or clicking "Use My Live GPS Location" above.
+                    </p>
+                  </div>
+                ) : (
+                  /* Real Google-Listed Hospital Cards Grid */
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {filteredGoogleHospitals.map((hosp, idx) => {
+                      const isReviewsOpen = expandedReviewsPlaceId === hosp.placeId;
+                      return (
+                        <div
+                          key={hosp.placeId || idx}
+                          onClick={() => setSelectedMapHospital(hosp)}
+                          className={`bg-neutral-900/85 border rounded-2xl p-5 space-y-3.5 transition-all duration-300 hover:shadow-xl group flex flex-col justify-between cursor-pointer ${
+                            selectedMapHospital?.placeId === hosp.placeId
+                              ? 'border-indigo-500 shadow-indigo-500/10'
+                              : 'border-white/10 hover:border-indigo-500/40'
+                          }`}
+                        >
+                          <div className="space-y-2.5">
+                            <div className="flex items-start justify-between gap-3">
+                              <div className="flex items-start gap-2.5">
+                                <span className="px-2 py-0.5 rounded-lg bg-indigo-500/20 text-indigo-300 font-mono text-xs font-black border border-indigo-500/30 shrink-0">
+                                  #{idx + 1}
+                                </span>
+                                <div>
+                                  <h4 className="text-sm sm:text-base font-black text-white group-hover:text-indigo-300 transition-colors leading-snug">
+                                    {hosp.name}
+                                  </h4>
+                                  <div className="flex items-center gap-1.5 mt-1 flex-wrap">
+                                    <span className="text-[10px] px-2 py-0.5 rounded-md bg-emerald-500/15 text-emerald-300 font-bold border border-emerald-500/30">
+                                      Google Verified Place
+                                    </span>
+                                    {hosp.rating && (
+                                      <span className="text-[10px] text-amber-300 font-bold bg-amber-400/10 px-2 py-0.5 rounded-md border border-amber-400/20">
+                                        ★ {hosp.rating} ({hosp.userRatingCount.toLocaleString()} Google reviews)
+                                      </span>
+                                    )}
+                                    {hosp.openNow !== null && hosp.openNow !== undefined && (
+                                      <span
+                                        className={`text-[10px] px-2 py-0.5 rounded-md font-bold border ${
+                                          hosp.openNow
+                                            ? 'bg-emerald-500/10 text-emerald-300 border-emerald-500/25'
+                                            : 'bg-rose-500/10 text-rose-300 border-rose-500/25'
+                                        }`}
+                                      >
+                                        {hosp.openNow ? 'Open Now' : 'Closed'}
+                                      </span>
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="space-y-1.5 text-xs">
+                              <div className="flex items-start gap-1.5 text-white/75">
+                                <MapPin className="w-3.5 h-3.5 text-indigo-400 shrink-0 mt-0.5" />
+                                <span className="leading-relaxed">{hosp.address}</span>
+                              </div>
+                              {hosp.reviewSummary && (
+                                <p className="text-[11px] text-indigo-200/80 bg-indigo-500/10 border border-indigo-500/20 rounded-xl p-2.5 leading-relaxed">
+                                  {hosp.reviewSummary}
+                                </p>
+                              )}
+                            </div>
+
+                            <div className="flex items-center gap-2 flex-wrap text-[11px] font-bold">
+                              {hosp.phone && (
+                                <a
+                                  href={`tel:${hosp.phone.replace(/[^0-9+]/g, '')}`}
+                                  onClick={(e) => e.stopPropagation()}
+                                  className="px-2.5 py-1 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-white/90 flex items-center gap-1.5 transition-colors"
+                                >
+                                  <Phone className="w-3 h-3 text-emerald-400" />
+                                  <span>{hosp.phone}</span>
+                                </a>
+                              )}
+                              {hosp.reviews && hosp.reviews.length > 0 && (
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    playSound('pop');
+                                    setExpandedReviewsPlaceId(isReviewsOpen ? null : hosp.placeId);
+                                  }}
+                                  className="px-2.5 py-1 rounded-full bg-amber-500/15 hover:bg-amber-500/25 border border-amber-400/30 text-amber-200 flex items-center gap-1 transition-colors cursor-pointer"
+                                >
+                                  <span>{isReviewsOpen ? 'Hide Snippets' : `Preview ${hosp.reviews.length} Top Reviews`}</span>
+                                </button>
+                              )}
+                            </div>
+
+                            {/* Expandable Real Google User Reviews Drawer */}
+                            {isReviewsOpen && hosp.reviews && hosp.reviews.length > 0 && (
+                              <div
+                                onClick={(e) => e.stopPropagation()}
+                                className="mt-2 pt-2.5 border-t border-white/10 space-y-2 max-h-52 overflow-y-auto pr-1"
+                              >
+                                <div className="text-[10px] font-black uppercase tracking-wider text-amber-300">
+                                  Authentic Google Maps User Reviews
+                                </div>
+                                {hosp.reviews.map((rev, rIdx) => (
+                                  <div key={rIdx} className="p-2.5 rounded-xl bg-black/40 border border-white/10 space-y-1 text-[11px]">
+                                    <div className="flex items-center justify-between gap-2">
+                                      <span className="font-bold text-white">{rev.authorName}</span>
+                                      <span className="text-amber-300 font-bold">
+                                        {'★'.repeat(Math.max(1, Math.min(5, Math.round(rev.rating))))} {rev.relativeTime && `• ${rev.relativeTime}`}
+                                      </span>
+                                    </div>
+                                    {rev.text && <p className="text-white/75 leading-relaxed line-clamp-3">{rev.text}</p>}
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Mandatory Action Buttons: View Google Maps & Google Reviews + Book Consult */}
+                          <div
+                            onClick={(e) => e.stopPropagation()}
+                            className="pt-3 border-t border-white/10 flex flex-wrap items-center justify-between gap-2"
+                          >
+                            <div className="flex flex-wrap items-center gap-2">
+                              <a
+                                href={hosp.googleMapsUri}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="px-3 py-1.5 rounded-xl bg-indigo-500/20 hover:bg-indigo-500/30 border border-indigo-400/30 text-xs text-indigo-200 hover:text-white font-bold flex items-center gap-1.5 transition-all"
+                              >
+                                <MapPin className="w-3.5 h-3.5 text-indigo-400" />
+                                <span>View Google Maps</span>
+                                <ExternalLink className="w-3 h-3" />
+                              </a>
+
+                              <a
+                                href={hosp.reviewsUri}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/30 text-xs text-amber-200 hover:text-white font-bold flex items-center gap-1.5 transition-all"
+                              >
+                                <span>★ Google Reviews</span>
+                                <ExternalLink className="w-3 h-3" />
+                              </a>
+                            </div>
+
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setSelectedClinic(hosp.name);
+                                playSound('click');
+                                window.scrollTo({ top: 380, behavior: 'smooth' });
+                              }}
+                              className="text-xs px-3 py-1.5 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-200 border border-emerald-500/30 rounded-xl font-bold transition-all flex items-center gap-1 cursor-pointer"
+                            >
+                              <span>Book Consult</span>
+                              <ArrowRight className="w-3 h-3" />
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
             </motion.div>
           )}
@@ -2462,6 +2937,12 @@ export const ExpertPediatricianSection: React.FC = () => {
                       disabled={isChatLoading}
                       placeholder={`Ask ${activeChatDoc.name} about nutrition, feeding, fever, or sleep... (Press Enter for line break)`}
                       className="flex-1 bg-white/5 border border-white/10 rounded-2xl px-4 py-3 text-xs md:text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/40 disabled:opacity-50 resize-y min-h-[46px] leading-relaxed"
+                    />
+                    <VoiceDictationButton
+                      language={language}
+                      label="Voice"
+                      compact={false}
+                      onTranscript={(spoken) => setChatInput((prev) => (prev ? `${prev} ${spoken}` : spoken))}
                     />
                     <button
                       type="button"

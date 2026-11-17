@@ -262,24 +262,37 @@ Here is simple, caring guidance to help Ashwath fall asleep peacefully:
 ];
 
 export function isPersonalInfoQuery(query: string): boolean {
-  const q = query.toLowerCase().trim();
-  const piiKeywords = [
-    'personal info', 'personal information', 'personal details', 'personal data', 'pii',
-    'phone number', 'mobile number', 'cell phone', 'contact number', 'whatsapp number', 'telephone',
-    'phone no', 'mobile no', 'contact no', 'give me phone', 'what is your phone', 'share your phone',
-    'email address', 'email id', 'gmail id', 'what is your email', 'give me email', 'share your email', 'your email', 'my email', 'user email',
-    'home address', 'residential address', 'where do you live', 'physical address', 'street address', 'postal code', 'pin code', 'zip code', 'your address',
-    'password', 'passcode', 'login credentials', 'secret key', 'api key', 'private key', 'auth token', 'otp',
-    'credit card', 'debit card', 'cvv', 'card number', 'bank account', 'account number', 'ifsc', 'net banking', 'upi id', 'upi pin',
-    'aadhaar', 'pan card', 'social security', 'ssn', 'passport number', 'voter id', 'driving license',
-    'private record', 'confidential info', 'private identity', 'personal identity',
-    'tell me personal', 'give me personal', 'what is user', 'who created you give their personal',
-    'give me ashwath phone', 'give me lashmi phone', 'doctor phone', 'doctor contact',
-    'contact details', 'contact info', 'share contact', 'give contact',
-    'personal profile', 'user info', 'account details', 'give personal', 'share personal'
+  const q = (query || '').toLowerCase().trim();
+  if (!q) return false;
+
+  // Exclude normal pediatric/parenting phrases that contain words like "address", "contact", or "pin"
+  const safeParentingPhrases = [
+    /\beye\s+contact\b/i,
+    /\bskin[\s-]+to[\s-]+skin\s+contact\b/i,
+    /\bcontact\s+nap/i,
+    /\bcontact\s+dermatitis\b/i,
+    /\baddress\s+(tantrum|behavior|hitting|biting|sleep|feeding|issue|concern|problem|fear|anxiety)/i,
+    /\bhow\s+to\s+address\b/i,
+    /\bpincer\s+grasp\b/i,
   ];
-  return piiKeywords.some(kw => q.includes(kw));
+  if (safeParentingPhrases.some((rx) => rx.test(q))) {
+    return false;
+  }
+
+  const strictPiiPatterns = [
+    /\b(personal\s+info(rmation)?|personal\s+details|personal\s+data|private\s+data)\b/i,
+    /\b(phone\s+number|mobile\s+number|cell\s+phone|whatsapp\s+number|telephone\s+number|phone\s+no|mobile\s+no|contact\s+number)\b/i,
+    /\b(give\s+me|share|what\s+is|tell\s+me)\s+(your|their|user|ashwath'?s?|lashmi'?s?|doctor'?s?)\s+(phone|mobile|email|address|contact)\b/i,
+    /\b(email\s+address|email\s+id|gmail\s+id|your\s+email|user\s+email)\b/i,
+    /\b(home\s+address|residential\s+address|where\s+do\s+you\s+live|physical\s+address|street\s+address|postal\s+code|pin\s+code|zip\s+code)\b/i,
+    /\b(password|passcode|login\s+credentials|secret\s+key|api\s+key|private\s+key|auth\s+token|\botp\b)\b/i,
+    /\b(credit\s+card|debit\s+card|\bcvv\b|card\s+number|bank\s+account|account\s+number|\bifsc\b|net\s+banking|upi\s+id|upi\s+pin)\b/i,
+    /\b(aadhaar|pan\s+card|social\s+security|\bssn\b|passport\s+number|voter\s+id|driving\s+licen[cs]e)\b/i,
+  ];
+
+  return strictPiiPatterns.some((rx) => rx.test(q));
 }
+
 
 export function parseChildAgeBracket(ageStr?: string): {
   bracket: 'infant' | 'toddler' | 'preschool' | 'school' | 'teen';

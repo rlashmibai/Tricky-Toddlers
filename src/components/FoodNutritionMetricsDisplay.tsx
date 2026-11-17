@@ -24,6 +24,7 @@ interface FoodNutritionMetricsDisplayProps {
     name?: string;
     calories?: string;
     protein?: string;
+    fat?: string;
     sodium?: string;
     ingredients?: string[];
     allergyCheck?: string;
@@ -53,11 +54,13 @@ export const FoodNutritionMetricsDisplay: React.FC<FoodNutritionMetricsDisplayPr
   const negativeFactors = scoreCalculation.factors.filter(f => f.points < 0);
   const compliantFactors = scoreCalculation.factors.filter(f => f.points === 0);
 
-  // Sodium and Vitamin B12 values
+  // Core highlights values: Calories, Protein, Fat, Vitamin B12, and Sodium
   const sodiumItem = nutrients.find(n => n.id === 'sodium');
   const vitaminB12Item = nutrients.find(n => n.id === 'vitamin_b12');
   const calorieItem = nutrients.find(n => n.id === 'calories');
   const proteinItem = nutrients.find(n => n.id === 'protein');
+  const fatItem = nutrients.find(n => n.id === 'fats');
+  const fatShortAmount = fatItem?.amount ? (fatItem.amount.match(/^[\d.]+\s*g/i)?.[0] || fatItem.amount) : (food.fat || '3.6 g');
 
   return (
     <div className="space-y-8 text-left">
@@ -67,8 +70,9 @@ export const FoodNutritionMetricsDisplay: React.FC<FoodNutritionMetricsDisplayPr
           1. Overall Score / 10 Button (Before Calories)
           2. Calories
           3. Protein
-          4. Vitamin B12
-          5. Sodium
+          4. Fat
+          5. Vitamin B12
+          6. Sodium
       ========================================================== */}
       <div className="p-4 sm:p-5 rounded-2xl bg-[#091122] border border-white/10 shadow-lg flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-2.5">
@@ -100,14 +104,21 @@ export const FoodNutritionMetricsDisplay: React.FC<FoodNutritionMetricsDisplayPr
             <span>{proteinItem?.amount || food.protein || '5.2 g'}</span>
           </div>
 
-          {/* 4. Vitamin B12 */}
+          {/* 4. Fat */}
+          <div className="px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-xs sm:text-sm font-bold text-white flex items-center gap-1.5">
+            <Droplets className="w-3.5 h-3.5 text-yellow-400" />
+            <span className="text-slate-400 font-normal">Fat:</span>
+            <span>{fatShortAmount}</span>
+          </div>
+
+          {/* 5. Vitamin B12 */}
           <div className="px-3.5 py-2 rounded-xl bg-amber-500/10 border border-amber-400/30 text-xs sm:text-sm font-bold text-amber-300 flex items-center gap-1.5">
             <Sparkles className="w-3.5 h-3.5 text-amber-400" />
             <span className="text-amber-200/70 font-normal">Vitamin B12:</span>
             <span>{vitaminB12Item?.amount || '0.5 mcg'}</span>
           </div>
 
-          {/* 5. Sodium */}
+          {/* 6. Sodium */}
           <div className="px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-xs sm:text-sm font-bold text-white flex items-center gap-1.5">
             <Droplets className="w-3.5 h-3.5 text-sky-400" />
             <span className="text-slate-400 font-normal">Sodium:</span>

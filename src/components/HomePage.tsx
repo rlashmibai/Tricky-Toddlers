@@ -776,6 +776,9 @@ export const HomePage: React.FC<HomePageProps> = ({
             src="/child-wellness-journey.svg" 
             alt="Child Wellness Journey - A Brighter Tomorrow: 1 Register, 2 Collect, 3 Analyse, 4 Personalise, 5 Alert, 6 Monitor"
             className="w-full h-auto object-contain rounded-2xl shadow"
+            loading="eager"
+            decoding="sync"
+            fetchPriority="high"
           />
         </div>
       </section>

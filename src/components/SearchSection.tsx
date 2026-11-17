@@ -14,6 +14,7 @@ import { useAuth } from '../lib/AuthContext';
 import { useLanguage } from '../lib/LanguageContext';
 import { playSound } from '../lib/sounds';
 import { ChildProfileSelector } from './ChildProfileSelector';
+import { VoiceDictationButton, CloudTTSButton } from './VoiceDictationButton';
 import { 
   saveAISearchRecord, 
   isPersonalInfoQuery, 
@@ -44,75 +45,51 @@ export interface EmergencyDetectionResult {
 }
 
 export function detectEmergencyCondition(queryText: string, responseText: string = ''): EmergencyDetectionResult {
-  const combinedQuery = (queryText || '').toLowerCase();
-  const combinedAll = `${combinedQuery} ${(responseText || '').toLowerCase()}`;
+  const q = (queryText || '').toLowerCase().trim();
+  const r = (responseText || '').toLowerCase();
 
-  const chokingKeywords = [
-    'choking',
-    'choke',
-    'choked',
-    'gagging',
-    'swallowed a coin',
-    'swallowed a battery',
-    'button battery',
-    'swallowed a',
-    'stuck in throat',
-    'object in throat',
-    'airway blocked',
-    'back blows',
-    'heimlich'
+  // 1. False-Positive Prevention: Exclude preventive, educational, or food-prep safety questions
+  const preventivePatterns = [
+    /\b(prevent|avoid|reduce|stop)\s+(choking|gagging|fever|seizure)/i,
+    /\bchoking\s+(hazard|risk|prevention|safe|foods?\s+to\s+avoid)/i,
+    /\bsafe\s+from\s+choking\b/i,
+    /\bdifference\s+between\s+(normal\s+)?gagging\s+and\s+(true\s+)?choking\b/i,
+    /\bgag\s+reflex\s+vs\b/i,
+    /\bhow\s+(should\s+i|to)\s+cut\b.*\bchok/i,
+    /\bwhy\s+do\s+(babies|toddlers)\s+gag\b/i,
+    /\bwhen\s+does\s+a\s+toddler\s+fever\s+require\b/i,
   ];
-
-  const severeIllnessKeywords = [
-    'high fever',
-    'severe fever',
-    '102',
-    '103',
-    '104',
-    'trouble breathing',
-    'difficulty breathing',
-    'breathing difficulty',
-    'not breathing',
-    'can\'t breathe',
-    'cannot breathe',
-    'fast breathing',
-    'wheezing',
-    'stridor',
-    'blue lips',
-    'turning blue',
-    'seizure',
-    'convulsion',
-    'fits',
-    'unresponsive',
-    'unconscious',
-    'fainted',
-    'lethargic',
-    'limp',
-    'severe dehydration',
-    'dehydrated',
-    'sunken fontanelle',
-    'sunken eyes',
-    'projectile vomiting',
-    'vomiting blood',
-    'blood in stool',
-    'blood in vomit',
-    'anaphylaxis',
-    'swollen tongue',
-    'head injury',
-    'poison',
-    'severe illness'
-  ];
-
-  for (const kw of chokingKeywords) {
-    if (combinedQuery.includes(kw) || combinedAll.includes(kw)) {
-      return { isEmergency: true, type: 'choking', matchedKeyword: kw };
-    }
+  if (preventivePatterns.some((rx) => rx.test(q))) {
+    return { isEmergency: false, type: 'severe_illness' };
   }
 
-  for (const kw of severeIllnessKeywords) {
-    if (combinedQuery.includes(kw) || combinedAll.includes('immediate emergency first-aid')) {
-      return { isEmergency: true, type: 'severe_illness', matchedKeyword: kw };
-    }
+  // 2. Negation Filtering: Remove negated symptom clauses ("no fever", "not choking", "without wheezing")
+  const cleanedQuery = q
+    .replace(/\b(no|not|never|without|neither|nor|doesn'?t\s+have|does\s+not\s+have|resolved|recovered\s+from)\s+(any\s+)?(choking|gagging|high\s+fever|fever|trouble\s+breathing|difficulty\s+breathing|wheezing|seizure|convulsion|stridor|blue\s+lips)/gi, ' ')
+    .trim();
+
+  // 3. Choking / Airway Obstruction Detection (strict word boundaries + multilingual Indian scripts)
+  const chokingRegex = /\b(chok(e|ing|ed)|gagging\s+badly|swallowed\s+a\s+(coin|battery|button|magnet|toy|marble|bead|cap|pin|stone|object)|button\s+battery|stuck\s+in\s+(throat|windpipe|airway)|object\s+in\s+throat|something\s+in\s+throat|airway\s+blocked|can'?t\s+swallow\s+or\s+breathe|heimlich)\b|दम\s+घुट|गले\s+में\s+अटक|अटक\s+गया|மூச்சுத்\s+திணறல்|தொண்டையில்\s+சிக்கியது|గొంతులో\s+ఇరుక్కుంది|ಗಂಟಲಲ್ಲಿ\s+ಸಿಕ್ಕಿಹಾಕಿಕೊಂಡಿದೆ|തൊണ്ടയിൽ\s+കുടുങ്ങി|घशात\s+अडकले|गળામાં\s+અટકી|গলায়\s+আটকে|ਗਲੇ\s+ਵਿੱਚ\s+ਫਸ/i;
+
+  const chokingMatch = cleanedQuery.match(chokingRegex);
+  if (chokingMatch) {
+    return { isEmergency: true, type: 'choking', matchedKeyword: chokingMatch[0] };
+  }
+
+  // 4. Severe Illness Detection (strict word boundaries to prevent "fits" or "102" false positives)
+  const severeIllnessRegex = /\b(high\s+fever|severe\s+fever|10[2345](\.\d+)?\s*(f|°f|degree|temp|fever)|fever\s+(of\s+|above\s+|over\s+)?10[2345]|trouble\s+breathing|difficulty\s+breathing|breathing\s+difficulty|not\s+breathing|can'?t\s+breathe|cannot\s+breathe|fast\s+breathing|stridor|blue\s+lips|turning\s+blue|cyanosis|ribs\s+pulling\s+in|chest\s+retractions|seizure|seizures|convulsion|convulsions|febrile\s+fits|epileptic\s+fits|having\s+fits\s+and\s+shaking|unresponsive|unconscious|fainted|lethargic\s+and\s+limp|severe\s+dehydration|sunken\s+fontanelle|sunken\s+eyes|projectile\s+vomiting|vomiting\s+blood|blood\s+in\s+(stool|vomit)|anaphylaxis|swollen\s+tongue|head\s+injury\s+vomiting|poison|drank\s+cleaner|swallowed\s+medicine)\b|तेज\s+बुखार|सांस\s+लेने\s+में\s+तकलीफ|दौरे\s+पड़ना|बेहोश|अचेत|கடுமையான\s+காய்ச்சல்|மூச்சு\s+விட\s+சிரமம்|வலிப்பு|மயக்கம்|తీవ్రమైన\s+జ్వరం|శ్వాస\s+తీసుకోవడంలో\s+ఇబ్బంది|మూర్ఛ|ತೀವ್ರ\s+ಜ್ವರ|ಉಸಿರಾಟದ\s+ತೊಂದರೆ|ಮೂರ್ಛೆ|കടുത്ത\s+പനി|ശ്വാസതടസ്സം|അപസ്മാരം|तीव्र\s+ताप|श्वास\s+घेण्यास\s+त्रास|प्रचंड\s+ताप|ભારે\s+તાવ|શ્વાસ\s+લેવામાં\s+તકલીફ|প্রচণ্ড\s+জ্বর|শ্বাসকষ্ট|ਤੇਜ਼\s+ਬੁਖਾਰ|ਸਾਹ\s+ਲੈਣ\s+ਵਿੱਚ\s+ਤਕਲੀਫ਼/i;
+
+  const illnessMatch = cleanedQuery.match(severeIllnessRegex);
+  if (illnessMatch) {
+    return { isEmergency: true, type: 'severe_illness', matchedKeyword: illnessMatch[0] };
+  }
+
+  // 5. Only trigger from AI response text if the AI explicitly emitted an emergency triage header
+  if (r.includes('### 🚨 immediate emergency action') || r.includes('step-by-step choking first-aid tips')) {
+    return { isEmergency: true, type: 'choking', matchedKeyword: 'emergency_choking_protocol' };
+  }
+  if (r.includes('### 🚨 emergencyhelpline & hospital triage') || r.includes('immediate first-aid tips while arranging pediatric care')) {
+    return { isEmergency: true, type: 'severe_illness', matchedKeyword: 'emergency_triage_protocol' };
   }
 
   return { isEmergency: false, type: 'severe_illness' };
@@ -781,7 +758,7 @@ export const getAgeSpecificTopics = (
 
 export const SearchSection: React.FC = () => {
   const { profile, childProfiles, activeChildIndex } = useAuth();
-  const { t, getAIPromptModifier } = useLanguage();
+  const { language, t, getAIPromptModifier } = useLanguage();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -1179,18 +1156,11 @@ export const SearchSection: React.FC = () => {
                 Press <strong>Enter</strong> to submit · <strong>Shift+Enter</strong> for line break
               </span>
               <div className="flex items-center gap-2 ml-auto">
-                <button
-                  type="button"
-                  onClick={toggleVoiceInput}
-                  className={`p-2.5 rounded-xl border transition-all cursor-pointer ${
-                    isListening
-                      ? 'bg-rose-500/20 text-rose-300 border-rose-500/50 animate-pulse'
-                      : 'bg-white/5 hover:bg-white/15 text-slate-300 border-white/15'
-                  }`}
-                  title={isListening ? "Listening... click to stop" : "Speak your question"}
-                >
-                  {isListening ? <MicOff className="w-4 h-4 text-rose-400" /> : <Mic className="w-4 h-4" />}
-                </button>
+                <VoiceDictationButton
+                  language={language}
+                  label="Live Transcribe"
+                  onTranscript={(spoken) => setQuery((prev) => (prev ? `${prev} ${spoken}` : spoken))}
+                />
 
                 <button
                   type="button"
@@ -1567,7 +1537,7 @@ export const SearchSection: React.FC = () => {
                           );
                         })()}
 
-                        {/* In-Chat Responsible AI Trust Badges */}
+                        {/* In-Chat Responsible AI Trust Badges & Cloud TTS Playback */}
                         {!loading && (
                           <div className="mt-4 pt-3.5 border-t border-white/10 flex flex-wrap items-center justify-between gap-2 text-xs">
                             <div className="flex flex-wrap items-center gap-2">
@@ -1579,10 +1549,8 @@ export const SearchSection: React.FC = () => {
                                 <CheckCircle2 className="w-3.5 h-3.5 text-indigo-400" />
                                 <span>ICMR-NIN &amp; FSSAI Standards</span>
                               </span>
-                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white/5 border border-white/10 text-slate-400 text-[10px] font-mono">
-                                🔒 Zero Ad Selling · 100% Private
-                              </span>
                             </div>
+                            <CloudTTSButton text={parsed.cleanContent} language={language} />
                           </div>
                         )}
                       </div>
@@ -1729,18 +1697,11 @@ export const SearchSection: React.FC = () => {
                     Conversation remembers context · Press <strong>Enter</strong> to send
                   </span>
                   <div className="flex items-center gap-2 ml-auto">
-                    <button
-                      type="button"
-                      onClick={toggleVoiceInput}
-                      className={`p-2.5 rounded-xl border transition-all cursor-pointer ${
-                        isListening
-                          ? 'bg-rose-500/20 text-rose-300 border-rose-500/50 animate-pulse'
-                          : 'bg-white/5 hover:bg-white/15 text-slate-300 border-white/15'
-                      }`}
-                      title={isListening ? "Listening... click to stop" : "Speak reply"}
-                    >
-                      {isListening ? <MicOff className="w-4 h-4 text-rose-400" /> : <Mic className="w-4 h-4" />}
-                    </button>
+                    <VoiceDictationButton
+                      language={language}
+                      label="Live Transcribe"
+                      onTranscript={(spoken) => setFollowUpText((prev) => (prev ? `${prev} ${spoken}` : spoken))}
+                    />
 
                     <button
                       type="button"

@@ -646,6 +646,8 @@ export const FoodLensView: React.FC<FoodLensViewProps> = ({
                 alt="General-Purpose AI vs FoodLens AI Comparison" 
                 className="w-full h-auto object-contain rounded-2xl mx-auto"
                 loading="eager"
+                decoding="sync"
+                fetchPriority="high"
               />
             </div>
           </div>
@@ -668,58 +670,52 @@ export const FoodLensView: React.FC<FoodLensViewProps> = ({
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight">How it Works</h2>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div className="rounded-3xl overflow-hidden border border-white/10 bg-slate-900/80 shadow-xl flex items-center justify-center">
-                <picture>
-                  <source srcSet="/assets/aistudio/Gemini_Generated_Image_2vihgd2vihgd2vih__1__7cdf258c.webp" type="image/webp" />
-                  <img 
-                    src="/assets/aistudio/Gemini_Generated_Image_2vihgd2vihgd2vih__1__7cdf258c.png" 
-                    alt="Scan Label" 
-                    className="w-full h-auto object-contain block" 
-                    loading="eager"
-                    decoding="async"
-                    onError={(e) => {
-                      const target = e.currentTarget;
-                      if (!target.src.endsWith('.png')) {
-                        target.src = '/assets/aistudio/Gemini_Generated_Image_2vihgd2vihgd2vih__1__7cdf258c.png';
-                      }
-                    }}
-                  />
-                </picture>
+                <img 
+                  src="/assets/aistudio/Gemini_Generated_Image_ey66ykey66ykey66_5d0c3f3e.png" 
+                  alt="Scan Label" 
+                  className="w-full h-auto object-contain block" 
+                  loading="eager"
+                  decoding="sync"
+                  fetchPriority="high"
+                  onError={(e) => {
+                    const target = e.currentTarget;
+                    if (!target.src.endsWith('/foodlens-label-scanner.png')) {
+                      target.src = '/foodlens-label-scanner.png';
+                    }
+                  }}
+                />
               </div>
               <div className="rounded-3xl overflow-hidden border border-white/10 bg-slate-900/80 shadow-xl flex items-center justify-center">
-                <picture>
-                  <source srcSet="/assets/aistudio/Gemini_Generated_Image_2c1rd52c1rd52c1r_872957ea.webp" type="image/webp" />
-                  <img 
-                    src="/assets/aistudio/Gemini_Generated_Image_2c1rd52c1rd52c1r_872957ea.png" 
-                    alt="Scan Barcode" 
-                    className="w-full h-auto object-contain block" 
-                    loading="eager"
-                    decoding="async"
-                    onError={(e) => {
-                      const target = e.currentTarget;
-                      if (!target.src.endsWith('.webp')) {
-                        target.src = '/assets/aistudio/Gemini_Generated_Image_2c1rd52c1rd52c1r_872957ea.webp';
-                      }
-                    }}
-                  />
-                </picture>
+                <img 
+                  src="/assets/aistudio/Gemini_Generated_Image_wv7k35wv7k35wv7k_a44bd422.png" 
+                  alt="Scan Barcode" 
+                  className="w-full h-auto object-contain block" 
+                  loading="eager"
+                  decoding="sync"
+                  fetchPriority="high"
+                  onError={(e) => {
+                    const target = e.currentTarget;
+                    if (!target.src.endsWith('/foodlens-barcode-scanner.png')) {
+                      target.src = '/foodlens-barcode-scanner.png';
+                    }
+                  }}
+                />
               </div>
               <div className="rounded-3xl overflow-hidden border border-white/10 bg-slate-900/80 shadow-xl flex items-center justify-center">
-                <picture>
-                  <source srcSet="/assets/aistudio/Gemini_Generated_Image_2vihgd2vihgd2vih_5acaf8ea.webp" type="image/webp" />
-                  <img 
-                    src="/assets/aistudio/Gemini_Generated_Image_2vihgd2vihgd2vih_5acaf8ea.png" 
-                    alt="Scan Meal" 
-                    className="w-full h-auto object-contain block" 
-                    loading="eager"
-                    decoding="async"
-                    onError={(e) => {
-                      const target = e.currentTarget;
-                      if (!target.src.endsWith('.png')) {
-                        target.src = '/assets/aistudio/Gemini_Generated_Image_2vihgd2vihgd2vih_5acaf8ea.png';
-                      }
-                    }}
-                  />
-                </picture>
+                <img 
+                  src="/assets/aistudio/Gemini_Generated_Image_c5bssfc5bssfc5bs_4ffd1601.png" 
+                  alt="Scan Meal" 
+                  className="w-full h-auto object-contain block" 
+                  loading="eager"
+                  decoding="sync"
+                  fetchPriority="high"
+                  onError={(e) => {
+                    const target = e.currentTarget;
+                    if (!target.src.endsWith('/foodlens-meal-scanner.png')) {
+                      target.src = '/foodlens-meal-scanner.png';
+                    }
+                  }}
+                />
               </div>
             </div>
           </div>

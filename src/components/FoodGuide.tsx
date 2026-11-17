@@ -48,6 +48,7 @@ import { getRecipeNutrientDetails } from '../lib/recipeNutrition';
 import { GeneratedRecipe, AIRecipeBatchRecord, getSavedRecipeHistory, saveRecipeBatch } from '../lib/aiRecipeHistory';
 import { AIRecipeResultsView } from './AIRecipeResultsView';
 import { ChildProfileSelector } from './ChildProfileSelector';
+import { VoiceDictationButton } from './VoiceDictationButton';
 
 // Regional affinity mapper based on Indian State selected in Profile settings
 export const getStateRegion = (stateName: string): 'South' | 'North' | 'West' | 'East' => {
@@ -1138,12 +1139,22 @@ Each object must have these exact keys:
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-white/70 uppercase tracking-wider mb-1.5">
-                {gt('ingredientsLabel')}
-              </label>
+              <div className="flex items-center justify-between gap-2 mb-1.5">
+                <label className="block text-xs font-bold text-white/70 uppercase tracking-wider">
+                  {gt('ingredientsLabel')}
+                </label>
+                <VoiceDictationButton
+                  language={language}
+                  label="Speak Ingredients"
+                  compact={false}
+                  onTranscript={(spoken) =>
+                    setCustomIngredients((prev) => (prev ? `${prev}, ${spoken}` : spoken))
+                  }
+                />
+              </div>
               <textarea
                 rows={2}
-                placeholder="e.g., banana, rolled oats, carrot (Press Enter for line break)"
+                placeholder="e.g., banana, rolled oats, carrot (Press Enter for line break or tap Speak Ingredients)"
                 value={customIngredients}
                 onChange={(e) => setCustomIngredients(e.target.value)}
                 onKeyDown={(e) => {

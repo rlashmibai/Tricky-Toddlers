@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { isPersonalInfoQuery } from '../lib/aiHistory';
 import { playSound } from '../lib/sounds';
+import { VoiceDictationButton } from './VoiceDictationButton';
 
 interface ChatMessage {
   id: string;
@@ -252,6 +253,29 @@ export const GlobalChat: React.FC = () => {
 
     setLoading(true);
     const sentText = newMessage.trim();
+
+    try {
+      const modRes = await fetch('/api/moderate-content', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          content: sentText,
+          contextType: 'parent_connect_chat'
+        })
+      });
+      if (modRes.ok) {
+        const modData = await modRes.json();
+        if (!modData.approved) {
+          setPrivacyWarning(modData.reason || "Message blocked by AI Content Moderator for community safety.");
+          setTimeout(() => setPrivacyWarning(null), 7000);
+          setLoading(false);
+          return;
+        }
+      }
+    } catch (modErr) {
+      console.warn("Moderation check fallback:", modErr);
+    }
+
     const newMsg: ChatMessage = {
       id: 'msg_' + Date.now(),
       userId: user?.uid || 'lashmi',
@@ -635,10 +659,17 @@ export const GlobalChat: React.FC = () => {
                     }
                   }} />
                 </label>
+                {isDirectMessagingAllowed && (
+                  <VoiceDictationButton
+                    onTranscript={(txt) => setNewMessage((prev) => (prev ? `${prev} ${txt}` : txt))}
+                    label="Speak"
+                    className="ml-1"
+                  />
+                )}
               </div>
               <span className="text-[10px] text-slate-400 flex items-center gap-1">
                 <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-                Responsible AI Guardrails Protected
+                AI Content &amp; PII Moderation Active
               </span>
             </div>
 
@@ -663,6 +694,12 @@ export const GlobalChat: React.FC = () => {
                 }
                 className="flex-1 bg-white/[0.04] border border-white/10 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500 transition-all placeholder:text-slate-500 resize-none min-h-[44px] max-h-32 leading-relaxed disabled:opacity-50 disabled:cursor-not-allowed"
               />
+              {isDirectMessagingAllowed && (
+                <VoiceDictationButton
+                  compact
+                  onTranscript={(txt) => setNewMessage((prev) => (prev ? `${prev} ${txt}` : txt))}
+                />
+              )}
               <button
                 type="submit"
                 disabled={loading || !newMessage.trim() || !isDirectMessagingAllowed}

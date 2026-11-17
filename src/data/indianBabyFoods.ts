@@ -9,6 +9,7 @@ export interface IndianBabyFood {
   ingredients: string[];
   calories: string;
   protein: string;
+  fat?: string;
   sodium: string;
   texture: string;
   blwStatus: string;

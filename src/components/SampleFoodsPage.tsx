@@ -36,7 +36,7 @@ import {
   POPULAR_INDIAN_BABY_BRANDS 
 } from '../data/indianBabyFoods';
 import { FoodNutritionMetricsDisplay } from './FoodNutritionMetricsDisplay';
-import { formatScaleOf10, calculateScoreForFood } from '../lib/foodNutritionCalculator';
+import { formatScaleOf10, calculateScoreForFood, calculateFatForFood } from '../lib/foodNutritionCalculator';
 import { saveLoggedMeal } from './DailyDishLogPage';
 
 export const SampleFoodsPage: React.FC = () => {
@@ -249,6 +249,7 @@ export const SampleFoodsPage: React.FC = () => {
             score: data.score || '9.4 / 10',
             calories: data.calories || '145 kcal',
             protein: data.protein || '5.2 g',
+            fat: data.fat || '3.6 g',
             sodium: data.sodium || '0.04 g',
             texture: data.texture || 'Soft Mash',
             blwStatus: data.blwStatus || 'Safe',
@@ -842,9 +843,12 @@ export const SampleFoodsPage: React.FC = () => {
 
                   {/* Card bottom actions - Simple, uncluttered */}
                   <div className="pt-3 border-t border-white/10 space-y-2.5">
-                    <div className="flex items-center justify-between text-xs text-slate-400 font-medium">
+                    <div className="flex items-center justify-between gap-2 text-xs text-slate-400 font-medium flex-wrap">
                       <span>{food.calories}</span>
-                      <span className="text-emerald-400 font-bold">{food.protein} protein</span>
+                      <div className="flex items-center gap-3">
+                        <span className="text-emerald-400 font-bold">{food.protein} protein</span>
+                        <span className="text-amber-300 font-bold">{calculateFatForFood(food)} fat</span>
+                      </div>
                     </div>
 
                     <div className="flex items-center gap-2 pt-1">

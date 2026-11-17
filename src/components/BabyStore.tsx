@@ -1124,7 +1124,8 @@ export const BabyStore: React.FC<BabyStoreProps> = ({ onGoHome, initialView = 'c
                     src={product.image}
                     alt={product.name}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    loading="lazy"
+                    loading="eager"
+                    decoding="sync"
                     referrerPolicy="no-referrer"
                   />
 

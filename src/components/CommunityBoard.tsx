@@ -7,8 +7,9 @@ import { motion, AnimatePresence } from 'motion/react';
 import { 
   MessageSquare, Send, Trash2, User, Loader2, Sparkles, 
   Hash, Bold, Italic, List, Smile, Paperclip, Reply, 
-  ChevronDown, ChevronUp, Clock, Calendar, Filter
+  ChevronDown, ChevronUp, Clock, Calendar, Filter, ShieldCheck, AlertCircle
 } from 'lucide-react';
+import { VoiceDictationButton } from './VoiceDictationButton';
 
 interface ReplyData {
   id: string;
@@ -687,6 +688,9 @@ export const CommunityBoard: React.FC = () => {
   const [replyText, setReplyText] = useState<{ [postId: string]: string }>({});
   const [selectedHashtag, setSelectedHashtag] = useState<string | null>(null);
   const [allHashtags, setAllHashtags] = useState<string[]>([]);
+  const [moderationWarning, setModerationWarning] = useState<string | null>(null);
+  const [moderationSuccessMsg, setModerationSuccessMsg] = useState<string | null>(null);
+  const [moderatingReplyId, setModeratingReplyId] = useState<string | null>(null);
   
   const currentAuthorName = cleanParentIndianUsername(profile?.parentName || profile?.name || profile?.firstName || localStorage.getItem('parent_name') || 'Lashmi');
   
@@ -772,7 +776,27 @@ export const CommunityBoard: React.FC = () => {
     if (!newPost.trim() || !user) return;
 
     setLoading(true);
+    setModerationWarning(null);
+    setModerationSuccessMsg(null);
     try {
+      // Production Content Moderation Check (Deterministic PII/Unsafe Medical + Gemini AI Guardrail)
+      const modRes = await fetch('/api/moderate-content', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          content: newPost.trim(),
+          contextType: 'community_post'
+        })
+      });
+      if (modRes.ok) {
+        const modData = await modRes.json();
+        if (!modData.approved) {
+          setModerationWarning(modData.reason || 'Post blocked by Community Safety Moderation. Please remove personal contact details, unsafe medical claims, or inappropriate language.');
+          setLoading(false);
+          return;
+        }
+      }
+
       const hashtags = generateHashtags(newPost);
       const authorToSave = cleanParentIndianUsername(currentAuthorName);
       await addDoc(collection(db, 'posts'), {
@@ -784,6 +808,8 @@ export const CommunityBoard: React.FC = () => {
         createdAt: serverTimestamp()
       });
       setNewPost('');
+      setModerationSuccessMsg('Post verified safe by AI Community Moderation and published.');
+      setTimeout(() => setModerationSuccessMsg(null), 4000);
     } catch (error) {
       console.error("Error adding post:", error);
     } finally {
@@ -795,7 +821,26 @@ export const CommunityBoard: React.FC = () => {
     const text = replyText[postId];
     if (!text?.trim() || !user) return;
 
+    setModeratingReplyId(postId);
+    setModerationWarning(null);
     try {
+      const modRes = await fetch('/api/moderate-content', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          content: text.trim(),
+          contextType: 'community_reply'
+        })
+      });
+      if (modRes.ok) {
+        const modData = await modRes.json();
+        if (!modData.approved) {
+          setModerationWarning(modData.reason || 'Reply blocked by Community Safety Moderation.');
+          setModeratingReplyId(null);
+          return;
+        }
+      }
+
       const authorToSave = cleanParentIndianUsername(currentAuthorName);
       if (!postId.startsWith('seed-')) {
         await addDoc(collection(db, `posts/${postId}/replies`), {
@@ -825,6 +870,8 @@ export const CommunityBoard: React.FC = () => {
       setReplyText(prev => ({ ...prev, [postId]: '' }));
     } catch (error) {
       console.error("Error adding reply:", error);
+    } finally {
+      setModeratingReplyId(null);
     }
   };
 
@@ -1132,30 +1179,56 @@ export const CommunityBoard: React.FC = () => {
                 className="w-full bg-white/[0.03] border border-white/[0.08] rounded-2xl p-4 text-white placeholder:text-white/20 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500/40 transition-all min-h-[120px] resize-y leading-relaxed"
               />
               
-              {/* Formatting Toolbar */}
+              {/* Formatting Toolbar + Live Speech-to-Text */}
               {!user && (
                 <div className="text-amber-400 text-xs font-bold p-2 bg-amber-500/10 rounded-xl border border-amber-500/20 mb-2">
                   Please create an account to post or reply to parents.
                 </div>
               )}
-              <div className="flex items-center gap-1 mt-2 px-2 pb-2">
-                <button type="button" onClick={() => insertFormat('bold')} className="p-1.5 hover:bg-white/5 rounded text-white/40 hover:text-white" title="Bold">
-                  <Bold className="w-4 h-4" />
-                </button>
-                <button type="button" onClick={() => insertFormat('italic')} className="p-1.5 hover:bg-white/5 rounded text-white/40 hover:text-white" title="Italic">
-                  <Italic className="w-4 h-4" />
-                </button>
-                <button type="button" onClick={() => insertFormat('bullet')} className="p-1.5 hover:bg-white/5 rounded text-white/40 hover:text-white" title="Bullet List">
-                  <List className="w-4 h-4" />
-                </button>
-                <label className="p-1.5 hover:bg-white/5 rounded text-white/40 hover:text-white cursor-pointer" title="Upload Image/File">
-                  <Paperclip className="w-4 h-4" />
-                  <input type="file" className="hidden" accept="image/*" onChange={(e) => {
-                    if (e.target.files && e.target.files[0]) {
-                      // Logic to be implemented
-                    }
-                  }} />
-                </label>
+              {moderationWarning && (
+                <div className="p-3 rounded-xl bg-rose-500/15 border border-rose-500/40 text-rose-200 text-xs font-semibold flex items-start gap-2.5 my-2">
+                  <AlertCircle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
+                  <div className="flex-1">
+                    <span className="font-black text-rose-300 block">AI Community Safety Moderation Alert</span>
+                    <span>{moderationWarning}</span>
+                  </div>
+                </div>
+              )}
+              {moderationSuccessMsg && (
+                <div className="p-2.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-200 text-xs font-semibold flex items-center gap-2 my-2">
+                  <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <span>{moderationSuccessMsg}</span>
+                </div>
+              )}
+              <div className="flex flex-wrap items-center justify-between gap-2 mt-2 px-2 pb-2">
+                <div className="flex items-center gap-1">
+                  <button type="button" onClick={() => insertFormat('bold')} className="p-1.5 hover:bg-white/5 rounded text-white/40 hover:text-white" title="Bold">
+                    <Bold className="w-4 h-4" />
+                  </button>
+                  <button type="button" onClick={() => insertFormat('italic')} className="p-1.5 hover:bg-white/5 rounded text-white/40 hover:text-white" title="Italic">
+                    <Italic className="w-4 h-4" />
+                  </button>
+                  <button type="button" onClick={() => insertFormat('bullet')} className="p-1.5 hover:bg-white/5 rounded text-white/40 hover:text-white" title="Bullet List">
+                    <List className="w-4 h-4" />
+                  </button>
+                  <label className="p-1.5 hover:bg-white/5 rounded text-white/40 hover:text-white cursor-pointer" title="Upload Image/File">
+                    <Paperclip className="w-4 h-4" />
+                    <input type="file" className="hidden" accept="image/*" onChange={(e) => {
+                      if (e.target.files && e.target.files[0]) {
+                        // Logic to be implemented
+                      }
+                    }} />
+                  </label>
+                  <VoiceDictationButton
+                    onTranscript={(txt) => setNewPost((prev) => (prev ? `${prev} ${txt}` : txt))}
+                    label="Speak Post"
+                    className="ml-1"
+                  />
+                </div>
+                <span className="text-[10px] text-emerald-300/80 flex items-center gap-1 font-semibold">
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                  Protected by AI Content &amp; PII Moderation
+                </span>
               </div>
             </div>
 
@@ -1275,7 +1348,7 @@ export const CommunityBoard: React.FC = () => {
                           </div>
 
                           {/* Reply Form */}
-                          <div className="pt-4 flex items-end gap-2">
+                          <div className="pt-4 flex flex-wrap items-end gap-2">
                             <textarea
                               rows={1}
                               value={replyText[post.id] || ''}
@@ -1289,12 +1362,22 @@ export const CommunityBoard: React.FC = () => {
                               placeholder="Type a helpful reply... (Enter for line break)"
                               className="flex-1 bg-white/[0.03] border border-white/[0.08] rounded-xl px-4 py-2.5 text-sm text-white placeholder:text-white/20 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 transition-all resize-y min-h-[42px] leading-relaxed"
                             />
+                            <VoiceDictationButton
+                              compact
+                              onTranscript={(txt) =>
+                                setReplyText((prev) => ({
+                                  ...prev,
+                                  [post.id]: prev[post.id] ? `${prev[post.id]} ${txt}` : txt
+                                }))
+                              }
+                            />
                             <button
                               type="button"
                               onClick={() => handleReplySubmit(post.id)}
-                              disabled={!replyText[post.id]?.trim()}
-                              className="px-4 py-2.5 bg-indigo-500 rounded-xl text-white text-sm font-semibold hover:bg-indigo-600 disabled:opacity-50 transition-all active:scale-95 shadow-lg shadow-indigo-500/20 shrink-0 cursor-pointer"
+                              disabled={!replyText[post.id]?.trim() || moderatingReplyId === post.id}
+                              className="px-4 py-2.5 bg-indigo-500 rounded-xl text-white text-sm font-semibold hover:bg-indigo-600 disabled:opacity-50 transition-all active:scale-95 shadow-lg shadow-indigo-500/20 shrink-0 cursor-pointer flex items-center gap-1.5"
                             >
+                              {moderatingReplyId === post.id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : null}
                               Reply
                             </button>
                           </div>

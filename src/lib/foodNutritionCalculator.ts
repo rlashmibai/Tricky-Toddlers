@@ -65,6 +65,7 @@ export function getCompleteFoodAnalysis(food: {
   name?: string;
   calories?: string;
   protein?: string;
+  fat?: string;
   sodium?: string;
   ingredients?: string[];
   allergyCheck?: string;
@@ -80,8 +81,10 @@ export function getCompleteFoodAnalysis(food: {
   brandName?: string;
 }): CompleteFoodAnalysis {
   const name = (food.name || '').toLowerCase();
+  const ingJoined = (food.ingredients || []).join(' ').toLowerCase();
   const cals = parseNum(food.calories);
   const prot = parseNum(food.protein);
+  const explicitFat = parseNum(food.fat);
   const rawScore = food.scoreNumber != null 
     ? (food.scoreNumber > 10 ? food.scoreNumber / 10 : food.scoreNumber) 
     : (parseNum(food.score) > 10 ? parseNum(food.score) / 10 : parseNum(food.score));
@@ -93,7 +96,9 @@ export function getCompleteFoodAnalysis(food: {
   const isMilletOrRagi = name.includes('ragi') || name.includes('millet') || name.includes('slurrp');
   const isKhichdiOrDal = name.includes('khichdi') || name.includes('dal') || name.includes('lentil') || name.includes('moong');
   const isDairyCurdPaneer = name.includes('curd') || name.includes('paneer') || name.includes('kheer') || name.includes('milk') || name.includes('formula');
-  const isFruitOrVeg = name.includes('apple') || name.includes('banana') || name.includes('puree') || name.includes('sweet potato') || name.includes('pumpkin') || name.includes('papaya') || name.includes('avocado') || name.includes('spinach') || name.includes('beetroot');
+  const isNutOrHalwaOrAvocado = name.includes('badam') || name.includes('almond') || name.includes('nut') || name.includes('halwa') || name.includes('avocado') || name.includes('egg') || name.includes('paratha') || ingJoined.includes('almond') || ingJoined.includes('cashew') || ingJoined.includes('walnut');
+  const hasGheeOrCoconut = ingJoined.includes('ghee') || ingJoined.includes('coconut') || ingJoined.includes('butter') || name.includes('ghee');
+  const isFruitOrVeg = name.includes('apple') || name.includes('banana') || name.includes('puree') || name.includes('sweet potato') || name.includes('pumpkin') || name.includes('papaya') || name.includes('spinach') || name.includes('beetroot') || name.includes('water');
 
   // Estimate realistic nutrient values
   let estCarbs = isFruitOrVeg ? 18.5 : isMilletOrRagi ? 28.0 : isKhichdiOrDal ? 24.5 : isCerelacOrSugar ? 42.0 : 22.0;
@@ -101,8 +106,24 @@ export function getCompleteFoodAnalysis(food: {
   let estSugar = isCerelacOrSugar ? 16.5 : isFruitOrVeg ? 11.0 : isMilletOrRagi ? 0.0 : isKhichdiOrDal ? 0.0 : 1.5;
   let isNaturalSugar = isFruitOrVeg && !isCerelacOrSugar;
   let estAddedSugar = isCerelacOrSugar ? "12g – 18g (Added refined sugar)" : "0g (Zero Added Sugar · 100% Whole Food)";
-  let estFat = isDairyCurdPaneer ? 4.8 : isKhichdiOrDal ? 2.8 : isCerelacOrSugar ? 7.5 : 1.4;
-  let estSatFat = isDairyCurdPaneer ? 2.4 : isKhichdiOrDal ? 1.2 : isCerelacOrSugar ? 3.6 : 0.4;
+  let estFat = explicitFat > 0
+    ? explicitFat
+    : isNutOrHalwaOrAvocado
+    ? 6.4
+    : isDairyCurdPaneer && isKhichdiOrDal
+    ? 5.6
+    : isDairyCurdPaneer
+    ? 4.8
+    : isCerelacOrSugar
+    ? 7.5
+    : isKhichdiOrDal || hasGheeOrCoconut
+    ? 3.6
+    : isMilletOrRagi
+    ? 2.2
+    : isFruitOrVeg
+    ? 0.4
+    : 2.5;
+  let estSatFat = Number((estFat * (isDairyCurdPaneer || hasGheeOrCoconut || isCerelacOrSugar ? 0.5 : 0.28)).toFixed(1));
   let estSodiumMg = food.sodium && food.sodium.includes('mg') ? parseNum(food.sodium) : (isCerelacOrSugar ? 280 : isKhichdiOrDal ? 22 : 12);
   let estIronMg = isMilletOrRagi ? "3.9 mg (58% RDA)" : isKhichdiOrDal ? "2.4 mg (35% RDA)" : isFruitOrVeg ? "1.2 mg (18% RDA)" : "1.8 mg (26% RDA)";
   let estCalciumMg = isMilletOrRagi ? "180 mg (36% RDA)" : isDairyCurdPaneer ? "145 mg (29% RDA)" : "35 mg (7% RDA)";
@@ -483,6 +504,22 @@ export function calculateScoreForFood(food: any): string {
     return `${analysis.scoreCalculation.finalScore.toFixed(1)} / 10`;
   } catch {
     return formatScaleOf10(food.score);
+  }
+}
+
+export function calculateFatForFood(food: any): string {
+  if (!food) return '3.6 g';
+  if (food.fat) return food.fat;
+  try {
+    const analysis = getCompleteFoodAnalysis(food);
+    const fatItem = analysis.nutrients.find(n => n.id === 'fats');
+    if (fatItem?.amount) {
+      const m = fatItem.amount.match(/^[\d.]+\s*g/i);
+      return m ? m[0] : fatItem.amount;
+    }
+    return '3.6 g';
+  } catch {
+    return '3.6 g';
   }
 }
 
