@@ -239,6 +239,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (activateUI) {
       setSessionActive(true);
     }
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('tt_auth_mode', 'guest');
+    }
     if (!auth) return null;
     setLoading(true);
     try {

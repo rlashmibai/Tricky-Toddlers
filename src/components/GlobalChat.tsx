@@ -60,8 +60,8 @@ const INITIAL_PARENT_ACCOUNTS: ParentAccount[] = [
     avatarGradient: 'from-emerald-500 to-teal-600',
     childTag: 'Mom to 2.5yo',
     location: 'Bengaluru · Nutrition',
-    status: 'Active now',
-    isOnline: true,
+    status: 'Offline',
+    isOnline: false,
     messages: [
       { id: 'p1', userId: 'priya', username: 'Priya', text: "Lashmi, my 2.5-year-old completely rejects vegetables now. The moment she spots spinach or carrot pieces, she pushes the plate away! How do you handle this?", createdAt: new Date(Date.now() - 1000 * 60 * 6), timeString: '10:05' },
       { id: 'p2', userId: 'lashmi', username: 'Lashmi', text: "Totally understand, Priya! Toddlers can spot a tiny green speck from a mile away! What worked wonders for us was making grated beetroot and palak parathas kneaded with a little desi cow ghee and serving homemade curd on the side. When it looks pink and colorful, toddler curiosity takes over. Don't force them to finish, just keep exposure playful.", createdAt: new Date(Date.now() - 1000 * 60 * 4), timeString: '10:06' },
@@ -90,8 +90,8 @@ const INITIAL_PARENT_ACCOUNTS: ParentAccount[] = [
     avatarGradient: 'from-pink-500 to-rose-600',
     childTag: 'Mom to 2yo',
     location: 'Chennai · Screen-Free',
-    status: 'Active now',
-    isOnline: true,
+    status: 'Offline',
+    isOnline: false,
     messages: [
       { id: 'a1', userId: 'ananya', username: 'Ananya', text: "Hey Lashmi, after 7 PM my 2-year-old gets super hyper and demands nursery rhymes on the mobile phone. How do you keep evenings peaceful without screens?", createdAt: new Date(Date.now() - 1000 * 60 * 6), timeString: '17:15' },
       { id: 'a2', userId: 'lashmi', username: 'Lashmi', text: "Hi Ananya! We had that exact post-dinner screen battle. We switched to dim warm amber lighting after 7:30 PM, playing soft classical flute lullabies on a bluetooth speaker, and doing a 5-minute warm water foot wash. It drops cortisol levels and signals to their brain that night is here.", createdAt: new Date(Date.now() - 1000 * 60 * 4), timeString: '17:16' },
@@ -120,8 +120,8 @@ const INITIAL_PARENT_ACCOUNTS: ParentAccount[] = [
     avatarGradient: 'from-cyan-500 to-blue-600',
     childTag: 'Mom to 3yo',
     location: 'Hyderabad · Big Emotions',
-    status: 'Active now',
-    isOnline: true,
+    status: 'Offline',
+    isOnline: false,
     messages: [
       { id: 'k1', userId: 'kavita', username: 'Kavita', text: "Hi Lashmi, whenever my 3-year-old gets frustrated with blocks collapsing, he hits or throws items across the room. How should I respond in that moment?", createdAt: new Date(Date.now() - 1000 * 60 * 6), timeString: '11:10' },
       { id: 'k2', userId: 'lashmi', username: 'Lashmi', text: "Hi Kavita, hold his little hands gently, get down to his eye level, and say in a steady, calm voice: 'Hands are not for hitting. You are mad the tower fell. Let us stomp our feet or squeeze this cushion together.' Acknowledging the frustration while holding the physical boundary helps them learn emotional regulation.", createdAt: new Date(Date.now() - 1000 * 60 * 4), timeString: '11:11' },
@@ -135,8 +135,8 @@ const INITIAL_PARENT_ACCOUNTS: ParentAccount[] = [
     avatarGradient: 'from-amber-600 to-yellow-600',
     childTag: 'Dad to 2yo',
     location: 'Ahmedabad · Digestion',
-    status: 'Offline',
-    isOnline: false,
+    status: 'Active now',
+    isOnline: true,
     messages: [
       { id: 'rh1', userId: 'rohit', username: 'Rohit', text: "Hello Lashmi! My 2-year-old gets constipated whenever we travel or change routine. What gentle home remedies or diet tweaks do you suggest?", createdAt: new Date(Date.now() - 1000 * 60 * 6), timeString: '07:20' },
       { id: 'rh2', userId: 'lashmi', username: 'Lashmi', text: "Hello Rohit! Overnight soaked munakka (black raisins) water in the morning works wonders for toddler bowels. Also add half a teaspoon of pure A2 desi cow ghee to his warm moong dal khichdi, and offer fresh papaya slices. Ensure he drinks enough water throughout the day.", createdAt: new Date(Date.now() - 1000 * 60 * 4), timeString: '07:21' },
@@ -150,8 +150,8 @@ const INITIAL_PARENT_ACCOUNTS: ParentAccount[] = [
     avatarGradient: 'from-teal-500 to-emerald-600',
     childTag: 'Mom to 15mo',
     location: 'Kolkata · Teething',
-    status: 'Active now',
-    isOnline: true,
+    status: 'Offline',
+    isOnline: false,
     messages: [
       { id: 'd1', userId: 'deepa', username: 'Deepa', text: "Hi Lashmi, little Riya is cutting her molars and her gums look red and swollen. She is drooling constantly and refusing warm meals. Any soothing ideas?", createdAt: new Date(Date.now() - 1000 * 60 * 6), timeString: '16:00' },
       { id: 'd2', userId: 'lashmi', username: 'Lashmi', text: "Hi Deepa! Warm food stings inflamed gums right now. Try chilled thick fresh curd or cool cucumber sticks wrapped in a safe silicone feeder. You can also massage her gums with a clean damp cloth chilled in the fridge for a few minutes, as it numbs the throbbing naturally.", createdAt: new Date(Date.now() - 1000 * 60 * 4), timeString: '16:01' },
@@ -420,18 +420,26 @@ export const GlobalChat: React.FC = () => {
                     onClick={() => handleSelectParent(parent)}
                     className={`w-full text-left p-3.5 transition-all flex items-start gap-3 cursor-pointer group relative ${
                       isSelected 
-                        ? 'bg-indigo-500/15 border-l-4 border-indigo-500' 
-                        : 'hover:bg-white/[0.04]'
+                        ? parent.isOnline
+                          ? 'bg-emerald-500/15 border-l-4 border-emerald-400'
+                          : 'bg-rose-500/15 border-l-4 border-rose-400'
+                        : parent.isOnline
+                          ? 'bg-emerald-500/[0.03] hover:bg-emerald-500/[0.08] border-l-2 border-emerald-500/40'
+                          : 'bg-rose-500/[0.03] hover:bg-rose-500/[0.08] border-l-2 border-rose-500/40'
                     }`}
                   >
-                    {/* Parent Avatar with initials */}
+                    {/* Parent Avatar with initials and alternating Online/Offline status dot */}
                     <div className="relative shrink-0">
                       <div className={`w-10 h-10 rounded-2xl bg-gradient-to-br ${parent.avatarGradient} flex items-center justify-center text-white font-black text-xs shadow-md group-hover:scale-105 transition-transform`}>
                         {parent.initials}
                       </div>
-                      {parent.isOnline && (
-                        <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-400 border-2 border-[#091122] rounded-full" />
-                      )}
+                      <div
+                        className={`absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 border-2 border-[#091122] rounded-full ${
+                          parent.isOnline
+                            ? 'bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.85)]'
+                            : 'bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.75)]'
+                        }`}
+                      />
                     </div>
 
                     {/* Text Details */}
@@ -439,7 +447,7 @@ export const GlobalChat: React.FC = () => {
                       <div className="flex items-center justify-between gap-1 mb-0.5">
                         <div className="flex items-center gap-1.5 min-w-0">
                           <h4 className={`text-xs sm:text-sm font-bold truncate ${
-                            isSelected ? 'text-indigo-200' : 'text-white'
+                            isSelected ? 'text-white' : 'text-slate-100'
                           }`}>
                             {parent.name}
                           </h4>
@@ -447,8 +455,19 @@ export const GlobalChat: React.FC = () => {
                             <CheckCircle2 className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
                           )}
                         </div>
-                        <span className="text-[10px] text-slate-400 font-medium shrink-0">
-                          {parent.status.replace('Active ', '')}
+                        <span
+                          className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold shrink-0 border ${
+                            parent.isOnline
+                              ? 'bg-emerald-500/15 text-emerald-300 border-emerald-400/35'
+                              : 'bg-rose-500/15 text-rose-300 border-rose-400/35'
+                          }`}
+                        >
+                          <span
+                            className={`w-1.5 h-1.5 rounded-full ${
+                              parent.isOnline ? 'bg-emerald-400 animate-pulse' : 'bg-rose-400'
+                            }`}
+                          />
+                          {parent.isOnline ? 'Online' : 'Offline'}
                         </span>
                       </div>
 
@@ -491,9 +510,11 @@ export const GlobalChat: React.FC = () => {
                 <div className={`w-10 h-10 rounded-2xl bg-gradient-to-br ${activeParent.avatarGradient} flex items-center justify-center text-white font-black text-sm shadow-md`}>
                   {activeParent.initials}
                 </div>
-                {activeParent.isOnline && (
-                  <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-400 border-2 border-[#091122] rounded-full" />
-                )}
+                <div
+                  className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 border-2 border-[#091122] rounded-full ${
+                    activeParent.isOnline ? 'bg-emerald-400' : 'bg-rose-500'
+                  }`}
+                />
               </div>
 
               <div>
@@ -513,7 +534,9 @@ export const GlobalChat: React.FC = () => {
                   <span>•</span>
                   <span>{activeParent.location}</span>
                   <span>•</span>
-                  <span className="text-emerald-400 font-semibold">{activeParent.status}</span>
+                  <span className={activeParent.isOnline ? 'text-emerald-400 font-semibold' : 'text-rose-400 font-semibold'}>
+                    {activeParent.isOnline ? 'Online' : 'Offline'}
+                  </span>
                 </div>
               </div>
             </div>

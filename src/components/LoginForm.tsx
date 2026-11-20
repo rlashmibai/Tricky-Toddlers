@@ -24,6 +24,7 @@ export const LoginForm: React.FC = () => {
     setGuestLoading(true);
     setError(null);
     try {
+      localStorage.setItem('tt_auth_mode', 'guest');
       setSessionActive(true);
       localStorage.removeItem('user_logged_out');
       if (!localStorage.getItem('parent_name')) localStorage.setItem('parent_name', 'Lashmi');
@@ -46,7 +47,13 @@ export const LoginForm: React.FC = () => {
       localStorage.removeItem('user_logged_out');
       // Use internal dummy email for Firebase Auth
       const internalEmail = `${username.toLowerCase().trim()}@securepass.internal`;
-      await signInWithEmailAndPassword(auth, internalEmail, password);
+      const cred = await signInWithEmailAndPassword(auth, internalEmail, password);
+      localStorage.setItem('tt_auth_mode', 'account');
+      // Clear any generic guest premium unlock unless this specific UID unlocked premium
+      if (localStorage.getItem(`tricky_toddlers_premium_unlocked_${cred.user.uid}`) !== 'true') {
+        localStorage.removeItem('tricky_toddlers_premium_unlocked');
+        localStorage.removeItem('user_plan');
+      }
       setSessionActive(true);
       navigate('/');
     } catch (err: any) {

@@ -665,5 +665,379 @@ export const PRODUCTS: Product[] = [
     description: 'Replacement high-speed magnetic charging dock cable with gold-plated pogo pins plus backup battery cell for uninterrupted child monitoring.',
     features: ['Magnetic snap-on connection', 'Short-circuit surge guard', 'Charges 100% in 30 minutes', 'High-conductivity copper core'],
     inStock: true
+  },
+
+  // =========================================================================
+  // COMPREHENSIVE UNDER ₹200 BABY STORE ESSENTIALS (EACH & EVERY PRODUCT TYPE)
+  // =========================================================================
+
+  // 33. CLOTHING & BEDDING: Organic Cotton Drool Bibs
+  {
+    id: 'cb-drool-bibs',
+    name: 'Organic 6-Layer Muslin Bandana Drool & Teething Bibs with Dual Snaps (Pack of 3)',
+    category: 'Clothing & Bedding',
+    ageRange: '0-6m',
+    supportedAges: ['0-6m', '6-12m', '12-24m'],
+    ageLabel: '0–24 Months',
+    price: 99,
+    originalPrice: 179,
+    rating: 4.9,
+    reviewsCount: 410,
+    image: muslinSwaddlesImg,
+    description: 'Super-absorbent 6-layer organic cotton bandana bibs that keep baby neckfolds dry during heavy teething and milk feeds.',
+    features: ['6-Layer absorbent cotton', 'Adjustable nickel-free snaps', 'Prevents neck drool rash', 'Machine washable'],
+    inStock: true,
+    isBestseller: true
+  },
+
+  // 34. CLOTHING & BEDDING: Shoulder Burp Cloths
+  {
+    id: 'cb-burp-cloths',
+    name: 'Ultra-Soft Contoured Organic Cotton Shoulder Burp Cloths & Spit-Up Pads (Set of 4)',
+    category: 'Clothing & Bedding',
+    ageRange: '0-6m',
+    supportedAges: ['0-6m', '6-12m'],
+    ageLabel: '0–12 Months',
+    price: 129,
+    originalPrice: 210,
+    rating: 4.8,
+    reviewsCount: 315,
+    image: onesiesImg,
+    description: 'Ergonomic kidney-shaped shoulder burp cloths with triple-layer fleece core to catch spit-ups and protect parent clothes.',
+    features: ['Contoured shoulder curve', 'Triple-layer leak barrier', 'Unbleached organic weave', 'Feather-soft on cheeks'],
+    inStock: true
+  },
+
+  // 35. CLOTHING & BEDDING: Newborn Knit Booties & Socks
+  {
+    id: 'cb-knit-booties',
+    name: 'Soft Combed Cotton Newborn Booties & Stay-On Ankle Socks (3 Pairs)',
+    category: 'Clothing & Bedding',
+    ageRange: '0-6m',
+    supportedAges: ['0-6m', '6-12m'],
+    ageLabel: '0–12 Months',
+    price: 89,
+    originalPrice: 149,
+    rating: 4.8,
+    reviewsCount: 289,
+    image: babyMittensCapImg,
+    description: 'Gentle drawstring and ribbed-cuff newborn booties that stay securely on kicking feet without leaving elastic marks.',
+    features: ['Zero-mark gentle ankle cuffs', 'Breathable combed cotton', 'Warm toe protection', 'Seamless inner stitching'],
+    inStock: true
+  },
+
+  // 36. CLOTHING & BEDDING: Traditional Cotton Langot / Nappies
+  {
+    id: 'cb-cotton-langot',
+    name: 'Breathable Mulmul Cotton Reusable Newborn Langot / Tie-Up Cloth Nappies (Pack of 6)',
+    category: 'Clothing & Bedding',
+    ageRange: '0-6m',
+    supportedAges: ['0-6m', '6-12m'],
+    ageLabel: '0–9 Months',
+    price: 149,
+    originalPrice: 249,
+    rating: 4.9,
+    reviewsCount: 540,
+    image: babyClothDiaperImg,
+    description: 'Traditional dermatologist-recommended airy mulmul cotton langots for diaper-free airing time in warm and humid Indian weather.',
+    features: ['100% Pure Mulmul Cotton', 'Allows skin to breathe freely', 'Quick-dry double layer', 'Soft tie-up straps'],
+    inStock: true,
+    isBestseller: true
+  },
+
+  // 37. CLOTHING & BEDDING: Waterproof Dry Sheet / Changing Mat
+  {
+    id: 'cb-dry-sheet',
+    name: 'Breathable Waterproof Baby Bed Protector Dry Sheet & Travel Changing Mat (Medium)',
+    category: 'Clothing & Bedding',
+    ageRange: '0-6m',
+    supportedAges: ['0-6m', '6-12m', '12-24m', '2-3y'],
+    ageLabel: '0–3 Years',
+    price: 179,
+    originalPrice: 299,
+    rating: 4.9,
+    reviewsCount: 620,
+    image: cribMattressImg,
+    description: 'Noiseless, heat-free fleece top mat with a 100% waterproof TPU membrane backing that absorbs 8x its weight in liquid.',
+    features: ['100% Waterproof TPU base', 'Zero crinkle noise or heat', 'Holds 8x liquid weight', 'Ideal for crib & massage'],
+    inStock: true,
+    isBestseller: true
+  },
+
+  // 38. DIAPERING & BATHING: Baby Nail Clipper & Grooming Kit
+  {
+    id: 'db-nail-clipper',
+    name: '4-in-1 Safety Rounded Baby Nail Scissors, Clipper, Glass File & Tweezers Kit',
+    category: 'Diapering & Bathing',
+    ageRange: '0-6m',
+    supportedAges: ['0-6m', '6-12m', '12-24m', '2-3y', '3y+'],
+    ageLabel: 'All Ages',
+    price: 119,
+    originalPrice: 199,
+    rating: 4.9,
+    reviewsCount: 475,
+    image: babyFingerBrushImg,
+    description: 'Precision micro-curved blades and rounded safety tips designed specifically for tiny infant fingernails to prevent accidental skin nicks.',
+    features: ['Rounded safety-tip scissors', 'Ergonomic anti-slip clipper', 'Gentle glass nail file', 'Storage hygiene case'],
+    inStock: true,
+    isBestseller: true
+  },
+
+  // 39. DIAPERING & BATHING: Cold-Pressed Baby Massage Oil
+  {
+    id: 'db-massage-oil',
+    name: 'Cold-Pressed Sweet Almond, Coconut & Sesame Ayurvedic Baby Massage Oil (100ml)',
+    category: 'Diapering & Bathing',
+    ageRange: '0-6m',
+    supportedAges: ['0-6m', '6-12m', '12-24m', '2-3y'],
+    ageLabel: '0–3 Years',
+    price: 159,
+    originalPrice: 240,
+    rating: 4.9,
+    reviewsCount: 530,
+    image: babyBathLotionImg,
+    description: '100% virgin cold-pressed oil blend enriched with Vitamin E to strengthen developing infant bones, muscles, and skin barrier.',
+    features: ['100% Cold-pressed virgin oils', 'Zero mineral oil or paraffin', 'Boosts bone & muscle tone', 'Non-sticky fast absorption'],
+    inStock: true,
+    isBestseller: true
+  },
+
+  // 40. DIAPERING & BATHING: Goat Milk & Shea Baby Soap Bar
+  {
+    id: 'db-baby-soap',
+    name: 'pH 5.5 Creamy Goat Milk, Oatmeal & Shea Butter Moisturizing Baby Bath Bar (75g x 2)',
+    category: 'Diapering & Bathing',
+    ageRange: '0-6m',
+    supportedAges: ['0-6m', '6-12m', '12-24m', '2-3y', '3y+'],
+    ageLabel: 'All Ages',
+    price: 79,
+    originalPrice: 130,
+    rating: 4.8,
+    reviewsCount: 380,
+    image: diaperRashCreamImg,
+    description: 'Syndet pH 5.5 cleansing bar crafted with raw shea butter and colloidal oatmeal to cleanse gently without stripping natural skin oils.',
+    features: ['Skin-friendly pH 5.5', 'Rich shea butter & oat lipid', 'Tear-free & sulfate-free', 'Twin value pack'],
+    inStock: true
+  },
+
+  // 41. DIAPERING & BATHING: Bamboo Washcloths & Bath Sponge
+  {
+    id: 'db-washcloth-set',
+    name: 'Ultra-Plush Bamboo Muslin Baby Face Washcloths & Natural Konjac Bath Sponge (Set of 6)',
+    category: 'Diapering & Bathing',
+    ageRange: '0-6m',
+    supportedAges: ['0-6m', '6-12m', '12-24m', '2-3y'],
+    ageLabel: '0–3 Years',
+    price: 109,
+    originalPrice: 180,
+    rating: 4.8,
+    reviewsCount: 295,
+    image: babyHoodedTowelsImg,
+    description: 'Silky bamboo fiber face towels paired with a plant-based konjac sponge for cradle cap care and gentle bath-time lathering.',
+    features: ['Antibacterial bamboo weave', 'Includes soft bath sponge', 'Hanging loop on each cloth', 'Gentle on newborn cradle cap'],
+    inStock: true
+  },
+
+  // 42. DIAPERING & BATHING: Safety Ear Buds & Nasal Aspirator
+  {
+    id: 'db-nasal-aspirator',
+    name: 'Soft Silicone Bulb Baby Nasal Aspirator & Safety-Stopper Organic Cotton Swabs (100 pcs)',
+    category: 'Diapering & Bathing',
+    ageRange: '0-6m',
+    supportedAges: ['0-6m', '6-12m', '12-24m'],
+    ageLabel: '0–24 Months',
+    price: 99,
+    originalPrice: 169,
+    rating: 4.8,
+    reviewsCount: 340,
+    image: diapersWipesImg,
+    description: 'Gentle suction silicone nozzle clears stuffy infant noses in seconds, bundled with safety-bulb cotton swabs that prevent deep ear insertion.',
+    features: ['Soft medical silicone tip', 'Clears blocked nose fast', 'Safety-ridged cotton buds', 'Disassembles for boiling'],
+    inStock: true
+  },
+
+  // 43. FEEDING & GEAR: Silicone Fruit & Veggie Nibbler Feeder
+  {
+    id: 'fg-fruit-nibbler',
+    name: 'BPA-Free Silicone Fresh Fruit & Steamed Veggie Teething Nibbler Feeder with 3 Sacs',
+    category: 'Feeding & Gear',
+    ageRange: '6-12m',
+    supportedAges: ['6-12m', '12-24m'],
+    ageLabel: '6–18 Months',
+    price: 99,
+    originalPrice: 179,
+    rating: 4.9,
+    reviewsCount: 740,
+    image: babySippyCupImg,
+    description: 'Lets babies safely enjoy fresh banana, steamed apple, and chilled fruit pulp through micro-perforations with zero choking risk.',
+    features: ['Anti-choking micro-holes', 'Includes S, M, L silicone sacs', 'Doubles as chilled teether', 'Twist-lock childproof ring'],
+    inStock: true,
+    isBestseller: true
+  },
+
+  // 44. FEEDING & GEAR: Heat-Sensing Weaning Spoons
+  {
+    id: 'fg-heat-spoons',
+    name: 'Color-Changing Heat-Sensing Soft Silicone Tip Baby First Weaning Spoons (Set of 3)',
+    category: 'Feeding & Gear',
+    ageRange: '6-12m',
+    supportedAges: ['6-12m', '12-24m'],
+    ageLabel: '6–24 Months',
+    price: 89,
+    originalPrice: 149,
+    rating: 4.8,
+    reviewsCount: 410,
+    image: toddlerCutleryImg,
+    description: 'Spoon tip automatically turns white when porridge or khichdi exceeds 40°C, protecting delicate infant palates from hot food burns.',
+    features: ['Turns white if food > 40°C', 'Shallow gum-friendly bowl', 'Long ergonomic parent handle', '100% BPA & Phthalate free'],
+    inStock: true
+  },
+
+  // 45. FEEDING & GEAR: Orthodontic Silicone Pacifier & Clip
+  {
+    id: 'fg-pacifier-soother',
+    name: 'Orthodontic Ultra-Air Silicone Pacifier Soother with Anti-Drop Clothing Clip & Case',
+    category: 'Feeding & Gear',
+    ageRange: '0-6m',
+    supportedAges: ['0-6m', '6-12m', '12-24m'],
+    ageLabel: '0–18 Months',
+    price: 119,
+    originalPrice: 199,
+    rating: 4.8,
+    reviewsCount: 350,
+    image: feedingBottlesImg,
+    description: 'Symmetrical orthodontic nipple supports natural palate and tooth development, with extra-large air holes to prevent perioral skin irritation.',
+    features: ['Orthodontic collapsible teat', 'Breathable air-flow shield', 'Includes ribbon clip & case', 'Sterilizer-ready case'],
+    inStock: true
+  },
+
+  // 46. FEEDING & GEAR: Formula Dispenser & Snack Cup
+  {
+    id: 'fg-formula-dispenser',
+    name: '3-Compartment Rotating Milk Powder Formula Dispenser & Spill-Proof Toddler Snack Cup',
+    category: 'Feeding & Gear',
+    ageRange: '0-6m',
+    supportedAges: ['0-6m', '6-12m', '12-24m', '2-3y'],
+    ageLabel: '0–3 Years',
+    price: 129,
+    originalPrice: 210,
+    rating: 4.8,
+    reviewsCount: 290,
+    image: siliconeSuctionPlateImg,
+    description: 'Pre-measure 3 exact formula feeds for midnight or travel bottles, then remove the inner divider to use as a soft-flap toddler snack container.',
+    features: ['Holds 3 pre-measured feeds', 'No-spill funnel pour spout', 'Converts to puff snack cup', 'Fits diaper bag side pockets'],
+    inStock: true
+  },
+
+  // 47. FEEDING & GEAR: Babyproofing Corner Guards & Cabinet Locks
+  {
+    id: 'fg-safety-guards',
+    name: 'Childproofing Clear Silicone Table Corner Guards (12 pcs) & Cabinet Safety Locks (4 pcs)',
+    category: 'Feeding & Gear',
+    ageRange: '6-12m',
+    supportedAges: ['6-12m', '12-24m', '2-3y', '3y+'],
+    ageLabel: '6m–4 Years',
+    price: 149,
+    originalPrice: 249,
+    rating: 4.9,
+    reviewsCount: 515,
+    image: babyHighChairImg,
+    description: 'High-impact shock-absorbing corner cushions with pre-applied 3M adhesive plus multi-surface drawer latches to babyproof sharp furniture.',
+    features: ['Thick air-cushion silicone', '3M damage-free adhesive', '4 Childproof drawer locks', 'Transparent blend-in look'],
+    inStock: true,
+    isBestseller: true
+  },
+
+  // 48. TOYS & PLAY: Chilled Water-Filled Teether Ring
+  {
+    id: 'tp-water-teether',
+    name: 'Chilled Distilled-Water Filled & Multi-Textured Silicone Molar Teething Ring Set (Pack of 2)',
+    category: 'Toys & Play',
+    ageRange: '0-6m',
+    supportedAges: ['0-6m', '6-12m', '12-24m'],
+    ageLabel: '3–18 Months',
+    price: 79,
+    originalPrice: 139,
+    rating: 4.9,
+    reviewsCount: 640,
+    image: babyStackRingsImg,
+    description: 'Chill in the refrigerator for 15 minutes to provide instant cooling relief to swollen, throbbing infant gums during front and molar eruption.',
+    features: ['Filled with pure RO water', 'Massages front & back gums', 'Easy-grasp ring geometry', '100% Non-toxic EVA/Silicone'],
+    inStock: true,
+    isBestseller: true
+  },
+
+  // 49. TOYS & PLAY: Organic Wooden & Bell Hand Rattle
+  {
+    id: 'tp-baby-rattle',
+    name: 'Montessori Neem Wood & Soft Pastel Silicone Sensory Grasping Hand Rattle & Shaker',
+    category: 'Toys & Play',
+    ageRange: '0-6m',
+    supportedAges: ['0-6m', '6-12m'],
+    ageLabel: '0–12 Months',
+    price: 99,
+    originalPrice: 169,
+    rating: 4.8,
+    reviewsCount: 375,
+    image: woodenShapeSorterImg,
+    description: 'Naturally antibacterial Indian neem wood ring paired with gentle acoustic rattle beads to train auditory tracking and palmar reflex grip.',
+    features: ['Antibacterial natural neem wood', 'Gentle low-decibel acoustic bell', 'Lightweight for 3m+ grasp', 'Zero paint or chemical varnish'],
+    inStock: true
+  },
+
+  // 50. TOYS & PLAY: Floating Squeaky Bath Toys
+  {
+    id: 'tp-bath-ducks',
+    name: 'Mold-Free Sealed Floating Rubber Duck & Sea Animal Bath Squirt Toys (Set of 5)',
+    category: 'Toys & Play',
+    ageRange: '6-12m',
+    supportedAges: ['6-12m', '12-24m', '2-3y'],
+    ageLabel: '6m–3 Years',
+    price: 119,
+    originalPrice: 199,
+    rating: 4.8,
+    reviewsCount: 430,
+    image: waterDoodleMatImg,
+    description: 'Hermetically sealed bottom holes prevent dirty bathwater from trapping inside, guaranteeing 100% mold-free floating bath-time fun.',
+    features: ['Hole-free anti-mold seal', 'Bright high-visibility colors', 'Soft chewable food-grade PVC', 'Builds fine motor squeeze'],
+    inStock: true
+  },
+
+  // 51. TOYS & PLAY: Touch-and-Feel Crinkle Cloth Book
+  {
+    id: 'tp-cloth-book',
+    name: 'Washable Tear-Proof Crinkle Sound & 3D Animal Tails Sensory Cloth Book',
+    category: 'Toys & Play',
+    ageRange: '0-6m',
+    supportedAges: ['0-6m', '6-12m', '12-24m'],
+    ageLabel: '3–24 Months',
+    price: 149,
+    originalPrice: 249,
+    rating: 4.9,
+    reviewsCount: 580,
+    image: babySensoryCardImg,
+    description: 'Interactive crinkle pages with textured 3D plush animal tails that encourage tummy-time head lifting, tactile curiosity, and early vocabulary.',
+    features: ['Built-in crinkle & squeaker', '3D Textured animal tails', 'Chew-safe & machine washable', 'Stroller attachment strap'],
+    inStock: true,
+    isBestseller: true
+  },
+
+  // 52. TOYS & PLAY: Wooden Peg Alphabet & Animal Puzzle
+  {
+    id: 'tp-wooden-puzzle',
+    name: 'Chunky Knob Wooden Animal & Fruit Matching Montessori Peg Puzzle Board',
+    category: 'Toys & Play',
+    ageRange: '12-24m',
+    supportedAges: ['12-24m', '2-3y', '3y+'],
+    ageLabel: '1–4 Years',
+    price: 169,
+    originalPrice: 279,
+    rating: 4.8,
+    reviewsCount: 365,
+    image: babyWoodWalkerImg,
+    description: 'Large wooden pegs sized for toddler pincer grasps with full-color matching illustrations underneath each laser-smooth puzzle piece.',
+    features: ['Easy-grip jumbo wooden knobs', 'Splinter-free basswood board', 'Boosts pincer & memory skills', 'Water-based safe colors'],
+    inStock: true
   }
 ];
+

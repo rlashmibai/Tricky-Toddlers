@@ -22,15 +22,17 @@ import { NutriBandCartPage } from './NutriBandCartPage';
 import { SampleFoodsPage } from './SampleFoodsPage';
 import { HomePage } from './HomePage';
 import { AboutPage } from './AboutPage';
-import { isPremiumUser } from '../lib/premiumUtils';
+import { isPremiumUser, shouldLockPremiumFeature } from '../lib/premiumUtils';
+import { PremiumFeatureLock } from './PremiumFeatureLock';
 import { seedSampleData } from '../lib/seedData';
 import { playSound } from '../lib/sounds';
 
 export const Dashboard: React.FC = () => {
-  const { user, profile } = useAuth();
+  const { user, profile, isSessionActive } = useAuth();
   const { t } = useLanguage();
   const navigate = useNavigate();
-  const hasPremium = isPremiumUser(profile);
+  const hasPremium = isPremiumUser(profile, user);
+  const isPremiumLocked = shouldLockPremiumFeature(user, profile, isSessionActive);
   const [searchParams, setSearchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState<'home' | 'ai' | 'community' | 'chat' | 'milestones' | 'routine' | 'vaccine' | 'food' | 'foodlens' | 'sample-foods' | 'nutriband' | 'nutriband-cart' | 'pediatric' | 'learning' | 'videos' | 'store' | 'about' | 'tales'>('home');
   const [storeInitialView, setStoreInitialView] = useState<'catalog' | 'cart'>('catalog');
@@ -509,11 +511,18 @@ export const Dashboard: React.FC = () => {
               className="py-6"
             >
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-amber-500/5 blur-[120px] rounded-full pointer-events-none" />
-              <FoodLensView 
-                onNavigateToPediatric={() => handleTabChange('pediatric')} 
-                onNavigateToNutriBand={() => handleTabChange('nutriband')} 
-                onNavigateToSampleFoods={() => handleTabChange('sample-foods')}
-              />
+              {isPremiumLocked ? (
+                <PremiumFeatureLock
+                  featureName="FoodLens AI"
+                  onGoHome={() => handleTabChange('home')}
+                />
+              ) : (
+                <FoodLensView 
+                  onNavigateToPediatric={() => handleTabChange('pediatric')} 
+                  onNavigateToNutriBand={() => handleTabChange('nutriband')} 
+                  onNavigateToSampleFoods={() => handleTabChange('sample-foods')}
+                />
+              )}
             </motion.div>
           ) : activeTab === 'sample-foods' ? (
             <motion.div
@@ -536,15 +545,22 @@ export const Dashboard: React.FC = () => {
               className="py-6"
             >
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-cyan-500/5 blur-[120px] rounded-full pointer-events-none" />
-              <NutriBandView 
-                onNavigateToFoodLens={() => handleTabChange('foodlens')} 
-                onNavigateToPediatric={() => handleTabChange('pediatric')} 
-                onNavigateToStore={handleNavigateToStore}
-                onNavigateToReserveCart={() => {
-                  playSound('pop');
-                  navigate('/cart');
-                }}
-              />
+              {isPremiumLocked ? (
+                <PremiumFeatureLock
+                  featureName="NutriBand"
+                  onGoHome={() => handleTabChange('home')}
+                />
+              ) : (
+                <NutriBandView 
+                  onNavigateToFoodLens={() => handleTabChange('foodlens')} 
+                  onNavigateToPediatric={() => handleTabChange('pediatric')} 
+                  onNavigateToStore={handleNavigateToStore}
+                  onNavigateToReserveCart={() => {
+                    playSound('pop');
+                    navigate('/cart');
+                  }}
+                />
+              )}
             </motion.div>
           ) : activeTab === 'about' ? (
             <motion.div

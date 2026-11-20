@@ -57,6 +57,7 @@ export const RegisterForm: React.FC = () => {
           await setDoc(doc(db, 'users', user.uid), {
             username: cleanUsername,
             email: internalEmail,
+            plan: 'free',
             needsProfileSetup: true,
             profileCompleted: false,
             createdAt: serverTimestamp(),
@@ -67,6 +68,10 @@ export const RegisterForm: React.FC = () => {
         }
       }
 
+      localStorage.setItem('tt_auth_mode', 'account');
+      localStorage.removeItem('tricky_toddlers_premium_unlocked');
+      localStorage.removeItem(`tricky_toddlers_premium_unlocked_${user.uid}`);
+      localStorage.setItem('user_plan', 'free');
       localStorage.setItem('cached_user_uid', user.uid);
       localStorage.setItem('cached_user_email', internalEmail);
       localStorage.setItem('needs_profile_setup', 'true');

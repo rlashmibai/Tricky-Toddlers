@@ -14,6 +14,7 @@ import {
   AdvancedMarker,
   Pin,
   InfoWindow,
+  useMap,
 } from '@vis.gl/react-google-maps';
 import { 
   Sparkles, 
@@ -407,6 +408,133 @@ const growthChartData = [
   { age: 36, p5: 88.7, p50: 96.1, p95: 103.5, wP5: 11.5, wP50: 14.3, wP95: 18.1 }
 ];
 
+interface MapCameraControllerProps {
+  selectedHospital: { placeId: string; location: { lat: number; lng: number } } | null;
+  gpsLocation: { lat: number; lng: number } | null;
+  hospitals: Array<{ placeId: string; location: { lat: number; lng: number } }>;
+  cityKey: string;
+}
+
+const MapCameraController: React.FC<MapCameraControllerProps> = ({
+  selectedHospital,
+  gpsLocation,
+  hospitals,
+  cityKey,
+}) => {
+  const map = useMap();
+  const prevTargetKeyRef = useRef<string>('');
+  const prevCityKeyRef = useRef<string>('');
+
+  // Smoothly pan to selected hospital only when selection changes, leaving user free to drag & zoom
+  useEffect(() => {
+    if (!map) return;
+    if (selectedHospital?.location?.lat && selectedHospital?.location?.lng) {
+      const targetKey = `${selectedHospital.placeId}_${selectedHospital.location.lat}_${selectedHospital.location.lng}`;
+      if (prevTargetKeyRef.current !== targetKey) {
+        prevTargetKeyRef.current = targetKey;
+        map.panTo(selectedHospital.location);
+      }
+    }
+  }, [map, selectedHospital]);
+
+  // Recenter when city or GPS mode changes
+  useEffect(() => {
+    if (!map) return;
+    const currentCityKey = `${cityKey}_${gpsLocation ? `${gpsLocation.lat},${gpsLocation.lng}` : 'city'}`;
+    if (prevCityKeyRef.current !== currentCityKey && hospitals.length > 0) {
+      prevCityKeyRef.current = currentCityKey;
+      if (gpsLocation?.lat && gpsLocation?.lng) {
+        map.panTo(gpsLocation);
+        map.setZoom(13);
+      } else if (hospitals[0]?.location?.lat) {
+        map.panTo(hospitals[0].location);
+        map.setZoom(12);
+      }
+    }
+  }, [map, cityKey, gpsLocation, hospitals]);
+
+  const handleZoomIn = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!map) return;
+    map.setZoom((map.getZoom() || 12) + 1);
+  };
+
+  const handleZoomOut = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!map) return;
+    map.setZoom(Math.max(3, (map.getZoom() || 12) - 1));
+  };
+
+  const handleFitAllPins = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!map || hospitals.length === 0) return;
+    const g = (window as any).google;
+    if (!g?.maps?.LatLngBounds) return;
+    const bounds = new g.maps.LatLngBounds();
+    let count = 0;
+    hospitals.forEach((h) => {
+      if (h.location?.lat && h.location?.lng) {
+        bounds.extend(h.location);
+        count++;
+      }
+    });
+    if (gpsLocation?.lat && gpsLocation?.lng) {
+      bounds.extend(gpsLocation);
+      count++;
+    }
+    if (count > 0) {
+      map.fitBounds(bounds, 48);
+    }
+  };
+
+  const handleRecenterSelected = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!map) return;
+    const target = selectedHospital?.location || gpsLocation || hospitals[0]?.location;
+    if (target?.lat && target?.lng) {
+      map.panTo(target);
+      map.setZoom(14);
+    }
+  };
+
+  return (
+    <div className="absolute top-3 left-3 z-20 flex flex-wrap items-center gap-1.5 bg-[#0b1222]/90 backdrop-blur-md border border-white/20 p-1.5 rounded-2xl shadow-xl">
+      <button
+        type="button"
+        onClick={handleZoomIn}
+        title="Zoom In"
+        className="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-indigo-600 text-white font-black text-sm transition-colors cursor-pointer"
+      >
+        + Zoom In
+      </button>
+      <button
+        type="button"
+        onClick={handleZoomOut}
+        title="Zoom Out"
+        className="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-indigo-600 text-white font-black text-sm transition-colors cursor-pointer"
+      >
+        − Zoom Out
+      </button>
+      <button
+        type="button"
+        onClick={handleFitAllPins}
+        title="Fit All Hospitals on Map"
+        className="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-indigo-600 text-white font-bold text-xs transition-colors cursor-pointer"
+      >
+        Fit All Pins
+      </button>
+      <button
+        type="button"
+        onClick={handleRecenterSelected}
+        title="Center on Selected Hospital"
+        className="px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs transition-colors cursor-pointer"
+      >
+        Center Selected
+      </button>
+    </div>
+  );
+};
+
 const LockGate: React.FC<{ requiredPlan: 'essential' | 'comprehensive'; activePlan: string }> = ({ requiredPlan, activePlan }) => {
   const navigate = useNavigate();
   return (
@@ -680,10 +808,6 @@ export const ExpertPediatricianSection: React.FC = () => {
     return defaultList[0] || 'Bengaluru (Bangalore)';
   });
 
-  const availableClinics = React.useMemo(() => {
-    return getClinicsForCity(selectedCity, selectedState);
-  }, [selectedCity, selectedState]);
-
   const [selectedClinic, setSelectedClinic] = useState<string>(() => {
     const list = getClinicsForCity(
       (profileCity && (INDIAN_CITIES_BY_STATE[initialUserState] || []).includes(profileCity))
@@ -693,10 +817,12 @@ export const ExpertPediatricianSection: React.FC = () => {
     );
     return list[0] || '';
   });
+  const [selectedHospitalAddress, setSelectedHospitalAddress] = useState<string>('');
+  const [showAllHospitals, setShowAllHospitals] = useState<boolean>(false);
 
   const clinicDoctors = React.useMemo(() => {
-    return getDoctorsForClinic(selectedClinic, selectedCity, selectedState);
-  }, [selectedClinic, selectedCity, selectedState]);
+    return getDoctorsForClinic(selectedClinic, selectedCity, selectedState, selectedHospitalAddress);
+  }, [selectedClinic, selectedCity, selectedState, selectedHospitalAddress]);
 
   const [selectedDoc, setSelectedDoc] = useState<Doctor>(() => {
     const defaultCity = (profileCity && (INDIAN_CITIES_BY_STATE[initialUserState] || []).includes(profileCity))
@@ -706,13 +832,6 @@ export const ExpertPediatricianSection: React.FC = () => {
     const docs = getDoctorsForClinic(defaultClinics[0] || '', defaultCity, initialUserState);
     return docs[0] || getDoctorsForCity('Bengaluru')[0] || verifiedDoctors[0];
   });
-
-  // Ensure selectedClinic stays valid when availableClinics update
-  useEffect(() => {
-    if (availableClinics.length > 0 && !availableClinics.includes(selectedClinic)) {
-      setSelectedClinic(availableClinics[0]);
-    }
-  }, [availableClinics, selectedClinic]);
 
   // Ensure selectedDoc stays valid for the chosen clinic
   useEffect(() => {
@@ -917,7 +1036,55 @@ export const ExpertPediatricianSection: React.FC = () => {
   const [gpsRadiusKm, setGpsRadiusKm] = useState<number>(10);
   const [lookupMode, setLookupMode] = useState<'city' | 'gps'>('city');
   const [selectedMapHospital, setSelectedMapHospital] = useState<GoogleListedHospital | null>(null);
+  const [mapAnchorHospital, setMapAnchorHospital] = useState<GoogleListedHospital | null>(null);
   const [expandedReviewsPlaceId, setExpandedReviewsPlaceId] = useState<string | null>(null);
+
+  // Build unique clinic label for any Google-listed hospital (appends locality when multiple branches share a name)
+  const getHospitalClinicLabel = React.useCallback((hosp: GoogleListedHospital, allList: GoogleListedHospital[]) => {
+    const sameNameCount = allList.filter(
+      (h) => h.name.trim().toLowerCase() === hosp.name.trim().toLowerCase()
+    ).length;
+    if (sameNameCount > 1 && hosp.address) {
+      const parts = hosp.address.split(',').map((s) => s.trim()).filter(Boolean);
+      const locality = parts.length >= 2 ? parts[parts.length - 2] : parts[0];
+      if (locality && !hosp.name.toLowerCase().includes(locality.toLowerCase())) {
+        return `${hosp.name} - ${locality}`;
+      }
+    }
+    return hosp.name;
+  }, []);
+
+  // Select a Google-listed hospital from Step 1 card or Map pin and synchronize Step 2 clinic & doctors
+  const handleSelectGoogleHospital = React.useCallback(
+    (hosp: GoogleListedHospital, scrollToStep2: boolean = false, allList?: GoogleListedHospital[]) => {
+      const listToUse = allList || googleHospitals;
+      const clinicLabel = getHospitalClinicLabel(hosp, listToUse);
+      setSelectedMapHospital(hosp);
+      setSelectedClinic(clinicLabel);
+      setSelectedHospitalAddress(hosp.address || '');
+      const docs = getDoctorsForClinic(clinicLabel, selectedCity, selectedState, hosp.address || '');
+      if (docs.length > 0) {
+        setSelectedDoc(docs[0]);
+      }
+      playSound('click');
+      if (scrollToStep2) {
+        document.getElementById('pediatric-doctor-selection-section')?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+        });
+      }
+    },
+    [googleHospitals, getHospitalClinicLabel, selectedCity, selectedState]
+  );
+
+  // Clicking a pin on the Google Map reorders the 6-hospital list around that hospital and updates Step 2
+  const handleMapMarkerClick = React.useCallback(
+    (hosp: GoogleListedHospital) => {
+      setMapAnchorHospital(hosp);
+      handleSelectGoogleHospital(hosp, false);
+    },
+    [handleSelectGoogleHospital]
+  );
 
   // Load Google Maps API Key from server if not injected in Vite client env
   useEffect(() => {
@@ -935,6 +1102,8 @@ export const ExpertPediatricianSection: React.FC = () => {
   const fetchCityGoogleHospitals = async (city: string, state: string, customQuery?: string) => {
     setLoadingGoogleHospitals(true);
     setHospitalsError(null);
+    setMapAnchorHospital(null);
+    setShowAllHospitals(false);
     try {
       const res = await fetch('/api/hospitals/search', {
         method: 'POST',
@@ -964,7 +1133,13 @@ export const ExpertPediatricianSection: React.FC = () => {
       if (Array.isArray(data?.hospitals)) {
         setGoogleHospitals(data.hospitals);
         if (data.hospitals.length > 0) {
-          setSelectedMapHospital(data.hospitals[0]);
+          const first = data.hospitals[0];
+          const firstLabel = getHospitalClinicLabel(first, data.hospitals);
+          setSelectedMapHospital(first);
+          setSelectedClinic(firstLabel);
+          setSelectedHospitalAddress(first.address || '');
+          const docs = getDoctorsForClinic(firstLabel, city, state, first.address || '');
+          if (docs.length > 0) setSelectedDoc(docs[0]);
         }
       } else {
         setGoogleHospitals([]);
@@ -981,6 +1156,8 @@ export const ExpertPediatricianSection: React.FC = () => {
   const fetchNearbyGpsHospitals = async (lat: number, lng: number, radiusKm: number) => {
     setLoadingGoogleHospitals(true);
     setHospitalsError(null);
+    setMapAnchorHospital(null);
+    setShowAllHospitals(false);
     try {
       const res = await fetch('/api/hospitals/nearby', {
         method: 'POST',
@@ -1010,7 +1187,13 @@ export const ExpertPediatricianSection: React.FC = () => {
       if (Array.isArray(data?.hospitals)) {
         setGoogleHospitals(data.hospitals);
         if (data.hospitals.length > 0) {
-          setSelectedMapHospital(data.hospitals[0]);
+          const first = data.hospitals[0];
+          const firstLabel = getHospitalClinicLabel(first, data.hospitals);
+          setSelectedMapHospital(first);
+          setSelectedClinic(firstLabel);
+          setSelectedHospitalAddress(first.address || '');
+          const docs = getDoctorsForClinic(firstLabel, selectedCity, selectedState, first.address || '');
+          if (docs.length > 0) setSelectedDoc(docs[0]);
         }
       } else {
         setGoogleHospitals([]);
@@ -1072,6 +1255,48 @@ export const ExpertPediatricianSection: React.FC = () => {
         (h.reviewSummary && h.reviewSummary.toLowerCase().includes(q))
     );
   }, [googleHospitals, hospitalSearch]);
+
+  // Reorder hospitals when user clicks any hospital pin on the Google Map (putting clicked hospital #1 + nearest neighbors)
+  const orderedGoogleHospitals = React.useMemo(() => {
+    if (!mapAnchorHospital) return filteredGoogleHospitals;
+    const anchorLat = mapAnchorHospital.location?.lat;
+    const anchorLng = mapAnchorHospital.location?.lng;
+    const getDistSq = (h: GoogleListedHospital) => {
+      if (!anchorLat || !anchorLng || !h.location?.lat || !h.location?.lng) return 999999;
+      const dLat = h.location.lat - anchorLat;
+      const dLng = h.location.lng - anchorLng;
+      return dLat * dLat + dLng * dLng;
+    };
+    return [...filteredGoogleHospitals].sort((a, b) => {
+      if (a.placeId === mapAnchorHospital.placeId) return -1;
+      if (b.placeId === mapAnchorHospital.placeId) return 1;
+      return getDistSq(a) - getDistSq(b);
+    });
+  }, [filteredGoogleHospitals, mapAnchorHospital]);
+
+  // Display only 6 nearest hospitals by default for demo purpose, or full list when expanded
+  const DEMO_HOSPITAL_LIMIT = 6;
+  const displayedGoogleHospitals = React.useMemo(() => {
+    if (showAllHospitals) return orderedGoogleHospitals;
+    return orderedGoogleHospitals.slice(0, DEMO_HOSPITAL_LIMIT);
+  }, [orderedGoogleHospitals, showAllHospitals]);
+
+  // Synchronize Step 2 clinic dropdown options with the displayed (6 demo or all) hospitals + currently selected clinic
+  const allCityClinics = React.useMemo(() => {
+    if (orderedGoogleHospitals.length > 0) {
+      const labels = orderedGoogleHospitals.map((h) => getHospitalClinicLabel(h, googleHospitals));
+      return Array.from(new Set(labels));
+    }
+    return getClinicsForCity(selectedCity, selectedState);
+  }, [orderedGoogleHospitals, googleHospitals, getHospitalClinicLabel, selectedCity, selectedState]);
+
+  const availableClinics = React.useMemo(() => {
+    const baseList = showAllHospitals ? allCityClinics : allCityClinics.slice(0, DEMO_HOSPITAL_LIMIT);
+    if (selectedClinic && !baseList.includes(selectedClinic)) {
+      return [selectedClinic, ...baseList.slice(0, Math.max(0, baseList.length - 1))];
+    }
+    return baseList;
+  }, [allCityClinics, showAllHospitals, selectedClinic]);
 
   const [chatMessages, setChatMessages] = useState<{ sender: 'user' | 'doctor'; text: string; timestamp: Date }[]>(() => {
     const doc = getDoctorsForCity(profileCity || 'Bengaluru', initialUserState)[0] || verifiedDoctors[0];
@@ -1150,11 +1375,12 @@ export const ExpertPediatricianSection: React.FC = () => {
     }
   }, [stateCities, profileCity, selectedCity]);
 
-  // Synchronize clinics and doctors when city or state changes
+  // Synchronize fallback clinics and doctors when city or state changes before Google Places finishes
   useEffect(() => {
     const cl = getClinicsForCity(selectedCity, selectedState);
     if (cl && cl.length > 0) {
       setSelectedClinic(cl[0]);
+      setSelectedHospitalAddress('');
     }
     const docs = getDoctorsForCity(selectedCity, selectedState);
     if (docs && docs.length > 0) {
@@ -1448,256 +1674,192 @@ export const ExpertPediatricianSection: React.FC = () => {
   };
 
   return (
-    <div className="max-w-5xl mx-auto glass-card border border-white/10 rounded-3xl sm:rounded-[2.5rem] p-4 sm:p-8 lg:p-10 bg-gradient-to-br from-indigo-500/5 via-transparent to-transparent relative overflow-hidden mb-12 text-left shadow-3xl">
-      <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-500/5 blur-3xl rounded-full pointer-events-none" />
+    <div className="max-w-7xl mx-auto px-3 sm:px-6 py-6 sm:py-10 space-y-10 sm:space-y-14 text-left text-slate-100 font-sans mb-16">
       
-      {/* Header with Premium Tag */}
-      <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-3 mb-4 pb-3 border-b border-white/10 relative z-10">
-        <div>
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-[11px] font-black uppercase tracking-wider mb-2">
-            <Stethoscope className="w-3.5 h-3.5 text-indigo-300" />
-            Verified Pediatric Clinical Suite
+      {/* =========================================================
+          HERO LANDING SECTION (COMPACT WIDTH, SINGLE-LINE TEXT)
+      ========================================================== */}
+      <section className="relative overflow-hidden max-w-4xl mx-auto rounded-[2rem] border border-indigo-400/25 bg-gradient-to-br from-[#12192d] via-[#0c1324] to-[#070b16] px-6 py-6 sm:px-10 sm:py-8 shadow-2xl">
+        <div className="pointer-events-none absolute -top-24 -right-16 h-72 w-72 rounded-full bg-indigo-500/10 blur-[90px]" />
+        <div className="pointer-events-none absolute -bottom-24 -left-16 h-72 w-72 rounded-full bg-emerald-500/10 blur-[90px]" />
+
+        <div className="relative z-10 text-center space-y-2.5 overflow-x-auto no-scrollbar">
+          <div className="inline-flex items-center justify-center gap-2 text-indigo-300 text-[11px] sm:text-xs font-bold tracking-wider uppercase whitespace-nowrap">
+            <Stethoscope className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
+            <span>Verified Pediatric Clinical Suite</span>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight flex items-center gap-2.5">
-            <Stethoscope className="w-7 h-7 text-indigo-400" />
+
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-black text-white tracking-tight leading-snug whitespace-nowrap">
             {gt('sectionTitle')}
-          </h2>
-          <p className="text-white/50 text-xs sm:text-sm mt-1 leading-relaxed max-w-3xl">
+          </h1>
+
+          <p className="text-xs sm:text-sm text-slate-300 leading-normal whitespace-nowrap">
             {gt('sectionSubtitle')}
           </p>
         </div>
-      </div>
+      </section>
 
-      {/* Mobile Only (< 768px): Compact Pediatric Section Dropdown */}
-      <div className="md:hidden mb-3 bg-slate-900/90 p-2.5 rounded-2xl border border-indigo-500/30 shadow-lg flex items-center gap-2.5 relative z-10">
-        <span className="text-[11px] font-black uppercase tracking-wider text-indigo-300 shrink-0">
-          Section:
-        </span>
-        <select
-          aria-label="Select Pediatric Care Section"
-          value={activeTab}
-          onChange={(e) => {
-            playSound('click');
-            setActiveTab(e.target.value as typeof activeTab);
-          }}
-          className="flex-1 min-w-0 bg-slate-800/95 border border-white/15 rounded-xl px-3 py-2 text-xs font-extrabold text-white focus:outline-none focus:border-indigo-400"
-        >
-          <option value="consults">🩺 {gt('tabConsults')}</option>
-          <option value="live">📺 {gt('tabLive')}</option>
-          <option value="chat">💬 {gt('tabChat')}</option>
-          <option value="reports">📄 {gt('tabReports')}</option>
-        </select>
-      </div>
+      {/* =========================================================
+          SEGREGATED PEDIATRIC MENU NAVIGATION BAR (4 MENU BUTTONS)
+      ========================================================== */}
+      <nav
+        aria-label="Pediatric Care Sections"
+        className="rounded-[2rem] bg-[#0b1222]/95 border border-white/15 p-3 sm:p-4 shadow-2xl backdrop-blur-xl"
+      >
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-2 pb-3 mb-3 border-b border-white/10">
+          <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
+            Pediatric Care Navigation Menu
+          </span>
+          <span className="text-xs text-indigo-300 font-medium">
+            Select a clinical service below to explore
+          </span>
+        </div>
 
-      {/* Laptop/Desktop (>= 768px): Grid of 4 Separate High-Fidelity Interactive Tabs (100% Untouched) */}
-      <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3 mb-3 relative z-10">
-        {/* Tab 1: Pediatric Consults */}
-        <button
-          onClick={() => { setActiveTab('consults'); playSound('click'); }}
-          className={`p-3 rounded-2xl text-left border-2 transition-all duration-300 transform active:scale-95 flex items-center justify-between gap-3 h-18 sm:h-20 ${
-            activeTab === 'consults'
-              ? 'bg-gradient-to-r from-indigo-500/20 to-indigo-500/5 border-indigo-500 shadow-lg shadow-indigo-500/10'
-              : 'bg-white/[0.02] border-white/5 hover:border-white/15 hover:bg-white/[0.04]'
-          }`}
-        >
-          <div className="flex items-center gap-2.5 min-w-0">
-            <div className={`p-2 rounded-xl shrink-0 ${activeTab === 'consults' ? 'bg-indigo-500 text-white' : 'bg-white/5 text-white/60'}`}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+          {/* Menu Nav Button 1: Pediatric 1:1 Consult */}
+          <button
+            type="button"
+            onClick={() => { setActiveTab('consults'); playSound('click'); }}
+            className={`p-4 sm:p-5 rounded-2xl text-left border transition-all duration-200 cursor-pointer flex items-start gap-3.5 ${
+              activeTab === 'consults'
+                ? 'bg-indigo-600 text-white border-indigo-400 shadow-xl shadow-indigo-600/25'
+                : 'bg-[#121c33] text-slate-200 border-white/10 hover:border-indigo-400/40 hover:bg-[#16223d]'
+            }`}
+          >
+            <div className={`p-2.5 rounded-xl shrink-0 mt-0.5 ${
+              activeTab === 'consults' ? 'bg-white/20 text-white' : 'bg-indigo-500/15 text-indigo-300'
+            }`}>
               <Stethoscope className="w-5 h-5" />
             </div>
-            <div className="min-w-0">
-              <div className="text-xs sm:text-sm font-black text-white tracking-tight truncate">{gt('tabConsults')}</div>
-              <div className="text-[11px] text-white/40 truncate hidden sm:block">{gt('tabConsultsSub')}</div>
+            <div className="min-w-0 flex-1 space-y-1">
+              <div className="text-sm sm:text-base font-black leading-snug">
+                {gt('tabConsults')}
+              </div>
+              <div className={`text-xs leading-relaxed ${
+                activeTab === 'consults' ? 'text-indigo-100' : 'text-slate-400'
+              }`}>
+                {gt('tabConsultsSub')}
+              </div>
             </div>
-          </div>
-          {activeTab === 'consults' && <span className="w-2 h-2 rounded-full bg-indigo-400 animate-pulse shrink-0" />}
-        </button>
+          </button>
 
-        {/* Tab 2: Live Sessions */}
-        <button
-          onClick={() => { setActiveTab('live'); playSound('click'); }}
-          className={`p-3 rounded-2xl text-left border-2 transition-all duration-300 transform active:scale-95 flex items-center justify-between gap-3 h-18 sm:h-20 ${
-            activeTab === 'live'
-              ? 'bg-gradient-to-r from-red-500/20 to-red-500/5 border-red-500 shadow-lg shadow-red-500/10'
-              : 'bg-white/[0.02] border-white/5 hover:border-white/15 hover:bg-white/[0.04]'
-          }`}
-        >
-          <div className="flex items-center gap-2.5 min-w-0">
-            <div className={`p-2 rounded-xl shrink-0 ${activeTab === 'live' ? 'bg-red-500 text-white' : 'bg-white/5 text-white/60'}`}>
+          {/* Menu Nav Button 2: Live Sessions */}
+          <button
+            type="button"
+            onClick={() => { setActiveTab('live'); playSound('click'); }}
+            className={`p-4 sm:p-5 rounded-2xl text-left border transition-all duration-200 cursor-pointer flex items-start gap-3.5 ${
+              activeTab === 'live'
+                ? 'bg-rose-600 text-white border-rose-400 shadow-xl shadow-rose-600/25'
+                : 'bg-[#121c33] text-slate-200 border-white/10 hover:border-rose-400/40 hover:bg-[#16223d]'
+            }`}
+          >
+            <div className={`p-2.5 rounded-xl shrink-0 mt-0.5 ${
+              activeTab === 'live' ? 'bg-white/20 text-white' : 'bg-rose-500/15 text-rose-300'
+            }`}>
               <Tv className="w-5 h-5" />
             </div>
-            <div className="min-w-0">
-              <div className="text-xs sm:text-sm font-black text-white tracking-tight truncate">{gt('tabLive')}</div>
-              <div className="text-[11px] text-white/40 truncate hidden sm:block">{gt('tabLiveSub')}</div>
+            <div className="min-w-0 flex-1 space-y-1">
+              <div className="text-sm sm:text-base font-black leading-snug">
+                {gt('tabLive')}
+              </div>
+              <div className={`text-xs leading-relaxed ${
+                activeTab === 'live' ? 'text-rose-100' : 'text-slate-400'
+              }`}>
+                {gt('tabLiveSub')}
+              </div>
             </div>
-          </div>
-          {activeTab === 'live' && <span className="w-2 h-2 rounded-full bg-red-400 animate-pulse shrink-0" />}
-        </button>
+          </button>
 
-        {/* Tab 3: Doctor Chat */}
-        <button
-          onClick={() => { setActiveTab('chat'); playSound('click'); }}
-          className={`p-3 rounded-2xl text-left border-2 transition-all duration-300 transform active:scale-95 flex items-center justify-between gap-3 h-18 sm:h-20 ${
-            activeTab === 'chat'
-              ? 'bg-gradient-to-r from-emerald-500/20 to-emerald-500/5 border-emerald-500 shadow-lg shadow-emerald-500/10'
-              : 'bg-white/[0.02] border-white/5 hover:border-white/15 hover:bg-white/[0.04]'
-          }`}
-        >
-          <div className="flex items-center gap-2.5 min-w-0">
-            <div className={`p-2 rounded-xl shrink-0 ${activeTab === 'chat' ? 'bg-emerald-500 text-white' : 'bg-white/5 text-white/60'}`}>
+          {/* Menu Nav Button 3: Doctor Chat */}
+          <button
+            type="button"
+            onClick={() => { setActiveTab('chat'); playSound('click'); }}
+            className={`p-4 sm:p-5 rounded-2xl text-left border transition-all duration-200 cursor-pointer flex items-start gap-3.5 ${
+              activeTab === 'chat'
+                ? 'bg-emerald-600 text-white border-emerald-400 shadow-xl shadow-emerald-600/25'
+                : 'bg-[#121c33] text-slate-200 border-white/10 hover:border-emerald-400/40 hover:bg-[#16223d]'
+            }`}
+          >
+            <div className={`p-2.5 rounded-xl shrink-0 mt-0.5 ${
+              activeTab === 'chat' ? 'bg-white/20 text-white' : 'bg-emerald-500/15 text-emerald-300'
+            }`}>
               <MessageSquare className="w-5 h-5" />
             </div>
-            <div className="min-w-0">
-              <div className="text-xs sm:text-sm font-black text-white tracking-tight truncate">{gt('tabChat')}</div>
-              <div className="text-[11px] text-white/40 truncate hidden sm:block">{gt('tabChatSub')}</div>
+            <div className="min-w-0 flex-1 space-y-1">
+              <div className="text-sm sm:text-base font-black leading-snug">
+                {gt('tabChat')}
+              </div>
+              <div className={`text-xs leading-relaxed ${
+                activeTab === 'chat' ? 'text-emerald-100' : 'text-slate-400'
+              }`}>
+                {gt('tabChatSub')}
+              </div>
             </div>
-          </div>
-          {activeTab === 'chat' && <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />}
-        </button>
+          </button>
 
-        {/* Tab 4: Growth Reports */}
-        <button
-          onClick={() => { setActiveTab('reports'); playSound('click'); }}
-          className={`p-3 rounded-2xl text-left border-2 transition-all duration-300 transform active:scale-95 flex items-center justify-between gap-3 h-18 sm:h-20 ${
-            activeTab === 'reports'
-              ? 'bg-gradient-to-r from-amber-500/20 to-amber-500/5 border-amber-500 shadow-lg shadow-amber-500/10'
-              : 'bg-white/[0.02] border-white/5 hover:border-white/15 hover:bg-white/[0.04]'
-          }`}
-        >
-          <div className="flex items-center gap-2.5 min-w-0">
-            <div className={`p-2 rounded-xl shrink-0 ${activeTab === 'reports' ? 'bg-amber-500 text-white' : 'bg-white/5 text-white/60'}`}>
+          {/* Menu Nav Button 4: Growth Reports */}
+          <button
+            type="button"
+            onClick={() => { setActiveTab('reports'); playSound('click'); }}
+            className={`p-4 sm:p-5 rounded-2xl text-left border transition-all duration-200 cursor-pointer flex items-start gap-3.5 ${
+              activeTab === 'reports'
+                ? 'bg-amber-500 text-slate-950 border-amber-300 shadow-xl shadow-amber-500/25'
+                : 'bg-[#121c33] text-slate-200 border-white/10 hover:border-amber-400/40 hover:bg-[#16223d]'
+            }`}
+          >
+            <div className={`p-2.5 rounded-xl shrink-0 mt-0.5 ${
+              activeTab === 'reports' ? 'bg-slate-950/15 text-slate-950' : 'bg-amber-500/15 text-amber-300'
+            }`}>
               <FileText className="w-5 h-5" />
             </div>
-            <div className="min-w-0">
-              <div className="text-xs sm:text-sm font-black text-white tracking-tight truncate">{gt('tabReports')}</div>
-              <div className="text-[11px] text-white/40 truncate hidden sm:block">{gt('tabReportsSub')}</div>
+            <div className="min-w-0 flex-1 space-y-1">
+              <div className="text-sm sm:text-base font-black leading-snug">
+                {gt('tabReports')}
+              </div>
+              <div className={`text-xs leading-relaxed ${
+                activeTab === 'reports' ? 'text-slate-900 font-semibold' : 'text-slate-400'
+              }`}>
+                {gt('tabReportsSub')}
+              </div>
             </div>
-          </div>
-          {activeTab === 'reports' && <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse shrink-0" />}
-        </button>
-      </div>
-
-      {/* Live Sessions Filters Bar (Strictly In ONE Line Below Four Buttons) */}
-      {activeTab === 'live' && !isLiveActive && (
-        <div className="mb-3 px-3 sm:px-4 py-2 rounded-2xl bg-slate-900/90 border border-white/10 shadow-lg relative z-10 backdrop-blur-xl flex flex-wrap md:flex-nowrap items-center justify-between gap-2 overflow-x-auto no-scrollbar">
-          {/* Left: Webinars badge */}
-          <div className="flex items-center gap-2 shrink-0">
-            <span className="flex items-center gap-1.5 text-xs font-black text-white shrink-0">
-              <Tv className="w-4 h-4 text-red-400 animate-pulse shrink-0" />
-              <span className="hidden sm:inline">Live Webinars</span>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-red-500/20 text-red-300 border border-red-500/30 font-bold">
-                {filteredLiveSessions.length}
-              </span>
-            </span>
-          </div>
-
-          {/* Center: In One Line Date & Slot Filters */}
-          <div className="flex items-center gap-2 shrink-0">
-            {/* Date Filter Dropdown */}
-            <div className="flex items-center gap-1.5 bg-white/5 px-2.5 py-1.5 rounded-xl border border-white/10 text-xs">
-              <Calendar className="w-3.5 h-3.5 text-red-400 shrink-0" />
-              <span className="text-white/50 text-[11px] font-bold hidden sm:inline">Date:</span>
-              <select
-                value={liveDateFilter}
-                onChange={(e) => { playSound('click'); setLiveDateFilter(e.target.value); }}
-                className="bg-transparent text-white font-bold text-xs focus:outline-none cursor-pointer pr-1"
-              >
-                <option value="all" className="bg-neutral-900 text-white">All Dates</option>
-                <option value="today" className="bg-neutral-900 text-white">Today (Oct 5)</option>
-                <option value="tomorrow" className="bg-neutral-900 text-white">Tomorrow (Oct 6)</option>
-                <option value="this_week" className="bg-neutral-900 text-white">This Week</option>
-                <option value="next_week" className="bg-neutral-900 text-white">Next Week</option>
-              </select>
-            </div>
-
-            {/* Session Slot Filter Dropdown */}
-            <div className="flex items-center gap-1.5 bg-white/5 px-2.5 py-1.5 rounded-xl border border-white/10 text-xs">
-              <Clock className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-              <span className="text-white/50 text-[11px] font-bold hidden sm:inline">Slot:</span>
-              <select
-                value={livePeriodFilter}
-                onChange={(e) => { playSound('click'); setLivePeriodFilter(e.target.value as any); }}
-                className="bg-transparent text-white font-bold text-xs focus:outline-none cursor-pointer pr-1"
-              >
-                <option value="all" className="bg-neutral-900 text-white">All Slots (Morning, Afternoon, Evening)</option>
-                <option value="morning" className="bg-neutral-900 text-white">🌅 Morning (8 AM - 12 PM)</option>
-                <option value="afternoon" className="bg-neutral-900 text-white">☀️ Afternoon (12 PM - 5 PM)</option>
-                <option value="evening" className="bg-neutral-900 text-white">🌙 Evening (5 PM - 9 PM)</option>
-              </select>
-            </div>
-
-            {/* Quick Segmented Slot Buttons if screen permits */}
-            <div className="hidden xl:flex items-center gap-1">
-              {[
-                { id: 'all', label: 'All' },
-                { id: 'morning', label: '🌅 Morning' },
-                { id: 'afternoon', label: '☀️ Afternoon' },
-                { id: 'evening', label: '🌙 Evening' }
-              ].map(pf => (
-                <button
-                  key={pf.id}
-                  onClick={() => { playSound('click'); setLivePeriodFilter(pf.id as any); }}
-                  className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
-                    livePeriodFilter === pf.id
-                      ? 'bg-amber-400 text-slate-950 font-black shadow-sm'
-                      : 'bg-white/5 hover:bg-white/10 text-white/60 hover:text-white'
-                  }`}
-                >
-                  {pf.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Right: Quick Search in the same line */}
-          <div className="relative w-full sm:w-52 shrink-0">
-            <Search className="w-3.5 h-3.5 text-white/40 absolute left-2.5 top-1/2 -translate-y-1/2" />
-            <input
-              type="text"
-              value={liveSearchQuery}
-              onChange={(e) => setLiveSearchQuery(e.target.value)}
-              placeholder="Search webinars..."
-              className="w-full bg-white/5 border border-white/10 rounded-xl pl-8 pr-6 py-1.5 text-xs text-white placeholder:text-white/30 focus:outline-none focus:border-red-400"
-            />
-            {liveSearchQuery && (
-              <button
-                onClick={() => setLiveSearchQuery('')}
-                className="absolute right-2 top-1/2 -translate-y-1/2 text-white/40 hover:text-white text-xs"
-              >
-                ✕
-              </button>
-            )}
-          </div>
+          </button>
         </div>
-      )}
+      </nav>
 
-      {/* Main tab panel contents */}
+      {/* =========================================================
+          MAIN CONTENT SECTIONS (SPACIOUS SECTION-BY-SECTION FLOW)
+      ========================================================== */}
       <div className="relative z-10">
         <AnimatePresence mode="wait">
           {activeTab === 'consults' && (
             <motion.div
               key="consults-panel"
-              initial={{ opacity: 0, y: 15 }}
+              initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -15 }}
-              className="space-y-6"
+              exit={{ opacity: 0, y: -12 }}
+              className="space-y-10 sm:space-y-12"
             >
-              {/* Quick Navigation Buttons to Full Consultations Page */}
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-indigo-500/5 border border-indigo-500/20 shadow-md">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-10 h-10 rounded-xl bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center text-indigo-300 shrink-0">
-                    <CalendarDays className="w-5 h-5" />
+              {/* =========================================================
+                  SECTION A: YOUR CONSULTATIONS RECORDS BAR
+              ========================================================== */}
+              <section className="rounded-[2rem] bg-[#0d1424]/95 border border-white/10 p-6 sm:p-8 shadow-xl flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+                <div className="flex items-start sm:items-center gap-4">
+                  <div className="w-12 h-12 rounded-2xl bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-center text-indigo-300 shrink-0">
+                    <CalendarDays className="w-6 h-6" />
                   </div>
-                  <div>
-                    <h4 className="text-sm font-black text-white">Your Consultations Records</h4>
-                    <p className="text-xs text-white/50">View all clinical slips, doctor prescriptions, and booked appointments</p>
+                  <div className="space-y-1">
+                    <h2 className="text-lg sm:text-xl font-black text-white">Your Consultations Records</h2>
+                    <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                      View all clinical slips, doctor prescriptions, and booked appointments
+                    </p>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2.5 flex-wrap">
+                <div className="flex flex-wrap items-center gap-3">
                   <button
                     type="button"
                     onClick={() => { playSound('click'); navigate('/consultations?tab=upcoming'); }}
-                    className="flex-1 sm:flex-none px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-black text-xs uppercase tracking-wider transition-all shadow-md shadow-indigo-600/25 flex items-center justify-center gap-2 cursor-pointer active:scale-95"
+                    className="px-5 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs sm:text-sm transition-all shadow-lg shadow-indigo-600/20 flex items-center justify-center gap-2 cursor-pointer"
                   >
                     <Clock className="w-4 h-4 text-indigo-200" />
                     <span>Upcoming Consultations ({bookings.length})</span>
@@ -1706,298 +1868,183 @@ export const ExpertPediatricianSection: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => { playSound('click'); navigate('/consultations?tab=past'); }}
-                    className="flex-1 sm:flex-none px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-white font-bold text-xs transition-all border border-white/10 flex items-center justify-center gap-2 cursor-pointer active:scale-95"
+                    className="px-5 py-3 rounded-xl bg-[#16223a] hover:bg-[#1c2b49] text-white font-bold text-xs sm:text-sm transition-all border border-white/15 flex items-center justify-center gap-2 cursor-pointer"
                   >
                     <FileText className="w-4 h-4 text-amber-300" />
                     <span>Past Consultations ({pastBookings.length})</span>
                   </button>
                 </div>
-              </div>
+              </section>
 
-              {successMessage && (
-                <div className="p-4 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-2xl flex items-center gap-3">
-                  <Check className="w-5 h-5 shrink-0" />
-                  <span className="text-sm font-bold">{successMessage}</span>
-                </div>
-              )}
-
-              {/* Consultation Booking Form - Full Width Clean Layout */}
-              <div className="space-y-5">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {/* State Selector */}
-                    <div>
-                      <div className="flex items-center justify-between mb-2">
-                        <label className="block text-sm font-black text-white/60 uppercase tracking-widest">Select State</label>
-                        <span className="text-[11px] font-bold text-indigo-300">36 States & UTs (A-Z)</span>
-                      </div>
-                      <div className="relative">
-                        <select
-                          value={selectedState}
-                          onChange={(e) => { 
-                            const newState = e.target.value;
-                            setSelectedState(newState); 
-                            localStorage.setItem('user_indian_state', newState);
-                            const citiesForNewState = [...(INDIAN_CITIES_BY_STATE[newState] || [])].sort((a, b) => a.localeCompare(b));
-                            if (citiesForNewState.length > 0) {
-                              const newCity = citiesForNewState[0];
-                              setSelectedCity(newCity);
-                              setChatCity(newCity);
-                              localStorage.setItem('user_city', newCity);
-                              const newClinics = getClinicsForCity(newCity, newState);
-                              if (newClinics.length > 0) {
-                                setSelectedClinic(newClinics[0]);
-                                const docs = getDoctorsForClinic(newClinics[0], newCity, newState);
-                                if (docs.length > 0) setSelectedDoc(docs[0]);
-                              }
-                            }
-                            playSound('click'); 
-                          }}
-                          className="w-full bg-white/5 border border-white/10 rounded-2xl px-4 py-3.5 text-base text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 appearance-none cursor-pointer font-bold"
-                        >
-                          {allStatesList.map(st => (
-                            <option key={st} value={st} className="bg-neutral-900 text-white font-bold text-base">{st}</option>
-                          ))}
-                        </select>
-                        <ChevronDown className="w-5 h-5 text-white/40 absolute right-4 top-4.5 pointer-events-none" />
-                      </div>
+              {/* =========================================================
+                  SECTION B (STEP 01): LOCATION & GOOGLE-LISTED PEDIATRIC HOSPITALS
+                  (First step in booking order: Choose State/City or GPS & explore hospitals on Google Maps)
+              ========================================================== */}
+              <section className="rounded-[2.5rem] bg-[#0d1424]/95 border border-white/10 p-6 sm:p-10 lg:p-12 shadow-2xl space-y-8">
+                {/* Step 01 Header */}
+                <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 pb-6 border-b border-white/10">
+                  <div className="space-y-2 max-w-3xl">
+                    <div className="text-xs font-bold uppercase tracking-wider text-indigo-400">
+                      Step 01 · Location &amp; Hospital Discovery
                     </div>
-
-                    {/* City Selector */}
-                    <div>
-                      <div className="flex items-center justify-between mb-2">
-                        <label className="block text-sm font-black text-white/60 uppercase tracking-widest">{gt('cityLabel')}</label>
-                        <span className="text-[11px] font-bold text-indigo-300">{stateCities.length} Cities (A-Z)</span>
-                      </div>
-                      <div className="relative">
-                        <select
-                          value={selectedCity}
-                          onChange={(e) => { 
-                            const newCity = e.target.value;
-                            setSelectedCity(newCity); 
-                            setChatCity(newCity);
-                            localStorage.setItem('user_city', newCity);
-                            const newClinics = getClinicsForCity(newCity, selectedState);
-                            if (newClinics.length > 0) {
-                              setSelectedClinic(newClinics[0]);
-                              const docs = getDoctorsForClinic(newClinics[0], newCity, selectedState);
-                              if (docs.length > 0) setSelectedDoc(docs[0]);
-                            }
-                            playSound('click'); 
-                          }}
-                          className="w-full bg-white/5 border border-white/10 rounded-2xl px-4 py-3.5 text-base text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 appearance-none cursor-pointer font-bold"
-                        >
-                          {stateCities.map(city => (
-                            <option key={city} value={city} className="bg-neutral-900 text-white font-bold text-base">{city}</option>
-                          ))}
-                        </select>
-                        <ChevronDown className="w-5 h-5 text-white/40 absolute right-4 top-4.5 pointer-events-none" />
-                      </div>
-                    </div>
+                    <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+                      {lookupMode === 'gps' && gpsLocation
+                        ? `Google-Listed Pediatric Hospitals Near Your GPS (${gpsRadiusKm} km)`
+                        : `Google-Listed Pediatric Hospitals in ${cleanCityName(selectedCity)}`}
+                    </h2>
+                    <p className="text-sm sm:text-base text-slate-300 leading-relaxed">
+                      100% real hospitals verified directly from Google Maps Places API (New) with live ratings, street addresses, and authentic Google Reviews.
+                    </p>
                   </div>
 
-                  {/* Clinic / Hospital Selector */}
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <label className="block text-sm font-black text-white/60 uppercase tracking-widest">{gt('clinicLabel')}</label>
-                      <span className="text-xs text-indigo-300 font-bold">{availableClinics.length} Verified in {cleanCityName(selectedCity)}</span>
+                  <div className="flex flex-wrap items-center gap-3 shrink-0">
+                    <div className="text-xs sm:text-sm font-bold text-emerald-300">
+                      Showing {displayedGoogleHospitals.length} of {orderedGoogleHospitals.length} Live Google Places
+                    </div>
+                    {orderedGoogleHospitals.length > DEMO_HOSPITAL_LIMIT && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          playSound('click');
+                          setShowAllHospitals((prev) => !prev);
+                        }}
+                        className="px-3.5 py-2 rounded-xl bg-indigo-500/20 hover:bg-indigo-500/30 border border-indigo-400/30 text-xs font-bold text-indigo-200 hover:text-white transition-all cursor-pointer"
+                      >
+                        {showAllHospitals
+                          ? `Show Top ${DEMO_HOSPITAL_LIMIT} (Demo View)`
+                          : `Show All (${orderedGoogleHospitals.length})`}
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {/* Location Selectors: State & City + GPS Lookup Controls */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* State Selector */}
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <label className="block text-sm font-bold text-slate-200">Select State</label>
+                      <span className="text-xs text-indigo-300 font-medium">36 States &amp; UTs (A-Z)</span>
                     </div>
                     <div className="relative">
                       <select
-                        value={selectedClinic}
+                        value={selectedState}
                         onChange={(e) => { 
-                          const newClinic = e.target.value;
-                          setSelectedClinic(newClinic); 
-                          const docs = getDoctorsForClinic(newClinic, selectedCity, selectedState);
-                          if (docs.length > 0) setSelectedDoc(docs[0]);
+                          const newState = e.target.value;
+                          setSelectedState(newState); 
+                          localStorage.setItem('user_indian_state', newState);
+                          const citiesForNewState = [...(INDIAN_CITIES_BY_STATE[newState] || [])].sort((a, b) => a.localeCompare(b));
+                          if (citiesForNewState.length > 0) {
+                            const newCity = citiesForNewState[0];
+                            setSelectedCity(newCity);
+                            setChatCity(newCity);
+                            localStorage.setItem('user_city', newCity);
+                            const newClinics = getClinicsForCity(newCity, newState);
+                            if (newClinics.length > 0) {
+                              setSelectedClinic(newClinics[0]);
+                              setSelectedHospitalAddress('');
+                              const docs = getDoctorsForClinic(newClinics[0], newCity, newState);
+                              if (docs.length > 0) setSelectedDoc(docs[0]);
+                            }
+                          }
                           playSound('click'); 
                         }}
-                        className="w-full bg-white/5 border border-white/10 rounded-2xl px-4 py-3.5 text-base text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 appearance-none cursor-pointer font-bold"
+                        className="w-full bg-[#141f38] border border-white/15 rounded-2xl px-4 py-3.5 text-base text-white focus:outline-none focus:border-indigo-400 appearance-none cursor-pointer font-bold"
                       >
-                        {availableClinics.map(clinic => (
-                          <option key={clinic} value={clinic} className="bg-neutral-900 text-white font-bold text-base">{clinic}</option>
+                        {allStatesList.map(st => (
+                          <option key={st} value={st} className="bg-neutral-900 text-white font-bold text-base">{st}</option>
                         ))}
                       </select>
-                      <ChevronDown className="w-5 h-5 text-white/40 absolute right-4 top-4.5 pointer-events-none" />
+                      <ChevronDown className="w-5 h-5 text-slate-400 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
                     </div>
                   </div>
 
-                  {/* Doctor Selector */}
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <label className="block text-sm font-black text-white/60 uppercase tracking-widest">{gt('doctorLabel')}</label>
-                      <span className="text-xs text-indigo-300 font-bold">{clinicDoctors.length} Verified at {selectedClinic || cleanCityName(selectedCity)}</span>
+                  {/* City Selector */}
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <label className="block text-sm font-bold text-slate-200">{gt('cityLabel')}</label>
+                      <span className="text-xs text-indigo-300 font-medium">{stateCities.length} Cities (A-Z)</span>
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      {clinicDoctors.map(doc => {
-                        const isSelected = selectedDoc.name === doc.name && selectedDoc.hospital === doc.hospital;
-                        return (
-                          <button
-                            key={doc.id || `${doc.name}-${doc.hospital}`}
-                            type="button"
-                            onClick={() => { setSelectedDoc(doc); playSound('click'); }}
-                            className={`p-3.5 rounded-2xl border text-left flex items-start gap-3 transition-all duration-300 ${isSelected ? 'bg-indigo-500/15 border-indigo-500 shadow-lg shadow-indigo-500/10 scale-[1.01]' : 'bg-white/[0.02] border-white/5 hover:border-white/12 hover:bg-white/[0.04]'}`}
-                          >
-                            <span className="text-2xl p-2 bg-white/5 rounded-2xl shrink-0">{doc.image}</span>
-                            <div className="min-w-0 flex-1">
-                              <div className="flex items-center gap-1.5 flex-wrap">
-                                <span className="text-sm font-black text-white">{doc.name}</span>
-                                <span className="text-[9px] font-mono text-amber-300 bg-amber-400/10 border border-amber-400/20 px-1 rounded font-bold">{doc.degrees}</span>
-                              </div>
-                              <div className="text-xs text-indigo-300 font-semibold mt-0.5 truncate flex items-center gap-1">
-                                <Building2 className="w-3 h-3 text-indigo-400 shrink-0" />
-                                <span>{doc.hospital}</span>
-                              </div>
-                              <div className="text-[11px] text-white/45 truncate">{doc.location} • {doc.specialty}</div>
-                              <div className="flex items-center justify-between mt-1 flex-wrap gap-1">
-                                <span className="text-xs text-indigo-400 font-bold">{doc.experience} {gt('yearsExp')} exp • {doc.rating} ★</span>
-                              </div>
-                            </div>
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-
-                  {/* Consultation Fee Summary */}
-                  <div className="p-3.5 bg-indigo-950/40 border border-indigo-500/20 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 text-xs">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span className="text-white/90 font-bold">Doctor Pediatric Consultation Fee</span>
-                      <span className="text-[11px] font-bold text-amber-300 bg-amber-400/15 border border-amber-400/30 px-2.5 py-0.5 rounded-lg">
-                        To be paid at the hospital
-                      </span>
-                    </div>
-                    <span className="text-sm font-black text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-3 py-1 rounded-xl shrink-0">
-                      ₹399 / Consult
-                    </span>
-                  </div>
-
-                  {/* Date and Time selectors */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-black text-white/60 uppercase tracking-widest mb-2">{gt('dateLabel')}</label>
-                      <input
-                        type="date"
-                        value={bookingDate}
-                        min={new Date().toISOString().split('T')[0]}
-                        onChange={(e) => setBookingDate(e.target.value)}
-                        className="w-full bg-white/5 border border-white/10 rounded-2xl px-4 py-3 text-base text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer font-bold"
-                      />
-                    </div>
-
-                    <div>
-                      <div className="flex items-center justify-between mb-2">
-                        <label className="block text-sm font-black text-white/60 uppercase tracking-widest">{gt('timeLabel')}</label>
-                        <span className="text-[11px] font-bold text-emerald-400">
-                          {slotFilter === 'All'
-                            ? '8:00 AM - 10:00 PM (All 28 Slots)'
-                            : slotFilter === 'Morning'
-                            ? '8:00 AM - 12:00 PM (8 Slots)'
-                            : slotFilter === 'Afternoon'
-                            ? '12:00 PM - 5:00 PM (10 Slots)'
-                            : '5:00 PM - 10:00 PM (10 Slots)'}
-                        </span>
-                      </div>
-                      <div className="relative">
-                        <select
-                          value={bookingTime}
-                          onChange={(e) => { setBookingTime(e.target.value); playSound('click'); }}
-                          className="w-full bg-white/5 border border-white/10 rounded-2xl px-4 py-3.5 text-base text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 appearance-none cursor-pointer font-bold"
-                        >
-                          {displayedSlotGroups.map(grp => (
-                            <optgroup key={grp.period} label={grp.label} className="bg-neutral-900 text-indigo-300 font-black">
-                              {grp.slots.map(slot => (
-                                <option key={slot} value={slot} className="bg-neutral-900 text-white font-bold text-base">
-                                  {slot}
-                                </option>
-                              ))}
-                            </optgroup>
-                          ))}
-                        </select>
-                        <ChevronDown className="w-5 h-5 text-white/40 absolute right-4 top-4.5 pointer-events-none" />
-                      </div>
-                      <div className="flex flex-wrap items-center gap-1.5 mt-2.5">
-                        <button
-                          type="button"
-                          onClick={() => handleSlotFilterChange('All')}
-                          className={`text-[11px] px-3 py-1.5 rounded-xl border font-bold transition-all whitespace-nowrap cursor-pointer flex items-center gap-1.5 ${
-                            slotFilter === 'All'
-                              ? 'bg-indigo-500 text-white border-indigo-500 shadow-md shadow-indigo-500/20 font-black'
-                              : 'bg-white/5 hover:bg-white/10 text-white/60 border-white/10'
-                          }`}
-                        >
-                          <span>All Slots</span>
-                          <span className={`text-[10px] px-1.5 py-0.2 rounded-md ${slotFilter === 'All' ? 'bg-white/20 text-white' : 'bg-white/5 text-white/40'}`}>
-                            28
-                          </span>
-                        </button>
-                        {TIME_SLOT_GROUPS.map(grp => (
-                          <button
-                            key={grp.period}
-                            type="button"
-                            onClick={() => handleSlotFilterChange(grp.period as any)}
-                            className={`text-[11px] px-3 py-1.5 rounded-xl border font-bold transition-all whitespace-nowrap cursor-pointer flex items-center gap-1.5 ${
-                              slotFilter === grp.period
-                                ? 'bg-indigo-500 text-white border-indigo-500 shadow-md shadow-indigo-500/20 font-black'
-                                : 'bg-white/5 hover:bg-white/10 text-white/60 border-white/10'
-                            }`}
-                          >
-                            <span>{grp.period}</span>
-                            <span className={`text-[10px] px-1.5 py-0.2 rounded-md ${slotFilter === grp.period ? 'bg-white/20 text-white' : 'bg-white/5 text-white/40'}`}>
-                              {grp.slots.length}
-                            </span>
-                          </button>
+                    <div className="relative">
+                      <select
+                        value={selectedCity}
+                        onChange={(e) => { 
+                          const newCity = e.target.value;
+                          setSelectedCity(newCity); 
+                          setChatCity(newCity);
+                          localStorage.setItem('user_city', newCity);
+                          const newClinics = getClinicsForCity(newCity, selectedState);
+                          if (newClinics.length > 0) {
+                            setSelectedClinic(newClinics[0]);
+                            setSelectedHospitalAddress('');
+                            const docs = getDoctorsForClinic(newClinics[0], newCity, selectedState);
+                            if (docs.length > 0) setSelectedDoc(docs[0]);
+                          }
+                          playSound('click'); 
+                        }}
+                        className="w-full bg-[#141f38] border border-white/15 rounded-2xl px-4 py-3.5 text-base text-white focus:outline-none focus:border-indigo-400 appearance-none cursor-pointer font-bold"
+                      >
+                        {stateCities.map(city => (
+                          <option key={city} value={city} className="bg-neutral-900 text-white font-bold text-base">{city}</option>
                         ))}
-                      </div>
+                      </select>
+                      <ChevronDown className="w-5 h-5 text-slate-400 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
                     </div>
                   </div>
+                </div>
 
-                  <div className="flex justify-center pt-3">
+                {/* Search & Live GPS Controls Row */}
+                <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4 pt-2">
+                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 flex-1">
+                    <div className="relative flex-1">
+                      <Search className="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
+                      <input
+                        type="text"
+                        placeholder="Filter or search Google Places for a specific hospital or locality..."
+                        value={hospitalSearch}
+                        onChange={(e) => setHospitalSearch(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' && hospitalSearch.trim()) {
+                            e.preventDefault();
+                            fetchCityGoogleHospitals(selectedCity, selectedState, hospitalSearch.trim());
+                          }
+                        }}
+                        className="w-full bg-[#141f38] border border-white/15 rounded-xl pl-11 pr-10 py-3 text-sm text-white placeholder-slate-400 focus:outline-none focus:border-indigo-400 font-medium"
+                      />
+                      {hospitalSearch && (
+                        <button
+                          onClick={() => {
+                            setHospitalSearch('');
+                            if (lookupMode === 'city') {
+                              fetchCityGoogleHospitals(selectedCity, selectedState);
+                            }
+                          }}
+                          className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-xs cursor-pointer"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      )}
+                    </div>
                     <button
-                      onClick={handleBookConsultation}
-                      disabled={isSubmitting}
-                      className="w-auto px-8 py-3.5 bg-indigo-500 hover:bg-indigo-600 disabled:opacity-50 text-white font-black text-sm sm:text-base rounded-2xl transition-all duration-300 shadow-xl shadow-indigo-500/20 flex items-center justify-center gap-2.5 cursor-pointer active:scale-98"
+                      type="button"
+                      onClick={() => fetchCityGoogleHospitals(selectedCity, selectedState, hospitalSearch.trim())}
+                      disabled={loadingGoogleHospitals}
+                      className="px-5 py-3 rounded-xl bg-[#16223a] hover:bg-[#1c2b49] border border-white/15 text-xs sm:text-sm font-bold text-white flex items-center justify-center gap-2 cursor-pointer shrink-0"
                     >
-                      {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <CalendarDays className="w-5 h-5" />}
-                      <span>{gt('bookBtn')}</span>
+                      {loadingGoogleHospitals ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4 text-indigo-400" />}
+                      <span>Search Google Maps</span>
                     </button>
                   </div>
-              </div>
 
-              {/* LIVE GOOGLE MAPS & GPS PEDIATRIC HOSPITALS DIRECTORY (REAL GOOGLE-LISTED HOSPITALS ONLY) */}
-              <div className="mt-8 bg-white/[0.02] border border-white/10 rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl">
-                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-6 border-b border-white/10">
-                  <div className="space-y-1.5">
-                    <div className="flex items-center gap-3">
-                      <div className="p-2.5 rounded-2xl bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
-                        <Building2 className="w-6 h-6" />
-                      </div>
-                      <div>
-                        <div className="flex items-center gap-2.5 flex-wrap">
-                          <h3 className="text-xl sm:text-2xl font-black text-white tracking-wide">
-                            {lookupMode === 'gps' && gpsLocation
-                              ? `Google-Listed Pediatric Hospitals Near Your GPS (${gpsRadiusKm} km)`
-                              : `Google-Listed Pediatric Hospitals in ${cleanCityName(selectedCity)}`}
-                          </h3>
-                          <span className="px-3 py-1 rounded-full text-xs font-black bg-emerald-500/15 border border-emerald-500/30 text-emerald-300">
-                            {filteredGoogleHospitals.length} Live Google Places Results
-                          </span>
-                        </div>
-                        <p className="text-xs sm:text-sm text-white/60 mt-1">
-                          100% real hospitals verified directly from Google Maps Places API (New) with live ratings, street addresses, and authentic Google Reviews.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* GPS Lookup Controls & Search */}
-                  <div className="flex flex-wrap items-center gap-2.5">
+                  {/* GPS Lookup Controls */}
+                  <div className="flex flex-wrap items-center gap-3">
                     <button
                       type="button"
                       onClick={handleUseLiveGps}
                       disabled={gpsLoading || loadingGoogleHospitals}
-                      className={`px-4 py-2.5 rounded-xl font-black text-xs uppercase tracking-wider flex items-center gap-2 transition-all cursor-pointer shadow-lg ${
+                      className={`px-5 py-3 rounded-xl font-bold text-xs sm:text-sm flex items-center gap-2 transition-all cursor-pointer shadow-lg ${
                         lookupMode === 'gps'
-                          ? 'bg-emerald-500 text-slate-950 shadow-emerald-500/25'
+                          ? 'bg-emerald-500 text-slate-950 shadow-emerald-500/20'
                           : 'bg-indigo-600 hover:bg-indigo-500 text-white shadow-indigo-600/20'
                       }`}
                     >
@@ -2019,7 +2066,7 @@ export const ExpertPediatricianSection: React.FC = () => {
                             setGpsRadiusKm(r);
                             fetchNearbyGpsHospitals(gpsLocation.lat, gpsLocation.lng, r);
                           }}
-                          className="bg-neutral-900 border border-white/15 rounded-xl px-3 py-2.5 text-xs font-bold text-white focus:outline-none focus:border-emerald-400 cursor-pointer"
+                          className="bg-[#141f38] border border-white/15 rounded-xl px-3.5 py-3 text-xs sm:text-sm font-bold text-white focus:outline-none focus:border-emerald-400 cursor-pointer"
                         >
                           <option value={5}>Within 5 km</option>
                           <option value={10}>Within 10 km</option>
@@ -2033,7 +2080,7 @@ export const ExpertPediatricianSection: React.FC = () => {
                             playSound('click');
                             setLookupMode('city');
                           }}
-                          className="px-3 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 text-xs font-bold text-white cursor-pointer"
+                          className="px-4 py-3 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 text-xs sm:text-sm font-bold text-white cursor-pointer"
                         >
                           Switch to {cleanCityName(selectedCity)} City View
                         </button>
@@ -2042,72 +2089,42 @@ export const ExpertPediatricianSection: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Search & Live Google Query Bar */}
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-                  <div className="relative flex-1">
-                    <Search className="w-4 h-4 text-white/40 absolute left-3.5 top-3.5 pointer-events-none" />
-                    <input
-                      type="text"
-                      placeholder="Filter or search Google Places for a specific hospital or locality..."
-                      value={hospitalSearch}
-                      onChange={(e) => setHospitalSearch(e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' && hospitalSearch.trim()) {
-                          e.preventDefault();
-                          fetchCityGoogleHospitals(selectedCity, selectedState, hospitalSearch.trim());
-                        }
-                      }}
-                      className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-8 py-2.5 text-xs sm:text-sm text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-semibold"
-                    />
-                    {hospitalSearch && (
-                      <button
-                        onClick={() => {
-                          setHospitalSearch('');
-                          if (lookupMode === 'city') {
-                            fetchCityGoogleHospitals(selectedCity, selectedState);
-                          }
-                        }}
-                        className="absolute right-3 top-3 text-white/40 hover:text-white text-xs cursor-pointer"
-                      >
-                        <X className="w-4 h-4" />
-                      </button>
-                    )}
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => fetchCityGoogleHospitals(selectedCity, selectedState, hospitalSearch.trim())}
-                    disabled={loadingGoogleHospitals}
-                    className="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 text-xs font-black uppercase tracking-wider text-white flex items-center justify-center gap-2 cursor-pointer shrink-0"
-                  >
-                    {loadingGoogleHospitals ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4 text-indigo-400" />}
-                    <span>Search Google Maps</span>
-                  </button>
-                </div>
-
                 {hospitalsError && (
-                  <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-200 text-xs sm:text-sm font-semibold flex items-center gap-2.5">
-                    <AlertCircle className="w-4 h-4 text-amber-400 shrink-0" />
+                  <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-200 text-sm font-semibold flex items-center gap-3">
+                    <AlertCircle className="w-5 h-5 text-amber-400 shrink-0" />
                     <span>{hospitalsError}</span>
                   </div>
                 )}
 
                 {/* Interactive Google Map View (@vis.gl/react-google-maps) */}
                 {mapsApiKey && filteredGoogleHospitals.length > 0 && (
-                  <div className="rounded-2xl overflow-hidden border border-white/15 shadow-xl h-[340px] w-full relative bg-slate-900">
+                  <div className="rounded-3xl overflow-hidden border border-white/15 shadow-2xl h-[420px] sm:h-[480px] w-full relative bg-slate-900">
                     <APIProvider apiKey={mapsApiKey}>
                       <GoogleMap
                         mapId="DEMO_MAP_ID"
                         internalUsageAttributionIds={['gmp_mcp_codeassist_v1_aistudio']}
                         defaultZoom={12}
-                        center={
+                        defaultCenter={
                           selectedMapHospital?.location?.lat
                             ? selectedMapHospital.location
                             : gpsLocation || filteredGoogleHospitals[0]?.location || { lat: 12.9716, lng: 77.5946 }
                         }
                         gestureHandling="greedy"
+                        zoomControl={true}
+                        scrollwheel={true}
+                        draggable={true}
+                        disableDoubleClickZoom={false}
+                        keyboardShortcuts={true}
+                        fullscreenControl={true}
                         disableDefaultUI={false}
                         className="w-full h-full"
                       >
+                        <MapCameraController
+                          selectedHospital={selectedMapHospital}
+                          gpsLocation={gpsLocation}
+                          hospitals={filteredGoogleHospitals}
+                          cityKey={`${selectedState}_${selectedCity}_${lookupMode}`}
+                        />
                         {gpsLocation && (
                           <AdvancedMarker position={gpsLocation} title="Your Live GPS Location">
                             <Pin background="#10b981" borderColor="#064e3b" glyphColor="#ffffff" />
@@ -2120,7 +2137,7 @@ export const ExpertPediatricianSection: React.FC = () => {
                               key={hosp.placeId}
                               position={hosp.location}
                               title={hosp.name}
-                              onClick={() => setSelectedMapHospital(hosp)}
+                              onClick={() => handleMapMarkerClick(hosp)}
                             >
                               <Pin
                                 background={selectedMapHospital?.placeId === hosp.placeId ? '#6366f1' : '#ef4444'}
@@ -2136,20 +2153,20 @@ export const ExpertPediatricianSection: React.FC = () => {
                             position={selectedMapHospital.location}
                             onCloseClick={() => setSelectedMapHospital(null)}
                           >
-                            <div className="text-slate-900 p-1 max-w-[240px] space-y-1">
-                              <div className="font-bold text-xs leading-snug">{selectedMapHospital.name}</div>
-                              <div className="text-[11px] text-slate-600">{selectedMapHospital.address}</div>
+                            <div className="text-slate-900 p-1.5 max-w-[260px] space-y-2">
+                              <div className="font-bold text-xs sm:text-sm leading-snug">{selectedMapHospital.name}</div>
+                              <div className="text-xs text-slate-600 leading-relaxed">{selectedMapHospital.address}</div>
                               {selectedMapHospital.rating && (
-                                <div className="text-[11px] font-bold text-amber-600">
+                                <div className="text-xs font-bold text-amber-600">
                                   ★ {selectedMapHospital.rating} ({selectedMapHospital.userRatingCount} Google reviews)
                                 </div>
                               )}
-                              <div className="pt-1 flex items-center gap-2">
+                              <div className="pt-1 flex flex-wrap items-center gap-3">
                                 <a
                                   href={selectedMapHospital.googleMapsUri}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="text-[11px] font-bold text-indigo-600 underline"
+                                  className="text-xs font-bold text-indigo-600 underline"
                                 >
                                   Open Maps
                                 </a>
@@ -2157,11 +2174,18 @@ export const ExpertPediatricianSection: React.FC = () => {
                                   href={selectedMapHospital.reviewsUri}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="text-[11px] font-bold text-amber-700 underline"
+                                  className="text-xs font-bold text-amber-700 underline"
                                 >
                                   Google Reviews
                                 </a>
                               </div>
+                              <button
+                                type="button"
+                                onClick={() => handleSelectGoogleHospital(selectedMapHospital, true)}
+                                className="w-full mt-1 px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold cursor-pointer"
+                              >
+                                Select &amp; Book Consult →
+                              </button>
                             </div>
                           </InfoWindow>
                         )}
@@ -2170,203 +2194,639 @@ export const ExpertPediatricianSection: React.FC = () => {
                   </div>
                 )}
 
-                {/* Loading state */}
+                {/* Active Map Selection Status Bar */}
+                {mapAnchorHospital && (
+                  <div className="p-4 rounded-2xl bg-indigo-500/10 border border-indigo-400/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div className="text-xs sm:text-sm text-indigo-200 font-medium">
+                      <span className="font-black text-white">Map Hospital Selected:</span> Showing nearest hospitals around{' '}
+                      <span className="font-bold text-emerald-300">{mapAnchorHospital.name}</span> &amp; updated Step 02 specialists.
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        playSound('click');
+                        setMapAnchorHospital(null);
+                      }}
+                      className="px-3.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 text-xs font-bold text-white shrink-0 cursor-pointer"
+                    >
+                      Reset Default List Order
+                    </button>
+                  </div>
+                )}
+
+                {/* Hospital Cards Grid (6 Cards by default for demo purpose, expandable to full list) */}
                 {loadingGoogleHospitals ? (
-                  <div className="p-12 rounded-2xl bg-white/[0.02] border border-white/10 flex flex-col items-center justify-center gap-3 text-center">
+                  <div className="p-14 rounded-3xl bg-white/[0.02] border border-white/10 flex flex-col items-center justify-center gap-3 text-center">
                     <Loader2 className="w-8 h-8 animate-spin text-indigo-400" />
-                    <div className="text-sm font-bold text-white">
+                    <div className="text-base font-bold text-white">
                       Fetching live Google-listed hospitals from Google Maps Places API...
                     </div>
                   </div>
-                ) : filteredGoogleHospitals.length === 0 ? (
-                  <div className="p-10 rounded-2xl bg-white/[0.02] border border-white/10 text-center space-y-2">
-                    <Building2 className="w-10 h-10 text-white/30 mx-auto" />
-                    <div className="text-sm font-bold text-white">No Google-listed hospitals matched your filter</div>
-                    <p className="text-xs text-white/50">
+                ) : displayedGoogleHospitals.length === 0 ? (
+                  <div className="p-12 rounded-3xl bg-white/[0.02] border border-white/10 text-center space-y-2">
+                    <Building2 className="w-10 h-10 text-slate-500 mx-auto" />
+                    <div className="text-base font-bold text-white">No Google-listed hospitals matched your filter</div>
+                    <p className="text-sm text-slate-400">
                       Try clearing the search box or clicking "Use My Live GPS Location" above.
                     </p>
                   </div>
                 ) : (
-                  /* Real Google-Listed Hospital Cards Grid */
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {filteredGoogleHospitals.map((hosp, idx) => {
-                      const isReviewsOpen = expandedReviewsPlaceId === hosp.placeId;
-                      return (
-                        <div
-                          key={hosp.placeId || idx}
-                          onClick={() => setSelectedMapHospital(hosp)}
-                          className={`bg-neutral-900/85 border rounded-2xl p-5 space-y-3.5 transition-all duration-300 hover:shadow-xl group flex flex-col justify-between cursor-pointer ${
-                            selectedMapHospital?.placeId === hosp.placeId
-                              ? 'border-indigo-500 shadow-indigo-500/10'
-                              : 'border-white/10 hover:border-indigo-500/40'
-                          }`}
-                        >
-                          <div className="space-y-2.5">
-                            <div className="flex items-start justify-between gap-3">
-                              <div className="flex items-start gap-2.5">
-                                <span className="px-2 py-0.5 rounded-lg bg-indigo-500/20 text-indigo-300 font-mono text-xs font-black border border-indigo-500/30 shrink-0">
-                                  #{idx + 1}
-                                </span>
-                                <div>
-                                  <h4 className="text-sm sm:text-base font-black text-white group-hover:text-indigo-300 transition-colors leading-snug">
-                                    {hosp.name}
-                                  </h4>
-                                  <div className="flex items-center gap-1.5 mt-1 flex-wrap">
-                                    <span className="text-[10px] px-2 py-0.5 rounded-md bg-emerald-500/15 text-emerald-300 font-bold border border-emerald-500/30">
-                                      Google Verified Place
+                  <div className="space-y-6">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                      {displayedGoogleHospitals.map((hosp, idx) => {
+                        const isReviewsOpen = expandedReviewsPlaceId === hosp.placeId;
+                        const hospClinicLabel = getHospitalClinicLabel(hosp, googleHospitals);
+                        const isSelectedHospital =
+                          selectedMapHospital?.placeId === hosp.placeId ||
+                          selectedClinic === hospClinicLabel;
+                        return (
+                          <div
+                            key={hosp.placeId || idx}
+                            onClick={() => handleSelectGoogleHospital(hosp, false)}
+                            className={`bg-[#121c33] border rounded-3xl p-6 sm:p-7 space-y-5 transition-all duration-200 flex flex-col justify-between cursor-pointer ${
+                              isSelectedHospital
+                                ? 'border-indigo-400 bg-[#162342] shadow-xl shadow-indigo-500/15'
+                                : 'border-white/10 hover:border-indigo-400/40'
+                            }`}
+                          >
+                            <div className="space-y-4">
+                              <div className="space-y-2">
+                                <div className="flex items-center justify-between gap-2 flex-wrap">
+                                  <div className="flex items-center gap-2 text-xs text-slate-400 font-semibold flex-wrap">
+                                    <span className="text-indigo-300 font-mono font-bold">
+                                      {idx + 1 < 10 ? `0${idx + 1}.` : `${idx + 1}.`}
                                     </span>
+                                    <span className="text-emerald-300">Google Verified Place</span>
                                     {hosp.rating && (
-                                      <span className="text-[10px] text-amber-300 font-bold bg-amber-400/10 px-2 py-0.5 rounded-md border border-amber-400/20">
-                                        ★ {hosp.rating} ({hosp.userRatingCount.toLocaleString()} Google reviews)
-                                      </span>
+                                      <>
+                                        <span aria-hidden="true">·</span>
+                                        <span className="text-amber-300 font-bold">
+                                          ★ {hosp.rating} ({hosp.userRatingCount.toLocaleString()} Google reviews)
+                                        </span>
+                                      </>
                                     )}
                                     {hosp.openNow !== null && hosp.openNow !== undefined && (
-                                      <span
-                                        className={`text-[10px] px-2 py-0.5 rounded-md font-bold border ${
-                                          hosp.openNow
-                                            ? 'bg-emerald-500/10 text-emerald-300 border-emerald-500/25'
-                                            : 'bg-rose-500/10 text-rose-300 border-rose-500/25'
-                                        }`}
-                                      >
-                                        {hosp.openNow ? 'Open Now' : 'Closed'}
-                                      </span>
+                                      <>
+                                        <span aria-hidden="true">·</span>
+                                        <span className={hosp.openNow ? 'text-emerald-300 font-bold' : 'text-rose-300 font-bold'}>
+                                          {hosp.openNow ? 'Open Now' : 'Closed'}
+                                        </span>
+                                      </>
                                     )}
                                   </div>
+
+                                  {isSelectedHospital && (
+                                    <span className="text-xs font-bold text-emerald-300">
+                                      Selected in Step 02 ✓
+                                    </span>
+                                  )}
                                 </div>
-                              </div>
-                            </div>
 
-                            <div className="space-y-1.5 text-xs">
-                              <div className="flex items-start gap-1.5 text-white/75">
-                                <MapPin className="w-3.5 h-3.5 text-indigo-400 shrink-0 mt-0.5" />
-                                <span className="leading-relaxed">{hosp.address}</span>
+                                <h3 className="text-lg sm:text-xl font-black text-white leading-snug">
+                                  {hosp.name}
+                                </h3>
                               </div>
-                              {hosp.reviewSummary && (
-                                <p className="text-[11px] text-indigo-200/80 bg-indigo-500/10 border border-indigo-500/20 rounded-xl p-2.5 leading-relaxed">
-                                  {hosp.reviewSummary}
-                                </p>
-                              )}
-                            </div>
 
-                            <div className="flex items-center gap-2 flex-wrap text-[11px] font-bold">
-                              {hosp.phone && (
-                                <a
-                                  href={`tel:${hosp.phone.replace(/[^0-9+]/g, '')}`}
+                              <div className="space-y-3 text-sm">
+                                <div className="flex items-start gap-2.5 text-slate-300">
+                                  <MapPin className="w-4 h-4 text-indigo-400 shrink-0 mt-1" />
+                                  <span className="leading-relaxed">{hosp.address}</span>
+                                </div>
+                                {hosp.reviewSummary && (
+                                  <p className="text-xs sm:text-sm text-indigo-200 bg-indigo-500/10 border border-indigo-500/20 rounded-2xl p-3.5 leading-relaxed">
+                                    {hosp.reviewSummary}
+                                  </p>
+                                )}
+                              </div>
+
+                              <div className="flex items-center gap-3 flex-wrap text-xs font-bold pt-1">
+                                {hosp.phone && (
+                                  <a
+                                    href={`tel:${hosp.phone.replace(/[^0-9+]/g, '')}`}
+                                    onClick={(e) => e.stopPropagation()}
+                                    className="px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white flex items-center gap-2 transition-colors"
+                                  >
+                                    <Phone className="w-3.5 h-3.5 text-emerald-400" />
+                                    <span>{hosp.phone}</span>
+                                  </a>
+                                )}
+                                {hosp.reviews && hosp.reviews.length > 0 && (
+                                  <button
+                                    type="button"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      playSound('pop');
+                                      setExpandedReviewsPlaceId(isReviewsOpen ? null : hosp.placeId);
+                                    }}
+                                    className="px-3.5 py-2 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-400/30 text-amber-200 flex items-center gap-1.5 transition-colors cursor-pointer"
+                                  >
+                                    <span>{isReviewsOpen ? 'Hide Snippets' : `Preview ${hosp.reviews.length} Top Reviews`}</span>
+                                  </button>
+                                )}
+                              </div>
+
+                              {/* Expandable Real Google User Reviews Drawer */}
+                              {isReviewsOpen && hosp.reviews && hosp.reviews.length > 0 && (
+                                <div
                                   onClick={(e) => e.stopPropagation()}
-                                  className="px-2.5 py-1 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-white/90 flex items-center gap-1.5 transition-colors"
+                                  className="mt-3 pt-4 border-t border-white/10 space-y-3 max-h-60 overflow-y-auto pr-1"
                                 >
-                                  <Phone className="w-3 h-3 text-emerald-400" />
-                                  <span>{hosp.phone}</span>
-                                </a>
-                              )}
-                              {hosp.reviews && hosp.reviews.length > 0 && (
-                                <button
-                                  type="button"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    playSound('pop');
-                                    setExpandedReviewsPlaceId(isReviewsOpen ? null : hosp.placeId);
-                                  }}
-                                  className="px-2.5 py-1 rounded-full bg-amber-500/15 hover:bg-amber-500/25 border border-amber-400/30 text-amber-200 flex items-center gap-1 transition-colors cursor-pointer"
-                                >
-                                  <span>{isReviewsOpen ? 'Hide Snippets' : `Preview ${hosp.reviews.length} Top Reviews`}</span>
-                                </button>
-                              )}
-                            </div>
-
-                            {/* Expandable Real Google User Reviews Drawer */}
-                            {isReviewsOpen && hosp.reviews && hosp.reviews.length > 0 && (
-                              <div
-                                onClick={(e) => e.stopPropagation()}
-                                className="mt-2 pt-2.5 border-t border-white/10 space-y-2 max-h-52 overflow-y-auto pr-1"
-                              >
-                                <div className="text-[10px] font-black uppercase tracking-wider text-amber-300">
-                                  Authentic Google Maps User Reviews
-                                </div>
-                                {hosp.reviews.map((rev, rIdx) => (
-                                  <div key={rIdx} className="p-2.5 rounded-xl bg-black/40 border border-white/10 space-y-1 text-[11px]">
-                                    <div className="flex items-center justify-between gap-2">
-                                      <span className="font-bold text-white">{rev.authorName}</span>
-                                      <span className="text-amber-300 font-bold">
-                                        {'★'.repeat(Math.max(1, Math.min(5, Math.round(rev.rating))))} {rev.relativeTime && `• ${rev.relativeTime}`}
-                                      </span>
-                                    </div>
-                                    {rev.text && <p className="text-white/75 leading-relaxed line-clamp-3">{rev.text}</p>}
+                                  <div className="text-xs font-bold uppercase tracking-wider text-amber-300">
+                                    Authentic Google Maps User Reviews
                                   </div>
-                                ))}
-                              </div>
-                            )}
-                          </div>
-
-                          {/* Mandatory Action Buttons: View Google Maps & Google Reviews + Book Consult */}
-                          <div
-                            onClick={(e) => e.stopPropagation()}
-                            className="pt-3 border-t border-white/10 flex flex-wrap items-center justify-between gap-2"
-                          >
-                            <div className="flex flex-wrap items-center gap-2">
-                              <a
-                                href={hosp.googleMapsUri}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="px-3 py-1.5 rounded-xl bg-indigo-500/20 hover:bg-indigo-500/30 border border-indigo-400/30 text-xs text-indigo-200 hover:text-white font-bold flex items-center gap-1.5 transition-all"
-                              >
-                                <MapPin className="w-3.5 h-3.5 text-indigo-400" />
-                                <span>View Google Maps</span>
-                                <ExternalLink className="w-3 h-3" />
-                              </a>
-
-                              <a
-                                href={hosp.reviewsUri}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/30 text-xs text-amber-200 hover:text-white font-bold flex items-center gap-1.5 transition-all"
-                              >
-                                <span>★ Google Reviews</span>
-                                <ExternalLink className="w-3 h-3" />
-                              </a>
+                                  {hosp.reviews.map((rev, rIdx) => (
+                                    <div key={rIdx} className="p-3.5 rounded-2xl bg-black/40 border border-white/10 space-y-1.5 text-xs">
+                                      <div className="flex items-center justify-between gap-2">
+                                        <span className="font-bold text-white">{rev.authorName}</span>
+                                        <span className="text-amber-300 font-bold">
+                                          {'★'.repeat(Math.max(1, Math.min(5, Math.round(rev.rating))))} {rev.relativeTime && `· ${rev.relativeTime}`}
+                                        </span>
+                                      </div>
+                                      {rev.text && <p className="text-slate-300 leading-relaxed">{rev.text}</p>}
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
                             </div>
 
-                            <button
-                              type="button"
-                              onClick={() => {
-                                setSelectedClinic(hosp.name);
-                                playSound('click');
-                                window.scrollTo({ top: 380, behavior: 'smooth' });
-                              }}
-                              className="text-xs px-3 py-1.5 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-200 border border-emerald-500/30 rounded-xl font-bold transition-all flex items-center gap-1 cursor-pointer"
+                            {/* Mandatory Action Buttons: View Google Maps & Google Reviews + Book Consult */}
+                            <div
+                              onClick={(e) => e.stopPropagation()}
+                              className="pt-4 border-t border-white/10 flex flex-wrap items-center justify-between gap-3"
                             >
-                              <span>Book Consult</span>
-                              <ArrowRight className="w-3 h-3" />
-                            </button>
+                              <div className="flex flex-wrap items-center gap-2.5">
+                                <a
+                                  href={hosp.googleMapsUri}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="px-3.5 py-2 rounded-xl bg-indigo-500/20 hover:bg-indigo-500/30 border border-indigo-400/30 text-xs text-indigo-200 hover:text-white font-bold flex items-center gap-1.5 transition-all"
+                                >
+                                  <MapPin className="w-3.5 h-3.5 text-indigo-400" />
+                                  <span>View Google Maps</span>
+                                  <ExternalLink className="w-3 h-3" />
+                                </a>
+
+                                <a
+                                  href={hosp.reviewsUri}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="px-3.5 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/30 text-xs text-amber-200 hover:text-white font-bold flex items-center gap-1.5 transition-all"
+                                >
+                                  <span>★ Google Reviews</span>
+                                  <ExternalLink className="w-3 h-3" />
+                                </a>
+                              </div>
+
+                              <button
+                                type="button"
+                                onClick={() => handleSelectGoogleHospital(hosp, true)}
+                                className="text-xs px-4 py-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 rounded-xl font-black transition-all flex items-center gap-1.5 cursor-pointer shadow-md"
+                              >
+                                <span>Book Consult</span>
+                                <ArrowRight className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
                           </div>
+                        );
+                      })}
+                    </div>
+
+                    {/* Show More / Show Top 6 Demo Toggle Footer */}
+                    {orderedGoogleHospitals.length > DEMO_HOSPITAL_LIMIT && (
+                      <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-4 p-5 rounded-2xl bg-[#121c33]/80 border border-white/10">
+                        <div className="text-xs sm:text-sm text-slate-300">
+                          {showAllHospitals ? (
+                            <span>
+                              Showing all <strong className="text-white">{orderedGoogleHospitals.length}</strong> Google-listed pediatric hospitals in {cleanCityName(selectedCity)}.
+                            </span>
+                          ) : (
+                            <span>
+                              Showing top <strong className="text-white">{DEMO_HOSPITAL_LIMIT}</strong> nearest hospitals for demo view (click any pin on the map above to update this list, or expand to view all <strong className="text-white">{orderedGoogleHospitals.length}</strong> hospitals).
+                            </span>
+                          )}
                         </div>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            playSound('click');
+                            setShowAllHospitals((prev) => !prev);
+                          }}
+                          className="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs sm:text-sm font-bold transition-all cursor-pointer shrink-0 shadow-lg shadow-indigo-600/20"
+                        >
+                          {showAllHospitals
+                            ? `Show Only ${DEMO_HOSPITAL_LIMIT} Hospitals (Demo View)`
+                            : `View All ${orderedGoogleHospitals.length} Nearest Hospitals`}
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </section>
+
+              {/* =========================================================
+                  SECTION C (STEP 02): SELECT CLINIC & VERIFIED PEDIATRICIAN
+                  (Second step in booking order: Choose clinic & doctor with full readable cards)
+              ========================================================== */}
+              <section
+                id="pediatric-doctor-selection-section"
+                className="rounded-[2.5rem] bg-[#0d1424]/95 border border-white/10 p-6 sm:p-10 lg:p-12 shadow-2xl space-y-8 scroll-mt-24"
+              >
+                <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 pb-6 border-b border-white/10">
+                  <div className="space-y-2 max-w-3xl">
+                    <div className="text-xs font-bold uppercase tracking-wider text-indigo-400">
+                      Step 02 · Clinic &amp; Specialist Selection
+                    </div>
+                    <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+                      {gt('clinicLabel')} &amp; {gt('doctorLabel')}
+                    </h2>
+                    <p className="text-sm sm:text-base text-slate-300 leading-relaxed">
+                      Selected hospital from Step 01 is automatically synced below. You can also switch between the nearest hospitals or expand the full list.
+                    </p>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-3 shrink-0">
+                    <span className="text-xs sm:text-sm font-bold text-indigo-300">
+                      Showing {availableClinics.length} of {allCityClinics.length} Verified Clinics
+                    </span>
+                    {allCityClinics.length > DEMO_HOSPITAL_LIMIT && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          playSound('click');
+                          setShowAllHospitals((prev) => !prev);
+                        }}
+                        className="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 text-xs font-bold text-white cursor-pointer"
+                      >
+                        {showAllHospitals ? `Top ${DEMO_HOSPITAL_LIMIT} Demo List` : `Show All (${allCityClinics.length})`}
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {/* Clinic / Hospital Selector */}
+                <div className="space-y-2.5">
+                  <div className="flex items-center justify-between flex-wrap gap-2">
+                    <label className="block text-sm font-bold text-slate-200">{gt('clinicLabel')}</label>
+                    <span className="text-xs text-emerald-300 font-semibold">
+                      Active Clinic: {selectedClinic}
+                    </span>
+                  </div>
+                  <div className="relative">
+                    <select
+                      value={selectedClinic}
+                      onChange={(e) => { 
+                        const newClinic = e.target.value;
+                        setSelectedClinic(newClinic);
+                        const matchedGoogleHosp = googleHospitals.find(
+                          (h) => getHospitalClinicLabel(h, googleHospitals) === newClinic || h.name === newClinic
+                        );
+                        const addr = matchedGoogleHosp?.address || '';
+                        if (matchedGoogleHosp) {
+                          setSelectedMapHospital(matchedGoogleHosp);
+                        }
+                        setSelectedHospitalAddress(addr);
+                        const docs = getDoctorsForClinic(newClinic, selectedCity, selectedState, addr);
+                        if (docs.length > 0) setSelectedDoc(docs[0]);
+                        playSound('click'); 
+                      }}
+                      className="w-full bg-[#141f38] border border-white/15 rounded-2xl px-4 py-4 text-base text-white focus:outline-none focus:border-indigo-400 appearance-none cursor-pointer font-bold"
+                    >
+                      {availableClinics.map(clinic => (
+                        <option key={clinic} value={clinic} className="bg-neutral-900 text-white font-bold text-base">{clinic}</option>
+                      ))}
+                    </select>
+                    <ChevronDown className="w-5 h-5 text-slate-400 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  </div>
+                </div>
+
+                {/* Doctor Selector Cards (Spacious, Full Text, Zero Overlapping or Truncation) */}
+                <div className="space-y-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <label className="block text-base font-black text-white">{gt('doctorLabel')}</label>
+                    <span className="text-xs sm:text-sm text-indigo-300 font-semibold">
+                      {clinicDoctors.length} Verified at {selectedClinic || cleanCityName(selectedCity)}
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {clinicDoctors.map(doc => {
+                      const isSelected = selectedDoc.name === doc.name && selectedDoc.hospital === doc.hospital;
+                      return (
+                        <button
+                          key={doc.id || `${doc.name}-${doc.hospital}`}
+                          type="button"
+                          onClick={() => { setSelectedDoc(doc); playSound('click'); }}
+                          className={`p-6 rounded-3xl border text-left flex items-start gap-4 transition-all duration-200 cursor-pointer ${
+                            isSelected
+                              ? 'bg-[#162447] border-indigo-400 shadow-xl shadow-indigo-500/15'
+                              : 'bg-[#121c33] border-white/10 hover:border-indigo-400/40 hover:bg-[#15203b]'
+                          }`}
+                        >
+                          <div className="text-3xl p-3.5 bg-white/5 border border-white/10 rounded-2xl shrink-0">
+                            {doc.image}
+                          </div>
+                          <div className="min-w-0 flex-1 space-y-2">
+                            <div className="flex items-start justify-between gap-2">
+                              <div>
+                                <h3 className="text-base sm:text-lg font-black text-white leading-snug">
+                                  {doc.name}
+                                </h3>
+                                <p className="text-xs font-mono text-amber-300 font-semibold mt-0.5 leading-relaxed">
+                                  {doc.degrees}
+                                </p>
+                              </div>
+                              {isSelected && (
+                                <span className="text-xs font-bold text-emerald-300 shrink-0">
+                                  Selected ✓
+                                </span>
+                              )}
+                            </div>
+
+                            <div className="text-sm text-indigo-200 font-semibold flex items-start gap-2 leading-snug">
+                              <Building2 className="w-4 h-4 text-indigo-400 shrink-0 mt-0.5" />
+                              <span>{doc.hospital}</span>
+                            </div>
+
+                            <div className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                              {doc.location} · {doc.specialty}
+                            </div>
+
+                            <div className="pt-1 text-xs sm:text-sm text-indigo-300 font-bold">
+                              {doc.experience} {gt('yearsExp')} exp · {doc.rating} ★
+                            </div>
+                          </div>
+                        </button>
                       );
                     })}
                   </div>
+                </div>
+              </section>
+
+              {/* =========================================================
+                  SECTION D (STEP 03): DATE, TIME SLOT & CONFIRM CONSULTATION
+                  (Third step in booking order: Pick Date & Time and Confirm Booking)
+              ========================================================== */}
+              <section
+                id="pediatric-schedule-booking-section"
+                className="rounded-[2.5rem] bg-[#0d1424]/95 border border-indigo-400/30 p-6 sm:p-10 lg:p-12 shadow-2xl space-y-8 scroll-mt-24"
+              >
+                <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 pb-6 border-b border-white/10">
+                  <div className="space-y-2 max-w-3xl">
+                    <div className="text-xs font-bold uppercase tracking-wider text-emerald-400">
+                      Step 03 · Schedule &amp; Confirm Appointment
+                    </div>
+                    <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+                      {gt('dateLabel')} &amp; {gt('timeLabel')}
+                    </h2>
+                    <p className="text-sm sm:text-base text-slate-300 leading-relaxed">
+                      Select your preferred appointment date and 30-minute consultation slot with <strong className="text-white">{selectedDoc.name}</strong> at <strong className="text-indigo-200">{selectedClinic}</strong>.
+                    </p>
+                  </div>
+                </div>
+
+                {successMessage && (
+                  <div className="p-5 bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 rounded-2xl flex items-center gap-3">
+                    <Check className="w-6 h-6 shrink-0 text-emerald-400" />
+                    <span className="text-sm sm:text-base font-bold">{successMessage}</span>
+                  </div>
                 )}
-              </div>
+
+                {/* Date & Time Slot Grid */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  {/* Date Picker */}
+                  <div className="space-y-3">
+                    <label className="block text-sm font-bold text-slate-200">{gt('dateLabel')}</label>
+                    <input
+                      type="date"
+                      value={bookingDate}
+                      min={new Date().toISOString().split('T')[0]}
+                      onChange={(e) => setBookingDate(e.target.value)}
+                      className="w-full bg-[#141f38] border border-white/15 rounded-2xl px-4 py-4 text-base text-white focus:outline-none focus:border-indigo-400 cursor-pointer font-bold"
+                    />
+                    <p className="text-xs text-slate-400">
+                      Appointments are available 7 days a week across verified partner clinics.
+                    </p>
+                  </div>
+
+                  {/* Time Slot Picker */}
+                  <div className="space-y-3">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <label className="block text-sm font-bold text-slate-200">{gt('timeLabel')}</label>
+                      <span className="text-xs font-bold text-emerald-400">
+                        {slotFilter === 'All'
+                          ? '8:00 AM - 10:00 PM (All 28 Slots)'
+                          : slotFilter === 'Morning'
+                          ? '8:00 AM - 12:00 PM (8 Slots)'
+                          : slotFilter === 'Afternoon'
+                          ? '12:00 PM - 5:00 PM (10 Slots)'
+                          : '5:00 PM - 10:00 PM (10 Slots)'}
+                      </span>
+                    </div>
+
+                    <div className="relative">
+                      <select
+                        value={bookingTime}
+                        onChange={(e) => { setBookingTime(e.target.value); playSound('click'); }}
+                        className="w-full bg-[#141f38] border border-white/15 rounded-2xl px-4 py-4 text-base text-white focus:outline-none focus:border-indigo-400 appearance-none cursor-pointer font-bold"
+                      >
+                        {displayedSlotGroups.map(grp => (
+                          <optgroup key={grp.period} label={grp.label} className="bg-neutral-900 text-indigo-300 font-black">
+                            {grp.slots.map(slot => (
+                              <option key={slot} value={slot} className="bg-neutral-900 text-white font-bold text-base">
+                                {slot}
+                              </option>
+                            ))}
+                          </optgroup>
+                        ))}
+                      </select>
+                      <ChevronDown className="w-5 h-5 text-slate-400 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    </div>
+
+                    {/* Time Period Filter Buttons */}
+                    <div className="flex flex-wrap items-center gap-2 pt-1">
+                      <button
+                        type="button"
+                        onClick={() => handleSlotFilterChange('All')}
+                        className={`text-xs px-3.5 py-2 rounded-xl border font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                          slotFilter === 'All'
+                            ? 'bg-indigo-600 text-white border-indigo-400 shadow-md'
+                            : 'bg-[#141f38] hover:bg-white/10 text-slate-300 border-white/10'
+                        }`}
+                      >
+                        <span>All Slots (28)</span>
+                      </button>
+                      {TIME_SLOT_GROUPS.map(grp => (
+                        <button
+                          key={grp.period}
+                          type="button"
+                          onClick={() => handleSlotFilterChange(grp.period as any)}
+                          className={`text-xs px-3.5 py-2 rounded-xl border font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                            slotFilter === grp.period
+                              ? 'bg-indigo-600 text-white border-indigo-400 shadow-md'
+                              : 'bg-[#141f38] hover:bg-white/10 text-slate-300 border-white/10'
+                          }`}
+                        >
+                          <span>{grp.period} ({grp.slots.length})</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Consultation Fee & Selected Appointment Summary */}
+                <div className="p-6 bg-[#121c33] border border-indigo-400/25 rounded-3xl flex flex-col md:flex-row md:items-center justify-between gap-4">
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-3 flex-wrap">
+                      <span className="text-base font-black text-white">Doctor Pediatric Consultation Fee</span>
+                      <span className="text-xs font-bold text-amber-300">
+                        · To be paid at the hospital
+                      </span>
+                    </div>
+                    <p className="text-xs sm:text-sm text-slate-300">
+                      {selectedDoc.name} ({selectedDoc.degrees}) · {selectedClinic}, {cleanCityName(selectedCity)}
+                    </p>
+                  </div>
+                  <div className="text-lg sm:text-xl font-black text-emerald-400 shrink-0">
+                    ₹399 / Consult
+                  </div>
+                </div>
+
+                {/* Confirm & Book Consultation Action */}
+                <div className="flex justify-center pt-2">
+                  <button
+                    onClick={handleBookConsultation}
+                    disabled={isSubmitting}
+                    className="w-full sm:w-auto px-10 py-4 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white font-black text-base rounded-2xl transition-all duration-200 shadow-xl shadow-indigo-600/25 flex items-center justify-center gap-3 cursor-pointer"
+                  >
+                    {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <CalendarDays className="w-5 h-5" />}
+                    <span>{gt('bookBtn')}</span>
+                  </button>
+                </div>
+              </section>
             </motion.div>
           )}
 
           {activeTab === 'live' && (
             <motion.div
               key="live-panel"
-              initial={{ opacity: 0, y: 15 }}
+              initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -15 }}
-              className="space-y-6"
+              exit={{ opacity: 0, y: -12 }}
+              className="space-y-10 sm:space-y-12"
             >
               {!isLiveActive ? (
-                /* Landing webinars list */
-                <div className="space-y-6">
+                <>
+                  {/* =========================================================
+                      SECTION 1: LIVE WEBINARS FILTER & SEARCH CONTROLS
+                  ========================================================== */}
+                  <section className="rounded-[2.5rem] bg-[#0d1424]/95 border border-white/10 p-6 sm:p-8 lg:p-10 shadow-2xl space-y-6">
+                    <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-5 border-b border-white/10">
+                      <div className="space-y-1">
+                        <div className="text-xs font-bold uppercase tracking-wider text-rose-400">
+                          Interactive Clinical Webcasts
+                        </div>
+                        <h2 className="text-2xl sm:text-3xl font-black text-white flex items-center gap-3">
+                          <Tv className="w-6 h-6 text-rose-400" />
+                          <span>{gt('upcomingLiveSessions')}</span>
+                        </h2>
+                      </div>
+                      <span className="text-xs sm:text-sm text-slate-300 font-semibold">
+                        Showing {filteredLiveSessions.length} upcoming interactive sessions
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      {/* Date Filter Dropdown */}
+                      <div className="space-y-2">
+                        <label className="block text-xs font-bold uppercase tracking-wider text-slate-400">Filter by Date</label>
+                        <div className="flex items-center gap-2 bg-[#141f38] px-4 py-3 rounded-2xl border border-white/15">
+                          <Calendar className="w-4 h-4 text-rose-400 shrink-0" />
+                          <select
+                            value={liveDateFilter}
+                            onChange={(e) => { playSound('click'); setLiveDateFilter(e.target.value); }}
+                            className="w-full bg-transparent text-white font-bold text-sm focus:outline-none cursor-pointer"
+                          >
+                            <option value="all" className="bg-neutral-900 text-white">All Dates</option>
+                            <option value="today" className="bg-neutral-900 text-white">Today (Oct 5)</option>
+                            <option value="tomorrow" className="bg-neutral-900 text-white">Tomorrow (Oct 6)</option>
+                            <option value="this_week" className="bg-neutral-900 text-white">This Week</option>
+                            <option value="next_week" className="bg-neutral-900 text-white">Next Week</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      {/* Session Slot Filter Dropdown */}
+                      <div className="space-y-2">
+                        <label className="block text-xs font-bold uppercase tracking-wider text-slate-400">Filter by Time Slot</label>
+                        <div className="flex items-center gap-2 bg-[#141f38] px-4 py-3 rounded-2xl border border-white/15">
+                          <Clock className="w-4 h-4 text-amber-400 shrink-0" />
+                          <select
+                            value={livePeriodFilter}
+                            onChange={(e) => { playSound('click'); setLivePeriodFilter(e.target.value as any); }}
+                            className="w-full bg-transparent text-white font-bold text-sm focus:outline-none cursor-pointer"
+                          >
+                            <option value="all" className="bg-neutral-900 text-white">All Slots (Morning, Afternoon, Evening)</option>
+                            <option value="morning" className="bg-neutral-900 text-white">🌅 Morning (8 AM - 12 PM)</option>
+                            <option value="afternoon" className="bg-neutral-900 text-white">☀️ Afternoon (12 PM - 5 PM)</option>
+                            <option value="evening" className="bg-neutral-900 text-white">🌙 Evening (5 PM - 9 PM)</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      {/* Search Box */}
+                      <div className="space-y-2">
+                        <label className="block text-xs font-bold uppercase tracking-wider text-slate-400">Search Topic or Doctor</label>
+                        <div className="relative">
+                          <Search className="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
+                          <input
+                            type="text"
+                            value={liveSearchQuery}
+                            onChange={(e) => setLiveSearchQuery(e.target.value)}
+                            placeholder="Search webinars, doctors, topics..."
+                            className="w-full bg-[#141f38] border border-white/15 rounded-2xl pl-11 pr-9 py-3 text-sm text-white placeholder:text-slate-400 focus:outline-none focus:border-rose-400 font-medium"
+                          />
+                          {liveSearchQuery && (
+                            <button
+                              onClick={() => setLiveSearchQuery('')}
+                              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-xs cursor-pointer"
+                            >
+                              ✕
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Quick Segmented Slot Buttons */}
+                    <div className="flex flex-wrap items-center gap-2 pt-1">
+                      {[
+                        { id: 'all', label: 'All Time Slots' },
+                        { id: 'morning', label: '🌅 Morning' },
+                        { id: 'afternoon', label: '☀️ Afternoon' },
+                        { id: 'evening', label: '🌙 Evening' }
+                      ].map(pf => (
+                        <button
+                          key={pf.id}
+                          onClick={() => { playSound('click'); setLivePeriodFilter(pf.id as any); }}
+                          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                            livePeriodFilter === pf.id
+                              ? 'bg-amber-400 text-slate-950 font-black shadow-sm'
+                              : 'bg-[#141f38] hover:bg-white/10 text-slate-300 border border-white/10'
+                          }`}
+                        >
+                          {pf.label}
+                        </button>
+                      ))}
+                    </div>
+                  </section>
+
                   {/* Toast alert when registered */}
                   {registerToast && (
                     <motion.div
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className="p-4 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 flex items-center justify-between gap-3 text-xs sm:text-sm font-bold shadow-lg"
+                      className="p-5 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 flex items-center justify-between gap-3 text-sm font-bold shadow-lg"
                     >
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2.5">
                         <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
                         <span>{registerToast}</span>
                       </div>
@@ -2374,22 +2834,14 @@ export const ExpertPediatricianSection: React.FC = () => {
                     </motion.div>
                   )}
 
-                  {/* Detailed Section Subheader */}
-                  <div className="flex items-center justify-between pb-3 border-b border-white/10 mb-6">
-                    <h3 className="text-lg sm:text-xl font-black text-white flex items-center gap-2.5">
-                      <Tv className="w-5 h-5 text-red-500 animate-pulse" />
-                      <span>{gt('upcomingLiveSessions')}</span>
-                    </h3>
-                    <span className="text-xs text-white/50 font-medium">
-                      Showing {filteredLiveSessions.length} upcoming interactive sessions
-                    </span>
-                  </div>
-
+                  {/* =========================================================
+                      SECTION 2: UPCOMING LIVE WEBINARS GRID
+                  ========================================================== */}
                   {filteredLiveSessions.length === 0 ? (
-                    <div className="p-12 rounded-3xl bg-white/[0.02] border border-white/10 text-center space-y-3">
-                      <Tv className="w-12 h-12 text-white/30 mx-auto" />
-                      <h4 className="text-base font-bold text-white">No Upcoming Live Sessions Found</h4>
-                      <p className="text-xs text-white/50 max-w-md mx-auto">
+                    <section className="p-14 rounded-[2.5rem] bg-[#0d1424]/95 border border-white/10 text-center space-y-4 shadow-2xl">
+                      <Tv className="w-12 h-12 text-slate-500 mx-auto" />
+                      <h3 className="text-lg font-bold text-white">No Upcoming Live Sessions Found</h3>
+                      <p className="text-sm text-slate-400 max-w-md mx-auto">
                         No scheduled webinars match your active date or slot filter. Try selecting "All Dates" or "All Slots".
                       </p>
                       <button
@@ -2399,86 +2851,83 @@ export const ExpertPediatricianSection: React.FC = () => {
                           setLivePeriodFilter('all');
                           setLiveSearchQuery('');
                         }}
-                        className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/15 text-white text-xs font-bold transition-all cursor-pointer"
+                        className="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-white text-xs sm:text-sm font-bold transition-all cursor-pointer"
                       >
                         Reset Filters
                       </button>
-                    </div>
+                    </section>
                   ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <section className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                       {filteredLiveSessions.map((session) => {
                         const isRegistered = registeredSessionIds.includes(session.id);
 
                         return (
                           <div
                             key={session.id}
-                            className={`p-6 sm:p-7 bg-white/[0.025] hover:bg-white/[0.04] rounded-3xl border transition-all duration-300 flex flex-col justify-between relative overflow-hidden shadow-xl ${
+                            className={`p-7 sm:p-8 bg-[#0d1424]/95 rounded-[2.5rem] border transition-all duration-200 flex flex-col justify-between shadow-2xl space-y-6 ${
                               session.isLiveNow
-                                ? 'border-red-500/40 shadow-red-500/10 bg-red-950/5'
+                                ? 'border-rose-500/50'
                                 : isRegistered
-                                  ? 'border-emerald-500/30 bg-emerald-950/10'
+                                  ? 'border-emerald-500/40'
                                   : 'border-white/10 hover:border-white/25'
                             }`}
                           >
-                            {/* Card Top Pill Header */}
-                            <div className="flex items-center justify-between gap-2 mb-4">
-                              <div className="flex flex-wrap items-center gap-2">
-                                <span className={`px-3 py-1 rounded-full text-xs font-black tracking-wider uppercase border ${session.topicColor.bg} ${session.topicColor.text} ${session.topicColor.border}`}>
-                                  {session.topicTag}
-                                </span>
-                                <span className="text-xs font-bold text-white/70 bg-white/5 border border-white/10 px-2.5 py-1 rounded-xl flex items-center gap-1.5">
-                                  {session.period === 'morning' && <Sunrise className="w-3.5 h-3.5 text-amber-400" />}
-                                  {session.period === 'afternoon' && <Sun className="w-3.5 h-3.5 text-amber-300" />}
-                                  {session.period === 'evening' && <Moon className="w-3.5 h-3.5 text-indigo-300" />}
-                                  <span className="capitalize">{session.period}</span>
-                                </span>
+                            <div className="space-y-5">
+                              {/* Top Metadata Line */}
+                              <div className="flex items-center justify-between gap-3 flex-wrap text-xs font-bold">
+                                <div className="flex items-center gap-2 text-slate-300">
+                                  <span className={session.topicColor.text}>{session.topicTag}</span>
+                                  <span aria-hidden="true">·</span>
+                                  <span className="capitalize flex items-center gap-1">
+                                    {session.period === 'morning' && <Sunrise className="w-3.5 h-3.5 text-amber-400" />}
+                                    {session.period === 'afternoon' && <Sun className="w-3.5 h-3.5 text-amber-300" />}
+                                    {session.period === 'evening' && <Moon className="w-3.5 h-3.5 text-indigo-300" />}
+                                    <span>{session.period} Session</span>
+                                  </span>
+                                </div>
+
+                                <div>
+                                  {session.isLiveNow ? (
+                                    <span className="text-rose-400 font-black uppercase tracking-wider">
+                                      ● {gt('liveNow')}
+                                    </span>
+                                  ) : isRegistered ? (
+                                    <span className="text-emerald-300 font-black uppercase tracking-wider flex items-center gap-1">
+                                      <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                                      <span>Registered</span>
+                                    </span>
+                                  ) : (
+                                    <span className="text-slate-400 font-semibold flex items-center gap-1.5">
+                                      <Users className="w-4 h-4 text-indigo-400" />
+                                      <span>{session.registeredCount} registered</span>
+                                    </span>
+                                  )}
+                                </div>
                               </div>
 
-                              <div>
-                                {session.isLiveNow ? (
-                                  <span className="px-3 py-1 rounded-full bg-red-500/20 text-red-400 border border-red-500/40 text-xs font-black tracking-widest uppercase animate-pulse flex items-center gap-1.5">
-                                    <span className="w-2 h-2 rounded-full bg-red-500 animate-ping" />
-                                    {gt('liveNow')}
-                                  </span>
-                                ) : isRegistered ? (
-                                  <span className="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-xs font-black tracking-wider uppercase flex items-center gap-1.5">
-                                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                                    Registered
-                                  </span>
-                                ) : (
-                                  <span className="text-xs text-white/40 font-semibold flex items-center gap-1.5">
-                                    <Users className="w-3.5 h-3.5 text-indigo-400" />
-                                    <span>{session.registeredCount} registered</span>
-                                  </span>
-                                )}
-                              </div>
-                            </div>
-
-                            {/* Session Content */}
-                            <div className="space-y-4 mb-5">
                               {/* Session Title */}
-                              <h4 className="text-xl sm:text-2xl font-black text-white leading-snug tracking-tight">
+                              <h3 className="text-xl sm:text-2xl font-black text-white leading-snug tracking-tight">
                                 {session.title}
-                              </h4>
+                              </h3>
 
                               {/* Doctor Details & Hospital Affiliation */}
-                              <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/5 space-y-2.5 text-xs sm:text-sm">
-                                <div className="flex items-start sm:items-center justify-between gap-2 flex-wrap">
-                                  <div className="font-bold text-white flex items-center gap-2">
-                                    <div className="w-7 h-7 rounded-xl bg-indigo-500/20 text-indigo-300 flex items-center justify-center shrink-0">
-                                      <User className="w-4 h-4" />
+                              <div className="p-5 rounded-2xl bg-[#131d33] border border-white/10 space-y-3 text-sm">
+                                <div className="flex items-start justify-between gap-3 flex-wrap">
+                                  <div className="flex items-center gap-3">
+                                    <div className="w-9 h-9 rounded-xl bg-indigo-500/20 text-indigo-300 flex items-center justify-center shrink-0">
+                                      <User className="w-5 h-5" />
                                     </div>
                                     <div>
-                                      <span className="text-sm font-bold text-white">{session.doctorName}</span>
-                                      <span className="text-xs text-white/50 ml-1.5 font-normal">({session.degrees})</span>
+                                      <div className="font-black text-white text-base">{session.doctorName}</div>
+                                      <div className="text-xs text-amber-300 font-mono">{session.degrees}</div>
                                     </div>
                                   </div>
-                                  <span className="text-xs font-bold text-indigo-300 bg-indigo-500/10 px-2.5 py-1 rounded-lg border border-indigo-500/20">
+                                  <span className="text-xs font-bold text-indigo-300">
                                     {session.doctorSpecialty}
                                   </span>
                                 </div>
 
-                                <div className="flex items-start gap-2 text-xs text-emerald-300 font-medium pt-2 border-t border-white/5">
+                                <div className="flex items-start gap-2.5 text-xs sm:text-sm text-emerald-300 font-medium pt-3 border-t border-white/10">
                                   <Building2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
                                   <span className="leading-relaxed">
                                     <strong className="text-emerald-200">Hospital:</strong> {session.hospital}, {session.city}
@@ -2487,54 +2936,54 @@ export const ExpertPediatricianSection: React.FC = () => {
                               </div>
 
                               {/* Date and Time Details */}
-                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm">
-                                <div className="p-3 rounded-2xl bg-white/[0.02] border border-white/5 flex items-center gap-3">
-                                  <div className="p-2 rounded-xl bg-red-500/10 text-red-400 shrink-0">
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+                                <div className="p-4 rounded-2xl bg-[#131d33] border border-white/10 flex items-center gap-3.5">
+                                  <div className="p-2.5 rounded-xl bg-rose-500/15 text-rose-400 shrink-0">
                                     <Calendar className="w-4 h-4" />
                                   </div>
                                   <div>
-                                    <div className="text-[10px] text-white/40 uppercase font-bold tracking-wider">Date</div>
+                                    <div className="text-xs text-slate-400 font-bold">Date</div>
                                     <div className="font-bold text-white">{session.dateStr}</div>
                                   </div>
                                 </div>
 
-                                <div className="p-3 rounded-2xl bg-white/[0.02] border border-white/5 flex items-center gap-3">
-                                  <div className="p-2 rounded-xl bg-amber-500/10 text-amber-400 shrink-0">
+                                <div className="p-4 rounded-2xl bg-[#131d33] border border-white/10 flex items-center gap-3.5">
+                                  <div className="p-2.5 rounded-xl bg-amber-500/15 text-amber-400 shrink-0">
                                     <Clock className="w-4 h-4" />
                                   </div>
                                   <div>
-                                    <div className="text-[10px] text-white/40 uppercase font-bold tracking-wider">Time Slot</div>
+                                    <div className="text-xs text-slate-400 font-bold">Time Slot</div>
                                     <div className="font-bold text-white">{session.timeStr}</div>
                                   </div>
                                 </div>
                               </div>
 
                               {/* Detailed Session Description */}
-                              <p className="text-xs sm:text-sm text-white/60 leading-relaxed">
+                              <p className="text-sm text-slate-300 leading-relaxed">
                                 {session.description}
                               </p>
                             </div>
 
                             {/* Session Actions: Register or Join */}
-                            <div className="pt-3 border-t border-white/5">
+                            <div className="pt-4 border-t border-white/10">
                               {session.isLiveNow ? (
                                 <button
                                   onClick={() => { setIsLiveActive(true); playSound('glass'); }}
-                                  className="w-full py-3.5 bg-red-500 hover:bg-red-600 text-white font-black text-sm rounded-2xl transition-all shadow-lg shadow-red-500/25 flex items-center justify-center gap-2 cursor-pointer active:scale-98"
+                                  className="w-full py-4 bg-rose-600 hover:bg-rose-500 text-white font-black text-sm sm:text-base rounded-2xl transition-all shadow-lg shadow-rose-600/25 flex items-center justify-center gap-2 cursor-pointer"
                                 >
-                                  <Video className="w-4 h-4" />
+                                  <Video className="w-5 h-5" />
                                   <span>{gt('joinLiveSession')}</span>
                                 </button>
                               ) : isRegistered ? (
-                                <div className="flex items-center gap-2">
-                                  <div className="flex-1 py-3 px-4 bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 font-bold text-sm rounded-2xl flex items-center justify-center gap-2 text-center">
+                                <div className="flex items-center gap-3">
+                                  <div className="flex-1 py-3.5 px-4 bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 font-bold text-sm rounded-2xl flex items-center justify-center gap-2 text-center">
                                     <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
                                     <span>Registered</span>
                                   </div>
                                   <button
                                     onClick={() => handleUnregister(session.id)}
                                     title="Cancel registration"
-                                    className="p-3 rounded-2xl bg-white/5 hover:bg-rose-500/20 text-white/40 hover:text-rose-300 border border-white/10 transition-all text-xs cursor-pointer"
+                                    className="p-3.5 rounded-2xl bg-white/5 hover:bg-rose-500/20 text-slate-400 hover:text-rose-300 border border-white/10 transition-all text-xs cursor-pointer"
                                   >
                                     ✕
                                   </button>
@@ -2542,9 +2991,9 @@ export const ExpertPediatricianSection: React.FC = () => {
                               ) : (
                                 <button
                                   onClick={() => handleOpenRegisterModal(session)}
-                                  className="w-full py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white font-black text-sm rounded-2xl transition-all shadow-lg shadow-indigo-600/20 flex items-center justify-center gap-2 cursor-pointer active:scale-98"
+                                  className="w-full py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-black text-sm sm:text-base rounded-2xl transition-all shadow-lg shadow-indigo-600/20 flex items-center justify-center gap-2 cursor-pointer"
                                 >
-                                  <UserPlus className="w-4 h-4 text-indigo-200" />
+                                  <UserPlus className="w-5 h-5 text-indigo-200" />
                                   <span>Register</span>
                                 </button>
                               )}
@@ -2552,103 +3001,106 @@ export const ExpertPediatricianSection: React.FC = () => {
                           </div>
                         );
                       })}
-                    </div>
+                    </section>
                   )}
-                </div>
+                </>
               ) : (
                 /* Active Immersive Live Session view */
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-[460px]">
-                  {/* Simulated Video Player */}
-                  <div className="lg:col-span-7 bg-black rounded-3xl border border-white/10 relative overflow-hidden flex flex-col">
-                    <div className="p-4 bg-gradient-to-b from-black/85 to-transparent absolute top-0 left-0 w-full z-10 flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <span className="w-2.5 h-2.5 bg-red-500 rounded-full animate-ping" />
-                        <span className="text-[10px] font-black text-white tracking-widest uppercase">LIVE WEBCAST</span>
+                <section className="rounded-[2.5rem] bg-[#0d1424]/95 border border-white/10 p-6 sm:p-8 shadow-2xl">
+                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 min-h-[540px]">
+                    {/* Simulated Video Player */}
+                    <div className="lg:col-span-7 bg-black rounded-3xl border border-white/10 relative overflow-hidden flex flex-col">
+                      <div className="p-4 bg-gradient-to-b from-black/85 to-transparent absolute top-0 left-0 w-full z-10 flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <span className="w-2.5 h-2.5 bg-red-500 rounded-full animate-ping" />
+                          <span className="text-xs font-black text-white tracking-widest uppercase">LIVE WEBCAST</span>
+                        </div>
+                        <button
+                          onClick={() => { setIsLiveActive(false); playSound('click'); }}
+                          className="px-4 py-2 bg-white/15 hover:bg-rose-600 hover:text-white rounded-xl text-xs font-black text-white transition-all flex items-center gap-1.5 cursor-pointer"
+                        >
+                          <VideoOff className="w-4 h-4" />
+                          {gt('endSession')}
+                        </button>
                       </div>
-                      <button
-                        onClick={() => { setIsLiveActive(false); playSound('click'); }}
-                        className="px-3 py-1.5 bg-white/15 hover:bg-rose-600 hover:text-white rounded-xl text-[10px] font-black text-white transition-all flex items-center gap-1.5"
-                      >
-                        <VideoOff className="w-3.5 h-3.5" />
-                        {gt('endSession')}
-                      </button>
+
+                      {/* High-tech Speaker Simulation */}
+                      <div className="flex-1 bg-gradient-to-b from-neutral-900 to-neutral-950 flex flex-col items-center justify-center p-8 text-center">
+                        <div className="relative mb-4">
+                          <div className="w-24 h-24 bg-indigo-500/20 border-2 border-indigo-500 rounded-full flex items-center justify-center text-5xl shadow-inner relative">
+                            👨‍⚕️
+                          </div>
+                          <div className="absolute bottom-0 right-0 p-1.5 bg-emerald-500 rounded-full border-2 border-neutral-900">
+                            <Check className="w-4 h-4 text-white" />
+                          </div>
+                        </div>
+                        <div className="text-white font-black text-xl">Dr. Rajesh Iyer</div>
+                        <div className="text-sm text-indigo-400 font-bold mb-6">Speaking: Nutritional benefits of Sprouted Ragi Gruel</div>
+
+                        {/* Presentation slide representation */}
+                        <div className="w-full max-w-md bg-white/5 border border-white/10 p-5 rounded-2xl text-left space-y-2">
+                          <div className="text-xs text-amber-300 font-black tracking-wider uppercase flex items-center gap-1.5">
+                            <Award className="w-4 h-4" />
+                            <span>Key Slide Takeaways</span>
+                          </div>
+                          <div className="text-sm font-semibold text-white/95 leading-relaxed">
+                            Calcium &amp; Iron bioavailability is increased by 40% when sprouting grains. Great for motor coordination milestones!
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="p-4 bg-neutral-900/90 border-t border-white/10 flex items-center justify-between text-xs text-slate-300">
+                        <div className="flex items-center gap-2 font-semibold">
+                          <Users className="w-4 h-4 text-indigo-400" />
+                          <span>142 Parents participating live</span>
+                        </div>
+                        <div className="font-bold text-emerald-400">Audio/HD Video Connected</div>
+                      </div>
                     </div>
 
-                    {/* High-tech Speaker Simulation */}
-                    <div className="flex-1 bg-gradient-to-b from-neutral-900 to-neutral-950 flex flex-col items-center justify-center p-6 text-center">
-                      <div className="relative mb-3">
-                        <div className="w-24 h-24 bg-indigo-500/20 border-2 border-indigo-500 rounded-full flex items-center justify-center text-5xl shadow-inner relative animate-pulse">
-                          👨‍⚕️
-                        </div>
-                        <div className="absolute bottom-0 right-0 p-1.5 bg-emerald-500 rounded-full border-2 border-neutral-900">
-                          <Check className="w-4 h-4 text-white" />
-                        </div>
+                    {/* Live Chat Panel */}
+                    <div className="lg:col-span-5 flex flex-col bg-[#121c33] border border-white/10 rounded-3xl overflow-hidden h-[540px]">
+                      <div className="px-5 py-4 bg-white/5 border-b border-white/10 flex items-center gap-2.5">
+                        <MessageSquare className="w-4 h-4 text-indigo-400" />
+                        <h4 className="text-sm font-black text-white uppercase tracking-wider">{gt('liveChatFeed')}</h4>
                       </div>
-                      <div className="text-white font-black text-lg">Dr. Rajesh Iyer</div>
-                      <div className="text-xs md:text-sm text-indigo-400 font-bold mb-4">Speaking: Nutritional benefits of Sprouted Ragi Gruel</div>
 
-                      {/* Presentation slide representation */}
-                      <div className="w-full max-w-sm bg-white/5 border border-white/5 p-4 rounded-2xl text-left space-y-1.5 bg-gradient-to-r from-indigo-500/[0.04] to-transparent">
-                        <div className="text-[10px] text-amber-300 font-black tracking-widest uppercase flex items-center gap-1">
-                          <Award className="w-3.5 h-3.5" />
-                          Key Slide Takeaways
-                        </div>
-                        <div className="text-xs font-black text-white/95 leading-relaxed">Calcium & Iron bioavailability is increased by 40% when sprouting grains. Great for motor coordination milestones!</div>
+                      <div ref={liveChatContainerRef} className="flex-1 overflow-y-auto p-5 space-y-4">
+                        {liveChatMessages.map((msg, i) => (
+                          <div key={i} className={`text-sm space-y-1 max-w-[90%] ${msg.isUser ? 'ml-auto text-right' : ''}`}>
+                            <div className={`font-black text-xs ${msg.isUser ? 'text-indigo-300' : 'text-amber-300'}`}>{msg.sender}</div>
+                            <div className={`p-3.5 rounded-2xl leading-relaxed text-white/90 inline-block text-sm ${msg.isUser ? 'bg-indigo-600 text-white rounded-tr-none' : 'bg-white/5 rounded-tl-none'}`}>{msg.text}</div>
+                          </div>
+                        ))}
+                        <div ref={liveChatEndRef} />
                       </div>
-                    </div>
 
-                    <div className="p-4 bg-neutral-900/90 border-t border-white/10 flex items-center justify-between text-xs text-white/40">
-                      <div className="flex items-center gap-1.5 font-semibold">
-                        <Users className="w-4 h-4 text-indigo-400" />
-                        <span>142 Parents participating live</span>
+                      {/* Submit Question form */}
+                      <div className="p-4 bg-white/5 border-t border-white/10 flex items-end gap-2.5">
+                        <textarea
+                          rows={1}
+                          value={liveUserQuestion}
+                          onChange={(e) => setLiveUserQuestion(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              e.stopPropagation();
+                            }
+                          }}
+                          placeholder={`${gt('questionPlaceholder')} (Press Enter for line break)`}
+                          className="flex-1 bg-[#0d1424] border border-white/15 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-indigo-400 resize-y min-h-[44px] leading-relaxed"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => handleLiveQuestionSubmit()}
+                          disabled={!liveUserQuestion.trim()}
+                          className="p-3 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-40 text-white rounded-xl transition-colors shrink-0 cursor-pointer"
+                        >
+                          <Send className="w-4 h-4" />
+                        </button>
                       </div>
-                      <div className="font-bold text-emerald-400">Audio/HD Video Connected</div>
                     </div>
                   </div>
-
-                  {/* Live Chat Panel */}
-                  <div className="lg:col-span-5 flex flex-col bg-white/[0.02] border border-white/5 rounded-3xl overflow-hidden h-full">
-                    <div className="px-4 py-3 bg-white/5 border-b border-white/5 flex items-center gap-2">
-                      <MessageSquare className="w-4 h-4 text-indigo-400" />
-                      <h4 className="text-sm font-black text-white uppercase tracking-wider">{gt('liveChatFeed')}</h4>
-                    </div>
-
-                    <div ref={liveChatContainerRef} className="flex-1 overflow-y-auto p-4 space-y-3.5 scrollbar-none">
-                      {liveChatMessages.map((msg, i) => (
-                        <div key={i} className={`text-sm space-y-1 max-w-[90%] ${msg.isUser ? 'ml-auto text-right' : ''}`}>
-                          <div className={`font-black uppercase tracking-wider text-[10px] ${msg.isUser ? 'text-indigo-400' : 'text-amber-400'}`}>{msg.sender}</div>
-                          <div className={`p-3 rounded-2xl leading-relaxed text-white/80 inline-block text-sm ${msg.isUser ? 'bg-indigo-500/20 text-indigo-100 rounded-tr-none' : 'bg-white/5 rounded-tl-none'}`}>{msg.text}</div>
-                        </div>
-                      ))}
-                      <div ref={liveChatEndRef} />
-                    </div>
-
-                    {/* Submit Question form */}
-                    <div className="p-3 bg-white/5 border-t border-white/5 flex items-end gap-2">
-                      <textarea
-                        rows={1}
-                        value={liveUserQuestion}
-                        onChange={(e) => setLiveUserQuestion(e.target.value)}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter') {
-                            // Enter / Shift+Enter for line break, never submit or select button
-                            e.stopPropagation();
-                          }
-                        }}
-                        placeholder={`${gt('questionPlaceholder')} (Press Enter for line break)`}
-                        className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500 resize-y min-h-[42px] leading-relaxed"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => handleLiveQuestionSubmit()}
-                        disabled={!liveUserQuestion.trim()}
-                        className="p-2.5 bg-indigo-500 hover:bg-indigo-600 disabled:opacity-40 text-white rounded-xl transition-colors shrink-0 cursor-pointer"
-                      >
-                        <Send className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
-                </div>
+                </section>
               )}
             </motion.div>
           )}
@@ -2656,25 +3108,33 @@ export const ExpertPediatricianSection: React.FC = () => {
           {activeTab === 'chat' && (
             <motion.div
               key="chat-panel"
-              initial={{ opacity: 0, y: 15 }}
+              initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -15 }}
-              className="space-y-6"
+              exit={{ opacity: 0, y: -12 }}
+              className="space-y-10 sm:space-y-12"
             >
-              {/* Filter by State Cities Header */}
-              <div className="bg-white/[0.02] border border-white/5 p-5 rounded-3xl space-y-3">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                  <div>
-                    <h3 className="text-base font-black text-white uppercase tracking-wider flex items-center gap-2">
-                      <Stethoscope className="w-5 h-5 text-indigo-400" />
-                      Verified Pediatric Specialists Directory
-                    </h3>
-                    <p className="text-xs text-white/50 mt-0.5">Filter by city in <span className="text-indigo-300 font-bold">{selectedState}</span> to consult top verified pediatricians from accredited hospitals.</p>
+              {/* =========================================================
+                  SECTION 1: VERIFIED PEDIATRIC SPECIALISTS DIRECTORY
+              ========================================================== */}
+              <section className="rounded-[2.5rem] bg-[#0d1424]/95 border border-white/10 p-6 sm:p-10 lg:p-12 shadow-2xl space-y-8">
+                <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 pb-6 border-b border-white/10">
+                  <div className="space-y-2 max-w-2xl">
+                    <div className="text-xs font-bold uppercase tracking-wider text-emerald-400">
+                      Step 01 · Choose On-Demand Specialist
+                    </div>
+                    <h2 className="text-2xl sm:text-3xl font-black text-white flex items-center gap-3">
+                      <Stethoscope className="w-7 h-7 text-emerald-400" />
+                      <span>Verified Pediatric Specialists Directory</span>
+                    </h2>
+                    <p className="text-sm sm:text-base text-slate-300 leading-relaxed">
+                      Filter by city in <span className="text-indigo-300 font-bold">{selectedState}</span> to consult top verified pediatricians from accredited hospitals.
+                    </p>
                   </div>
-                  <div className="flex flex-wrap items-center gap-3">
+
+                  <div className="flex flex-wrap items-center gap-4">
                     {/* State Selector */}
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-xs text-white/50 font-bold uppercase tracking-wider">State:</span>
+                    <div className="space-y-1.5">
+                      <span className="block text-xs text-slate-400 font-bold">State</span>
                       <div className="relative">
                         <select
                           value={selectedState}
@@ -2695,19 +3155,19 @@ export const ExpertPediatricianSection: React.FC = () => {
                             }
                             playSound('click');
                           }}
-                          className="bg-neutral-900 border border-white/10 text-white font-bold text-xs rounded-xl px-3 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer"
+                          className="bg-[#141f38] border border-white/15 text-white font-bold text-sm rounded-xl px-4 py-2.5 pr-9 focus:outline-none focus:border-indigo-400 cursor-pointer appearance-none"
                         >
                           {allStatesList.map(st => (
                             <option key={st} value={st} className="bg-neutral-900 text-white font-bold">{st}</option>
                           ))}
                         </select>
-                        <ChevronDown className="w-3.5 h-3.5 text-white/50 absolute right-2.5 top-3 pointer-events-none" />
+                        <ChevronDown className="w-4 h-4 text-slate-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                       </div>
                     </div>
 
                     {/* City Selector */}
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-xs text-white/50 font-bold uppercase tracking-wider">City:</span>
+                    <div className="space-y-1.5">
+                      <span className="block text-xs text-slate-400 font-bold">City</span>
                       <div className="relative">
                         <select
                           value={chatCity}
@@ -2722,125 +3182,125 @@ export const ExpertPediatricianSection: React.FC = () => {
                               handleSelectChatDoctor(cityDocs[0]);
                             }
                           }}
-                          className="bg-neutral-900 border border-white/10 text-white font-bold text-xs rounded-xl px-3 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer"
+                          className="bg-[#141f38] border border-white/15 text-white font-bold text-sm rounded-xl px-4 py-2.5 pr-9 focus:outline-none focus:border-indigo-400 cursor-pointer appearance-none"
                         >
                           {stateCities.map(c => (
                             <option key={c} value={c} className="bg-neutral-900 text-white font-bold">{c}</option>
                           ))}
                         </select>
-                        <ChevronDown className="w-3.5 h-3.5 text-white/50 absolute right-2.5 top-3 pointer-events-none" />
+                        <ChevronDown className="w-4 h-4 text-slate-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                       </div>
                     </div>
                   </div>
                 </div>
 
                 {/* Doctor Chat Fee & Session Banner */}
-                <div className="p-4 bg-gradient-to-r from-indigo-950/60 via-purple-950/40 to-slate-900/60 border border-indigo-500/20 rounded-2xl flex flex-wrap items-center justify-between gap-3 text-xs">
-                  <div className="flex items-center gap-2 text-indigo-200">
-                    <span className="text-base">🩺</span>
-                    <span className="font-bold">Doctor Chat Consultation: <span className="text-emerald-300 font-extrabold text-sm">₹199 for all doctors</span></span>
-                    <span className="text-white/40">•</span>
-                    <span className="text-amber-300 font-bold bg-amber-400/10 border border-amber-400/20 px-2 py-0.5 rounded-lg">1 Session is 20 min</span>
+                <div className="p-5 bg-[#121c33] border border-indigo-400/25 rounded-2xl flex flex-wrap items-center justify-between gap-4 text-sm">
+                  <div className="flex items-center gap-2.5 text-slate-200 flex-wrap">
+                    <span className="font-bold">Doctor Chat Consultation: <span className="text-emerald-300 font-black">₹199 for all doctors</span></span>
+                    <span aria-hidden="true">·</span>
+                    <span className="text-amber-300 font-bold">1 Session is 20 min</span>
                   </div>
-                  <div className="text-[11px] text-white/50">
-                    Instant 1:1 Pediatric Clinical Q&A with Qualified Pediatricians in Our Partner Network
+                  <div className="text-xs sm:text-sm text-slate-400">
+                    Instant 1:1 Pediatric Clinical Q&amp;A with Qualified Pediatricians in Our Partner Network
                   </div>
                 </div>
 
-
-                {/* Doctors List for this City */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2">
+                {/* Doctors List for this City (Spacious, Full Text, Zero Truncation) */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   {getDoctorsForCity(chatCity, selectedState).map(doc => {
                     const isSelected = activeChatDoc.name === doc.name;
                     return (
                       <div
                         key={doc.id || doc.name}
                         onClick={() => handleSelectChatDoctor(doc)}
-                        className={`p-3.5 rounded-2xl border text-left cursor-pointer transition-all duration-300 relative ${isSelected ? 'bg-indigo-500/15 border-indigo-500 shadow-lg shadow-indigo-500/10 ring-1 ring-indigo-500/30' : 'bg-white/[0.02] border-white/5 hover:border-white/15 hover:bg-white/[0.04]'}`}
+                        className={`p-6 rounded-3xl border text-left cursor-pointer transition-all duration-200 flex flex-col justify-between space-y-4 ${
+                          isSelected
+                            ? 'bg-[#162447] border-emerald-400 shadow-xl shadow-emerald-500/10'
+                            : 'bg-[#121c33] border-white/10 hover:border-emerald-400/40 hover:bg-[#15203b]'
+                        }`}
                       >
-                        <div className="flex items-start gap-3">
-                          <span className="text-3xl p-2 bg-white/5 rounded-2xl shrink-0">{doc.image}</span>
-                          <div className="min-w-0 flex-1">
-                            <div className="flex items-center gap-1 flex-wrap">
-                              <span className="text-sm font-black text-white">{doc.name}</span>
+                        <div className="flex items-start gap-3.5">
+                          <span className="text-3xl p-3 bg-white/5 border border-white/10 rounded-2xl shrink-0">{doc.image}</span>
+                          <div className="min-w-0 flex-1 space-y-1.5">
+                            <div className="flex items-start justify-between gap-2">
+                              <h3 className="text-base font-black text-white leading-snug">{doc.name}</h3>
                               {isSelected && (
-                                <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-500/30">Active</span>
+                                <span className="text-xs font-bold text-emerald-300 shrink-0">Active ✓</span>
                               )}
                             </div>
-                            <div className="text-[10px] font-mono text-amber-300 bg-amber-400/10 border border-amber-400/20 px-1 py-0.5 rounded font-bold mt-1 inline-block">
+                            <div className="text-xs font-mono text-amber-300 font-semibold leading-relaxed">
                               {doc.degrees}
                             </div>
-                            <div className="text-xs text-indigo-300 font-semibold mt-1 truncate flex items-center gap-1">
-                              <Building2 className="w-3 h-3 text-indigo-400 shrink-0" />
-                              <span>{doc.hospital}</span>
-                            </div>
-                            <div className="text-[11px] text-white/50 truncate">
-                              📍 {doc.location}, {doc.city}
-                            </div>
-                            <div className="text-[11px] text-white/40 mt-0.5 truncate">
-                              {doc.specialty}
-                            </div>
-                            <div className="flex items-center justify-between mt-1.5 flex-wrap gap-1">
-                              <span className="text-[11px] text-indigo-400 font-bold">
-                                {doc.experience} yrs exp • {doc.rating} ★
-                              </span>
-                            </div>
+                          </div>
+                        </div>
+
+                        <div className="space-y-2 pt-2 border-t border-white/10 text-xs sm:text-sm">
+                          <div className="text-indigo-200 font-semibold flex items-start gap-2 leading-snug">
+                            <Building2 className="w-4 h-4 text-indigo-400 shrink-0 mt-0.5" />
+                            <span>{doc.hospital}</span>
+                          </div>
+                          <div className="text-slate-300">
+                            {doc.location}, {doc.city}
+                          </div>
+                          <div className="text-slate-400 leading-relaxed">
+                            {doc.specialty}
+                          </div>
+                          <div className="pt-1 text-emerald-300 font-bold">
+                            {doc.experience} yrs exp · {doc.rating} ★
                           </div>
                         </div>
                       </div>
                     );
                   })}
                 </div>
-              </div>
+              </section>
 
-              {/* Main Doctor Chat Window */}
-              <div className="w-full">
-                {/* Active Doctor Chat Window */}
-                <div className="w-full bg-white/[0.01] border border-white/5 rounded-3xl flex flex-col h-[540px] shadow-xl overflow-hidden">
+              {/* =========================================================
+                  SECTION 2: ACTIVE DOCTOR CHAT WINDOW
+              ========================================================== */}
+              <section className="rounded-[2.5rem] bg-[#0d1424]/95 border border-emerald-400/30 p-5 sm:p-8 shadow-2xl space-y-5">
+                <div className="w-full bg-[#111a2e] border border-white/10 rounded-3xl flex flex-col h-[580px] shadow-xl overflow-hidden">
                   {/* Chat Header with Hospital, Degrees & Location */}
-                  <div className="px-5 py-4 bg-white/5 border-b border-white/5 flex items-center justify-between gap-3">
-                    <div className="flex items-center gap-3 min-w-0">
-                      <div className="relative shrink-0">
-                        <div className="w-12 h-12 rounded-2xl bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-center text-2xl shadow-inner">
-                          {activeChatDoc.image}
-                        </div>
-                        <span className="w-3 h-3 bg-emerald-500 border-2 border-neutral-900 rounded-full absolute -bottom-0.5 -right-0.5 animate-pulse" />
+                  <div className="px-6 py-5 bg-white/5 border-b border-white/10 flex flex-wrap items-center justify-between gap-4">
+                    <div className="flex items-center gap-4 min-w-0">
+                      <div className="w-13 h-13 rounded-2xl bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-center text-2xl shadow-inner shrink-0">
+                        {activeChatDoc.image}
                       </div>
-                      <div className="min-w-0">
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <h4 className="text-sm md:text-base font-black text-white uppercase tracking-wider truncate">
+                      <div className="min-w-0 space-y-1">
+                        <div className="flex items-center gap-2.5 flex-wrap">
+                          <h3 className="text-base sm:text-lg font-black text-white tracking-tight">
                             {activeChatDoc.name}
-                          </h4>
-                          <span className="text-[10px] font-mono text-amber-300 bg-amber-400/10 border border-amber-400/20 px-1.5 py-0.5 rounded font-bold">
-                            {activeChatDoc.degrees}
+                          </h3>
+                          <span className="text-xs font-mono text-amber-300 font-bold">
+                            · {activeChatDoc.degrees}
                           </span>
                         </div>
-                        <div className="text-xs text-indigo-300 font-semibold flex items-center gap-1 mt-0.5 truncate">
-                          <Building2 className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
-                          <span>{activeChatDoc.hospital} • {activeChatDoc.location} ({activeChatDoc.city})</span>
+                        <div className="text-xs sm:text-sm text-indigo-200 font-semibold flex items-center gap-1.5 flex-wrap">
+                          <Building2 className="w-4 h-4 text-indigo-400 shrink-0" />
+                          <span>{activeChatDoc.hospital} · {activeChatDoc.location} ({activeChatDoc.city})</span>
                         </div>
-                        <div className="text-[11px] text-emerald-400 font-bold flex items-center gap-1 mt-0.5">
-                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block" />
-                          <span>Online • {activeChatDoc.specialty}</span>
+                        <div className="text-xs text-emerald-400 font-bold">
+                          Online · {activeChatDoc.specialty}
                         </div>
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-2 shrink-0">
-                      <div className="hidden sm:flex text-[10px] font-black text-amber-300 items-center gap-1 bg-amber-500/10 border border-amber-500/20 px-2.5 py-1.5 rounded-xl">
-                        <UserCheck className="w-3.5 h-3.5 text-amber-400" />
-                        CLINIC VERIFIED
+                    <div className="flex items-center gap-3 shrink-0">
+                      <div className="hidden sm:flex text-xs font-bold text-amber-300 items-center gap-1.5">
+                        <UserCheck className="w-4 h-4 text-amber-400" />
+                        <span>Clinic Verified</span>
                       </div>
-                      <div className="text-xs font-mono font-black text-emerald-300 bg-emerald-500/10 border border-emerald-500/30 px-3 py-1.5 rounded-xl">
+                      <div className="text-sm font-mono font-black text-emerald-300 bg-emerald-500/15 border border-emerald-500/30 px-3.5 py-2 rounded-xl">
                         ₹199 / 20 min
                       </div>
                     </div>
                   </div>
 
                   {/* Messages Body */}
-                  <div ref={chatContainerRef} className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-none">
-                    <div className="p-3 bg-amber-500/5 border border-amber-500/10 text-amber-300 text-xs rounded-2xl leading-relaxed flex items-start gap-2">
-                      <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+                  <div ref={chatContainerRef} className="flex-1 overflow-y-auto p-5 sm:p-6 space-y-5">
+                    <div className="p-4 bg-amber-500/10 border border-amber-500/20 text-amber-200 text-xs sm:text-sm rounded-2xl leading-relaxed flex items-start gap-2.5">
+                      <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-amber-400" />
                       <span>{gt('chatDisclaimer')}</span>
                     </div>
 
@@ -2852,46 +3312,46 @@ export const ExpertPediatricianSection: React.FC = () => {
 
                       return (
                         <div key={i} className={`flex ${isDoc ? 'justify-start' : 'justify-end'}`}>
-                          <div className={`flex items-start gap-2.5 max-w-[88%] ${isDoc ? '' : 'flex-row-reverse'}`}>
+                          <div className={`flex items-start gap-3 max-w-[88%] ${isDoc ? '' : 'flex-row-reverse'}`}>
                             {isDoc && (
-                              <div className="w-8 h-8 rounded-full bg-white/5 border border-white/5 shrink-0 flex items-center justify-center text-base">
+                              <div className="w-9 h-9 rounded-full bg-white/5 border border-white/10 shrink-0 flex items-center justify-center text-base">
                                 {activeChatDoc.image}
                               </div>
                             )}
                             <div className="space-y-3">
-                              <div className={`p-4 rounded-2xl text-xs md:text-sm leading-relaxed whitespace-pre-wrap text-left ${isDoc ? 'bg-white/5 text-white/90 rounded-tl-none border border-white/5' : 'bg-indigo-500 text-white rounded-tr-none shadow-md'}`}>
+                              <div className={`p-4 sm:p-5 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap text-left ${isDoc ? 'bg-white/5 text-white/95 rounded-tl-none border border-white/10' : 'bg-indigo-600 text-white rounded-tr-none shadow-md'}`}>
                                 {msg.text}
                               </div>
 
                               {isDoc && emergencyInfo.isEmergency && (
-                                <div className="rounded-2xl border-2 border-rose-500/70 bg-gradient-to-br from-rose-950/90 via-[#1f0913]/95 to-slate-950 p-4 shadow-xl space-y-3 text-left">
-                                  <div className="flex flex-wrap items-center justify-between gap-2 border-b border-rose-500/30 pb-2.5">
+                                <div className="rounded-2xl border-2 border-rose-500/70 bg-gradient-to-br from-rose-950/90 via-[#1f0913]/95 to-slate-950 p-5 shadow-xl space-y-3 text-left">
+                                  <div className="flex flex-wrap items-center justify-between gap-2 border-b border-rose-500/30 pb-3">
                                     <div>
-                                      <span className="px-2 py-0.5 rounded-full bg-rose-500 text-white text-[9px] font-black uppercase tracking-widest">
+                                      <span className="text-rose-300 text-xs font-black uppercase tracking-wider">
                                         Urgent Action Required
                                       </span>
-                                      <h4 className="text-sm font-black text-white mt-1">
+                                      <h4 className="text-base font-black text-white mt-0.5">
                                         Emergency First Aid
                                       </h4>
                                     </div>
                                     <a
                                       href="tel:108"
                                       onClick={() => playSound('pop')}
-                                      className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-rose-500 hover:bg-rose-400 text-white font-black text-xs uppercase tracking-wider shadow-md transition-all no-underline"
+                                      className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-rose-500 hover:bg-rose-400 text-white font-black text-xs uppercase tracking-wider shadow-md transition-all no-underline"
                                     >
                                       <Phone className="w-3.5 h-3.5" />
                                       <span>Call Pediatrician</span>
                                     </a>
                                   </div>
-                                  <div className="text-xs text-rose-100/95 space-y-1.5 leading-relaxed">
+                                  <div className="text-xs sm:text-sm text-rose-100/95 space-y-2 leading-relaxed">
                                     {isChoking ? (
-                                      <ol className="list-decimal pl-4 space-y-1 text-slate-100">
+                                      <ol className="list-decimal pl-4 space-y-1.5 text-slate-100">
                                         <li><strong>5 Firm Back Blows:</strong> Hold infant face-down along forearm (or lean older child forward) and give 5 firm blows between shoulder blades.</li>
                                         <li><strong>5 Chest / Abdominal Thrusts:</strong> Give 5 two-finger chest thrusts (under 1 yr) or 5 abdominal thrusts (over 1 yr). Repeat cycles of 5 &amp; 5.</li>
                                         <li><strong>No Blind Finger Sweep:</strong> Never reach inside the mouth unless you clearly see a loose object.</li>
                                       </ol>
                                     ) : (
-                                      <ol className="list-decimal pl-4 space-y-1 text-slate-100">
+                                      <ol className="list-decimal pl-4 space-y-1.5 text-slate-100">
                                         <li><strong>Airway &amp; Positioning:</strong> Keep child upright for breathing distress, or on their side (recovery position) during a seizure.</li>
                                         <li><strong>Temperature &amp; Hydration:</strong> Sponge with lukewarm water for high fever and offer small sips of Indian IAP-approved ORS if awake.</li>
                                         <li><strong>Immediate Hospital Triage:</strong> Call <strong>112 / 108</strong> immediately for blue lips, chest retractions, or lethargy.</li>
@@ -2908,13 +3368,13 @@ export const ExpertPediatricianSection: React.FC = () => {
 
                     {isChatLoading && (
                       <div className="flex justify-start">
-                        <div className="flex items-start gap-2.5">
-                          <div className="w-8 h-8 rounded-full bg-white/5 border border-white/5 flex items-center justify-center text-sm">
+                        <div className="flex items-start gap-3">
+                          <div className="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-sm">
                             {activeChatDoc.image}
                           </div>
-                          <div className="p-3.5 bg-white/5 rounded-2xl rounded-tl-none border border-white/5 flex items-center gap-2">
-                            <Loader2 className="w-4 h-4 animate-spin text-white/40" />
-                            <span className="text-xs text-white/50 font-bold">{activeChatDoc.name} is typing clinical guidance...</span>
+                          <div className="p-4 bg-white/5 rounded-2xl rounded-tl-none border border-white/10 flex items-center gap-2.5">
+                            <Loader2 className="w-4 h-4 animate-spin text-emerald-400" />
+                            <span className="text-xs sm:text-sm text-slate-300 font-bold">{activeChatDoc.name} is typing clinical guidance...</span>
                           </div>
                         </div>
                       </div>
@@ -2923,20 +3383,19 @@ export const ExpertPediatricianSection: React.FC = () => {
                   </div>
 
                   {/* Input panel */}
-                  <div className="p-3 bg-white/5 border-t border-white/5 flex items-end gap-2">
+                  <div className="p-4 bg-white/5 border-t border-white/10 flex items-end gap-3">
                     <textarea
                       rows={1}
                       value={chatInput}
                       onChange={(e) => setChatInput(e.target.value)}
                       onKeyDown={(e) => {
                         if (e.key === 'Enter') {
-                          // Enter / Shift+Enter for line break, never submit or select button
                           e.stopPropagation();
                         }
                       }}
                       disabled={isChatLoading}
                       placeholder={`Ask ${activeChatDoc.name} about nutrition, feeding, fever, or sleep... (Press Enter for line break)`}
-                      className="flex-1 bg-white/5 border border-white/10 rounded-2xl px-4 py-3 text-xs md:text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/40 disabled:opacity-50 resize-y min-h-[46px] leading-relaxed"
+                      className="flex-1 bg-[#0d1424] border border-white/15 rounded-2xl px-4 py-3.5 text-sm text-white focus:outline-none focus:border-emerald-400 disabled:opacity-50 resize-y min-h-[48px] leading-relaxed"
                     />
                     <VoiceDictationButton
                       language={language}
@@ -2948,303 +3407,313 @@ export const ExpertPediatricianSection: React.FC = () => {
                       type="button"
                       onClick={() => handleSendChat()}
                       disabled={!chatInput.trim() || isChatLoading}
-                      className="py-3 px-5 bg-indigo-500 hover:bg-indigo-600 disabled:opacity-40 text-white rounded-2xl transition-all font-black text-xs md:text-sm flex items-center gap-1.5 shadow-md shrink-0 cursor-pointer"
+                      className="py-3.5 px-6 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 text-white rounded-2xl transition-all font-black text-sm flex items-center gap-2 shadow-md shrink-0 cursor-pointer"
                     >
                       <Send className="w-4 h-4" />
-                      Send
+                      <span>Send</span>
                     </button>
                   </div>
                 </div>
-              </div>
+              </section>
 
-              {/* Button at the end of the page to view history of doctor chat conversation which opens in new page */}
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-5 bg-gradient-to-r from-indigo-950/40 via-purple-950/30 to-slate-900/50 border border-indigo-500/20 rounded-3xl shadow-xl mt-6">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-2xl bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center text-indigo-300 shrink-0">
-                    <MessageSquare className="w-5 h-5" />
+              {/* =========================================================
+                  SECTION 3: PAST DOCTOR CHAT CONVERSATIONS ARCHIVE
+              ========================================================== */}
+              <section className="flex flex-col sm:flex-row items-center justify-between gap-6 p-6 sm:p-8 bg-[#0d1424]/95 border border-white/10 rounded-[2rem] shadow-xl">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-2xl bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center text-indigo-300 shrink-0">
+                    <MessageSquare className="w-6 h-6" />
                   </div>
-                  <div>
-                    <h4 className="text-sm md:text-base font-black text-white">Past Doctor Chat Conversations</h4>
-                    <p className="text-xs text-white/50">View complete transcripts, clinical summaries, and pediatric consultation archives</p>
+                  <div className="space-y-1">
+                    <h3 className="text-base sm:text-lg font-black text-white">Past Doctor Chat Conversations</h3>
+                    <p className="text-xs sm:text-sm text-slate-300">View complete transcripts, clinical summaries, and pediatric consultation archives</p>
                   </div>
                 </div>
                 <button
                   type="button"
                   onClick={() => {
                     playSound('click');
-                    window.open('/doctor-chat-history', '_blank');
+                    navigate('/doctor-chat-history');
                   }}
-                  className="px-6 py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white font-black text-xs md:text-sm rounded-2xl border border-indigo-400/30 shadow-lg flex items-center gap-2 hover:scale-[1.02] transition-all cursor-pointer shrink-0"
+                  className="px-6 py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white font-black text-xs sm:text-sm rounded-2xl shadow-lg flex items-center gap-2.5 transition-all cursor-pointer shrink-0"
                 >
                   <Clock className="w-4 h-4 text-amber-300" />
                   <span>View History of Doctor Chat Conversation</span>
                   <ArrowRight className="w-4 h-4" />
                 </button>
-              </div>
+              </section>
             </motion.div>
           )}
 
           {activeTab === 'reports' && (
             <motion.div
               key="reports-panel"
-              initial={{ opacity: 0, y: 15 }}
+              initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -15 }}
-              className="space-y-6"
+              exit={{ opacity: 0, y: -12 }}
+              className="space-y-10 sm:space-y-12"
             >
-              {/* Growth Report Form and Visualization Section */}
-              <div className="grid grid-cols-1 xl:grid-cols-12 gap-8">
-                {/* Inputs card */}
-                <div className="xl:col-span-5 bg-white/[0.02] border border-white/5 p-6 rounded-3xl space-y-4">
-                  <div className="flex items-center gap-2 pb-3 border-b border-white/5">
-                    <TrendingUp className="w-5 h-5 text-amber-400" />
-                    <h3 className="text-base font-black text-white uppercase tracking-wider">Toddler Growth Inputs</h3>
+              {/* =========================================================
+                  SECTION 1: TODDLER GROWTH INPUTS & MILESTONES CHECKLIST
+              ========================================================== */}
+              <section className="rounded-[2.5rem] bg-[#0d1424]/95 border border-white/10 p-6 sm:p-10 lg:p-12 shadow-2xl space-y-8">
+                <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-6 border-b border-white/10">
+                  <div className="space-y-1.5">
+                    <div className="text-xs font-bold uppercase tracking-wider text-amber-400">
+                      Step 01 · Anthropometric Parameters
+                    </div>
+                    <h2 className="text-2xl sm:text-3xl font-black text-white flex items-center gap-3">
+                      <TrendingUp className="w-7 h-7 text-amber-400" />
+                      <span>Toddler Growth Inputs</span>
+                    </h2>
                   </div>
+                </div>
 
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   {/* Toddler Name */}
-                  <div>
-                    <label className="block text-sm font-black text-white/50 uppercase tracking-widest mb-1.5">Child's Name</label>
+                  <div className="space-y-2">
+                    <label className="block text-sm font-bold text-slate-200">Child's Name</label>
                     <input
                       type="text"
                       value={childName}
                       onChange={(e) => setChildName(e.target.value)}
                       placeholder="Ashwath"
-                      className="w-full bg-white/5 border border-white/10 rounded-xl px-3.5 py-2.5 text-base text-white focus:outline-none focus:ring-2 focus:ring-amber-500 font-bold"
+                      className="w-full bg-[#141f38] border border-white/15 rounded-2xl px-4 py-3.5 text-base text-white focus:outline-none focus:border-amber-400 font-bold"
                     />
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
-                    {/* Age in Months */}
-                    <div>
-                      <label className="block text-sm font-black text-white/50 uppercase tracking-widest mb-1.5">Age (Months)</label>
-                      <div className="relative">
-                        <select
-                          value={childAge}
-                          onChange={(e) => { setChildAge(Number(e.target.value)); playSound('click'); }}
-                          className="w-full bg-white/5 border border-white/10 rounded-xl px-3.5 py-2.5 text-base text-white focus:outline-none focus:ring-2 focus:ring-amber-500 appearance-none font-bold cursor-pointer"
-                        >
-                          {[0, 3, 6, 9, 12, 15, 18, 24, 30, 36].map(m => (
-                            <option key={m} value={m} className="bg-neutral-900 text-white font-bold text-base">{m} Months</option>
-                          ))}
-                        </select>
-                        <ChevronDown className="w-4 h-4 text-white/40 absolute right-3 top-3.5 pointer-events-none" />
-                      </div>
-                    </div>
-
-                    {/* Gender */}
-                    <div>
-                      <label className="block text-sm font-black text-white/50 uppercase tracking-widest mb-1.5">Gender</label>
-                      <div className="grid grid-cols-2 bg-white/5 border border-white/10 rounded-xl p-0.5">
-                        <button
-                          type="button"
-                          onClick={() => { setChildGender('Boy'); playSound('click'); }}
-                          className={`py-1.5 rounded-lg text-sm font-black ${childGender === 'Boy' ? 'bg-amber-500 text-black' : 'text-white/60'}`}
-                        >
-                          Boy
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => { setChildGender('Girl'); playSound('click'); }}
-                          className={`py-1.5 rounded-lg text-sm font-black ${childGender === 'Girl' ? 'bg-pink-500 text-white' : 'text-white/60'}`}
-                        >
-                          Girl
-                        </button>
-                      </div>
+                  {/* Age in Months */}
+                  <div className="space-y-2">
+                    <label className="block text-sm font-bold text-slate-200">Age (Months)</label>
+                    <div className="relative">
+                      <select
+                        value={childAge}
+                        onChange={(e) => { setChildAge(Number(e.target.value)); playSound('click'); }}
+                        className="w-full bg-[#141f38] border border-white/15 rounded-2xl px-4 py-3.5 text-base text-white focus:outline-none focus:border-amber-400 appearance-none font-bold cursor-pointer"
+                      >
+                        {[0, 3, 6, 9, 12, 15, 18, 24, 30, 36].map(m => (
+                          <option key={m} value={m} className="bg-neutral-900 text-white font-bold text-base">{m} Months</option>
+                        ))}
+                      </select>
+                      <ChevronDown className="w-5 h-5 text-slate-400 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-3 gap-3">
-                    {/* Weight */}
-                    <div>
-                      <label className="block text-sm font-black text-white/50 uppercase tracking-widest mb-1.5">Weight (kg)</label>
-                      <input
-                        type="number"
-                        step="0.1"
-                        value={childWeight}
-                        onChange={(e) => setChildWeight(Number(e.target.value))}
-                        className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-base text-white focus:outline-none focus:ring-2 focus:ring-amber-500 font-bold"
-                      />
-                    </div>
-
-                    {/* Height */}
-                    <div>
-                      <label className="block text-sm font-black text-white/50 uppercase tracking-widest mb-1.5">Height (cm)</label>
-                      <input
-                        type="number"
-                        step="0.1"
-                        value={childHeight}
-                        onChange={(e) => setChildHeight(Number(e.target.value))}
-                        className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-base text-white focus:outline-none focus:ring-2 focus:ring-amber-500 font-bold"
-                      />
-                    </div>
-
-                    {/* Head Circumference */}
-                    <div>
-                      <label className="block text-sm font-black text-white/50 uppercase tracking-widest mb-1.5">Head (cm)</label>
-                      <input
-                        type="number"
-                        step="0.1"
-                        value={childHead}
-                        onChange={(e) => setChildHead(Number(e.target.value))}
-                        className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-base text-white focus:outline-none focus:ring-2 focus:ring-amber-500 font-bold"
-                      />
+                  {/* Gender */}
+                  <div className="space-y-2">
+                    <label className="block text-sm font-bold text-slate-200">Gender</label>
+                    <div className="grid grid-cols-2 bg-[#141f38] border border-white/15 rounded-2xl p-1">
+                      <button
+                        type="button"
+                        onClick={() => { setChildGender('Boy'); playSound('click'); }}
+                        className={`py-2.5 rounded-xl text-sm font-black cursor-pointer transition-colors ${childGender === 'Boy' ? 'bg-amber-400 text-slate-950' : 'text-slate-300 hover:text-white'}`}
+                      >
+                        Boy
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => { setChildGender('Girl'); playSound('click'); }}
+                        className={`py-2.5 rounded-xl text-sm font-black cursor-pointer transition-colors ${childGender === 'Girl' ? 'bg-pink-500 text-white' : 'text-slate-300 hover:text-white'}`}
+                      >
+                        Girl
+                      </button>
                     </div>
                   </div>
+                </div>
 
-                  {/* Interactive Milestones checklist */}
-                  <div className="space-y-2 pt-3 border-t border-white/5">
-                    <label className="block text-sm font-black text-white/50 uppercase tracking-widest mb-1.5">Milestones Checked</label>
-                    <div className="space-y-2 bg-black/10 p-3 rounded-2xl border border-white/5">
-                      <label className="flex items-start gap-2.5 cursor-pointer text-sm text-white/90 select-none">
-                        <input
-                          type="checkbox"
-                          checked={milestonesChecklist.standsHolding}
-                          onChange={(e) => setMilestonesChecklist({...milestonesChecklist, standsHolding: e.target.checked})}
-                          className="mt-0.5 rounded border-white/10 bg-white/5 text-amber-500 focus:ring-0"
-                        />
-                        <span>Stands with support (holding furniture)</span>
-                      </label>
-                      <label className="flex items-start gap-2.5 cursor-pointer text-sm text-white/90 select-none">
-                        <input
-                          type="checkbox"
-                          checked={milestonesChecklist.saysMamaDada}
-                          onChange={(e) => setMilestonesChecklist({...milestonesChecklist, saysMamaDada: e.target.checked})}
-                          className="mt-0.5 rounded border-white/10 bg-white/5 text-amber-500 focus:ring-0"
-                        />
-                        <span>Says 1-2 words (Mama, Dada)</span>
-                      </label>
-                      <label className="flex items-start gap-2.5 cursor-pointer text-sm text-white/90 select-none">
-                        <input
-                          type="checkbox"
-                          checked={milestonesChecklist.wavesBye}
-                          onChange={(e) => setMilestonesChecklist({...milestonesChecklist, wavesBye: e.target.checked})}
-                          className="mt-0.5 rounded border-white/10 bg-white/5 text-amber-500 focus:ring-0"
-                        />
-                        <span>Waves goodbye confidently</span>
-                      </label>
-                    </div>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                  {/* Weight */}
+                  <div className="space-y-2">
+                    <label className="block text-sm font-bold text-slate-200">Weight (kg)</label>
+                    <input
+                      type="number"
+                      step="0.1"
+                      value={childWeight}
+                      onChange={(e) => setChildWeight(Number(e.target.value))}
+                      className="w-full bg-[#141f38] border border-white/15 rounded-2xl px-4 py-3.5 text-base text-white focus:outline-none focus:border-amber-400 font-bold"
+                    />
                   </div>
 
+                  {/* Height */}
+                  <div className="space-y-2">
+                    <label className="block text-sm font-bold text-slate-200">Height (cm)</label>
+                    <input
+                      type="number"
+                      step="0.1"
+                      value={childHeight}
+                      onChange={(e) => setChildHeight(Number(e.target.value))}
+                      className="w-full bg-[#141f38] border border-white/15 rounded-2xl px-4 py-3.5 text-base text-white focus:outline-none focus:border-amber-400 font-bold"
+                    />
+                  </div>
+
+                  {/* Head Circumference */}
+                  <div className="space-y-2">
+                    <label className="block text-sm font-bold text-slate-200">Head Circumference (cm)</label>
+                    <input
+                      type="number"
+                      step="0.1"
+                      value={childHead}
+                      onChange={(e) => setChildHead(Number(e.target.value))}
+                      className="w-full bg-[#141f38] border border-white/15 rounded-2xl px-4 py-3.5 text-base text-white focus:outline-none focus:border-amber-400 font-bold"
+                    />
+                  </div>
+                </div>
+
+                {/* Interactive Milestones checklist */}
+                <div className="space-y-3 pt-4 border-t border-white/10">
+                  <label className="block text-sm font-bold text-slate-200">Milestones Checked</label>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-[#121c33] p-5 rounded-2xl border border-white/10">
+                    <label className="flex items-start gap-3 cursor-pointer text-sm text-white/90 select-none">
+                      <input
+                        type="checkbox"
+                        checked={milestonesChecklist.standsHolding}
+                        onChange={(e) => setMilestonesChecklist({...milestonesChecklist, standsHolding: e.target.checked})}
+                        className="mt-0.5 w-4 h-4 rounded border-white/20 bg-white/5 text-amber-500 focus:ring-0"
+                      />
+                      <span>Stands with support (holding furniture)</span>
+                    </label>
+                    <label className="flex items-start gap-3 cursor-pointer text-sm text-white/90 select-none">
+                      <input
+                        type="checkbox"
+                        checked={milestonesChecklist.saysMamaDada}
+                        onChange={(e) => setMilestonesChecklist({...milestonesChecklist, saysMamaDada: e.target.checked})}
+                        className="mt-0.5 w-4 h-4 rounded border-white/20 bg-white/5 text-amber-500 focus:ring-0"
+                      />
+                      <span>Says 1-2 words (Mama, Dada)</span>
+                    </label>
+                    <label className="flex items-start gap-3 cursor-pointer text-sm text-white/90 select-none">
+                      <input
+                        type="checkbox"
+                        checked={milestonesChecklist.wavesBye}
+                        onChange={(e) => setMilestonesChecklist({...milestonesChecklist, wavesBye: e.target.checked})}
+                        className="mt-0.5 w-4 h-4 rounded border-white/20 bg-white/5 text-amber-500 focus:ring-0"
+                      />
+                      <span>Waves goodbye confidently</span>
+                    </label>
+                  </div>
+                </div>
+
+                <div className="flex justify-end pt-2">
                   <button
                     onClick={triggerGenerateReport}
-                    className="w-full py-3 px-4 bg-amber-500 hover:bg-amber-600 text-black font-black text-base rounded-xl transition-colors shadow-lg flex items-center justify-center gap-2"
+                    className="w-full sm:w-auto py-4 px-8 bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-base rounded-2xl transition-colors shadow-xl flex items-center justify-center gap-2.5 cursor-pointer"
                   >
-                    <FileDown className="w-4 h-4" />
-                    Generate & Download PDF Report
+                    <FileDown className="w-5 h-5" />
+                    <span>Generate &amp; Download PDF Report</span>
                   </button>
                 </div>
+              </section>
 
-                {/* Analytics and Interactive Recharts Curve */}
-                <div className="xl:col-span-7 bg-white/[0.01] border border-white/5 p-6 rounded-3xl space-y-6 flex flex-col justify-between">
-                  {/* WHO Percentile cards */}
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    {/* Weight percentile */}
-                    <div className="p-4 bg-white/5 border border-white/5 rounded-2xl text-center relative overflow-hidden">
-                      <div className="absolute top-1 right-1 w-6 h-6 bg-amber-500/10 rounded-full blur-md" />
-                      <div className="text-[10px] text-white/40 uppercase font-black tracking-wider">Weight Percentile</div>
-                      <div className="text-2xl font-black text-amber-400 mt-1">{weightPercentile}th</div>
-                      <div className="text-[10px] text-white/40 mt-1">IAP Healthy Range</div>
+              {/* =========================================================
+                  SECTION 2: WHO / INDIAN IAP PERCENTILE ANALYTICS & CURVE
+              ========================================================== */}
+              <section className="rounded-[2.5rem] bg-[#0d1424]/95 border border-white/10 p-6 sm:p-10 lg:p-12 shadow-2xl space-y-8">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-white/10">
+                  <div className="space-y-1">
+                    <div className="text-xs font-bold uppercase tracking-wider text-indigo-400">
+                      Step 02 · Clinical Growth Curve Visualization
                     </div>
-
-                    {/* Height percentile */}
-                    <div className="p-4 bg-white/5 border border-white/5 rounded-2xl text-center relative overflow-hidden">
-                      <div className="absolute top-1 right-1 w-6 h-6 bg-indigo-500/10 rounded-full blur-md" />
-                      <div className="text-[10px] text-white/40 uppercase font-black tracking-wider">Height Percentile</div>
-                      <div className="text-2xl font-black text-indigo-400 mt-1">{heightPercentile}th</div>
-                      <div className="text-[10px] text-white/40 mt-1">Excellent Stature</div>
-                    </div>
-
-                    {/* Head Circumference percentile */}
-                    <div className="p-4 bg-white/5 border border-white/5 rounded-2xl text-center relative overflow-hidden">
-                      <div className="absolute top-1 right-1 w-6 h-6 bg-emerald-500/10 rounded-full blur-md" />
-                      <div className="text-[10px] text-white/40 uppercase font-black tracking-wider">Brain Growth</div>
-                      <div className="text-2xl font-black text-emerald-400 mt-1">{headPercentile}th</div>
-                      <div className="text-[10px] text-white/40 mt-1">Optimal Development</div>
-                    </div>
+                    <h3 className="text-2xl sm:text-3xl font-black text-white flex items-center gap-2.5">
+                      <Activity className="w-7 h-7 text-indigo-400" />
+                      <span>Indian IAP Pediatric Percentile Standard</span>
+                    </h3>
                   </div>
 
-                  {/* Dynamic Recharts Chart */}
-                  <div className="bg-black/20 border border-white/5 p-4 rounded-2xl flex-1">
-                    <div className="flex items-center justify-between mb-4">
-                      <h4 className="text-xs font-black text-white/70 uppercase tracking-widest flex items-center gap-1.5">
-                        <Activity className="w-4 h-4 text-indigo-400" />
-                        Indian IAP Pediatric Percentile Standard
-                      </h4>
-
-                      <div className="flex bg-white/5 p-0.5 rounded-lg border border-white/5 text-[10px] font-black">
-                        <button
-                          onClick={() => { setChartMetric('height'); playSound('click'); }}
-                          className={`px-2.5 py-1 rounded-md ${chartMetric === 'height' ? 'bg-indigo-500 text-white' : 'text-white/60'}`}
-                        >
-                          Height (cm)
-                        </button>
-                        <button
-                          onClick={() => { setChartMetric('weight'); playSound('click'); }}
-                          className={`px-2.5 py-1 rounded-md ${chartMetric === 'weight' ? 'bg-indigo-500 text-white' : 'text-white/60'}`}
-                        >
-                          Weight (kg)
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* Recharts responsive container */}
-                    <div className="w-full h-56 font-mono text-[10px]">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <LineChart data={growthChartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-                          <XAxis 
-                            dataKey="age" 
-                            stroke="rgba(255,255,255,0.3)" 
-                            tickLine={false} 
-                            label={{ value: 'Age (Months)', position: 'insideBottom', offset: -5, fill: 'rgba(255,255,255,0.3)', style: { textAnchor: 'middle' } }} 
-                          />
-                          <YAxis stroke="rgba(255,255,255,0.3)" tickLine={false} domain={chartMetric === 'height' ? [40, 110] : [2, 20]} />
-                          <Tooltip 
-                            contentStyle={{ backgroundColor: 'rgba(15,15,15,0.95)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }} 
-                            labelFormatter={(label) => `${label} Months`} 
-                          />
-                          <Legend verticalAlign="top" height={36} />
-                          
-                          <Line 
-                            name="95th Percentile" 
-                            type="monotone" 
-                            dataKey={chartMetric === 'height' ? 'p95' : 'wP95'} 
-                            stroke="rgba(255,255,255,0.15)" 
-                            strokeDasharray="4 4" 
-                            dot={false} 
-                          />
-                          <Line 
-                            name="Median (50th)" 
-                            type="monotone" 
-                            dataKey={chartMetric === 'height' ? 'p50' : 'wP50'} 
-                            stroke="#10b981" 
-                            strokeWidth={2} 
-                            dot={false} 
-                          />
-                          <Line 
-                            name="5th Percentile" 
-                            type="monotone" 
-                            dataKey={chartMetric === 'height' ? 'p5' : 'wP5'} 
-                            stroke="rgba(255,255,255,0.15)" 
-                            strokeDasharray="4 4" 
-                            dot={false} 
-                          />
-
-                          {/* ReferenceDot mapping the parent's actual input! */}
-                          <ReferenceDot 
-                            x={childAge} 
-                            y={chartMetric === 'height' ? childHeight : childWeight} 
-                            r={7} 
-                            fill={chartMetric === 'height' ? '#6366f1' : '#f59e0b'} 
-                            stroke="#ffffff" 
-                            strokeWidth={2} 
-                          />
-                        </LineChart>
-                      </ResponsiveContainer>
-                    </div>
+                  <div className="flex bg-[#141f38] p-1 rounded-xl border border-white/15 text-xs font-bold self-start sm:self-center">
+                    <button
+                      onClick={() => { setChartMetric('height'); playSound('click'); }}
+                      className={`px-4 py-2 rounded-lg cursor-pointer transition-colors ${chartMetric === 'height' ? 'bg-indigo-600 text-white font-black' : 'text-slate-300 hover:text-white'}`}
+                    >
+                      Height (cm)
+                    </button>
+                    <button
+                      onClick={() => { setChartMetric('weight'); playSound('click'); }}
+                      className={`px-4 py-2 rounded-lg cursor-pointer transition-colors ${chartMetric === 'weight' ? 'bg-indigo-600 text-white font-black' : 'text-slate-300 hover:text-white'}`}
+                    >
+                      Weight (kg)
+                    </button>
                   </div>
                 </div>
-              </div>
+
+                {/* WHO Percentile Cards */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                  <div className="p-6 bg-[#121c33] border border-white/10 rounded-3xl text-center space-y-2">
+                    <div className="text-xs text-slate-400 uppercase font-bold tracking-wider">Weight Percentile</div>
+                    <div className="text-3xl sm:text-4xl font-black text-amber-400 tabular-nums">{weightPercentile}th</div>
+                    <div className="text-xs text-slate-300 font-medium">IAP Healthy Range</div>
+                  </div>
+
+                  <div className="p-6 bg-[#121c33] border border-white/10 rounded-3xl text-center space-y-2">
+                    <div className="text-xs text-slate-400 uppercase font-bold tracking-wider">Height Percentile</div>
+                    <div className="text-3xl sm:text-4xl font-black text-indigo-400 tabular-nums">{heightPercentile}th</div>
+                    <div className="text-xs text-slate-300 font-medium">Excellent Stature</div>
+                  </div>
+
+                  <div className="p-6 bg-[#121c33] border border-white/10 rounded-3xl text-center space-y-2">
+                    <div className="text-xs text-slate-400 uppercase font-bold tracking-wider">Brain Growth</div>
+                    <div className="text-3xl sm:text-4xl font-black text-emerald-400 tabular-nums">{headPercentile}th</div>
+                    <div className="text-xs text-slate-300 font-medium">Optimal Development</div>
+                  </div>
+                </div>
+
+                {/* Dynamic Recharts Chart */}
+                <div className="bg-[#11192e] border border-white/10 p-6 rounded-3xl">
+                  <div className="w-full h-72 sm:h-80 font-mono text-xs">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <LineChart data={growthChartData} margin={{ top: 10, right: 15, left: -10, bottom: 5 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
+                        <XAxis 
+                          dataKey="age" 
+                          stroke="rgba(255,255,255,0.4)" 
+                          tickLine={false} 
+                          label={{ value: 'Age (Months)', position: 'insideBottom', offset: -5, fill: 'rgba(255,255,255,0.5)', style: { textAnchor: 'middle' } }} 
+                        />
+                        <YAxis stroke="rgba(255,255,255,0.4)" tickLine={false} domain={chartMetric === 'height' ? [40, 110] : [2, 20]} />
+                        <Tooltip 
+                          contentStyle={{ backgroundColor: 'rgba(13,20,36,0.96)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '14px' }} 
+                          labelFormatter={(label) => `${label} Months`} 
+                        />
+                        <Legend verticalAlign="top" height={36} />
+                        
+                        <Line 
+                          name="95th Percentile" 
+                          type="monotone" 
+                          dataKey={chartMetric === 'height' ? 'p95' : 'wP95'} 
+                          stroke="rgba(255,255,255,0.2)" 
+                          strokeDasharray="4 4" 
+                          dot={false} 
+                        />
+                        <Line 
+                          name="Median (50th)" 
+                          type="monotone" 
+                          dataKey={chartMetric === 'height' ? 'p50' : 'wP50'} 
+                          stroke="#10b981" 
+                          strokeWidth={2.5} 
+                          dot={false} 
+                        />
+                        <Line 
+                          name="5th Percentile" 
+                          type="monotone" 
+                          dataKey={chartMetric === 'height' ? 'p5' : 'wP5'} 
+                          stroke="rgba(255,255,255,0.2)" 
+                          strokeDasharray="4 4" 
+                          dot={false} 
+                        />
+
+                        {/* ReferenceDot mapping the parent's actual input */}
+                        <ReferenceDot 
+                          x={childAge} 
+                          y={chartMetric === 'height' ? childHeight : childWeight} 
+                          r={7} 
+                          fill={chartMetric === 'height' ? '#6366f1' : '#f59e0b'} 
+                          stroke="#ffffff" 
+                          strokeWidth={2} 
+                        />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+              </section>
             </motion.div>
           )}
         </AnimatePresence>

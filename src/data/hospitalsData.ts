@@ -3569,11 +3569,11 @@ const clinicDoctorRosterCache = new Map<string, Doctor[]>();
  * Aligns doctor hospital, area, city, and state with 100% precision.
  * Guarantees distinct, non-repeating doctor names.
  */
-export function getDoctorsForClinic(clinicName: string, cityName: string, stateName?: string): Doctor[] {
+export function getDoctorsForClinic(clinicName: string, cityName: string, stateName?: string, customAddress?: string): Doctor[] {
   const cleanCity = cleanCityName(cityName) || "Bengaluru";
   const stateLower = (stateName || "").toLowerCase();
   const cityLower = cleanCity.toLowerCase();
-  const cacheKey = `${clinicName}__${cityLower}__${stateLower}`;
+  const cacheKey = `${clinicName}__${customAddress || ""}__${cityLower}__${stateLower}`;
 
   if (clinicDoctorRosterCache.has(cacheKey)) {
     return clinicDoctorRosterCache.get(cacheKey)!;
@@ -3581,21 +3581,47 @@ export function getDoctorsForClinic(clinicName: string, cityName: string, stateN
 
   const hospitals = getHospitalsForCity(cleanCity, stateName);
   
-  // Find matching hospital by exact clinic string (Name - Area) or fuzzy match
+  // Find matching hospital by exact clinic string (Name - Area) or exact name match
   let targetHosp = hospitals.find(h => `${h.name} - ${h.area}` === clinicName);
   if (!targetHosp && clinicName) {
-    targetHosp = hospitals.find(h => 
-      clinicName.includes(h.name) || 
-      (clinicName.includes(h.area) && (clinicName.includes(h.brand) || h.brand.includes(clinicName)))
+    targetHosp = hospitals.find(h =>
+      h.name.toLowerCase() === clinicName.toLowerCase() ||
+      `${h.name}, ${h.area}`.toLowerCase() === clinicName.toLowerCase()
     );
   }
-  if (!targetHosp) {
-    targetHosp = hospitals[0];
-  }
 
-  const hospName = targetHosp ? targetHosp.name : "Pediatric Care Center";
-  const hospArea = targetHosp ? targetHosp.area : "City Center";
-  const hospBrand = targetHosp ? targetHosp.brand : "";
+  let hospName = "Pediatric Care Center";
+  let hospArea = cleanCity;
+  let hospBrand = "";
+
+  if (targetHosp) {
+    hospName = targetHosp.name;
+    hospArea = targetHosp.area;
+    hospBrand = targetHosp.brand;
+  } else if (clinicName && clinicName.trim()) {
+    const trimmed = clinicName.trim();
+    if (trimmed.includes(" - ")) {
+      const parts = trimmed.split(" - ");
+      hospName = parts[0].trim();
+      hospArea = parts.slice(1).join(" - ").trim() || cleanCity;
+    } else {
+      hospName = trimmed;
+      if (customAddress && customAddress.trim()) {
+        const addrParts = customAddress.split(",").map(s => s.trim()).filter(Boolean);
+        hospArea = addrParts.length >= 2 ? addrParts.slice(0, 2).join(", ") : customAddress.trim();
+      } else if (trimmed.includes(",")) {
+        const commaParts = trimmed.split(",").map(s => s.trim()).filter(Boolean);
+        hospArea = commaParts[commaParts.length - 1] || cleanCity;
+      } else {
+        hospArea = cleanCity;
+      }
+    }
+    hospBrand = hospName.split(" ")[0] || "";
+  } else if (hospitals[0]) {
+    hospName = hospitals[0].name;
+    hospArea = hospitals[0].area;
+    hospBrand = hospitals[0].brand;
+  }
 
   // Determine regional names pool
   let regionKey = "north_central";
@@ -3618,9 +3644,9 @@ export function getDoctorsForClinic(clinicName: string, cityName: string, stateN
   const firstNames = REGIONAL_FIRST_NAMES[regionKey] || REGIONAL_FIRST_NAMES.north_central;
   const lastNames = REGIONAL_LAST_NAMES[regionKey] || REGIONAL_LAST_NAMES.north_central;
 
-  // Compute deterministic hash combining clinic, hospital, area, city, and state
+  // Compute deterministic hash combining exact clinicName, hospital, area, city, and state
   let hash = 0;
-  const seed = `${hospName}__${hospArea}__${hospBrand}__${cityLower}__${stateLower}`;
+  const seed = `${clinicName}__${hospName}__${hospArea}__${hospBrand}__${cityLower}__${stateLower}`;
   for (let i = 0; i < seed.length; i++) {
     hash = (((hash << 5) - hash) + seed.charCodeAt(i)) | 0;
   }
@@ -3653,12 +3679,16 @@ export function getDoctorsForClinic(clinicName: string, cityName: string, stateN
     const experience = 10 + ((posHash + idx * 3) % 15);
     const rating = (4.8 + (((posHash + idx * 4) % 3) * 0.1)).toFixed(1);
 
+    const locationStr = hospArea.toLowerCase().includes(cityLower)
+      ? hospArea
+      : `${hospArea}, ${cleanCity}`;
+
     return {
-      id: `doc-${cityLower.replace(/[^a-z0-9]/g, '')}-${hospArea.replace(/[^a-z0-9]/g, '')}-${idx + 1}`,
+      id: `doc-${cityLower.replace(/[^a-z0-9]/g, '')}-${hospName.replace(/[^a-z0-9]/g, '').slice(0, 16)}-${idx + 1}`,
       name: fullName,
       degrees,
       hospital: hospName,
-      location: `${hospArea}, ${cleanCity}`,
+      location: locationStr,
       city: cleanCity,
       specialty,
       experience,

@@ -33,10 +33,12 @@ import {
   HelpCircle,
   Menu,
   UserPlus,
-  LogIn
+  LogIn,
+  Lock
 } from 'lucide-react';
 import { playSound } from '../lib/sounds';
 import { triggerToast } from '../lib/ToastContext';
+import { shouldLockPremiumFeature } from '../lib/premiumUtils';
 import { motion, AnimatePresence } from 'motion/react';
 
 interface MenuItem {
@@ -51,7 +53,8 @@ interface MenuItem {
 }
 
 export const Navbar: React.FC = () => {
-  const { user, loginAsGuest, needsProfileSetup, isSessionActive, setSessionActive } = useAuth();
+  const { user, profile, loginAsGuest, needsProfileSetup, isSessionActive, setSessionActive } = useAuth();
+  const isPremiumLocked = shouldLockPremiumFeature(user, profile, isSessionActive);
   const { language, setLanguage, t } = useLanguage();
   const navigate = useNavigate();
   const location = useLocation();
@@ -188,19 +191,23 @@ export const Navbar: React.FC = () => {
       id: 'foodlens',
       tab: 'foodlens',
       label: t('foodLensPro') || 'FoodLens AI',
-      icon: Camera,
+      icon: isPremiumLocked ? Lock : Camera,
       iconColor: 'text-amber-300',
-      badge: 'PREMIUM',
-      badgeClass: 'bg-gradient-to-r from-amber-400 to-yellow-400 text-black font-black shadow-sm'
+      badge: isPremiumLocked ? 'LOCKED' : 'PREMIUM',
+      badgeClass: isPremiumLocked
+        ? 'bg-amber-500/25 text-amber-300 border border-amber-400/50 font-black shadow-sm'
+        : 'bg-gradient-to-r from-amber-400 to-yellow-400 text-black font-black shadow-sm'
     },
     {
       id: 'nutriband',
       tab: 'nutriband',
       label: t('nutriBand') || 'NutriBand',
-      icon: Activity,
-      iconColor: 'text-cyan-400',
-      badge: 'PREMIUM',
-      badgeClass: 'bg-gradient-to-r from-amber-400 to-yellow-400 text-black font-black shadow-sm'
+      icon: isPremiumLocked ? Lock : Activity,
+      iconColor: isPremiumLocked ? 'text-amber-300' : 'text-cyan-400',
+      badge: isPremiumLocked ? 'LOCKED' : 'PREMIUM',
+      badgeClass: isPremiumLocked
+        ? 'bg-amber-500/25 text-amber-300 border border-amber-400/50 font-black shadow-sm'
+        : 'bg-gradient-to-r from-amber-400 to-yellow-400 text-black font-black shadow-sm'
     }
   ];
 
@@ -307,6 +314,7 @@ export const Navbar: React.FC = () => {
   const handleQuickGuestClick = async () => {
     playSound('glass');
     setLanguage('en');
+    localStorage.setItem('tt_auth_mode', 'guest');
     setSessionActive(true);
     localStorage.removeItem('user_logged_out');
     if (!localStorage.getItem('parent_name')) localStorage.setItem('parent_name', 'Lashmi');
@@ -325,6 +333,7 @@ export const Navbar: React.FC = () => {
 
   const handleLogout = async () => {
     playSound('pop');
+    localStorage.setItem('tt_auth_mode', 'guest');
     setSessionActive(false);
     try {
       localStorage.setItem('user_logged_out', 'true');

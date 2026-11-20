@@ -38,6 +38,7 @@ import {
 import { FoodNutritionMetricsDisplay } from './FoodNutritionMetricsDisplay';
 import { formatScaleOf10, calculateScoreForFood, calculateFatForFood } from '../lib/foodNutritionCalculator';
 import { saveLoggedMeal } from './DailyDishLogPage';
+import { searchAutocompleteFoods, getInlineGhostCompletion, AutocompleteFoodProduct } from '../data/foodAutocompleteCatalog';
 
 export const SampleFoodsPage: React.FC = () => {
   const navigate = useNavigate();
@@ -47,6 +48,8 @@ export const SampleFoodsPage: React.FC = () => {
   const [selectedAgeFilter, setSelectedAgeFilter] = useState<string>('all');
   const [selectedBrandFilter, setSelectedBrandFilter] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [isMainSearchAutoOpen, setIsMainSearchAutoOpen] = useState<boolean>(false);
+  const [mainSearchHighlightIdx, setMainSearchHighlightIdx] = useState<number>(0);
   
   // Selected food for deep inspection/scoring (null by default so no dish shows until selected/scanned)
   const [inspectedFood, setInspectedFood] = useState<IndianBabyFood | null>(null);
@@ -59,6 +62,53 @@ export const SampleFoodsPage: React.FC = () => {
   const [scanStatus, setScanStatus] = useState<'idle' | 'scanning' | 'success'>('idle');
   const [uploadedImagePreview, setUploadedImagePreview] = useState<string | null>(null);
   const [customSearchDish, setCustomSearchDish] = useState<string>('');
+  const [isCustomAutoOpen, setIsCustomAutoOpen] = useState<boolean>(false);
+  const [customHighlightIdx, setCustomHighlightIdx] = useState<number>(0);
+
+  const mainSearchMatches = searchAutocompleteFoods(searchQuery, 7);
+  const mainGhostCompletion = getInlineGhostCompletion(searchQuery, mainSearchMatches[0]);
+  const customDishMatches = searchAutocompleteFoods(customSearchDish, 7);
+  const customGhostCompletion = getInlineGhostCompletion(customSearchDish, customDishMatches[0]);
+
+  const handleSelectAutocompleteProduct = (item: AutocompleteFoodProduct, source: 'main' | 'custom') => {
+    playSound('pop');
+    if (source === 'main') {
+      setSearchQuery(item.name);
+      setIsMainSearchAutoOpen(false);
+    } else {
+      setCustomSearchDish(item.name);
+      setIsCustomAutoOpen(false);
+    }
+    const existingBabyFood = INDIAN_BABY_FOODS.find(f => f.id === item.id || f.name.toLowerCase() === item.name.toLowerCase());
+    if (existingBabyFood) {
+      handleSelectFood(existingBabyFood);
+    } else {
+      const mappedFood: IndianBabyFood = {
+        id: item.id,
+        name: item.name,
+        hindiName: item.name,
+        ageGroup: '3-5y',
+        ageBadge: item.ageBadge,
+        stageName: item.stageName,
+        score: item.score,
+        calories: item.calories,
+        protein: item.protein,
+        fat: item.fat,
+        sodium: item.sodium,
+        texture: item.texture,
+        blwStatus: item.blwStatus,
+        benefits: item.pediatricTip,
+        ingredients: item.ingredients,
+        fssaiNumber: 'FSSAI VERIFIED',
+        allergyCheck: item.allergyCheck,
+        pediatricTip: item.pediatricTip,
+        foodType: item.category === 'Home Recipe' ? 'traditional' : 'packaged',
+        brandName: item.brandName,
+        packagingType: item.category
+      };
+      handleSelectFood(mappedFood);
+    }
+  };
   
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
@@ -662,19 +712,98 @@ export const SampleFoodsPage: React.FC = () => {
               </div>
             )}
 
-            {/* Custom food name search input */}
-            <div className="flex flex-col sm:flex-row items-center gap-3">
+            {/* Custom food name search input with Auto-Typing Product Selector */}
+            <div className="flex flex-col sm:flex-row items-center gap-3 relative z-30">
               <div className="relative flex-1 w-full">
+                {customGhostCompletion && isCustomAutoOpen && (
+                  <div
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-y-0 left-0 right-10 flex items-center px-4 text-sm overflow-hidden whitespace-nowrap select-none"
+                  >
+                    <span className="text-transparent">{customSearchDish}</span>
+                    <span className="text-emerald-400/45">{customGhostCompletion}</span>
+                  </div>
+                )}
                 <input
                   type="text"
                   value={customSearchDish}
-                  onChange={(e) => setCustomSearchDish(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') executeAnalysis(customSearchDish);
+                  onFocus={() => setIsCustomAutoOpen(true)}
+                  onBlur={() => setTimeout(() => setIsCustomAutoOpen(false), 180)}
+                  onChange={(e) => {
+                    setCustomSearchDish(e.target.value);
+                    setIsCustomAutoOpen(true);
+                    setCustomHighlightIdx(0);
                   }}
-                  placeholder="Or type any dish name (e.g. Khichdi, Ragi Malt, Curd Rice, Idli)..."
-                  className="w-full bg-[#131d33] border border-white/15 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-400 focus:outline-none focus:border-emerald-400"
+                  onKeyDown={(e) => {
+                    if ((e.key === 'Tab' || e.key === 'ArrowRight') && customGhostCompletion && customDishMatches[0]) {
+                      e.preventDefault();
+                      setCustomSearchDish(customDishMatches[0].name);
+                      return;
+                    }
+                    if (e.key === 'ArrowDown' && customDishMatches.length > 0) {
+                      e.preventDefault();
+                      setIsCustomAutoOpen(true);
+                      setCustomHighlightIdx((prev) => (prev + 1) % customDishMatches.length);
+                      return;
+                    }
+                    if (e.key === 'ArrowUp' && customDishMatches.length > 0) {
+                      e.preventDefault();
+                      setIsCustomAutoOpen(true);
+                      setCustomHighlightIdx((prev) => (prev - 1 + customDishMatches.length) % customDishMatches.length);
+                      return;
+                    }
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      if (isCustomAutoOpen && customDishMatches[customHighlightIdx]) {
+                        handleSelectAutocompleteProduct(customDishMatches[customHighlightIdx], 'custom');
+                      } else {
+                        setIsCustomAutoOpen(false);
+                        executeAnalysis(customSearchDish);
+                      }
+                    }
+                  }}
+                  placeholder="Type any food or brand (e.g. Cerelac, Lay's, Khichdi, Ragi Malt, Idli)..."
+                  className="w-full bg-[#131d33] border border-white/15 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-400 focus:outline-none focus:border-emerald-400 relative z-10"
                 />
+                {isCustomAutoOpen && customSearchDish.trim().length > 0 && customDishMatches.length > 0 && (
+                  <div className="absolute left-0 right-0 top-full mt-2 bg-[#0b1326] border border-emerald-400/35 rounded-2xl shadow-2xl overflow-hidden z-50">
+                    <div className="px-3.5 py-2 bg-[#111c36] border-b border-white/10 flex items-center justify-between text-[10px] font-black uppercase tracking-wider text-emerald-300">
+                      <span>Auto-Typing Product Matches ({customDishMatches.length})</span>
+                      <span className="text-slate-400">Tab to Complete • Click to Select</span>
+                    </div>
+                    <div className="max-h-64 overflow-y-auto divide-y divide-white/5">
+                      {customDishMatches.map((item, idx) => (
+                        <button
+                          key={item.id}
+                          type="button"
+                          onMouseDown={(e) => {
+                            e.preventDefault();
+                            handleSelectAutocompleteProduct(item, 'custom');
+                          }}
+                          onMouseEnter={() => setCustomHighlightIdx(idx)}
+                          className={`w-full text-left px-4 py-2.5 flex items-center justify-between gap-3 transition-colors cursor-pointer ${
+                            idx === customHighlightIdx ? 'bg-emerald-500/20' : 'hover:bg-white/5'
+                          }`}
+                        >
+                          <div className="min-w-0">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <span className="text-xs sm:text-sm font-black text-white truncate">{item.name}</span>
+                              {item.brandName && (
+                                <span className="px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-300 text-[10px] font-bold border border-emerald-500/25">
+                                  {item.brandName}
+                                </span>
+                              )}
+                            </div>
+                            <div className="text-[11px] text-slate-400 mt-0.5">
+                              {item.calories} • Protein: {item.protein} • Fat: {item.fat}
+                            </div>
+                          </div>
+                          <span className="text-xs font-black text-emerald-300 shrink-0">{formatScaleOf10(item.score)} / 10</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
               <button
                 onClick={() => executeAnalysis(customSearchDish)}
@@ -747,23 +876,103 @@ export const SampleFoodsPage: React.FC = () => {
                 </div>
               )}
 
-              {/* Search Bar */}
-              <div className="relative flex-1 sm:w-72 md:w-80">
-                <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              {/* Search Bar with Auto-Typing Product Selector */}
+              <div className="relative flex-1 sm:w-72 md:w-80 z-30">
+                <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 z-20 pointer-events-none" />
+                {mainGhostCompletion && isMainSearchAutoOpen && (
+                  <div
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-y-0 left-0 right-9 flex items-center pl-10 pr-4 text-xs sm:text-sm overflow-hidden whitespace-nowrap select-none z-10"
+                  >
+                    <span className="text-transparent">{searchQuery}</span>
+                    <span className="text-amber-400/45">{mainGhostCompletion}</span>
+                  </div>
+                )}
                 <input
                   type="text"
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search Khichdi, Ragi, Paneer, Curd..."
-                  className="w-full bg-[#11192e] border border-white/15 rounded-xl pl-10 pr-4 py-2.5 text-xs sm:text-sm text-white placeholder-slate-400 focus:outline-none focus:border-amber-400 shadow-sm"
+                  onFocus={() => setIsMainSearchAutoOpen(true)}
+                  onBlur={() => setTimeout(() => setIsMainSearchAutoOpen(false), 180)}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    setIsMainSearchAutoOpen(true);
+                    setMainSearchHighlightIdx(0);
+                  }}
+                  onKeyDown={(e) => {
+                    if ((e.key === 'Tab' || e.key === 'ArrowRight') && mainGhostCompletion && mainSearchMatches[0]) {
+                      e.preventDefault();
+                      setSearchQuery(mainSearchMatches[0].name);
+                      return;
+                    }
+                    if (e.key === 'ArrowDown' && mainSearchMatches.length > 0) {
+                      e.preventDefault();
+                      setIsMainSearchAutoOpen(true);
+                      setMainSearchHighlightIdx((prev) => (prev + 1) % mainSearchMatches.length);
+                      return;
+                    }
+                    if (e.key === 'ArrowUp' && mainSearchMatches.length > 0) {
+                      e.preventDefault();
+                      setIsMainSearchAutoOpen(true);
+                      setMainSearchHighlightIdx((prev) => (prev - 1 + mainSearchMatches.length) % mainSearchMatches.length);
+                      return;
+                    }
+                    if (e.key === 'Enter' && mainSearchMatches[mainSearchHighlightIdx]) {
+                      e.preventDefault();
+                      handleSelectAutocompleteProduct(mainSearchMatches[mainSearchHighlightIdx], 'main');
+                    }
+                  }}
+                  placeholder="Type food or brand (auto-complete)..."
+                  className="w-full bg-[#11192e] border border-white/15 rounded-xl pl-10 pr-8 py-2.5 text-xs sm:text-sm text-white placeholder-slate-400 focus:outline-none focus:border-amber-400 shadow-sm relative z-10"
                 />
                 {searchQuery && (
                   <button 
-                    onClick={() => setSearchQuery('')}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white"
+                    onClick={() => {
+                      setSearchQuery('');
+                      setIsMainSearchAutoOpen(false);
+                    }}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white z-20 cursor-pointer"
                   >
                     <X className="w-4 h-4" />
                   </button>
+                )}
+                {isMainSearchAutoOpen && searchQuery.trim().length > 0 && mainSearchMatches.length > 0 && (
+                  <div className="absolute left-0 right-0 top-full mt-2 bg-[#0b1326] border border-amber-400/35 rounded-2xl shadow-2xl overflow-hidden z-50 min-w-[290px] sm:min-w-[340px]">
+                    <div className="px-3.5 py-2 bg-[#111c36] border-b border-white/10 flex items-center justify-between text-[10px] font-black uppercase tracking-wider text-amber-300">
+                      <span>Select Product ({mainSearchMatches.length})</span>
+                      <span className="text-slate-400">Tab / Click</span>
+                    </div>
+                    <div className="max-h-64 overflow-y-auto divide-y divide-white/5">
+                      {mainSearchMatches.map((item, idx) => (
+                        <button
+                          key={item.id}
+                          type="button"
+                          onMouseDown={(e) => {
+                            e.preventDefault();
+                            handleSelectAutocompleteProduct(item, 'main');
+                          }}
+                          onMouseEnter={() => setMainSearchHighlightIdx(idx)}
+                          className={`w-full text-left px-3.5 py-2.5 flex items-center justify-between gap-2 transition-colors cursor-pointer ${
+                            idx === mainSearchHighlightIdx ? 'bg-amber-500/20' : 'hover:bg-white/5'
+                          }`}
+                        >
+                          <div className="min-w-0">
+                            <div className="flex items-center gap-1.5 flex-wrap">
+                              <span className="text-xs font-black text-white truncate">{item.name}</span>
+                              {item.brandName && (
+                                <span className="px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-300 text-[9px] font-bold">
+                                  {item.brandName}
+                                </span>
+                              )}
+                            </div>
+                            <div className="text-[10px] text-slate-400 mt-0.5">
+                              {item.calories} • Protein: {item.protein} • Fat: {item.fat}
+                            </div>
+                          </div>
+                          <span className="text-[11px] font-black text-amber-300 shrink-0">{formatScaleOf10(item.score)} / 10</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
                 )}
               </div>
 

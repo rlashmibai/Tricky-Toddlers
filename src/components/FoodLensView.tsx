@@ -37,6 +37,11 @@ import { INDIAN_BABY_FOODS, IndianBabyFood } from '../data/indianBabyFoods';
 import { FoodNutritionMetricsDisplay } from './FoodNutritionMetricsDisplay';
 import { formatScaleOf10, calculateScoreForFood } from '../lib/foodNutritionCalculator';
 import { saveLoggedMeal } from './DailyDishLogPage';
+import {
+  searchAutocompleteFoods,
+  getInlineGhostCompletion,
+  AutocompleteFoodProduct
+} from '../data/foodAutocompleteCatalog';
 
 interface StatTile {
   label: string;
@@ -100,12 +105,40 @@ export const FoodLensView: React.FC<FoodLensViewProps> = ({
   } | null>(null);
   
   const [loggedMealToast, setLoggedMealToast] = useState<string | null>(null);
+  const [showAutocomplete, setShowAutocomplete] = useState(false);
+  const [activeSuggestionIndex, setActiveSuggestionIndex] = useState<number>(0);
   
   const fileInputBottomRef = useRef<HTMLInputElement>(null);
   const nativeCameraInputRef = useRef<HTMLInputElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const scanSectionRef = useRef<HTMLDivElement>(null);
+  const resultCardRef = useRef<HTMLDivElement>(null);
+  const autocompleteContainerRef = useRef<HTMLDivElement>(null);
   const mediaStreamRef = useRef<MediaStream | null>(null);
+
+  const autocompleteSuggestions = React.useMemo(
+    () => searchAutocompleteFoods(searchQuery, 8),
+    [searchQuery]
+  );
+
+  const inlineGhostText = React.useMemo(
+    () => getInlineGhostCompletion(searchQuery, autocompleteSuggestions[0]),
+    [searchQuery, autocompleteSuggestions]
+  );
+
+  // Close autocomplete dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        autocompleteContainerRef.current &&
+        !autocompleteContainerRef.current.contains(e.target as Node)
+      ) {
+        setShowAutocomplete(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const handleLogScannedDish = () => {
     if (!scanResult) return;
@@ -414,9 +447,47 @@ export const FoodLensView: React.FC<FoodLensViewProps> = ({
     }, 60);
   };
 
+  const handleSelectAutocompleteProduct = (item: AutocompleteFoodProduct) => {
+    playSound('pop');
+    setSearchQuery(item.name);
+    setShowAutocomplete(false);
+    setShowScanPreview(true);
+    setScanResult({
+      isFood: true,
+      name: item.name,
+      ageBadge: item.ageBadge,
+      stageName: item.stageName,
+      score: item.score,
+      scoreNumber: item.scoreNumber,
+      novaLevel: item.novaLevel,
+      calories: item.calories,
+      protein: item.protein,
+      sodium: item.sodium,
+      blwStatus: item.blwStatus,
+      gumPinchTest: item.gumPinchTest,
+      ingredients: item.ingredients,
+      allergyCheck: item.allergyCheck,
+      pediatricTip: item.pediatricTip,
+      texture: item.texture,
+      safetyWarning: item.safetyWarning,
+      isSafeForBaby: item.isSafeForBaby,
+      foodType: item.category,
+      brandName: item.brandName
+    });
+    setScanStatus('analyzed');
+    setTimeout(() => {
+      if (resultCardRef.current) {
+        resultCardRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        scanSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 80);
+  };
+
   // Scan Now button handler (when query is typed, analyzes it; if query empty, scrolls to live camera scanner)
   const handleScanNowClick = async (queryOverride?: string) => {
     playSound('pop');
+    setShowAutocomplete(false);
     const queryToUse = (typeof queryOverride === 'string' ? queryOverride : searchQuery).trim();
 
     if (!queryToUse) {
@@ -428,10 +499,25 @@ export const FoodLensView: React.FC<FoodLensViewProps> = ({
       return;
     }
 
+    // Check if query matches a product in our autocomplete catalog for instant selection
+    const exactMatch = autocompleteSuggestions.find(
+      (item) => item.name.toLowerCase() === queryToUse.toLowerCase()
+    );
+    if (exactMatch) {
+      handleSelectAutocompleteProduct(exactMatch);
+      return;
+    }
+
     // Item query entered: execute food evaluation
     setShowScanPreview(true);
     setScanStatus('scanning');
-    scanSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
+    setTimeout(() => {
+      if (resultCardRef.current) {
+        resultCardRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        scanSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 60);
 
     try {
       const res = await fetch('/api/analyze-food', {
@@ -882,58 +968,18 @@ export const FoodLensView: React.FC<FoodLensViewProps> = ({
             </p>
           </div>
 
-          {/* Top Scan Bar (Matching the top bar in image.png) */}
-          {/* Top Search Bar (Only search bar with Text Search by name) */}
-          <div className="max-w-3xl mx-auto">
-            <div className="relative bg-[#111c30]/95 border border-white/20 rounded-full p-2.5 sm:p-3 shadow-[0_15px_40px_rgba(0,0,0,0.6)] backdrop-blur-xl flex items-center gap-2.5 transition-all focus-within:border-emerald-400 focus-within:ring-4 focus-within:ring-emerald-500/10">
-              
-              {/* Left icon + input */}
-              <div className="flex items-center gap-3 px-3 flex-1">
-                <Search className="w-5 h-5 text-emerald-400 shrink-0" />
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') handleScanNowClick();
-                  }}
-                  placeholder="Search by name..."
-                  className="w-full bg-transparent text-white placeholder-slate-400 text-xs sm:text-sm md:text-base font-medium focus:outline-none"
-                />
-                {searchQuery && (
-                  <button 
-                    onClick={() => setSearchQuery('')}
-                    className="p-1 rounded-full hover:bg-white/10 text-slate-400 hover:text-white transition-colors"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                )}
-              </div>
-
-              {/* Search Action Button */}
-              <button
-                type="button"
-                onClick={() => handleScanNowClick()}
-                className="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs sm:text-sm tracking-tight transition-all active:scale-95 cursor-pointer shrink-0"
-              >
-                <Search className="w-4 h-4 text-slate-950 stroke-[2.5]" />
-                <span>Search</span>
-              </button>
-            </div>
-          </div>
-
           {/* =========================================================
-              ALWAYS-VISIBLE SCANNER WINDOW AT BOTTOM (EXPANDED TO MAXIMUM VIEWPORT PRESENCE)
+              ALWAYS-VISIBLE SCANNER WINDOW AT BOTTOM (CAMERA & UPLOAD IMAGE ONLY)
           ========================================================== */}
           <div className="relative max-w-6xl mx-auto rounded-3xl overflow-hidden bg-slate-950 border-2 border-emerald-400/60 shadow-[0_20px_60px_rgba(0,0,0,0.8)] p-4 sm:p-6 lg:p-8">
-            <div className="flex items-center justify-between gap-3 mb-4">
+            <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
               <div className="flex items-center gap-2.5">
                 <span className={`w-3 h-3 rounded-full ${isCameraActive ? 'bg-emerald-400 animate-ping' : 'bg-amber-400'}`} />
                 <span className="text-xs sm:text-sm font-black uppercase tracking-wider text-emerald-300">
                   AI Food & Nutrition Label Scanner Window
                 </span>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 {isCameraActive ? (
                   <>
                     <button
@@ -945,6 +991,13 @@ export const FoodLensView: React.FC<FoodLensViewProps> = ({
                       <span className="hidden sm:inline">Flip Camera</span>
                     </button>
                     <button
+                      onClick={() => fileInputBottomRef.current?.click()}
+                      className="px-3.5 py-1.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5"
+                    >
+                      <Upload className="w-3.5 h-3.5 text-emerald-400" />
+                      <span>Upload Image</span>
+                    </button>
+                    <button
                       onClick={handleStopCamera}
                       className="px-3.5 py-1.5 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/40 text-xs font-bold transition-all cursor-pointer"
                     >
@@ -952,13 +1005,22 @@ export const FoodLensView: React.FC<FoodLensViewProps> = ({
                     </button>
                   </>
                 ) : (
-                  <button
-                    onClick={handleStartCamera}
-                    className="px-4 py-2 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5"
-                  >
-                    <Camera className="w-4 h-4 text-emerald-400" />
-                    <span>Turn On Camera</span>
-                  </button>
+                  <>
+                    <button
+                      onClick={handleStartCamera}
+                      className="px-4 py-2 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5"
+                    >
+                      <Camera className="w-4 h-4 text-emerald-400" />
+                      <span>Turn On Camera</span>
+                    </button>
+                    <button
+                      onClick={() => fileInputBottomRef.current?.click()}
+                      className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5"
+                    >
+                      <Upload className="w-4 h-4 text-emerald-400" />
+                      <span>Upload Image</span>
+                    </button>
+                  </>
                 )}
               </div>
             </div>
@@ -1085,10 +1147,11 @@ export const FoodLensView: React.FC<FoodLensViewProps> = ({
           {/* Detailed Result Card */}
           {showScanPreview && (
             <motion.div
+              ref={resultCardRef}
               id="scan-result-card"
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              className={`mt-6 p-6 sm:p-8 rounded-3xl border-2 text-left shadow-2xl transition-all ${
+              className={`mt-6 p-6 sm:p-8 rounded-3xl border-2 text-left shadow-2xl transition-all scroll-mt-24 ${
                 scanStatus === 'scanning'
                   ? 'bg-[#142338] border-emerald-400/40'
                   : scanResult && !scanResult.isFood

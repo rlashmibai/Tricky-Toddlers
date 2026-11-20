@@ -57,6 +57,9 @@ export const CheckoutPage: React.FC = () => {
     // Update localStorage
     localStorage.setItem('user_plan', 'comprehensive');
     localStorage.setItem('tricky_toddlers_premium_unlocked', 'true');
+    if (user?.uid) {
+      localStorage.setItem(`tricky_toddlers_premium_unlocked_${user.uid}`, 'true');
+    }
     localStorage.setItem('tricky_toddlers_last_tx', JSON.stringify({
       id: generatedTxn,
       plan: 'comprehensive',

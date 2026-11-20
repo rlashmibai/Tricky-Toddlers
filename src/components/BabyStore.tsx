@@ -63,6 +63,7 @@ const AGE_FILTERS = [
 
 const CATEGORIES = [
   "All",
+  "Under ₹200",
   "Clothing & Bedding",
   "Diapering & Bathing",
   "Feeding & Gear",
@@ -221,7 +222,12 @@ export const BabyStore: React.FC<BabyStoreProps> = ({ onGoHome, initialView = 'c
 
   const filteredProducts = BABY_STORE_PRODUCTS.filter((p) => {
     const matchesAge = selectedAge === 'all' || p.ageRange === selectedAge || (p.supportedAges && p.supportedAges.includes(selectedAge));
-    const matchesCategory = selectedCategory === 'All' || p.category === selectedCategory;
+    const matchesCategory =
+      selectedCategory === 'All'
+        ? true
+        : selectedCategory === 'Under ₹200'
+          ? p.price <= 200
+          : p.category === selectedCategory;
     const matchesSearch = 
       p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       p.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -907,7 +913,7 @@ export const BabyStore: React.FC<BabyStoreProps> = ({ onGoHome, initialView = 'c
             <div className="flex flex-wrap items-center gap-2 mb-2">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-emerald-200 text-[11px] font-black tracking-wider uppercase">
                 <Gift className="w-3.5 h-3.5 text-cheerful-yellow" />
-                Baby Store • Essentials from ₹99
+                Baby Store • 29+ Essentials Under ₹200
               </span>
               <span className="text-[11px] text-emerald-300/80 font-medium hidden sm:inline">
                 • Pediatrician-approved • Free Delivery &gt; ₹499
@@ -917,7 +923,7 @@ export const BabyStore: React.FC<BabyStoreProps> = ({ onGoHome, initialView = 'c
               Curated Essentials <span className="bg-gradient-to-r from-cheerful-yellow via-amber-300 to-emerald-300 bg-clip-text text-transparent">For Every Stage</span>
             </h1>
             <p className="text-xs sm:text-sm text-emerald-100/90 font-medium leading-relaxed">
-              Pocket-friendly organic clothing, feeding gear, and development toys starting at just ₹99.
+              Pocket-friendly organic clothing, diapering, grooming, feeding gear, and development toys starting at just ₹79.
             </p>
           </div>
 
@@ -1059,7 +1065,7 @@ export const BabyStore: React.FC<BabyStoreProps> = ({ onGoHome, initialView = 'c
               }}
               className="bg-transparent text-xs text-white font-bold focus:outline-none cursor-pointer pr-1"
             >
-              <option value="price-asc" className="bg-slate-900 text-white">Price: Low to High (From ₹99)</option>
+              <option value="price-asc" className="bg-slate-900 text-white">Price: Low to High (From ₹79)</option>
               <option value="price-desc" className="bg-slate-900 text-white">Price: High to Low</option>
               <option value="rating" className="bg-slate-900 text-white">Customer Rating</option>
               <option value="bestseller" className="bg-slate-900 text-white">Bestsellers First</option>
@@ -1137,6 +1143,11 @@ export const BabyStore: React.FC<BabyStoreProps> = ({ onGoHome, initialView = 'c
                     <span className="px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-black/70 backdrop-blur-md text-emerald-300 border border-emerald-400/30">
                       {product.ageLabel}
                     </span>
+                    {product.price <= 200 && (
+                      <span className="px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-emerald-500 text-black shadow-md">
+                        Under ₹200 Deal
+                      </span>
+                    )}
                     {product.isBestseller && (
                       <span className="px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-amber-400 text-black shadow-md">
                         ★ Bestseller
