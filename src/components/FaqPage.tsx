@@ -82,7 +82,7 @@ export const FAQ_CATEGORIES: FaqCategoryMeta[] = [
     id: 'ai-nutrichef',
     label: 'AI NutriChef & Meal Planning',
     shortLabel: 'AI NutriChef',
-    description: 'Custom kitchen ingredient cooker, 250+ age-matched Indian toddler recipes, Sample Foods & Daily Dish Log.',
+    description: 'Custom kitchen ingredient cooker, 250+ age-matched Indian kids recipes, Sample Foods & Daily Dish Log.',
     icon: Utensils,
     badgeColor: 'bg-green-500/20 text-green-300 border-green-400/35',
     borderColor: 'border-green-500/30',
@@ -147,7 +147,7 @@ export const ALL_FAQ_ITEMS: FaqQuestionItem[] = [
     category: 'ai-trackers',
     question: 'How does the AI Parenting Assistant personalize advice for my child?',
     answer:
-      'The AI Parenting Assistant automatically reads your active child profile, including exact age in months, dietary restrictions, allergies, Indian state/city, and custom parent instructions, so every suggestion on sleep regressions, tantrums, teething, or weaning is tailored specifically to your toddler.'
+      'The AI Parenting Assistant automatically reads your active child profile, including exact age in months, dietary restrictions, allergies, Indian state/city, and custom parent instructions, so every suggestion on sleep regressions, tantrums, teething, or weaning is tailored specifically to your child.'
   },
   {
     id: 'ai-2',
@@ -196,7 +196,7 @@ export const ALL_FAQ_ITEMS: FaqQuestionItem[] = [
   {
     id: 'ped-4',
     category: 'pediatric-care',
-    question: 'How does 24/7 Doctor Chat work for everyday toddler health questions?',
+    question: 'How does 24/7 Doctor Chat work for everyday child health questions?',
     answer:
       'Doctor Chat provides on-demand clinical chat support where you can describe non-emergency symptoms (such as mild rashes, teething discomfort, picky eating, or stool changes), get structured pediatric care advice and first-aid guidance, and revisit all past conversations inside Doctor Chat History.'
   },

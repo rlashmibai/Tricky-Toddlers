@@ -68,7 +68,7 @@ export const AboutPage: React.FC<{ embedded?: boolean }> = ({ embedded = false }
             </p>
 
             <p className="text-indigo-200 font-medium">
-              Food. Allergies. Sleep. Vaccines. Milestones. Routines. Tantrums. And so many other small things that come with raising a toddler.
+              Food. Allergies. Sleep. Vaccines. Milestones. Routines. Tantrums. And so many other small things that come with raising a child.
             </p>
 
             <p>

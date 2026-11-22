@@ -7,6 +7,7 @@ import {
 } from 'firebase/auth';
 import { auth, db } from './firebase';
 import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { isPremiumUser, shouldLockPremiumFeature } from './premiumUtils';
 
 export interface ChildProfile {
   id: 1 | 2;
@@ -50,6 +51,8 @@ interface AuthContextType {
   switchActiveChild: (index: 1 | 2) => Promise<void>;
   child2NotApplicable: boolean;
   setChild2NotApplicable: (notApplicable: boolean) => Promise<void>;
+  isPremium: boolean;
+  isPremiumLocked: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -565,6 +568,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     )
   );
 
+  const isPremium = isPremiumUser(profile, user);
+  const isPremiumLocked = shouldLockPremiumFeature(user, profile, isSessionActive);
+
   return (
     <AuthContext.Provider value={{ 
       user, 
@@ -580,7 +586,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       activeChild,
       switchActiveChild,
       child2NotApplicable,
-      setChild2NotApplicable
+      setChild2NotApplicable,
+      isPremium,
+      isPremiumLocked
     }}>
       {children}
     </AuthContext.Provider>

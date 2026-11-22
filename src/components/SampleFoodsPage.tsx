@@ -39,10 +39,13 @@ import { FoodNutritionMetricsDisplay } from './FoodNutritionMetricsDisplay';
 import { formatScaleOf10, calculateScoreForFood, calculateFatForFood } from '../lib/foodNutritionCalculator';
 import { saveLoggedMeal } from './DailyDishLogPage';
 import { searchAutocompleteFoods, getInlineGhostCompletion, AutocompleteFoodProduct } from '../data/foodAutocompleteCatalog';
+import { useAuth } from '../lib/AuthContext';
+import { PremiumFeatureLock } from './PremiumFeatureLock';
 
 export const SampleFoodsPage: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const { isPremiumLocked } = useAuth();
 
   // Filter & Search states
   const [selectedAgeFilter, setSelectedAgeFilter] = useState<string>('all');
@@ -398,6 +401,15 @@ export const SampleFoodsPage: React.FC = () => {
     setLoggedNotification(`Added "${name}" to Daily Dish Log!`);
     setTimeout(() => setLoggedNotification(null), 4000);
   };
+
+  if (isPremiumLocked) {
+    return (
+      <PremiumFeatureLock
+        featureName="FoodLens AI"
+        onGoHome={() => navigate('/?tab=home')}
+      />
+    );
+  }
 
   return (
     <div className="flex-1 w-full bg-[#060b17] text-slate-100 font-sans selection:bg-amber-400 selection:text-black">

@@ -49,6 +49,7 @@ import nutribandThreeStrapsImg from '../assets/images/three_cotton_straps_real.j
 import nutribandSiliconeWatchImg from '../assets/images/nutriband_silicone_smartwatch.svg';
 import { NutriBandIntegratedEcosystem } from './NutriBandIntegratedEcosystem';
 import { useAuth } from '../lib/AuthContext';
+import { PremiumFeatureLock } from './PremiumFeatureLock';
 
 const formatChildAge = (birthDateStr?: string | null, fallbackAge?: string | null): string => {
   if (birthDateStr) {
@@ -93,7 +94,7 @@ export const NutriBandView: React.FC<NutriBandViewProps> = ({
   onNavigateToReserveCart
 }) => {
   const navigate = useNavigate();
-  const { profile } = useAuth();
+  const { profile, isPremiumLocked } = useAuth();
   const [, setTick] = useState(0);
 
   // Re-read if settings are updated in other views or localStorage
@@ -234,6 +235,15 @@ export const NutriBandView: React.FC<NutriBandViewProps> = ({
     playSound('click');
     setExpandedSection(prev => prev === section ? null : section);
   };
+
+  if (isPremiumLocked) {
+    return (
+      <PremiumFeatureLock
+        featureName="NutriBand"
+        onGoHome={() => navigate('/?tab=home')}
+      />
+    );
+  }
 
   return (
     <div className="space-y-12 sm:space-y-16 w-full py-2 font-sans text-slate-100">

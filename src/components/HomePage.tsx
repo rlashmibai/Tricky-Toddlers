@@ -188,7 +188,7 @@ export const HomePage: React.FC<HomePageProps> = ({
       name: 'Doctor Chat',
       category: 'care',
       tag: 'On-demand support via chat',
-      desc: 'Direct on-demand clinical chat support for everyday toddler health advice.',
+      desc: 'Direct on-demand clinical chat support for everyday child health advice.',
       icon: MessageSquare,
       color: 'from-sky-500 to-blue-600',
       textColor: 'text-sky-300',
@@ -564,7 +564,7 @@ export const HomePage: React.FC<HomePageProps> = ({
           </div>
 
           <p className="text-xs sm:text-sm md:text-base text-slate-200 leading-relaxed font-normal w-full max-w-none text-left">
-            Technology should quietly handle the clutter in the background, so parents can spend less time managing apps, reminders and scattered information, and more time enjoying the beautiful, funny and precious moments with their toddlers.
+            Technology should quietly handle the clutter in the background, so parents can spend less time managing apps, reminders and scattered information, and more time enjoying the beautiful, funny and precious moments with their children.
           </p>
 
           <div className="p-3.5 sm:p-4 rounded-2xl bg-purple-500/10 border border-purple-500/25 w-full">
@@ -628,9 +628,9 @@ export const HomePage: React.FC<HomePageProps> = ({
                   <Baby className="w-4 h-4" />
                 </div>
                 <div>
-                  <h4 className="text-sm sm:text-base font-bold text-white">Fine-Tuned AI Specially Designed for Toddlers</h4>
+                  <h4 className="text-sm sm:text-base font-bold text-white">Fine-Tuned AI Specially Designed for Children</h4>
                   <p className="text-xs sm:text-sm text-slate-300 mt-0.5 leading-relaxed">
-                    <span className="notranslate" translate="no">Tricky Toddlers</span> is calibrated for parents of toddlers, using pediatric guidance and recognised health standards (IAP, FSSAI &amp; ICMR).
+                    <span className="notranslate" translate="no">Tricky Toddlers</span> is calibrated for parents of children, using pediatric guidance and recognised health standards (IAP, FSSAI &amp; ICMR).
                   </p>
                 </div>
               </div>
@@ -989,14 +989,14 @@ export const HomePage: React.FC<HomePageProps> = ({
         <div className="w-full space-y-3">
           {[
             {
-              question: 'Which features are designed specifically for toddlers, and can I track more than one child?',
+              question: 'Which features are designed specifically for children, and can I track more than one child?',
               answer:
                 'While interactive play tabs like Toddler Academy, Toddler Tales, and Toddler TV are specially designed for toddlers, all other features, including the AI Parenting Assistant, AI NutriChef, FoodLens AI, Pediatric Care, and Health Trackers, are common and support children across all growing stages. Yes, you can manage up to two child profiles and switch between them anytime to get personalized milestones, vaccine schedules, and meal ideas for each child.'
             },
             {
               question: 'How do AI NutriChef and FoodLens AI help with picky eaters and food allergies?',
               answer:
-                'AI NutriChef generates custom, age-appropriate recipes based on the ingredients you have at home and automatically respects your saved Dietary Preferences (such as Vegetarian, Jain, Eggitarian, zero refined sugar, or specific allergies). FoodLens AI lets you snap or upload a photo of any meal to get an instant nutritional breakdown, choking-hazard check, and toddler-friendly serving tips.'
+                'AI NutriChef generates custom, age-appropriate recipes based on the ingredients you have at home and automatically respects your saved Dietary Preferences (such as Vegetarian, Jain, Eggitarian, zero refined sugar, or specific allergies). FoodLens AI lets you snap or upload a photo of any meal to get an instant nutritional breakdown, choking-hazard check, and child-friendly serving tips.'
             },
             {
               question: 'Are the developmental milestones and immunization schedules aligned with Indian pediatric standards?',

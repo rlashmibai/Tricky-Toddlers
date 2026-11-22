@@ -40,6 +40,8 @@ import nutribandCottonStrapImg from '../assets/images/three_cotton_straps_real.j
 import nutribandSiliconeStrapImg from '../assets/images/nutriband_silicone_smartwatch.svg';
 import nutribandBatteryCoinImg from '../assets/images/small_phone_usb_cable.svg';
 import nutribandCaseImg from '../assets/images/storage_box_half_open.svg';
+import { useAuth } from '../lib/AuthContext';
+import { PremiumFeatureLock } from './PremiumFeatureLock';
 
 export interface CottonStrapOption {
   id: string;
@@ -114,6 +116,7 @@ interface NutriBandCartPageProps {
 
 export const NutriBandCartPage: React.FC<NutriBandCartPageProps> = ({ onBack }) => {
   const navigate = useNavigate();
+  const { isPremiumLocked } = useAuth();
   const [quantity, setQuantity] = useState<number>(1);
   const [selectedCottonStrap, setSelectedCottonStrap] = useState<string>('blush-stars');
   const [paymentMethod, setPaymentMethod] = useState<'upi' | 'networking' | 'card' | 'cod'>('upi');
@@ -288,6 +291,15 @@ export const NutriBandCartPage: React.FC<NutriBandCartPageProps> = ({ onBack }) 
     'Bank of Baroda',
     'Canara Bank'
   ];
+
+  if (isPremiumLocked) {
+    return (
+      <PremiumFeatureLock
+        featureName="NutriBand"
+        onGoHome={() => navigate('/?tab=home')}
+      />
+    );
+  }
 
   return (
     <div className="w-full flex-1 py-6 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto font-sans text-white text-left">

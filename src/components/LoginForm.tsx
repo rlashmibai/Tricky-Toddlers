@@ -5,6 +5,7 @@ import { auth } from '../lib/firebase';
 import { useAuth } from '../lib/AuthContext';
 import { motion, AnimatePresence } from 'motion/react';
 import { Lock, LogIn, AlertCircle, Loader2, User, Sparkles, Mail, X, CheckCircle2, KeyRound } from 'lucide-react';
+import { triggerToast } from '../lib/ToastContext';
 
 export const LoginForm: React.FC = () => {
   const { loginAsGuest, setSessionActive } = useAuth();
@@ -30,6 +31,7 @@ export const LoginForm: React.FC = () => {
       if (!localStorage.getItem('parent_name')) localStorage.setItem('parent_name', 'Lashmi');
       if (!localStorage.getItem('baby_name')) localStorage.setItem('baby_name', 'Ashwath');
       await loginAsGuest();
+      triggerToast('You have now signed into Guest account.', 'success', 'Guest Session Active');
       navigate('/?tab=home');
       window.dispatchEvent(new CustomEvent('nav-reset-to-home'));
     } catch (err: any) {

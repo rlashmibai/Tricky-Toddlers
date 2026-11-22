@@ -42,6 +42,8 @@ import {
   getInlineGhostCompletion,
   AutocompleteFoodProduct
 } from '../data/foodAutocompleteCatalog';
+import { useAuth } from '../lib/AuthContext';
+import { PremiumFeatureLock } from './PremiumFeatureLock';
 
 interface StatTile {
   label: string;
@@ -69,6 +71,7 @@ export const FoodLensView: React.FC<FoodLensViewProps> = ({
 }) => {
   const navigate = useNavigate();
   const { language } = useLanguage();
+  const { isPremiumLocked } = useAuth();
   // Scanner state
   const [searchQuery, setSearchQuery] = useState('');
   const [isCameraActive, setIsCameraActive] = useState(true);
@@ -564,13 +567,26 @@ export const FoodLensView: React.FC<FoodLensViewProps> = ({
     }, 300);
   };
 
-  // Auto-start camera on mount and clean up on unmount
+  // Auto-start camera on mount and clean up on unmount (only when unlocked)
   useEffect(() => {
+    if (isPremiumLocked) {
+      handleStopCamera();
+      return;
+    }
     handleStartCamera();
     return () => {
       handleStopCamera();
     };
-  }, []);
+  }, [isPremiumLocked]);
+
+  if (isPremiumLocked) {
+    return (
+      <PremiumFeatureLock
+        featureName="FoodLens AI"
+        onGoHome={() => navigate('/?tab=home')}
+      />
+    );
+  }
 
   return (
     <div className="max-w-7xl mx-auto font-sans text-left px-3 sm:px-6 py-6 space-y-12 text-slate-100">

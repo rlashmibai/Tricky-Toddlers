@@ -324,7 +324,7 @@ export const Navbar: React.FC = () => {
     } catch (err) {
       console.warn("Guest login via top bar:", err);
     }
-    triggerToast('Instant Guest Access activated for Lashmi & Ashwath.', 'success', 'Guest Session Active');
+    triggerToast('You have now signed into Guest account.', 'success', 'Guest Session Active');
     if (location.pathname.includes('login') || location.pathname.includes('register')) {
       navigate('/?tab=home');
       window.dispatchEvent(new CustomEvent('nav-reset-to-home'));
@@ -500,9 +500,69 @@ export const Navbar: React.FC = () => {
                 <span className="notranslate" translate="no">{t('plans') || 'Plans'}</span>
               </Link>
 
+              {/* 4. Language Selector Dropdown (Always visible next to Plans on Homepage, Guest & Signed-In) */}
+              <div className="relative" ref={langDropdownRef}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    playSound('click');
+                    setLangDropdownOpen(!langDropdownOpen);
+                  }}
+                  className="flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition-colors text-xs font-bold text-white/80 hover:text-white cursor-pointer"
+                  title="Select Language"
+                >
+                  <Languages className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
+                  <span className="notranslate" translate="no">
+                    {SUPPORTED_LANGUAGES.find(l => l.code === language)?.localName || 'English'}
+                  </span>
+                  <ChevronDown className={`w-3 h-3 text-white/50 transition-transform ${langDropdownOpen ? 'rotate-180' : ''}`} />
+                </button>
+
+                <AnimatePresence>
+                  {langDropdownOpen && (
+                    <>
+                      <div 
+                        className="fixed inset-0 z-40" 
+                        onClick={() => setLangDropdownOpen(false)} 
+                      />
+                      <motion.div
+                        initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                        className="absolute right-0 mt-2 w-48 rounded-2xl bg-[#090d1a] border border-white/10 p-1.5 shadow-2xl z-50 backdrop-blur-2xl max-h-80 overflow-y-auto"
+                      >
+                        <div className="px-2.5 py-1 text-[9px] font-bold text-white/30 uppercase tracking-widest mb-1 border-b border-white/5">
+                          Indian Languages
+                        </div>
+                        {SUPPORTED_LANGUAGES.map((lang) => (
+                          <button
+                            type="button"
+                            key={lang.code}
+                            onClick={() => {
+                              playSound('glass');
+                              setLanguage(lang.code);
+                              setLangDropdownOpen(false);
+                              triggerToast(`Language switched to ${lang.name} (${lang.localName}).`, 'info', 'Language Updated');
+                            }}
+                            className={`w-full text-left px-2.5 py-2 rounded-xl text-xs font-semibold transition-all flex justify-between items-center ${
+                              language === lang.code
+                                ? 'bg-indigo-500 text-white shadow-lg shadow-indigo-500/20'
+                                : 'text-white/60 hover:text-white hover:bg-white/5'
+                            }`}
+                          >
+                            <span>{lang.localName}</span>
+                            <span className="text-[9px] opacity-40 font-mono">{lang.name}</span>
+                          </button>
+                        ))}
+                      </motion.div>
+                    </>
+                  )}
+                </AnimatePresence>
+              </div>
+
               {isSessionActive ? (
                 <>
-                  {/* 4. Dietary Preferences (Visible once Guest or Create Account is clicked) */}
+                  {/* 5. Dietary Preferences (Visible once Guest or Create Account is clicked) */}
                   <Link 
                     to="/dietary-preferences" 
                     onClick={() => {
@@ -519,66 +579,6 @@ export const Navbar: React.FC = () => {
                     <Utensils className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
                     <span className="notranslate" translate="no">{t('dietaryPreferences') || 'Dietary Preferences'}</span>
                   </Link>
-
-                  {/* 5. Language Selector Dropdown (English by default, visible once Guest or Create Account is clicked) */}
-                  <div className="relative" ref={langDropdownRef}>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        playSound('click');
-                        setLangDropdownOpen(!langDropdownOpen);
-                      }}
-                      className="flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition-colors text-xs font-bold text-white/80 hover:text-white cursor-pointer"
-                      title="Select Language"
-                    >
-                      <Languages className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
-                      <span className="notranslate" translate="no">
-                        {SUPPORTED_LANGUAGES.find(l => l.code === language)?.localName || 'English'}
-                      </span>
-                      <ChevronDown className={`w-3 h-3 text-white/50 transition-transform ${langDropdownOpen ? 'rotate-180' : ''}`} />
-                    </button>
-
-                    <AnimatePresence>
-                      {langDropdownOpen && (
-                        <>
-                          <div 
-                            className="fixed inset-0 z-40" 
-                            onClick={() => setLangDropdownOpen(false)} 
-                          />
-                          <motion.div
-                            initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                            animate={{ opacity: 1, y: 0, scale: 1 }}
-                            exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                            className="absolute right-0 mt-2 w-48 rounded-2xl bg-[#090d1a] border border-white/10 p-1.5 shadow-2xl z-50 backdrop-blur-2xl max-h-80 overflow-y-auto"
-                          >
-                            <div className="px-2.5 py-1 text-[9px] font-bold text-white/30 uppercase tracking-widest mb-1 border-b border-white/5">
-                              Indian Languages
-                            </div>
-                            {SUPPORTED_LANGUAGES.map((lang) => (
-                              <button
-                                type="button"
-                                key={lang.code}
-                                onClick={() => {
-                                  playSound('glass');
-                                  setLanguage(lang.code);
-                                  setLangDropdownOpen(false);
-                                  triggerToast(`Language switched to ${lang.name} (${lang.localName}).`, 'info', 'Language Updated');
-                                }}
-                                className={`w-full text-left px-2.5 py-2 rounded-xl text-xs font-semibold transition-all flex justify-between items-center ${
-                                  language === lang.code
-                                    ? 'bg-indigo-500 text-white shadow-lg shadow-indigo-500/20'
-                                    : 'text-white/60 hover:text-white hover:bg-white/5'
-                                }`}
-                              >
-                                <span>{lang.localName}</span>
-                                <span className="text-[9px] opacity-40 font-mono">{lang.name}</span>
-                              </button>
-                            ))}
-                          </motion.div>
-                        </>
-                      )}
-                    </AnimatePresence>
-                  </div>
 
                   {/* 6. Profile Settings (Visible once Guest or Create Account is clicked) */}
                   <Link 
