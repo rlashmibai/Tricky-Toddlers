@@ -39,7 +39,8 @@ export const isSignedInAccount = (
     email === 'lashmi@gmail.com' ||
     email === 'lashm@gmail.com' ||
     email.startsWith('guest_') ||
-    username === 'lashmi';
+    username === 'lashmi' ||
+    username === 'parent';
 
   return !isGuestIdentity;
 };

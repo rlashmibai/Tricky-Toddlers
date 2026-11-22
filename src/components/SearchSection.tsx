@@ -10,7 +10,7 @@ import {
 import { motion, AnimatePresence } from 'motion/react';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { useAuth } from '../lib/AuthContext';
+import { useAuth, normalizeGuestParentName, normalizeGuestChild1Name, normalizeGuestChild2Name } from '../lib/AuthContext';
 import { useLanguage } from '../lib/LanguageContext';
 import { playSound } from '../lib/sounds';
 import { ChildProfileSelector } from './ChildProfileSelector';
@@ -133,7 +133,7 @@ function getExplainabilityLinksMarkdown(contextText: string): string {
 function parseAIResponse(
   rawText: string,
   isFirstTurn: boolean = true,
-  parentName: string = 'Lashmi',
+  parentName: string = 'Parent',
   queryContext: string = '',
   isStreaming: boolean = false
 ): ParsedResponse {
@@ -228,7 +228,7 @@ function parseAIResponse(
   text = text.replace(/\|\s*\|\s*$/gm, '|');
 
   // 6. Enforce First-Conversation vs Follow-Up Greeting Rule
-  const pName = (parentName || 'Lashmi').trim();
+  const pName = (parentName || 'Parent').trim();
   const escapedName = pName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   if (isFirstTurn) {
     // First conversation turn in the session: normalize greeting to "Namaste Lashmi! "
@@ -350,11 +350,11 @@ export const getChildAgeInMonths = (
   birthDateStr?: string | null, 
   ageStr?: string | null,
   childName?: string,
-  childId?: number
+  _childId?: number
 ): number => {
   const nameLower = (childName || '').toLowerCase();
-  const isAshwath = childId === 1 || nameLower.includes('ashwath') || nameLower.includes('ashath') || nameLower.includes('rashwath');
-  const isAnanya = childId === 2 || nameLower.includes('ananya');
+  const isAshwath = nameLower.includes('ashwath') || nameLower.includes('ashath') || nameLower.includes('rashwath') || nameLower === 'child 1';
+  const isAnanya = nameLower.includes('ananya') || nameLower === 'child 2';
 
   // If age string explicitly indicates years or months, prioritize parsing ageStr
   if (ageStr) {
@@ -365,7 +365,7 @@ export const getChildAgeInMonths = (
     if (yrMatch) total += parseInt(yrMatch[1], 10) * 12;
     if (moMatch) total += parseInt(moMatch[1], 10);
     if (total > 0) {
-      if (isAshwath && total < 12) return 30; // Ashwath is ~2.5 yrs (30 mo)
+      if (isAshwath && total < 12) return 30; // Demo Child 1 is ~2.5 yrs (30 mo)
       return total;
     }
   }
@@ -378,16 +378,16 @@ export const getChildAgeInMonths = (
       let diff = (now.getFullYear() - dob.getFullYear()) * 12 + (now.getMonth() - dob.getMonth());
       if (now.getDate() < dob.getDate()) diff--;
       if (diff >= 0) {
-        if (isAshwath && diff < 12) return 30; // Ashwath is ~2.5 yrs (30 mo)
+        if (isAshwath && diff < 12) return 30; // Demo Child 1 is ~2.5 yrs (30 mo)
         return diff;
       }
     }
   }
 
-  if (isAnanya) return 3; // Ananya is 3 months
-  if (isAshwath) return 30; // Ashwath is 2.5 years (30 months)
+  if (isAnanya) return 3; // Demo Child 2 is 3 months
+  if (isAshwath) return 30; // Demo Child 1 is 2.5 years (30 months)
 
-  return 30; // Default toddler
+  return 24; // Default 24 months if neither DOB nor age string is provided
 };
 
 export const getAgeSpecificTopics = (
@@ -757,7 +757,7 @@ export const getAgeSpecificTopics = (
 };
 
 export const SearchSection: React.FC = () => {
-  const { profile, childProfiles, activeChildIndex } = useAuth();
+  const { profile, childProfiles, activeChildIndex, isAccountUser } = useAuth();
   const { language, t, getAIPromptModifier } = useLanguage();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -788,13 +788,16 @@ export const SearchSection: React.FC = () => {
   // Dynamic Child Profile or General Mode for AI Assistant
   const isGeneralMode = pageChildId === 'general';
   const activeChild = isGeneralMode ? undefined : (childProfiles.find(cp => cp.id === pageChildId) || childProfiles[0]);
-  const parentName = profile?.parentName || profile?.firstName || profile?.name || (typeof window !== 'undefined' ? localStorage.getItem('parent_name') : null) || 'Lashmi';
+  const parentName = isAccountUser
+    ? (profile?.parentName || profile?.firstName || profile?.name || profile?.username || 'Parent')
+    : normalizeGuestParentName(profile?.parentName || profile?.firstName || profile?.name || (typeof window !== 'undefined' ? localStorage.getItem('parent_name') : null));
+  const rawChildName = activeChild?.name || profile?.babyName || profile?.childName;
   const childName = isGeneralMode
     ? 'your child'
-    : (activeChild?.name || profile?.babyName || profile?.childName || (pageChildId === 2 ? 'Ananya' : 'Ashwath'));
+    : (isAccountUser ? (rawChildName || 'Child') : (pageChildId === 2 ? normalizeGuestChild2Name(rawChildName) : normalizeGuestChild1Name(rawChildName)));
   const childAge = isGeneralMode
     ? 'All Ages'
-    : (activeChild?.age || profile?.babyAge || (pageChildId === 2 ? '3 Months' : '2 Years 6 Months'));
+    : (activeChild?.age || profile?.babyAge || (isAccountUser ? 'Age not set' : (pageChildId === 2 ? '3 Months' : '2 Years 6 Months')));
 
   // Accurate age calculation for stage determination
   const childAgeMonths = useMemo(() => {

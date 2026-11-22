@@ -364,7 +364,7 @@ export const ALL_FAQ_ITEMS: FaqQuestionItem[] = [
     category: 'plans-settings',
     question: 'How does Instant Guest Access work?',
     answer:
-      'Clicking "Instant Guest Access" in the top navigation bar lets you immediately explore all 14 features with a pre-configured sample profile (Lashmi & Ashwath) without entering an email or password. You can create your own personal account whenever you are ready.'
+      'Clicking "Instant Guest Access" in the top navigation bar lets you immediately explore all 14 features with a pre-configured sample profile (Parent, Child 1 & Child 2) without entering an email or password. You can create your own personal account whenever you are ready.'
   },
   {
     id: 'ps-4',

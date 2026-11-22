@@ -48,7 +48,7 @@ async function* readStreamWithTimeout<T>(stream: AsyncIterable<T>, chunkTimeoutM
 
 
 function sanitizeAIOutput(text: string, parentName?: string): string {
-  const pName = parentName?.trim() || "Lashmi";
+  const pName = parentName?.trim() || "Parent";
   let result = text;
   
   // Clean corrupted greetings or stuttered name fragments on the same line without touching newlines
@@ -115,7 +115,7 @@ function parseChildAgeBracket(ageStr?: string): {
 }
 
 function getHowICanSupportYou(childName?: string, childAge?: string): string {
-  const cName = childName?.trim() || 'Ashwath';
+  const cName = childName?.trim() || 'Child 1';
   const { bracket, label } = parseChildAgeBracket(childAge);
 
   switch (bracket) {
@@ -163,8 +163,8 @@ function getHowICanSupportYou(childName?: string, childAge?: string): string {
 }
 
 function getResponsibleAIRefusal(parentName?: string, childName?: string, childAge?: string): string {
-  const pName = parentName?.trim() || "Lashmi";
-  const cName = childName?.trim() || "Ashwath";
+  const pName = parentName?.trim() || "Parent";
+  const cName = childName?.trim() || "Child 1";
   return `### 🛡️ Responsible AI & Privacy Notice
 
 ${pName},
@@ -181,8 +181,8 @@ ${getHowICanSupportYou(cName, childAge)}`;
 }
 
 function getOutOfScopePediatricNotice(parentName?: string, childName?: string, childAge?: string): string {
-  const pName = parentName?.trim() || "Lashmi";
-  const cName = childName?.trim() || "Ashwath";
+  const pName = parentName?.trim() || "Parent";
+  const cName = childName?.trim() || "Child 1";
   return `### 🛡️ Tricky Toddler AI: Pediatric Scope Notice
 
 ${pName},
@@ -316,8 +316,8 @@ function getTopicExplainabilityMarkdown(lq: string): string {
 }
 
 function generateTailoredFallback(q: string, parentName?: string, childName?: string, childAge?: string, isFollowUp: boolean = false): string {
-  const pName = parentName?.trim() || "Lashmi";
-  const cName = childName?.trim() || "Ashwath";
+  const pName = parentName?.trim() || "Parent";
+  const cName = childName?.trim() || "Child 1";
   const age = childAge?.trim() || "2 yrs 6 mos";
   const lq = (q || '').toLowerCase();
 
@@ -880,8 +880,8 @@ At age ${age}, children undergo rapid neural wiring and language expansion. They
 }
 
 function getSystemInstruction(parentName?: string, childName?: string, childAge?: string, languagePromptModifier?: string, isFollowUp: boolean = false): string {
-  const pName = parentName?.trim() || "Lashmi";
-  const cName = childName?.trim() || "Ashwath";
+  const pName = parentName?.trim() || "Parent";
+  const cName = childName?.trim() || "Child 1";
   const age = childAge?.trim() || "2 yrs 6 mos";
   const { bracket, label: ageBracketLabel } = parseChildAgeBracket(age);
 
@@ -1420,8 +1420,8 @@ ${languagePromptModifier ? `\n\nREMINDER: Entire response must be in the request
       return res.status(400).json({ error: "Query or messages are required" });
     }
 
-    const pName = parentName?.trim() || "Lashmi";
-    const cName = childName?.trim() || "Ashwath";
+    const pName = parentName?.trim() || "Parent";
+    const cName = childName?.trim() || "Child 1";
     const age = childAge?.trim() || "14 Months";
     const isFollowUp = Boolean(bodyIsFollowUp || (Array.isArray(messages) && messages.length > 1));
 

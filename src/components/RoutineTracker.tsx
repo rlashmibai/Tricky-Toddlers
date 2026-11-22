@@ -42,11 +42,16 @@ const getAgeBracketForChild = (child?: { age?: string; birthDate?: string }): st
 };
 
 export const RoutineTracker: React.FC = () => {
-  const { user, profile, childProfiles } = useAuth();
+  const { user, profile, childProfiles, activeChildIndex, isAccountUser } = useAuth();
   const { t } = useLanguage();
-  const [pageChildId, setPageChildId] = useState<1 | 2>(1);
+  const [pageChildId, setPageChildId] = useState<1 | 2>(() => (activeChildIndex === 2 ? 2 : 1));
+  useEffect(() => {
+    if (activeChildIndex === 1 || activeChildIndex === 2) {
+      setPageChildId(activeChildIndex);
+    }
+  }, [activeChildIndex]);
   const currentChild = childProfiles.find(cp => cp.id === pageChildId) || childProfiles[0];
-  const childName = currentChild?.name || profile?.babyName || profile?.childName || 'Ashwath';
+  const childName = currentChild?.name || profile?.babyName || profile?.childName || (isAccountUser ? 'Child' : (pageChildId === 2 ? 'Child 2' : 'Child 1'));
 
   const [selectedAgeGroup, setSelectedAgeGroup] = useState<string>(() => getAgeBracketForChild(currentChild));
   const [selectedTimeType, setSelectedTimeType] = useState<'all' | 'morning' | 'evening' | 'bedtime'>('all');

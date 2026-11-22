@@ -36,6 +36,8 @@ export const formatChildAge = (dobString?: string | null, fallback?: string): st
   return `${years} Year${years > 1 ? 's' : ''} ${remMonths} Month${remMonths > 1 ? 's' : ''}`;
 };
 
+export type AuthMode = 'landing' | 'guest' | 'account';
+
 interface AuthContextType {
   user: User | null;
   profile: any | null;
@@ -43,6 +45,9 @@ interface AuthContextType {
   needsProfileSetup: boolean;
   isSessionActive: boolean;
   setSessionActive: (active: boolean) => void;
+  authMode: AuthMode;
+  isGuestDemo: boolean;
+  isAccountUser: boolean;
   refreshProfile: () => Promise<void>;
   loginAsGuest: (activateUI?: boolean) => Promise<User | null>;
   activeChildIndex: 1 | 2;
@@ -56,6 +61,50 @@ interface AuthContextType {
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export const clearDemoLocalStorageForAccount = () => {
+  if (typeof window === 'undefined') return;
+  const demoValues = ['lashmi', 'parent', 'ashwath', 'child 1', 'ananya', 'child 2', 'lashm@gmail.com', 'lashmi@gmail.com'];
+  const checkAndClear = (key: string) => {
+    const val = (localStorage.getItem(key) || '').trim().toLowerCase();
+    if (demoValues.includes(val)) {
+      localStorage.removeItem(key);
+    }
+  };
+  ['parent_name', 'baby_name', 'child_name', 'toddler_name', 'child_1_name', 'child_2_name', 'user_contact_email'].forEach(checkAndClear);
+  localStorage.removeItem('child_1_dob');
+  localStorage.removeItem('child_2_dob');
+  localStorage.removeItem('baby_birthdate');
+  localStorage.removeItem('baby_birth_date');
+  localStorage.removeItem('baby_age');
+  localStorage.removeItem('toddler_age');
+  localStorage.removeItem('child_1_dietary_config');
+  localStorage.removeItem('child_2_dietary_config');
+};
+
+export const normalizeGuestParentName = (val?: string | null): string => {
+  const trimmed = (val || '').trim();
+  if (!trimmed || trimmed.toLowerCase() === 'lashmi' || trimmed.toLowerCase() === 'lakshmi') {
+    return 'Parent';
+  }
+  return trimmed;
+};
+
+export const normalizeGuestChild1Name = (val?: string | null): string => {
+  const trimmed = (val || '').trim();
+  if (!trimmed || trimmed.toLowerCase() === 'ashwath' || trimmed.toLowerCase() === 'aanya') {
+    return 'Child 1';
+  }
+  return trimmed;
+};
+
+export const normalizeGuestChild2Name = (val?: string | null): string => {
+  const trimmed = (val || '').trim();
+  if (!trimmed || trimmed.toLowerCase() === 'ananya') {
+    return 'Child 2';
+  }
+  return trimmed;
+};
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isSessionActive, setIsSessionActiveState] = useState<boolean>(() => {
@@ -95,29 +144,55 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const [user, setUser] = useState<User | null>(() => {
     const cachedUid = typeof window !== 'undefined' ? localStorage.getItem('cached_user_uid') : null;
+    const isAccountMode = typeof window !== 'undefined' && localStorage.getItem('tt_auth_mode') === 'account';
     let cachedEmail = typeof window !== 'undefined' ? localStorage.getItem('cached_user_email') : null;
-    if (!cachedEmail || cachedEmail === 'guest_instant@securepass.internal' || cachedEmail.includes('securepass.internal') || cachedEmail === 'guest@instant.internal') {
+    if (!isAccountMode && (!cachedEmail || cachedEmail === 'guest_instant@securepass.internal' || cachedEmail.includes('securepass.internal') || cachedEmail === 'guest@instant.internal')) {
       cachedEmail = 'lashmi@gmail.com';
       if (typeof window !== 'undefined') localStorage.setItem('cached_user_email', 'lashmi@gmail.com');
     }
     return {
       uid: cachedUid || 'guest_instant_user',
       email: cachedEmail,
-      isAnonymous: true,
+      isAnonymous: !isAccountMode,
     } as unknown as User;
   });
 
   const [profile, setProfile] = useState<any | null>(() => {
-    let parentName = (typeof window !== 'undefined' && localStorage.getItem('parent_name')) || 'Lashmi';
-    if (parentName.toLowerCase() === 'lakshmi') {
-      parentName = 'Lashmi';
-      localStorage.setItem('parent_name', 'Lashmi');
-    }
+    const isAccountMode = typeof window !== 'undefined' && localStorage.getItem('tt_auth_mode') === 'account';
     const savedActiveIndex = (typeof window !== 'undefined' && localStorage.getItem('active_child_index')) === '2' ? 2 : 1;
-    let babyName = (typeof window !== 'undefined' && localStorage.getItem('baby_name')) || (savedActiveIndex === 2 ? 'Ananya' : 'Ashwath');
-    if (babyName.toLowerCase() === 'aanya') {
-      babyName = 'Ashwath';
-      localStorage.setItem('baby_name', 'Ashwath');
+    if (isAccountMode) {
+      const savedParent = (typeof window !== 'undefined' && localStorage.getItem('parent_name')) || '';
+      const savedBaby = (typeof window !== 'undefined' && localStorage.getItem('baby_name')) || '';
+      const savedAge = (typeof window !== 'undefined' && localStorage.getItem('baby_age')) || '';
+      return {
+        username: savedParent,
+        name: savedParent,
+        firstName: savedParent,
+        parentName: savedParent,
+        babyName: savedBaby,
+        childName: savedBaby,
+        toddlerName: savedBaby,
+        babyAge: savedAge,
+        childAge: savedAge,
+        activeChildIndex: savedActiveIndex,
+        language: (typeof window !== 'undefined' && localStorage.getItem('user_language')) || 'en',
+      };
+    }
+    const rawParent = typeof window !== 'undefined' ? localStorage.getItem('parent_name') : null;
+    const parentName = normalizeGuestParentName(rawParent);
+    if (typeof window !== 'undefined' && rawParent !== parentName) {
+      localStorage.setItem('parent_name', parentName);
+    }
+    const rawBaby = typeof window !== 'undefined' ? localStorage.getItem('baby_name') : null;
+    const babyName = savedActiveIndex === 2
+      ? normalizeGuestChild2Name(rawBaby)
+      : normalizeGuestChild1Name(rawBaby);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('baby_name', babyName);
+      localStorage.setItem('child_name', babyName);
+      localStorage.setItem('toddler_name', babyName);
+      localStorage.setItem('child_1_name', normalizeGuestChild1Name(localStorage.getItem('child_1_name')));
+      localStorage.setItem('child_2_name', normalizeGuestChild2Name(localStorage.getItem('child_2_name')));
     }
     const babyAge = (typeof window !== 'undefined' && localStorage.getItem('baby_age')) || (savedActiveIndex === 2 ? '3 Months' : '2 Years 6 Months');
     return {
@@ -138,16 +213,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(false);
 
   const fetchProfile = async (uid: string) => {
+    const isAccountMode = typeof window !== 'undefined' && localStorage.getItem('tt_auth_mode') === 'account';
     if (!db) {
-      setProfile({
-        username: 'Lashmi',
-        name: 'Lashmi',
-        firstName: 'Lashmi',
-        parentName: 'Lashmi',
-        babyName: 'Ashwath',
-        childName: 'Ashwath',
-        language: 'en',
-      });
+      if (isAccountMode) {
+        setProfile({
+          language: 'en',
+        });
+      } else {
+        setProfile({
+          username: 'Parent',
+          name: 'Parent',
+          firstName: 'Parent',
+          parentName: 'Parent',
+          babyName: 'Child 1',
+          childName: 'Child 1',
+          language: 'en',
+        });
+      }
       return;
     }
     try {
@@ -155,44 +237,126 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
         const data = docSnap.data();
-        const isDemo = uid === 'guest_instant_user' || data.email === 'lashmi@gmail.com' || data.email === 'lashm@gmail.com' || data.username === 'Lashmi';
+        const isDemo = !isAccountMode && (uid === 'guest_instant_user' || data.email === 'lashmi@gmail.com' || data.email === 'lashm@gmail.com' || data.username === 'Lashmi' || data.username === 'Parent');
 
-        // Only default to Lashmi & Ashwath if it is the demo account and not a newly registered user
+        // Normalize Guest Demo profile names from legacy Lashmi/Ashwath/Ananya to Parent/Child 1/Child 2
         if (isDemo && !data.needsProfileSetup) {
-          if (!data.parentName && !data.firstName && !data.name) {
-            data.parentName = 'Lashmi';
-            data.firstName = 'Lashmi';
-            data.name = 'Lashmi';
-            data.username = data.username || 'Lashmi';
+          const normParent = normalizeGuestParentName(data.parentName || data.firstName || data.name || data.username);
+          data.parentName = normParent;
+          data.firstName = normParent;
+          data.name = normParent;
+          data.username = normParent;
+          if (!data.lastName || data.lastName.toLowerCase() === 'ashwath') {
+            data.lastName = '';
           }
-          if (!data.babyName && !data.childName) {
-            data.babyName = 'Ashwath';
-            data.childName = 'Ashwath';
+          const normC1 = normalizeGuestChild1Name(data.child1?.name || data.babyName || data.childName);
+          const normC2 = normalizeGuestChild2Name(data.child2?.name);
+          data.child1 = {
+            ...(data.child1 || {}),
+            name: normC1,
+            birthDate: data.child1?.birthDate || data.babyBirthDate || '2024-04-12',
+            gender: data.child1?.gender || 'Boy',
+            bloodGroup: data.child1?.bloodGroup || 'O+',
+            dietaryNotes: data.child1?.dietaryNotes || 'Vegetarian, low salt, zero refined sugar',
+          };
+          data.child2 = {
+            ...(data.child2 || {}),
+            name: normC2,
+            birthDate: data.child2?.birthDate || '2026-01-15',
+            gender: data.child2?.gender || 'Girl',
+            bloodGroup: data.child2?.bloodGroup || 'B+',
+            dietaryNotes: data.child2?.dietaryNotes || 'Mild lactose sensitivity, puree weaning stage',
+          };
+          const activeName = data.activeChildIndex === 2 ? normC2 : normC1;
+          data.babyName = activeName;
+          data.childName = activeName;
+          data.toddlerName = activeName;
+          if (typeof data.aiInstructions === 'string') {
+            data.aiInstructions = data.aiInstructions.replace(/\bAshwath\b/g, 'Child 1').replace(/\bAnanya\b/g, 'Child 2');
           }
-        } else if (data.parentName?.toLowerCase() === 'lakshmi') {
-          data.parentName = 'Lashmi';
-          data.firstName = 'Lashmi';
-          data.name = 'Lashmi';
+          if (typeof window !== 'undefined') {
+            localStorage.setItem('parent_name', normParent);
+            localStorage.setItem('child_1_name', normC1);
+            localStorage.setItem('child_2_name', normC2);
+            localStorage.setItem('baby_name', activeName);
+            localStorage.setItem('child_name', activeName);
+            localStorage.setItem('toddler_name', activeName);
+          }
+        } else if (isAccountMode) {
+          // Sync localStorage with the signed-in user's actual Firestore settings
+          if (typeof window !== 'undefined') {
+            const pName = data.parentName || data.firstName || data.name || data.username || '';
+            if (pName) localStorage.setItem('parent_name', pName);
+            const c1Name = data.child1?.name || data.babyName || data.childName || '';
+            if (c1Name) {
+              localStorage.setItem('child_1_name', c1Name);
+              localStorage.setItem('baby_name', data.activeChildIndex === 2 && data.child2?.name ? data.child2.name : c1Name);
+              localStorage.setItem('child_name', data.activeChildIndex === 2 && data.child2?.name ? data.child2.name : c1Name);
+              localStorage.setItem('toddler_name', data.activeChildIndex === 2 && data.child2?.name ? data.child2.name : c1Name);
+            }
+            if (data.child1?.birthDate || data.babyBirthDate) {
+              localStorage.setItem('child_1_dob', data.child1?.birthDate || data.babyBirthDate);
+            }
+            if (data.child2?.name) {
+              localStorage.setItem('child_2_name', data.child2.name);
+            } else {
+              localStorage.removeItem('child_2_name');
+            }
+            if (data.child2?.birthDate) {
+              localStorage.setItem('child_2_dob', data.child2.birthDate);
+            }
+            if (data.indianState) localStorage.setItem('user_indian_state', data.indianState);
+            if (data.city) localStorage.setItem('user_city', data.city);
+            if (data.contactEmail) localStorage.setItem('user_contact_email', data.contactEmail);
+          }
         }
         if (data.child2NotApplicable !== undefined) {
           const isNA = Boolean(data.child2NotApplicable);
           setChild2NotApplicableState(isNA);
           if (typeof window !== 'undefined') localStorage.setItem('child_2_not_applicable', String(isNA));
         }
+        if (data.activeChildIndex === 1 || data.activeChildIndex === 2) {
+          setActiveChildIndexState(data.activeChildIndex);
+          if (typeof window !== 'undefined') localStorage.setItem('active_child_index', String(data.activeChildIndex));
+        }
         setProfile(data);
+      } else if (isAccountMode) {
+        // Signed-in user without a document yet -> require profile setup
+        const emptyAccountProfile = {
+          uid,
+          plan: 'free',
+          needsProfileSetup: true,
+          profileCompleted: false,
+          language: 'en',
+        };
+        setProfile(emptyAccountProfile);
       } else {
-        // Create complete guest profile for Ashwath with updated settings
+        // Create complete guest profile for Parent, Child 1 & Child 2 with updated settings
         const defaultProfile = {
-          username: 'Lashmi',
-          name: 'Lashmi',
-          firstName: 'Lashmi',
-          lastName: 'Ashwath',
-          parentName: 'Lashmi',
+          username: 'Parent',
+          name: 'Parent',
+          firstName: 'Parent',
+          lastName: '',
+          parentName: 'Parent',
           contactEmail: 'lashm@gmail.com',
           email: 'lashm@gmail.com',
-          babyName: 'Ashwath',
-          childName: 'Ashwath',
+          babyName: 'Child 1',
+          childName: 'Child 1',
           babyBirthDate: '2024-04-12',
+          child1: {
+            name: 'Child 1',
+            birthDate: '2024-04-12',
+            gender: 'Boy',
+            bloodGroup: 'O+',
+            dietaryNotes: 'Vegetarian, low salt, zero refined sugar',
+          },
+          child2: {
+            name: 'Child 2',
+            birthDate: '2026-01-15',
+            gender: 'Girl',
+            bloodGroup: 'B+',
+            dietaryNotes: 'Mild lactose sensitivity, puree weaning stage',
+          },
           indianState: 'Karnataka',
           city: 'Bengaluru (Bangalore)',
           language: 'en',
@@ -201,7 +365,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           foodsToAvoid: ['No chemicals', 'No artificial sweeteners', 'No food coloring / artificial colors'],
           allergiesIntolerances: [],
           feedingStyles: ['Baby-led weaning (BLW)', 'Finger foods'],
-          aiInstructions: 'Ashwath is a healthy, active toddler who loves sensory play and outdoor exploration. Prefers nutritious, home-cooked vegetarian meals (khichdi, curd rice, steamed vegetables, and fruit slices) with low salt, zero refined sugar, and no artificial additives. Sensitive to loud noises, experiences teething discomfort, and thrives on a consistent afternoon nap and soothing bedtime routine. Please keep all advice gentle, actionable, and age-appropriate.',
+          aiInstructions: 'Child 1 is a healthy, active toddler who loves sensory play and outdoor exploration. Prefers nutritious, home-cooked vegetarian meals (khichdi, curd rice, steamed vegetables, and fruit slices) with low salt, zero refined sugar, and no artificial additives. Sensitive to loud noises, experiences teething discomfort, and thrives on a consistent afternoon nap and soothing bedtime routine. Please keep all advice gentle, actionable, and age-appropriate.',
           updatedAt: serverTimestamp(),
           createdAt: serverTimestamp(),
         };
@@ -214,27 +378,45 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     } catch (error) {
       console.warn("Profile fetch fallback engaged:", error);
-      setProfile({
-        username: 'Lashmi',
-        name: 'Lashmi',
-        firstName: 'Lashmi',
-        lastName: 'Ashwath',
-        parentName: 'Lashmi',
-        contactEmail: 'lashm@gmail.com',
-        email: 'lashm@gmail.com',
-        babyName: 'Ashwath',
-        childName: 'Ashwath',
-        babyBirthDate: '2024-04-12',
-        indianState: 'Karnataka',
-        city: 'Bengaluru (Bangalore)',
-        language: 'en',
-        dietType: 'Vegetarian',
-        religiousCultural: ['No specific restrictions'],
-        foodsToAvoid: ['No chemicals', 'No artificial sweeteners', 'No food coloring / artificial colors'],
-        allergiesIntolerances: [],
-        feedingStyles: ['Baby-led weaning (BLW)', 'Finger foods'],
-        aiInstructions: 'Ashwath is a healthy, active toddler who loves sensory play and outdoor exploration. Prefers nutritious, home-cooked vegetarian meals (khichdi, curd rice, steamed vegetables, and fruit slices) with low salt, zero refined sugar, and no artificial additives. Sensitive to loud noises, experiences teething discomfort, and thrives on a consistent afternoon nap and soothing bedtime routine. Please keep all advice gentle, actionable, and age-appropriate.',
-      });
+      if (isAccountMode) {
+        setProfile((prev: any) => prev || { language: 'en' });
+      } else {
+        setProfile({
+          username: 'Parent',
+          name: 'Parent',
+          firstName: 'Parent',
+          lastName: '',
+          parentName: 'Parent',
+          contactEmail: 'lashm@gmail.com',
+          email: 'lashm@gmail.com',
+          babyName: 'Child 1',
+          childName: 'Child 1',
+          babyBirthDate: '2024-04-12',
+          child1: {
+            name: 'Child 1',
+            birthDate: '2024-04-12',
+            gender: 'Boy',
+            bloodGroup: 'O+',
+            dietaryNotes: 'Vegetarian, low salt, zero refined sugar',
+          },
+          child2: {
+            name: 'Child 2',
+            birthDate: '2026-01-15',
+            gender: 'Girl',
+            bloodGroup: 'B+',
+            dietaryNotes: 'Mild lactose sensitivity, puree weaning stage',
+          },
+          indianState: 'Karnataka',
+          city: 'Bengaluru (Bangalore)',
+          language: 'en',
+          dietType: 'Vegetarian',
+          religiousCultural: ['No specific restrictions'],
+          foodsToAvoid: ['No chemicals', 'No artificial sweeteners', 'No food coloring / artificial colors'],
+          allergiesIntolerances: [],
+          feedingStyles: ['Baby-led weaning (BLW)', 'Finger foods'],
+          aiInstructions: 'Child 1 is a healthy, active toddler who loves sensory play and outdoor exploration. Prefers nutritious, home-cooked vegetarian meals (khichdi, curd rice, steamed vegetables, and fruit slices) with low salt, zero refined sugar, and no artificial additives. Sensitive to loud noises, experiences teething discomfort, and thrives on a consistent afternoon nap and soothing bedtime routine. Please keep all advice gentle, actionable, and age-appropriate.',
+        });
+      }
     }
   };
 
@@ -246,13 +428,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       localStorage.setItem('tt_auth_mode', 'guest');
     }
     if (!auth) return null;
-    setLoading(true);
     try {
       localStorage.removeItem('user_logged_out');
-      localStorage.setItem('parent_name', 'Lashmi');
-      localStorage.setItem('baby_name', 'Ashwath');
+      localStorage.setItem('parent_name', 'Parent');
+      localStorage.setItem('baby_name', 'Child 1');
+      localStorage.setItem('child_name', 'Child 1');
+      localStorage.setItem('toddler_name', 'Child 1');
+      localStorage.setItem('child_1_name', 'Child 1');
+      localStorage.setItem('child_1_dob', '2024-04-12');
+      localStorage.setItem('child_2_name', 'Child 2');
+      localStorage.setItem('child_2_dob', '2026-01-15');
       const defaultGuestEmail = 'lashmi@gmail.com';
       const defaultGuestPass = 'Guest@Pass987!';
+
+      // If already signed in as the background guest account, reuse immediately without network round-trip
+      if (auth.currentUser && auth.currentUser.email === defaultGuestEmail) {
+        setUser(auth.currentUser);
+        return auth.currentUser;
+      }
+
       let loggedInUser: User | null = null;
 
       try {
@@ -283,16 +477,32 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (loggedInUser) {
         setUser(loggedInUser);
         const guestData = {
-          username: 'Lashmi',
-          name: 'Lashmi',
-          firstName: 'Lashmi',
-          lastName: 'Ashwath',
-          parentName: 'Lashmi',
+          username: 'Parent',
+          name: 'Parent',
+          firstName: 'Parent',
+          lastName: '',
+          parentName: 'Parent',
           contactEmail: 'lashm@gmail.com',
           email: 'lashm@gmail.com',
-          babyName: 'Ashwath',
-          childName: 'Ashwath',
+          babyName: 'Child 1',
+          childName: 'Child 1',
           babyBirthDate: '2024-04-12',
+          activeChildIndex: 1,
+          child2NotApplicable: false,
+          child1: {
+            name: 'Child 1',
+            birthDate: '2024-04-12',
+            gender: 'Boy',
+            bloodGroup: 'O+',
+            dietaryNotes: 'Vegetarian, low salt, zero refined sugar',
+          },
+          child2: {
+            name: 'Child 2',
+            birthDate: '2026-01-15',
+            gender: 'Girl',
+            bloodGroup: 'B+',
+            dietaryNotes: 'Mild lactose sensitivity, puree weaning stage',
+          },
           indianState: 'Karnataka',
           city: 'Bengaluru (Bangalore)',
           language: 'en',
@@ -301,9 +511,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           foodsToAvoid: ['No chemicals', 'No artificial sweeteners', 'No food coloring / artificial colors'],
           allergiesIntolerances: [],
           feedingStyles: ['Baby-led weaning (BLW)', 'Finger foods'],
-          aiInstructions: 'Ashwath is a healthy, active toddler who loves sensory play and outdoor exploration. Prefers nutritious, home-cooked vegetarian meals (khichdi, curd rice, steamed vegetables, and fruit slices) with low salt, zero refined sugar, and no artificial additives. Sensitive to loud noises, experiences teething discomfort, and thrives on a consistent afternoon nap and soothing bedtime routine. Please keep all advice gentle, actionable, and age-appropriate.',
+          aiInstructions: 'Child 1 is a healthy, active toddler who loves sensory play and outdoor exploration. Prefers nutritious, home-cooked vegetarian meals (khichdi, curd rice, steamed vegetables, and fruit slices) with low salt, zero refined sugar, and no artificial additives. Sensitive to loud noises, experiences teething discomfort, and thrives on a consistent afternoon nap and soothing bedtime routine. Please keep all advice gentle, actionable, and age-appropriate.',
           updatedAt: serverTimestamp(),
         };
+        setChild2NotApplicableState(false);
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('child_2_not_applicable', 'false');
+          localStorage.setItem('child_1_name', 'Child 1');
+          localStorage.setItem('child_1_dob', '2024-04-12');
+          localStorage.setItem('child_2_name', 'Child 2');
+          localStorage.setItem('child_2_dob', '2026-01-15');
+        }
         if (db) {
           try {
             await setDoc(doc(db, 'users', loggedInUser.uid), guestData, { merge: true });
@@ -324,19 +542,39 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       } as unknown as User;
       localStorage.setItem('cached_user_email', 'lashmi@gmail.com');
       setUser(fallbackUser);
-      localStorage.setItem('parent_name', 'Lashmi');
-      localStorage.setItem('baby_name', 'Ashwath');
+      localStorage.setItem('parent_name', 'Parent');
+      localStorage.setItem('baby_name', 'Child 1');
+      localStorage.setItem('child_1_name', 'Child 1');
+      localStorage.setItem('child_2_name', 'Child 2');
+      setChild2NotApplicableState(false);
+      localStorage.setItem('child_2_not_applicable', 'false');
       setProfile({
-        username: 'Lashmi',
-        name: 'Lashmi',
-        firstName: 'Lashmi',
-        lastName: 'Ashwath',
-        parentName: 'Lashmi',
+        username: 'Parent',
+        name: 'Parent',
+        firstName: 'Parent',
+        lastName: '',
+        parentName: 'Parent',
         contactEmail: 'lashm@gmail.com',
         email: 'lashm@gmail.com',
-        babyName: 'Ashwath',
-        childName: 'Ashwath',
+        babyName: 'Child 1',
+        childName: 'Child 1',
         babyBirthDate: '2024-04-12',
+        activeChildIndex: 1,
+        child2NotApplicable: false,
+        child1: {
+          name: 'Child 1',
+          birthDate: '2024-04-12',
+          gender: 'Boy',
+          bloodGroup: 'O+',
+          dietaryNotes: 'Vegetarian, low salt, zero refined sugar',
+        },
+        child2: {
+          name: 'Child 2',
+          birthDate: '2026-01-15',
+          gender: 'Girl',
+          bloodGroup: 'B+',
+          dietaryNotes: 'Mild lactose sensitivity, puree weaning stage',
+        },
         indianState: 'Karnataka',
         city: 'Bengaluru (Bangalore)',
         language: 'en',
@@ -345,7 +583,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         foodsToAvoid: ['No chemicals', 'No artificial sweeteners', 'No food coloring / artificial colors'],
         allergiesIntolerances: [],
         feedingStyles: ['Baby-led weaning (BLW)', 'Finger foods'],
-        aiInstructions: 'Ashwath is a healthy, active toddler who loves sensory play and outdoor exploration. Prefers nutritious, home-cooked vegetarian meals (khichdi, curd rice, steamed vegetables, and fruit slices) with low salt, zero refined sugar, and no artificial additives. Sensitive to loud noises, experiences teething discomfort, and thrives on a consistent afternoon nap and soothing bedtime routine. Please keep all advice gentle, actionable, and age-appropriate.',
+        aiInstructions: 'Child 1 is a healthy, active toddler who loves sensory play and outdoor exploration. Prefers nutritious, home-cooked vegetarian meals (khichdi, curd rice, steamed vegetables, and fruit slices) with low salt, zero refined sugar, and no artificial additives. Sensitive to loud noises, experiences teething discomfort, and thrives on a consistent afternoon nap and soothing bedtime routine. Please keep all advice gentle, actionable, and age-appropriate.',
       });
       return fallbackUser;
     } finally {
@@ -354,14 +592,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   useEffect(() => {
-    // Cache default parent and child names for guest browsing
-    const storedParent = localStorage.getItem('parent_name');
-    if (!storedParent || storedParent.toLowerCase() === 'lakshmi') {
-      localStorage.setItem('parent_name', 'Lashmi');
-    }
-    const storedBaby = localStorage.getItem('baby_name');
-    if (!storedBaby || storedBaby.toLowerCase() === 'aanya') {
-      localStorage.setItem('baby_name', 'Ashwath');
+    const isAccountMode = typeof window !== 'undefined' && localStorage.getItem('tt_auth_mode') === 'account';
+    if (!isAccountMode) {
+      // Cache default parent and child names only for guest browsing
+      const storedParent = localStorage.getItem('parent_name');
+      const normParent = normalizeGuestParentName(storedParent);
+      if (storedParent !== normParent) {
+        localStorage.setItem('parent_name', normParent);
+      }
+      const storedBaby = localStorage.getItem('baby_name');
+      const savedIdx = localStorage.getItem('active_child_index') === '2' ? 2 : 1;
+      const normBaby = savedIdx === 2 ? normalizeGuestChild2Name(storedBaby) : normalizeGuestChild1Name(storedBaby);
+      if (storedBaby !== normBaby) {
+        localStorage.setItem('baby_name', normBaby);
+        localStorage.setItem('child_name', normBaby);
+        localStorage.setItem('toddler_name', normBaby);
+      }
+      localStorage.setItem('child_1_name', normalizeGuestChild1Name(localStorage.getItem('child_1_name')));
+      localStorage.setItem('child_2_name', normalizeGuestChild2Name(localStorage.getItem('child_2_name')));
     }
     if (!auth) {
       setLoading(false);
@@ -377,8 +625,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         await fetchProfile(currentUser.uid);
         setLoading(false);
       } else {
-        // Maintain a silent background Firebase Auth session so all 14 features & Firestore
-        // rules work seamlessly while keeping isSessionActive false on the Landing Page
+        // Maintain a silent background Firebase Auth session so Firestore rules work seamlessly
+        // while keeping isSessionActive false on the Landing Page
         await loginAsGuest(false);
       }
     });
@@ -392,18 +640,59 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  // Child Profiles computation
-  const child1Name = profile?.child1?.name || (profile?.activeChildIndex === 1 ? profile?.babyName : null) || (typeof window !== 'undefined' ? localStorage.getItem('child_1_name') : null) || (typeof window !== 'undefined' && localStorage.getItem('active_child_index') !== '2' ? localStorage.getItem('baby_name') : null) || 'Ashwath';
-  const child1DOB = profile?.child1?.birthDate || (typeof window !== 'undefined' ? localStorage.getItem('child_1_dob') : null) || '2024-04-12';
-  const child1Gender = profile?.child1?.gender || (typeof window !== 'undefined' ? localStorage.getItem('child_1_gender') : null) || 'Boy';
-  const child1Blood = profile?.child1?.bloodGroup || (typeof window !== 'undefined' ? localStorage.getItem('child_1_blood') : null) || 'O+';
-  const child1Age = formatChildAge(child1DOB, '2 Years 6 Months');
+  const storedAuthMode = typeof window !== 'undefined' ? localStorage.getItem('tt_auth_mode') : null;
+  const isDemoSession = storedAuthMode !== 'account' && (
+    storedAuthMode === 'guest' ||
+    user?.uid === 'guest_instant_user' ||
+    user?.email === 'lashmi@gmail.com' ||
+    user?.email === 'lashm@gmail.com' ||
+    profile?.username === 'Lashmi' ||
+    profile?.username === 'Parent'
+  );
 
-  const child2Name = profile?.child2?.name || (profile?.activeChildIndex === 2 ? profile?.babyName : null) || (typeof window !== 'undefined' ? localStorage.getItem('child_2_name') : null) || (typeof window !== 'undefined' && localStorage.getItem('active_child_index') === '2' ? localStorage.getItem('baby_name') : null) || 'Ananya';
-  const child2DOB = profile?.child2?.birthDate || (typeof window !== 'undefined' ? localStorage.getItem('child_2_dob') : null) || '2026-01-15';
-  const child2Gender = profile?.child2?.gender || (typeof window !== 'undefined' ? localStorage.getItem('child_2_gender') : null) || 'Girl';
-  const child2Blood = profile?.child2?.bloodGroup || (typeof window !== 'undefined' ? localStorage.getItem('child_2_blood') : null) || 'B+';
-  const child2Age = formatChildAge(child2DOB, '3 Months');
+  const authMode: AuthMode = !isSessionActive ? 'landing' : (isDemoSession ? 'guest' : 'account');
+  const isGuestDemo = authMode === 'guest';
+  const isAccountUser = authMode === 'account';
+
+  // Child Profiles computation:
+  // - In Guest Demo mode: retain the 1 demo family profile (Parent: Parent, Child 1: Child 1, Child 2: Child 2)
+  // - In Signed-In Account mode: strictly use the user's own settings from Profile Settings & Dietary Preferences
+  const child1Name = isAccountUser
+    ? (profile?.child1?.name || (profile?.activeChildIndex !== 2 ? profile?.babyName : null) || (typeof window !== 'undefined' ? localStorage.getItem('child_1_name') : null) || profile?.childName || profile?.babyName || 'Child 1')
+    : normalizeGuestChild1Name(profile?.child1?.name);
+  const child1DOB = isAccountUser
+    ? (profile?.child1?.birthDate || profile?.babyBirthDate || (typeof window !== 'undefined' ? localStorage.getItem('child_1_dob') : null) || '')
+    : (profile?.child1?.birthDate || '2024-04-12');
+  const child1Gender = isAccountUser
+    ? (profile?.child1?.gender || profile?.childGender || (typeof window !== 'undefined' ? localStorage.getItem('child_1_gender') : null) || 'Boy')
+    : (profile?.child1?.gender || 'Boy');
+  const child1Blood = isAccountUser
+    ? (profile?.child1?.bloodGroup || profile?.bloodGroup || (typeof window !== 'undefined' ? localStorage.getItem('child_1_blood') : null) || 'O+')
+    : (profile?.child1?.bloodGroup || 'O+');
+  const child1Age = isAccountUser
+    ? (child1DOB ? formatChildAge(child1DOB, profile?.babyAge || '1 Year') : (profile?.babyAge || profile?.toddlerAge || '1 Year'))
+    : formatChildAge(child1DOB, '2 Years 6 Months');
+
+  const rawChild2NameAccount = profile?.child2?.name || (typeof window !== 'undefined' ? localStorage.getItem('child_2_name') : null) || '';
+  const child2Name = isAccountUser
+    ? (rawChild2NameAccount.trim() || 'Child 2')
+    : normalizeGuestChild2Name(profile?.child2?.name);
+  const child2DOB = isAccountUser
+    ? (profile?.child2?.birthDate || (typeof window !== 'undefined' ? localStorage.getItem('child_2_dob') : null) || '')
+    : (profile?.child2?.birthDate || '2026-01-15');
+  const child2Gender = isAccountUser
+    ? (profile?.child2?.gender || (typeof window !== 'undefined' ? localStorage.getItem('child_2_gender') : null) || 'Girl')
+    : (profile?.child2?.gender || 'Girl');
+  const child2Blood = isAccountUser
+    ? (profile?.child2?.bloodGroup || (typeof window !== 'undefined' ? localStorage.getItem('child_2_blood') : null) || 'B+')
+    : (profile?.child2?.bloodGroup || 'B+');
+  const child2Age = isAccountUser
+    ? (child2DOB ? formatChildAge(child2DOB, '6 Months') : '6 Months')
+    : '3 Months';
+
+  const hasSecondChildInProfile = isAccountUser
+    ? (!child2NotApplicable && Boolean(rawChild2NameAccount.trim()))
+    : !child2NotApplicable;
 
   const childProfiles: ChildProfile[] = [
     {
@@ -413,24 +702,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       birthDate: child1DOB,
       gender: child1Gender,
       bloodGroup: child1Blood,
-      dietaryNotes: profile?.child1?.dietaryNotes || 'Vegetarian, low salt, zero refined sugar',
+      dietaryNotes: isAccountUser
+        ? (profile?.child1?.dietaryNotes || profile?.dietaryNotes || '')
+        : (profile?.child1?.dietaryNotes || 'Vegetarian, low salt, zero refined sugar'),
     },
-    ...(!child2NotApplicable ? [{
+    ...(hasSecondChildInProfile ? [{
       id: 2 as const,
       name: child2Name,
       age: child2Age,
       birthDate: child2DOB,
       gender: child2Gender,
       bloodGroup: child2Blood,
-      dietaryNotes: profile?.child2?.dietaryNotes || 'Mild lactose sensitivity, puree weaning stage',
+      dietaryNotes: isAccountUser
+        ? (profile?.child2?.dietaryNotes || '')
+        : (profile?.child2?.dietaryNotes || 'Mild lactose sensitivity, puree weaning stage'),
     }] : [])
   ];
 
-  const effectiveActiveIndex: 1 | 2 = (!child2NotApplicable && (profile?.activeChildIndex === 2 || activeChildIndex === 2)) ? 2 : 1;
+  const effectiveActiveIndex: 1 | 2 = (hasSecondChildInProfile && (profile?.activeChildIndex === 2 || activeChildIndex === 2)) ? 2 : 1;
   const activeChild: ChildProfile = childProfiles.find(cp => cp.id === effectiveActiveIndex) || childProfiles[0];
 
   const switchActiveChild = async (newIndex: 1 | 2) => {
-    const safeIndex: 1 | 2 = (child2NotApplicable && newIndex === 2) ? 1 : newIndex;
+    const safeIndex: 1 | 2 = (!hasSecondChildInProfile && newIndex === 2) ? 1 : newIndex;
     setActiveChildIndexState(safeIndex);
     const target = safeIndex === 2 && childProfiles.length > 1 ? childProfiles[1] : childProfiles[0];
 
@@ -451,11 +744,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       window.dispatchEvent(new Event('storage'));
     }
 
-    setProfile(prev => {
+    setProfile((prev: any) => {
+      const fallbackParent = isAccountUser ? (prev?.username || '') : 'Parent';
       const base = prev || {
-        parentName: 'Lashmi',
-        username: 'Lashmi',
-        firstName: 'Lashmi',
+        parentName: fallbackParent,
+        username: fallbackParent,
+        firstName: fallbackParent,
       };
       return {
         ...base,
@@ -515,7 +809,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       window.dispatchEvent(new Event('storage'));
     }
 
-    setProfile(prev => ({
+    setProfile((prev: any) => ({
       ...prev,
       child2NotApplicable: notApplicable,
       ...(notApplicable ? {
@@ -556,8 +850,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const isDemoSession = user?.uid === 'guest_instant_user' || user?.email === 'lashmi@gmail.com' || user?.email === 'lashm@gmail.com' || profile?.username === 'Lashmi';
-  
   const needsProfileSetup = Boolean(
     user &&
     !isDemoSession &&
@@ -579,6 +871,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       needsProfileSetup, 
       isSessionActive,
       setSessionActive,
+      authMode,
+      isGuestDemo,
+      isAccountUser,
       refreshProfile, 
       loginAsGuest,
       activeChildIndex: effectiveActiveIndex,

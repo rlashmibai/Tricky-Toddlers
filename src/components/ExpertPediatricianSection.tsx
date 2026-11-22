@@ -761,7 +761,7 @@ export const DEMO_LIVE_SESSIONS: DemoLiveSession[] = [
 
 export const ExpertPediatricianSection: React.FC = () => {
   const { language } = useLanguage();
-  const { user, profile } = useAuth();
+  const { user, profile, activeChild, isAccountUser } = useAuth();
   const navigate = useNavigate();
   const activePlan = profile?.plan || localStorage.getItem('user_plan') || 'free';
   
@@ -785,9 +785,15 @@ export const ExpertPediatricianSection: React.FC = () => {
   }, [subParam]);
 
   // Read state and city from user profile or saved preferences
-  const initialUserState = profile?.indianState || localStorage.getItem('user_indian_state') || 'Karnataka';
-  const profileCity = profile?.city || localStorage.getItem('user_city') || '';
+  const initialUserState = profile?.indianState || (!isAccountUser ? localStorage.getItem('user_indian_state') : null) || 'Karnataka';
+  const profileCity = profile?.city || (!isAccountUser ? localStorage.getItem('user_city') : null) || '';
   const [selectedState, setSelectedState] = useState<string>(initialUserState);
+
+  useEffect(() => {
+    if (profile?.indianState) {
+      setSelectedState(profile.indianState);
+    }
+  }, [profile?.indianState]);
 
   // All 36 Indian States and UTs list in strict alphabetical order (A-Z)
   const allStatesList = React.useMemo(() => Object.keys(INDIAN_CITIES_BY_STATE).sort((a, b) => a.localeCompare(b)), []);
@@ -1327,16 +1333,24 @@ export const ExpertPediatricianSection: React.FC = () => {
   };
 
   // Tab 4 Growth Reports states
-  const parentName = profile?.parentName || profile?.firstName || profile?.name || localStorage.getItem('parent_name') || 'Lashmi';
+  const parentName = isAccountUser
+    ? (profile?.parentName || profile?.firstName || profile?.name || profile?.username || 'Parent')
+    : (profile?.parentName || profile?.firstName || profile?.name || localStorage.getItem('parent_name') || 'Parent');
   const [childName, setChildName] = useState(() => {
-    return profile?.babyName || profile?.childName || localStorage.getItem('baby_name') || 'Ashwath';
+    const raw = activeChild?.name || profile?.babyName || profile?.childName || (!isAccountUser ? localStorage.getItem('baby_name') : null);
+    if (!isAccountUser && (!raw || raw.toLowerCase() === 'ashwath')) return 'Child 1';
+    if (!isAccountUser && raw.toLowerCase() === 'ananya') return 'Child 2';
+    return raw || (isAccountUser ? 'Child' : 'Child 1');
   });
 
   useEffect(() => {
-    if (profile?.babyName || profile?.childName) {
-      setChildName(profile.babyName || profile.childName);
+    const nextName = activeChild?.name || profile?.babyName || profile?.childName;
+    if (nextName) {
+      if (!isAccountUser && nextName.toLowerCase() === 'ashwath') setChildName('Child 1');
+      else if (!isAccountUser && nextName.toLowerCase() === 'ananya') setChildName('Child 2');
+      else setChildName(nextName);
     }
-  }, [profile?.babyName, profile?.childName]);
+  }, [activeChild?.name, profile?.babyName, profile?.childName, isAccountUser]);
 
   const [childAge, setChildAge] = useState(12);
   const [childGender, setChildGender] = useState<"Boy" | "Girl">("Boy");
@@ -3477,7 +3491,7 @@ export const ExpertPediatricianSection: React.FC = () => {
                       type="text"
                       value={childName}
                       onChange={(e) => setChildName(e.target.value)}
-                      placeholder="Ashwath"
+                      placeholder="Child 1"
                       className="w-full bg-[#141f38] border border-white/15 rounded-2xl px-4 py-3.5 text-base text-white focus:outline-none focus:border-amber-400 font-bold"
                     />
                   </div>

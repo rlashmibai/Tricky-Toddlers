@@ -115,7 +115,7 @@ export const BabyStore: React.FC<BabyStoreProps> = ({ onGoHome, initialView = 'c
   const [orderId, setOrderId] = useState<string>('');
 
   // Checkout address form
-  const [addressName, setAddressName] = useState('Lashmi');
+  const [addressName, setAddressName] = useState('Parent');
   const [addressStreet, setAddressStreet] = useState('Flat 402, Lotus Heights, Bandra West');
   const [addressCity, setAddressCity] = useState('Mumbai, Maharashtra');
   const [paymentMethod, setPaymentMethod] = useState<'upi' | 'card' | 'cod'>('upi');

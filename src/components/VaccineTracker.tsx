@@ -640,10 +640,15 @@ export const ALL_VACCINES: ComprehensiveVaccine[] = [
 ];
 
 export const VaccineTracker: React.FC = () => {
-  const { user, profile, childProfiles } = useAuth();
-  const [pageChildId, setPageChildId] = useState<1 | 2>(1);
+  const { user, profile, childProfiles, activeChildIndex, isAccountUser } = useAuth();
+  const [pageChildId, setPageChildId] = useState<1 | 2>(() => (activeChildIndex === 2 ? 2 : 1));
+  useEffect(() => {
+    if (activeChildIndex === 1 || activeChildIndex === 2) {
+      setPageChildId(activeChildIndex);
+    }
+  }, [activeChildIndex]);
   const currentChild = childProfiles.find(cp => cp.id === pageChildId) || childProfiles[0];
-  const childName = currentChild?.name || profile?.babyName || 'Ashwath';
+  const childName = currentChild?.name || profile?.babyName || (isAccountUser ? 'Child' : (pageChildId === 2 ? 'Child 2' : 'Child 1'));
 
   // Load vaccines from localStorage or profile or defaults - strictly 0% by default (all upcoming)
   const [vaccines, setVaccines] = useState<ComprehensiveVaccine[]>(() => {
@@ -938,7 +943,7 @@ export const VaccineTracker: React.FC = () => {
       <!DOCTYPE html>
       <html>
         <head>
-          <title>Child Immunization Record Card - ${profile?.babyName || localStorage.getItem('baby_name') || 'Ashwath'}</title>
+          <title>Child Immunization Record Card - ${childName}</title>
           <meta charset="utf-8" />
           <style>
             body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; padding: 32px; color: #0f172a; margin: 0; }
@@ -967,9 +972,9 @@ export const VaccineTracker: React.FC = () => {
             <div class="subtitle">Indian IAP, UIP and FSSAI Universal National Schedule</div>
           </div>
           <div class="meta-grid">
-            <div class="meta-item"><strong>Child Name</strong>${profile?.babyName || localStorage.getItem('baby_name') || 'Ashwath'}</div>
-            <div class="meta-item"><strong>Date of Birth</strong>${profile?.babyBirthDate || 'Not specified'}</div>
-            <div class="meta-item"><strong>Blood Group</strong>${profile?.bloodGroup || 'Not specified'}</div>
+            <div class="meta-item"><strong>Child Name</strong>${childName}</div>
+            <div class="meta-item"><strong>Date of Birth</strong>${currentChild?.birthDate || profile?.babyBirthDate || 'Not specified'}</div>
+            <div class="meta-item"><strong>Blood Group</strong>${currentChild?.bloodGroup || profile?.bloodGroup || 'Not specified'}</div>
             <div class="meta-item"><strong>Pediatrician / Clinic</strong>${profile?.pediatricianName || 'Family Pediatrician'}</div>
           </div>
           <table>
@@ -1608,14 +1613,14 @@ export const VaccineTracker: React.FC = () => {
                   <button
                     onClick={() => {
                       const text = `CHILD IMMUNIZATION & VACCINE RECORD CARD\n` +
-                        `Child: ${profile?.babyName || localStorage.getItem('baby_name') || 'Ashwath'}\nDOB: ${profile?.babyBirthDate || 'Not specified'}\nBlood Group: ${profile?.bloodGroup || 'Not specified'}\n` +
+                        `Child: ${childName}\nDOB: ${currentChild?.birthDate || profile?.babyBirthDate || 'Not specified'}\nBlood Group: ${currentChild?.bloodGroup || profile?.bloodGroup || 'Not specified'}\n` +
                         `Coverage: ${percentage}% (${completedCount}/${totalCount} completed)\n\n` +
                         vaccines.map(v => `[${v.status.toUpperCase()}] ${v.ageMilestone} - ${v.vaccineName} (${v.doseNumber}) | Prevents: ${v.diseaseProtected} | Date: ${v.dateAdministered || 'Not given'} | Clinic: ${v.clinicOrDoctor || '-'}`).join('\n');
                       const blob = new Blob([text], { type: 'text/plain' });
                       const url = URL.createObjectURL(blob);
                       const a = document.createElement('a');
                       a.href = url;
-                      a.download = `Vaccine_Card_${profile?.babyName || localStorage.getItem('baby_name') || 'Ashwath'}.txt`;
+                      a.download = `Vaccine_Card_${childName}.txt`;
                       a.click();
                       URL.revokeObjectURL(url);
                     }}
@@ -1658,15 +1663,15 @@ export const VaccineTracker: React.FC = () => {
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-white p-4 rounded-xl border border-slate-200 text-xs">
                   <div>
                     <span className="block text-[10px] font-bold text-slate-500 uppercase">Child Name</span>
-                    <strong className="text-sm text-slate-900">{profile?.babyName || localStorage.getItem('baby_name') || 'Ashwath'}</strong>
+                    <strong className="text-sm text-slate-900">{childName}</strong>
                   </div>
                   <div>
                     <span className="block text-[10px] font-bold text-slate-500 uppercase">Date of Birth</span>
-                    <strong className="text-sm text-slate-900">{profile?.babyBirthDate || 'Not recorded'}</strong>
+                    <strong className="text-sm text-slate-900">{currentChild?.birthDate || profile?.babyBirthDate || 'Not recorded'}</strong>
                   </div>
                   <div>
                     <span className="block text-[10px] font-bold text-slate-500 uppercase">Blood Group</span>
-                    <strong className="text-sm text-slate-900">{profile?.bloodGroup || 'Not specified'}</strong>
+                    <strong className="text-sm text-slate-900">{currentChild?.bloodGroup || profile?.bloodGroup || 'Not specified'}</strong>
                   </div>
                   <div>
                     <span className="block text-[10px] font-bold text-slate-500 uppercase">Pediatrician / Clinic</span>

@@ -25,7 +25,7 @@ import {
   Award,
   Bot
 } from 'lucide-react';
-import { useAuth } from '../lib/AuthContext';
+import { useAuth, normalizeGuestParentName, normalizeGuestChild1Name, normalizeGuestChild2Name } from '../lib/AuthContext';
 import { db, handleFirestoreError } from '../lib/firebase';
 import { doc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { playSound } from '../lib/sounds';
@@ -107,7 +107,7 @@ export const FEEDING_STYLE_OPTIONS = [
   'Mashed / soft foods'
 ] as const;
 
-export const ASHWATH_DEFAULT_PROMPT = "Ashwath is a healthy, active toddler who loves sensory play and outdoor exploration. Prefers nutritious, home-cooked vegetarian meals (khichdi, curd rice, steamed vegetables, and fruit slices) with low salt, zero refined sugar, and no artificial additives. Sensitive to loud noises, experiences teething discomfort, and thrives on a consistent afternoon nap and soothing bedtime routine. Please keep all advice gentle, actionable, and age-appropriate.";
+export const ASHWATH_DEFAULT_PROMPT = "Child 1 is a healthy, active toddler who loves sensory play and outdoor exploration. Prefers nutritious, home-cooked vegetarian meals (khichdi, curd rice, steamed vegetables, and fruit slices) with low salt, zero refined sugar, and no artificial additives. Sensitive to loud noises, experiences teething discomfort, and thrives on a consistent afternoon nap and soothing bedtime routine. Please keep all advice gentle, actionable, and age-appropriate.";
 
 export interface ChildDietaryConfig {
   babyName: string;
@@ -125,8 +125,8 @@ export interface ChildDietaryConfig {
 }
 
 export const CHILD_1_DEMO: ChildDietaryConfig = {
-  babyName: 'Ashwath',
-  babyBirthDate: '2023-04-12',
+  babyName: 'Child 1',
+  babyBirthDate: '2024-04-12',
   dietType: 'Vegetarian',
   religiousCultural: ['No specific restrictions'],
   otherReligiousPreference: '',
@@ -140,8 +140,8 @@ export const CHILD_1_DEMO: ChildDietaryConfig = {
 };
 
 export const CHILD_2_DEMO: ChildDietaryConfig = {
-  babyName: 'Ananya',
-  babyBirthDate: '2024-11-20',
+  babyName: 'Child 2',
+  babyBirthDate: '2026-01-15',
   dietType: 'Vegetarian + Eggs',
   religiousCultural: ['Sattvic'],
   otherReligiousPreference: '',
@@ -151,29 +151,46 @@ export const CHILD_2_DEMO: ChildDietaryConfig = {
   allergiesIntolerances: ['Lactose', 'Milk / dairy'],
   otherAllergyIntolerance: 'Mild dairy sensitivity',
   feedingStyles: ['Mashed / soft foods', 'Spoon feeding'],
-  aiInstructions: "Ananya is gentle and prefers pureed fruits, mashed dal/khichdi, and lactose-free soft foods. Avoid whole nuts, dairy, and strong spices.",
+  aiInstructions: "Child 2 is gentle and prefers pureed fruits, mashed dal/khichdi, and lactose-free soft foods. Avoid whole nuts, dairy, and strong spices.",
 };
 
 export const BabyHealthSettings: React.FC = () => {
-  const { user, profile, childProfiles, refreshProfile } = useAuth();
+  const { user, profile, childProfiles, activeChild, activeChildIndex, switchActiveChild, refreshProfile, isAccountUser } = useAuth();
   const navigate = useNavigate();
-  const [selectedChildId, setSelectedChildId] = useState<1 | 2>(1);
+  const [selectedChildId, setSelectedChildId] = useState<1 | 2>(() => activeChildIndex || 1);
 
   // Basic Info
   const [parentName, setParentName] = useState(() => {
-    return profile?.parentName || profile?.name || profile?.firstName || localStorage.getItem('parent_name') || 'Lashmi';
+    if (isAccountUser) {
+      return profile?.parentName || profile?.name || profile?.firstName || localStorage.getItem('parent_name') || profile?.username || '';
+    }
+    return normalizeGuestParentName(profile?.parentName || profile?.name || profile?.firstName || localStorage.getItem('parent_name'));
   });
 
   const [babyName, setBabyName] = useState(() => {
-    return profile?.babyName || profile?.childName || localStorage.getItem('baby_name') || 'Ashwath';
+    if (isAccountUser) {
+      return activeChild?.name || profile?.babyName || profile?.childName || localStorage.getItem('baby_name') || '';
+    }
+    const rawName = activeChild?.name || profile?.babyName || profile?.childName || localStorage.getItem('baby_name');
+    return (activeChildIndex || 1) === 2 ? normalizeGuestChild2Name(rawName) : normalizeGuestChild1Name(rawName);
   });
 
   const [babyBirthDate, setBabyBirthDate] = useState(() => {
-    return profile?.babyBirthDate || localStorage.getItem('baby_birthdate') || '2024-04-12';
+    if (isAccountUser) {
+      return activeChild?.birthDate || profile?.babyBirthDate || localStorage.getItem('baby_birthdate') || '';
+    }
+    return activeChild?.birthDate || profile?.babyBirthDate || localStorage.getItem('baby_birthdate') || '2024-04-12';
   });
 
   const [aiInstructions, setAiInstructions] = useState(() => {
-    return profile?.aiInstructions || localStorage.getItem('baby_ai_instructions') || ASHWATH_DEFAULT_PROMPT;
+    if (isAccountUser) {
+      const saved = profile?.aiInstructions || localStorage.getItem('baby_ai_instructions') || '';
+      if (saved && !saved.startsWith('Ashwath is a healthy, active toddler') && !saved.startsWith('Child 1 is a healthy, active toddler')) return saved;
+      const cName = activeChild?.name || profile?.babyName || profile?.childName || 'our child';
+      return `${cName} enjoys nutritious home-cooked meals and age-appropriate routines. Please keep all advice gentle, actionable, and tailored to ${cName}'s developmental stage.`;
+    }
+    const rawPrompt = profile?.aiInstructions || localStorage.getItem('baby_ai_instructions') || ASHWATH_DEFAULT_PROMPT;
+    return rawPrompt.replace(/\bAshwath\b/g, 'Child 1').replace(/\bAnanya\b/g, 'Child 2');
   });
 
   // Calculate baby age automatically from mandatory DOB
@@ -305,17 +322,32 @@ export const BabyHealthSettings: React.FC = () => {
   useEffect(() => {
     if (profile) {
       if (profile.parentName || profile.name || profile.firstName) {
-        setParentName(profile.parentName || profile.name || profile.firstName);
-      } else if (!parentName) {
-        setParentName('Lashmi');
+        const rawP = profile.parentName || profile.name || profile.firstName;
+        setParentName(isAccountUser ? rawP : normalizeGuestParentName(rawP));
+      } else if (!isAccountUser && !parentName) {
+        setParentName('Parent');
       }
-      if (profile.babyName || profile.childName) {
-        setBabyName(profile.babyName || profile.childName);
-      } else if (!babyName) {
-        setBabyName('Ashwath');
+      const currentProfileChild = childProfiles.find(cp => cp.id === selectedChildId) || activeChild;
+      if (currentProfileChild?.name) {
+        setBabyName(isAccountUser ? currentProfileChild.name : (selectedChildId === 2 ? normalizeGuestChild2Name(currentProfileChild.name) : normalizeGuestChild1Name(currentProfileChild.name)));
+      } else if (profile.babyName || profile.childName) {
+        const rawC = profile.babyName || profile.childName;
+        setBabyName(isAccountUser ? rawC : normalizeGuestChild1Name(rawC));
+      } else if (!isAccountUser && !babyName) {
+        setBabyName(selectedChildId === 2 ? 'Child 2' : 'Child 1');
       }
-      if (profile.babyBirthDate) setBabyBirthDate(profile.babyBirthDate);
-      if (profile.aiInstructions) setAiInstructions(profile.aiInstructions);
+      if (currentProfileChild?.birthDate) {
+        setBabyBirthDate(currentProfileChild.birthDate);
+      } else if (profile.babyBirthDate) {
+        setBabyBirthDate(profile.babyBirthDate);
+      }
+      if (profile.aiInstructions) {
+        if (!isAccountUser) {
+          setAiInstructions(profile.aiInstructions.replace(/\bAshwath\b/g, 'Child 1').replace(/\bAnanya\b/g, 'Child 2'));
+        } else if (!profile.aiInstructions.startsWith('Ashwath is a healthy, active toddler') && !profile.aiInstructions.startsWith('Child 1 is a healthy, active toddler')) {
+          setAiInstructions(profile.aiInstructions);
+        }
+      }
       if (profile.dietType) setDietType(profile.dietType);
       if (profile.religiousCultural && Array.isArray(profile.religiousCultural)) setReligiousCultural(profile.religiousCultural);
       if (profile.otherReligiousPreference !== undefined) setOtherReligiousPreference(profile.otherReligiousPreference);
@@ -329,7 +361,7 @@ export const BabyHealthSettings: React.FC = () => {
         setVaccinations(profile.vaccinations);
       }
     }
-  }, [profile]);
+  }, [profile, isAccountUser]);
 
   // Listen for local changes from Dedicated Vaccine Tracker
   useEffect(() => {
@@ -373,7 +405,25 @@ export const BabyHealthSettings: React.FC = () => {
 
     // 2. Switch to target child and load distinct config
     setSelectedChildId(targetId);
-    let targetConfig: ChildDietaryConfig = targetId === 1 ? { ...CHILD_1_DEMO } : { ...CHILD_2_DEMO };
+    switchActiveChild(targetId);
+    const matchedProfile = childProfiles.find(cp => cp.id === targetId);
+    let targetConfig: ChildDietaryConfig = isAccountUser
+      ? {
+          babyName: matchedProfile?.name || (targetId === 1 ? 'Child 1' : 'Child 2'),
+          babyBirthDate: matchedProfile?.birthDate || '',
+          dietType: profile?.dietType || 'Vegetarian',
+          religiousCultural: profile?.religiousCultural || ['No specific restrictions'],
+          otherReligiousPreference: profile?.otherReligiousPreference || '',
+          customRestrictions: profile?.customRestrictions || '',
+          foodsToAvoid: profile?.foodsToAvoid || [],
+          otherFoodsToAvoid: profile?.otherFoodsToAvoid || '',
+          allergiesIntolerances: profile?.allergiesIntolerances || [],
+          otherAllergyIntolerance: profile?.otherAllergyIntolerance || '',
+          feedingStyles: profile?.feedingStyles || ['Baby-led weaning (BLW)', 'Finger foods'],
+          aiInstructions: `${matchedProfile?.name || 'Child'} enjoys nutritious home-cooked meals and age-appropriate routines. Please keep all advice gentle, actionable, and tailored to their developmental stage.`,
+        }
+      : (targetId === 1 ? { ...CHILD_1_DEMO } : { ...CHILD_2_DEMO });
+
     try {
       const saved = localStorage.getItem(`child_${targetId}_dietary_config`);
       if (saved) {
@@ -382,10 +432,16 @@ export const BabyHealthSettings: React.FC = () => {
     } catch {}
 
     // Match real names from registered childProfiles if present
-    const matchedProfile = childProfiles.find(cp => cp.id === targetId);
     if (matchedProfile) {
       if (matchedProfile.name) targetConfig.babyName = matchedProfile.name;
       if (matchedProfile.birthDate) targetConfig.babyBirthDate = matchedProfile.birthDate;
+    }
+
+    if (!isAccountUser) {
+      targetConfig.babyName = targetId === 2 ? normalizeGuestChild2Name(targetConfig.babyName) : normalizeGuestChild1Name(targetConfig.babyName);
+      if (targetConfig.aiInstructions) {
+        targetConfig.aiInstructions = targetConfig.aiInstructions.replace(/\bAshwath\b/g, 'Child 1').replace(/\bAnanya\b/g, 'Child 2');
+      }
     }
 
     setBabyName(targetConfig.babyName);
@@ -617,12 +673,13 @@ export const BabyHealthSettings: React.FC = () => {
       document.documentElement.scrollTop = 0;
       document.body.scrollTop = 0;
       
-      // Navigate to Home Page
+      // Navigate directly to AI Assistant Page
       setTimeout(() => {
         window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
         document.documentElement.scrollTop = 0;
         document.body.scrollTop = 0;
-        navigate('/?tab=home');
+        navigate('/?tab=ai');
+        window.dispatchEvent(new CustomEvent('nav-tab-refresh', { detail: { tab: 'ai' } }));
       }, 400);
     } catch (err: any) {
       setError(err.message || "Failed to save baby profile");
@@ -1212,7 +1269,7 @@ export const BabyHealthSettings: React.FC = () => {
               Instructions for Tricky Toddler AI Assistant
             </h2>
             <p className="text-xs sm:text-sm text-slate-300 mt-1">
-              Custom prompt &amp; behavioral context saved directly for Ashwath's pediatric profile.
+              Custom prompt &amp; behavioral context saved directly for {babyName || 'your child'}'s pediatric profile.
             </p>
           </div>
         </div>
@@ -1220,22 +1277,25 @@ export const BabyHealthSettings: React.FC = () => {
         <div className="space-y-3">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <label className="text-xs font-bold text-slate-300 uppercase tracking-wider block">
-              Custom Prompt for Ashwath Profile (AI Guidance Context)
+              Custom Prompt for {babyName || 'Child'} Profile (AI Guidance Context)
             </label>
             <div className="flex items-center gap-2">
               <button
                 type="button"
                 onClick={() => {
                   playSound('pop');
-                  setAiInstructions(ASHWATH_DEFAULT_PROMPT);
-                  localStorage.setItem('baby_ai_instructions', ASHWATH_DEFAULT_PROMPT);
-                  setSuccess("Loaded Ashwath's complete default prompt!");
+                  const defaultPromptForChild = isAccountUser
+                    ? `${babyName || 'Our child'} enjoys nutritious home-cooked meals and age-appropriate routines. Please keep all advice gentle, actionable, and tailored to ${babyName || 'our child'}'s developmental stage.`
+                    : ASHWATH_DEFAULT_PROMPT;
+                  setAiInstructions(defaultPromptForChild);
+                  localStorage.setItem('baby_ai_instructions', defaultPromptForChild);
+                  setSuccess(`Loaded ${babyName || 'default'}'s complete default prompt!`);
                   setTimeout(() => setSuccess(null), 3000);
                 }}
                 className="text-xs font-bold text-indigo-300 hover:text-white bg-indigo-500/15 hover:bg-indigo-500/25 px-3 py-1.5 rounded-lg border border-indigo-500/30 transition-all cursor-pointer flex items-center gap-1.5 shadow-sm active:scale-95"
               >
                 <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
-                <span>Reset to Ashwath Prompt</span>
+                <span>Reset to Default Prompt</span>
               </button>
             </div>
           </div>
@@ -1279,13 +1339,13 @@ export const BabyHealthSettings: React.FC = () => {
                 e.stopPropagation();
               }
             }}
-            placeholder="Enter custom prompt instructions for Ashwath..."
+            placeholder={`Enter custom prompt instructions for ${babyName || 'your child'}...`}
             className="w-full bg-[#16223a] border border-indigo-500/40 rounded-xl p-4 text-white text-sm focus:outline-none focus:border-indigo-400 focus:ring-4 focus:ring-indigo-500/10 placeholder:text-slate-500 font-normal leading-relaxed resize-y"
           />
 
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
             <span className="text-[11px] text-slate-400">
-              The Tricky Toddler AI Assistant will incorporate this custom prompt across all routine checks, advice, and responses for Ashwath.
+              The Tricky Toddler AI Assistant will incorporate this custom prompt across all routine checks, advice, and responses for {babyName || 'your child'}.
             </span>
             <button
               type="button"
@@ -1302,13 +1362,13 @@ export const BabyHealthSettings: React.FC = () => {
                     console.warn("Saved to localStorage:", e);
                   }
                 }
-                setSuccess("Custom prompt saved successfully for Ashwath's profile!");
+                setSuccess(`Custom prompt saved successfully for ${babyName || 'your child'}'s profile!`);
                 setTimeout(() => setSuccess(null), 3500);
               }}
               className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-indigo-500 hover:bg-indigo-600 text-white font-bold text-xs shadow-lg shadow-indigo-500/20 active:scale-95 transition-all cursor-pointer shrink-0"
             >
               <Save className="w-3.5 h-3.5" />
-              <span>Save Custom Prompt for Ashwath</span>
+              <span>Save Custom Prompt for {babyName || 'Child'}</span>
             </button>
           </div>
         </div>

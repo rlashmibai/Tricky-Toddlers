@@ -20,7 +20,7 @@ export const ChildProfileSelector: React.FC<ChildProfileSelectorProps> = ({
   allowGeneral = false,
   className = '',
 }) => {
-  const { childProfiles } = useAuth();
+  const { childProfiles, switchActiveChild } = useAuth();
 
   if (!childProfiles || childProfiles.length === 0) {
     return null;
@@ -115,6 +115,9 @@ export const ChildProfileSelector: React.FC<ChildProfileSelectorProps> = ({
                 onClick={() => {
                   if (!isSelected) {
                     playSound('pop');
+                    if (cp.id === 1 || cp.id === 2) {
+                      switchActiveChild(cp.id);
+                    }
                     onSelectChild(cp.id);
                   }
                 }}
@@ -178,9 +181,9 @@ export const ChildProfileSelector: React.FC<ChildProfileSelectorProps> = ({
         <Check className="w-4 h-4 stroke-[3.5]" />
       </div>
       <div className="flex items-center gap-2.5">
-        <span className="text-base sm:text-lg font-black text-white">{childProfiles[0]?.name || 'Ashwath'}</span>
+        <span className="text-base sm:text-lg font-black text-white">{childProfiles[0]?.name || 'Child'}</span>
         <span className="text-xs font-black px-2.5 py-0.5 rounded-lg bg-emerald-500/25 border border-emerald-400/40 text-emerald-200">
-          {childProfiles[0]?.age || '2 yrs 6 mos'}
+          {childProfiles[0]?.age || 'Age not set'}
         </span>
         <span className="text-xs font-bold text-emerald-300 ml-1">· Active for {sectionContextName}</span>
       </div>

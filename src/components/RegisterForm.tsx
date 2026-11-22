@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { auth, db } from '../lib/firebase';
-import { useAuth } from '../lib/AuthContext';
+import { useAuth, clearDemoLocalStorageForAccount } from '../lib/AuthContext';
 import { motion } from 'motion/react';
 import { Mail, Lock, User, UserPlus, AlertCircle, Loader2 } from 'lucide-react';
 
@@ -44,6 +44,8 @@ export const RegisterForm: React.FC = () => {
 
     try {
       localStorage.removeItem('user_logged_out');
+      localStorage.setItem('tt_auth_mode', 'account');
+      clearDemoLocalStorageForAccount();
       // Use internal dummy email for Firebase Auth
       const internalEmail = `${cleanUsername}@securepass.internal`;
       
@@ -68,7 +70,6 @@ export const RegisterForm: React.FC = () => {
         }
       }
 
-      localStorage.setItem('tt_auth_mode', 'account');
       localStorage.removeItem('tricky_toddlers_premium_unlocked');
       localStorage.removeItem(`tricky_toddlers_premium_unlocked_${user.uid}`);
       localStorage.setItem('user_plan', 'free');

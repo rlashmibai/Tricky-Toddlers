@@ -1186,10 +1186,15 @@ interface LoggedMilestone {
 }
 
 export const MilestoneTracker: React.FC = () => {
-  const { user, profile, childProfiles } = useAuth();
-  const [pageChildId, setPageChildId] = useState<1 | 2>(1);
+  const { user, profile, childProfiles, activeChildIndex, isAccountUser } = useAuth();
+  const [pageChildId, setPageChildId] = useState<1 | 2>(() => (activeChildIndex === 2 ? 2 : 1));
+  useEffect(() => {
+    if (activeChildIndex === 1 || activeChildIndex === 2) {
+      setPageChildId(activeChildIndex);
+    }
+  }, [activeChildIndex]);
   const currentChild = childProfiles.find(cp => cp.id === pageChildId) || childProfiles[0];
-  const childName = currentChild?.name || profile?.babyName || profile?.childName || 'Ashwath';
+  const childName = currentChild?.name || profile?.babyName || profile?.childName || (isAccountUser ? 'Child' : (pageChildId === 2 ? 'Child 2' : 'Child 1'));
   const [loggedMilestones, setLoggedMilestones] = useState<Record<string, LoggedMilestone>>({});
   const [loading, setLoading] = useState(true);
   const [expandedId, setExpandedId] = useState<string | null>(null);

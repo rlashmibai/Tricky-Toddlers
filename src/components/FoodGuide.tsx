@@ -492,7 +492,7 @@ export interface FoodGuideProps {
 
 export const FoodGuide: React.FC<FoodGuideProps> = ({ onNavigateToFoodLens }) => {
   const { language } = useLanguage();
-  const { user, profile, childProfiles } = useAuth();
+  const { user, profile, childProfiles, activeChildIndex, isAccountUser } = useAuth();
   const navigate = useNavigate();
   const currentT = localT[language] || localT['en'];
 
@@ -502,12 +502,17 @@ export const FoodGuide: React.FC<FoodGuideProps> = ({ onNavigateToFoodLens }) =>
   };
 
   // Scoped child selection for AI Recipe Maker ('general' | 1 | 2)
-  const [pageChildId, setPageChildId] = useState<1 | 2 | 'general'>(1);
+  const [pageChildId, setPageChildId] = useState<1 | 2 | 'general'>(() => (activeChildIndex === 2 ? 2 : 1));
+  useEffect(() => {
+    if ((activeChildIndex === 1 || activeChildIndex === 2) && pageChildId !== 'general') {
+      setPageChildId(activeChildIndex);
+    }
+  }, [activeChildIndex]);
   const isGeneralMode = pageChildId === 'general';
   const currentChild = isGeneralMode ? undefined : (childProfiles?.find(cp => cp.id === pageChildId) || childProfiles?.[0]);
-  const childName = isGeneralMode ? 'General' : (currentChild?.name || profile?.childName || profile?.babyName || profile?.toddlerName || 'Ashwath');
+  const childName = isGeneralMode ? 'General' : (currentChild?.name || profile?.childName || profile?.babyName || profile?.toddlerName || (isAccountUser ? 'Child' : (pageChildId === 2 ? 'Child 2' : 'Child 1')));
   const profileAge = isGeneralMode ? 'All Ages' : (currentChild?.age || profile?.toddlerAge || profile?.babyAge || profile?.childAge || '1 - 2 Years');
-  const indianState = profile?.indianState || (typeof window !== 'undefined' ? localStorage.getItem('user_indian_state') : null) || 'Karnataka';
+  const indianState = profile?.indianState || (!isAccountUser && typeof window !== 'undefined' ? localStorage.getItem('user_indian_state') : null) || 'Karnataka';
   const userRegion = getStateRegion(indianState);
   const childStageId = getStageFromProfileAge(profileAge);
 
@@ -1285,7 +1290,7 @@ Each object must have these exact keys:
               </h3>
               <p className="text-xs text-emerald-300 font-semibold flex items-center gap-1.5">
                 <Sparkles className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                <span>Personalized for {childName || 'Ashwath'} based on both age ({profileAge}) & {indianState} cuisine</span>
+                <span>Personalized for {childName || 'Child'} based on both age ({profileAge}) & {indianState} cuisine</span>
               </p>
             </div>
 
@@ -1700,7 +1705,7 @@ Each object must have these exact keys:
                 <div>
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="text-sm font-black text-white tracking-wide">
-                      Personalized for <span className="text-emerald-400 font-extrabold">{childName || 'Ashwath'}</span>
+                      Personalized for <span className="text-emerald-400 font-extrabold">{childName || 'Child'}</span>
                     </span>
                     <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-400/20 text-emerald-300 border border-emerald-400/30 font-mono">
                       Age: {profileAge}
@@ -1714,7 +1719,7 @@ Each object must have these exact keys:
                     </span>
                   </div>
                   <p className="text-xs text-white/60 mt-0.5">
-                    Personalized for {childName || 'Ashwath'} based on both developmental age ({profileAge}) and regional home cuisine of {indianState}.
+                    Personalized for {childName || 'Child'} based on both developmental age ({profileAge}) and regional home cuisine of {indianState}.
                   </p>
                 </div>
               </div>

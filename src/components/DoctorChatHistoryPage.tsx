@@ -131,7 +131,7 @@ const SAMPLE_CHAT_HISTORY: ChatHistoryRecord[] = [
     messages: [
       {
         sender: 'user',
-        text: 'Hello Dr. Meera, my toddler Ashwath is 18 months old and has about 10-12 single words (mama, dada, ball, milk, bye). Other children at daycare seem to speak full 2-word sentences. Should I be worried about speech delay?',
+        text: 'Hello Dr. Meera, my toddler Child 1 is 18 months old and has about 10-12 single words (mama, dada, ball, milk, bye). Other children at daycare seem to speak full 2-word sentences. Should I be worried about speech delay?',
         timestamp: '02:00 PM'
       },
       {
@@ -375,7 +375,7 @@ export const DoctorChatHistoryPage: React.FC = () => {
                               : 'bg-indigo-600 text-white rounded-tr-none shadow-md'
                           }`}>
                             <div className="flex items-center justify-between gap-3 text-[10px] opacity-70 mb-1">
-                              <span className="font-bold">{isDoc ? selectedRecord.doctorName : 'Lashmi (Parent)'}</span>
+                              <span className="font-bold">{isDoc ? selectedRecord.doctorName : 'Parent'}</span>
                               <span>{m.timestamp}</span>
                             </div>
                             <p className="whitespace-pre-wrap">{m.text}</p>

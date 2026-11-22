@@ -42,7 +42,7 @@ interface FeedbackSubmission {
 export const ContactFeedbackPage: React.FC = () => {
   const { user, profile } = useAuth();
   const [category, setCategory] = useState<FeedbackCategory>('feedback');
-  const [name, setName] = useState(profile?.parentName || profile?.name || user?.displayName || localStorage.getItem('parent_name') || 'Lashmi');
+  const [name, setName] = useState(profile?.parentName || profile?.name || user?.displayName || localStorage.getItem('parent_name') || 'Parent');
   
   // Do not pre-fill auto-generated internal guest email addresses
   const cleanInitialEmail = (user?.email && !user.email.includes('guest_auto') && !user.email.includes('securepass.internal'))
@@ -304,7 +304,7 @@ export const ContactFeedbackPage: React.FC = () => {
                       required
                       value={name}
                       onChange={(e) => setName(e.target.value)}
-                      placeholder="e.g. Lashmi"
+                      placeholder="e.g. Parent"
                       className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 text-sm transition-all"
                     />
                   </div>

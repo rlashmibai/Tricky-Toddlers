@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { signInWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth';
 import { auth } from '../lib/firebase';
-import { useAuth } from '../lib/AuthContext';
+import { useAuth, clearDemoLocalStorageForAccount } from '../lib/AuthContext';
 import { motion, AnimatePresence } from 'motion/react';
 import { Lock, LogIn, AlertCircle, Loader2, User, Sparkles, Mail, X, CheckCircle2, KeyRound } from 'lucide-react';
 import { triggerToast } from '../lib/ToastContext';
@@ -26,14 +26,14 @@ export const LoginForm: React.FC = () => {
     setError(null);
     try {
       localStorage.setItem('tt_auth_mode', 'guest');
-      setSessionActive(true);
       localStorage.removeItem('user_logged_out');
-      if (!localStorage.getItem('parent_name')) localStorage.setItem('parent_name', 'Lashmi');
-      if (!localStorage.getItem('baby_name')) localStorage.setItem('baby_name', 'Ashwath');
+      localStorage.setItem('parent_name', 'Parent');
+      localStorage.setItem('baby_name', 'Child 1');
       await loginAsGuest();
+      setSessionActive(true);
+      window.dispatchEvent(new CustomEvent('nav-tab-refresh', { detail: { tab: 'ai' } }));
+      navigate('/?tab=ai', { replace: true });
       triggerToast('You have now signed into Guest account.', 'success', 'Guest Session Active');
-      navigate('/?tab=home');
-      window.dispatchEvent(new CustomEvent('nav-reset-to-home'));
     } catch (err: any) {
       setError("Could not launch guest mode. Please try signing in below.");
     } finally {
@@ -47,17 +47,19 @@ export const LoginForm: React.FC = () => {
     setError(null);
     try {
       localStorage.removeItem('user_logged_out');
+      localStorage.setItem('tt_auth_mode', 'account');
+      clearDemoLocalStorageForAccount();
       // Use internal dummy email for Firebase Auth
       const internalEmail = `${username.toLowerCase().trim()}@securepass.internal`;
       const cred = await signInWithEmailAndPassword(auth, internalEmail, password);
-      localStorage.setItem('tt_auth_mode', 'account');
       // Clear any generic guest premium unlock unless this specific UID unlocked premium
       if (localStorage.getItem(`tricky_toddlers_premium_unlocked_${cred.user.uid}`) !== 'true') {
         localStorage.removeItem('tricky_toddlers_premium_unlocked');
         localStorage.removeItem('user_plan');
       }
       setSessionActive(true);
-      navigate('/');
+      navigate('/?tab=ai');
+      window.dispatchEvent(new CustomEvent('nav-tab-refresh', { detail: { tab: 'ai' } }));
     } catch (err: any) {
       if (err.code === 'auth/invalid-credential' || err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password') {
         setError("Invalid username or password");

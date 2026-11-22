@@ -33,8 +33,15 @@ export const Dashboard: React.FC = () => {
   const navigate = useNavigate();
   const hasPremium = isPremiumUser(profile, user);
   const isPremiumLocked = shouldLockPremiumFeature(user, profile, isSessionActive);
+  const VALID_TABS = ['home', 'ai', 'community', 'chat', 'milestones', 'routine', 'vaccine', 'food', 'foodlens', 'sample-foods', 'nutriband', 'nutriband-cart', 'pediatric', 'learning', 'videos', 'store', 'about', 'tales'] as const;
   const [searchParams, setSearchParams] = useSearchParams();
-  const [activeTab, setActiveTab] = useState<'home' | 'ai' | 'community' | 'chat' | 'milestones' | 'routine' | 'vaccine' | 'food' | 'foodlens' | 'sample-foods' | 'nutriband' | 'nutriband-cart' | 'pediatric' | 'learning' | 'videos' | 'store' | 'about' | 'tales'>('home');
+  const [activeTab, setActiveTab] = useState<typeof VALID_TABS[number]>(() => {
+    const tabParam = searchParams.get('tab');
+    if (tabParam && VALID_TABS.includes(tabParam as any)) {
+      return tabParam as any;
+    }
+    return 'home';
+  });
   const [storeInitialView, setStoreInitialView] = useState<'catalog' | 'cart'>('catalog');
   const [showBlog, setShowBlog] = useState(false);
   const [selectedBlogCategory, setSelectedBlogCategory] = useState<string>('All');
@@ -42,7 +49,7 @@ export const Dashboard: React.FC = () => {
   // Sync tab with URL search parameter ?tab=...
   useEffect(() => {
     const tabParam = searchParams.get('tab');
-    if (tabParam && ['home', 'ai', 'community', 'chat', 'milestones', 'routine', 'vaccine', 'food', 'foodlens', 'sample-foods', 'nutriband', 'nutriband-cart', 'pediatric', 'learning', 'videos', 'store', 'about', 'tales'].includes(tabParam)) {
+    if (tabParam && VALID_TABS.includes(tabParam as any)) {
       setActiveTab(tabParam as any);
       setShowBlog(false);
     } else {
@@ -54,7 +61,7 @@ export const Dashboard: React.FC = () => {
     document.body.scrollTop = 0;
   }, [searchParams]);
 
-  // Listen for reset-to-home events when brand logo or Home is clicked
+  // Listen for reset-to-home and nav-tab-refresh events for instant 0ms tab switching
   useEffect(() => {
     const handleResetToHome = () => {
       setActiveTab('home');
@@ -64,8 +71,19 @@ export const Dashboard: React.FC = () => {
       document.documentElement.scrollTop = 0;
       document.body.scrollTop = 0;
     };
+    const handleTabRefresh = (e: Event) => {
+      const detail = (e as CustomEvent).detail || {};
+      if (detail.tab && VALID_TABS.includes(detail.tab)) {
+        setActiveTab(detail.tab);
+        setShowBlog(false);
+      }
+    };
     window.addEventListener('nav-reset-to-home', handleResetToHome);
-    return () => window.removeEventListener('nav-reset-to-home', handleResetToHome);
+    window.addEventListener('nav-tab-refresh', handleTabRefresh);
+    return () => {
+      window.removeEventListener('nav-reset-to-home', handleResetToHome);
+      window.removeEventListener('nav-tab-refresh', handleTabRefresh);
+    };
   }, [setSearchParams]);
 
   const handleTabChange = (tab: typeof activeTab, subTab?: string) => {

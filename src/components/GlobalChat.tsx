@@ -161,7 +161,13 @@ const INITIAL_PARENT_ACCOUNTS: ParentAccount[] = [
 ];
 
 export const GlobalChat: React.FC = () => {
-  const { user, profile } = useAuth();
+  const { user, profile, isAccountUser } = useAuth();
+  const rawGuestParent = (profile?.parentName || profile?.firstName || profile?.name || 'Parent').trim();
+  const currentParentName = (
+    isAccountUser
+      ? (profile?.parentName || profile?.firstName || profile?.name || profile?.username || 'Parent')
+      : (rawGuestParent.toLowerCase() === 'lashmi' || rawGuestParent.toLowerCase() === 'lakshmi' ? 'Parent' : rawGuestParent)
+  ).trim();
   const [conversations, setConversations] = useState<ParentAccount[]>(INITIAL_PARENT_ACCOUNTS);
   const [selectedParentId, setSelectedParentId] = useState<string>('sarah');
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -173,6 +179,11 @@ export const GlobalChat: React.FC = () => {
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   const isDirectMessagingAllowed = profile?.allowDirectMessages !== false && localStorage.getItem('allow_direct_messages') !== 'false';
+
+  const personalizeChatText = (text: string) => {
+    if (!currentParentName || currentParentName === 'Lashmi') return text;
+    return text.replace(/\bLashmi\b/g, currentParentName);
+  };
 
   // Active parent object
   const activeParent = conversations.find(p => p.id === selectedParentId) || conversations[0];
@@ -222,8 +233,8 @@ export const GlobalChat: React.FC = () => {
           id: 'welcome_' + Date.now(),
           userId: 'system',
           username: trimmed,
-          receiverName: 'Lashmi',
-          text: `Hi Lashmi! Started a new private conversation with you. Ask me anything about toddler routines or parenting!`,
+          receiverName: currentParentName,
+          text: `Hi ${currentParentName}! Started a new private conversation with you. Ask me anything about toddler routines or parenting!`,
           createdAt: new Date()
         }
       ]
@@ -279,7 +290,7 @@ export const GlobalChat: React.FC = () => {
     const newMsg: ChatMessage = {
       id: 'msg_' + Date.now(),
       userId: user?.uid || 'lashmi',
-      username: 'Lashmi',
+      username: currentParentName,
       receiverName: activeParent.name,
       text: sentText,
       createdAt: new Date()
@@ -304,7 +315,7 @@ export const GlobalChat: React.FC = () => {
       if (user && db) {
         await addDoc(collection(db, 'messages'), {
           userId: user.uid,
-          username: 'Lashmi',
+          username: currentParentName,
           receiverName: activeParent.name,
           text: sentText,
           createdAt: serverTimestamp()
@@ -477,7 +488,7 @@ export const GlobalChat: React.FC = () => {
 
                       {lastMsg && (
                         <p className="text-[11px] text-slate-300/80 truncate mt-1 leading-snug">
-                          {lastMsg.username === 'Lashmi' ? 'You: ' : ''}{lastMsg.text}
+                          {(lastMsg.username === 'Lashmi' || lastMsg.username === currentParentName) ? 'You: ' : ''}{personalizeChatText(lastMsg.text)}
                         </p>
                       )}
                     </div>
@@ -543,7 +554,7 @@ export const GlobalChat: React.FC = () => {
 
             <div className="hidden sm:flex items-center gap-2">
               <span className="text-[10px] text-slate-400 uppercase font-black tracking-wider px-2.5 py-1 rounded-xl bg-white/5 border border-white/10">
-                Logged in as @Lashmi
+                Logged in as @{currentParentName}
               </span>
             </div>
           </div>
@@ -556,13 +567,14 @@ export const GlobalChat: React.FC = () => {
             <div className="text-center py-2">
               <div className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400 px-3 py-1 rounded-full bg-white/[0.03] border border-white/5">
                 <Sparkles className="w-3 h-3 text-indigo-400" />
-                <span>Private peer conversation between Lashmi &amp; {activeParent.name}</span>
+                <span>Private peer conversation between {currentParentName} &amp; {activeParent.name}</span>
               </div>
             </div>
 
             <AnimatePresence initial={false}>
               {activeParent.messages.map((msg) => {
-                const isMyMessage = (msg.username || '').toLowerCase() === 'lashmi';
+                const isMyMessage = (msg.username || '').toLowerCase() === 'lashmi' || (msg.username || '').toLowerCase() === currentParentName.toLowerCase();
+                const displayUsername = isMyMessage ? currentParentName : msg.username;
                 const timeString = msg.createdAt instanceof Date 
                   ? msg.createdAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
                   : (msg.createdAt?.toDate ? msg.createdAt.toDate().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'just now');
@@ -578,7 +590,7 @@ export const GlobalChat: React.FC = () => {
                     <div className={`max-w-[85%] sm:max-w-[75%] flex flex-col ${isMyMessage ? 'items-end' : 'items-start'}`}>
                       <div className="flex items-center gap-2 mb-1 px-1">
                         <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                          @{msg.username}
+                          @{displayUsername}
                         </span>
                         <span className="text-[9px] text-slate-500">
                           {timeString}
@@ -589,7 +601,7 @@ export const GlobalChat: React.FC = () => {
                           ? 'bg-gradient-to-r from-indigo-600 to-indigo-500 text-white rounded-tr-none shadow-indigo-600/20' 
                           : 'bg-white/[0.08] text-slate-100 rounded-tl-none border border-white/10'
                       }`}>
-                        <div className="whitespace-pre-wrap">{msg.text}</div>
+                        <div className="whitespace-pre-wrap">{personalizeChatText(msg.text)}</div>
                       </div>
                     </div>
                   </motion.div>

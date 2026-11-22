@@ -53,7 +53,19 @@ interface MenuItem {
 }
 
 export const Navbar: React.FC = () => {
-  const { user, profile, loginAsGuest, needsProfileSetup, isSessionActive, setSessionActive } = useAuth();
+  const {
+    user,
+    profile,
+    loginAsGuest,
+    needsProfileSetup,
+    isSessionActive,
+    setSessionActive,
+    isGuestDemo,
+    isAccountUser,
+    childProfiles,
+    activeChildIndex,
+    switchActiveChild,
+  } = useAuth();
   const isPremiumLocked = shouldLockPremiumFeature(user, profile, isSessionActive);
   const { language, setLanguage, t } = useLanguage();
   const navigate = useNavigate();
@@ -63,6 +75,13 @@ export const Navbar: React.FC = () => {
   const [aboutDropdownOpen, setAboutDropdownOpen] = useState(false);
   const [expandedMobileGroup, setExpandedMobileGroup] = useState<string | null>('trackers');
   const [setupNotice, setSetupNotice] = useState(false);
+  const [modePromptModal, setModePromptModal] = useState<{
+    open: boolean;
+    targetTab?: string;
+    targetSubTab?: string;
+    targetPath?: string;
+    featureLabel?: string;
+  }>({ open: false });
 
   const aboutDropdownRef = useRef<HTMLDivElement>(null);
   const langDropdownRef = useRef<HTMLDivElement>(null);
@@ -73,6 +92,22 @@ export const Navbar: React.FC = () => {
     setLangDropdownOpen(false);
     setMobileMenuOpen(false);
   }, [location.pathname, location.search]);
+
+  // Listen for Landing Page feature card clicks requesting mode selection
+  useEffect(() => {
+    const handleOpenModePrompt = (e: Event) => {
+      const detail = (e as CustomEvent).detail || {};
+      setModePromptModal({
+        open: true,
+        targetTab: detail.tab,
+        targetSubTab: detail.subTab,
+        targetPath: detail.path,
+        featureLabel: detail.label || 'this feature',
+      });
+    };
+    window.addEventListener('tt-open-mode-prompt', handleOpenModePrompt);
+    return () => window.removeEventListener('tt-open-mode-prompt', handleOpenModePrompt);
+  }, []);
 
   // Close dropdowns when clicking anywhere outside
   useEffect(() => {
@@ -272,6 +307,16 @@ export const Navbar: React.FC = () => {
 
   const handleMenuClick = (item: MenuItem) => {
     playSound('glass');
+    // If on Landing Page (not signed into Guest or Personal Account) and clicking a feature tab, prompt mode choice
+    if (!isSessionActive && item.tab !== 'home') {
+      setModePromptModal({
+        open: true,
+        targetTab: item.tab,
+        targetPath: item.path,
+        featureLabel: item.label,
+      });
+      return;
+    }
     if (needsProfileSetup) {
       setSetupNotice(true);
       setTimeout(() => setSetupNotice(false), 4500);
@@ -311,39 +356,57 @@ export const Navbar: React.FC = () => {
     window.dispatchEvent(new CustomEvent('nav-reset-to-home'));
   };
 
-  const handleQuickGuestClick = async () => {
+  const handleQuickGuestClick = async (targetTabAfter?: string, targetSubTabAfter?: string, targetPathAfter?: string) => {
     playSound('glass');
     setLanguage('en');
     localStorage.setItem('tt_auth_mode', 'guest');
-    setSessionActive(true);
     localStorage.removeItem('user_logged_out');
-    if (!localStorage.getItem('parent_name')) localStorage.setItem('parent_name', 'Lashmi');
-    if (!localStorage.getItem('baby_name')) localStorage.setItem('baby_name', 'Ashwath');
+    localStorage.setItem('parent_name', 'Parent');
+    localStorage.setItem('baby_name', 'Child 1');
+    setModePromptModal({ open: false });
+
+    // Switch page and tab synchronously in the same frame BEFORE activating session or awaiting network calls
+    if (targetPathAfter) {
+      navigate(targetPathAfter);
+    } else {
+      const destTab = targetTabAfter || 'ai';
+      window.dispatchEvent(new CustomEvent('nav-tab-refresh', { detail: { tab: destTab, subTab: targetSubTabAfter } }));
+      navigate(targetSubTabAfter ? `/?tab=${destTab}&sub=${targetSubTabAfter}` : `/?tab=${destTab}`);
+    }
+    setSessionActive(true);
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+
+    triggerToast('You have now signed into Guest account.', 'success', 'Guest Session Active');
+
     try {
       await loginAsGuest();
     } catch (err) {
       console.warn("Guest login via top bar:", err);
     }
-    triggerToast('You have now signed into Guest account.', 'success', 'Guest Session Active');
-    if (location.pathname.includes('login') || location.pathname.includes('register')) {
-      navigate('/?tab=home');
-      window.dispatchEvent(new CustomEvent('nav-reset-to-home'));
-    }
   };
 
-  const handleLogout = async () => {
+  const handleLogout = () => {
     playSound('pop');
+    const wasAccountUser = isAccountUser;
     localStorage.setItem('tt_auth_mode', 'guest');
-    setSessionActive(false);
-    try {
-      localStorage.setItem('user_logged_out', 'true');
-      await signOut(auth);
-    } catch (error) {
-      console.error("Logout error:", error);
-    }
-    triggerToast('You have been signed out safely.', 'info', 'Signed Out');
-    navigate('/?tab=home');
+    localStorage.setItem('user_logged_out', 'true');
+
+    // Switch to Homepage synchronously in 0ms before any background auth cleanup
     window.dispatchEvent(new CustomEvent('nav-reset-to-home'));
+    navigate('/?tab=home', { replace: true });
+    setSessionActive(false);
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+    triggerToast('You have been signed out safely.', 'info', 'Signed Out');
+
+    if (wasAccountUser && auth) {
+      signOut(auth).catch((error) => {
+        console.error("Logout error:", error);
+      });
+    }
   };
 
   return (
@@ -620,7 +683,7 @@ export const Navbar: React.FC = () => {
                   {/* Instant Guest Access */}
                   <button
                     type="button"
-                    onClick={handleQuickGuestClick}
+                    onClick={() => handleQuickGuestClick()}
                     className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 text-xs font-black transition-all shadow-md shadow-emerald-500/20 cursor-pointer"
                     title="Instant Guest Access"
                   >
@@ -850,6 +913,111 @@ export const Navbar: React.FC = () => {
             )}
           </AnimatePresence>
         </div>
+
+        {/* =========================================================
+            LANDING PAGE FEATURE CLICK PROMPT MODAL
+            Prompts visitors to pick Guest Demo vs Personal Account
+        ========================================================== */}
+        <AnimatePresence>
+          {modePromptModal.open && (
+            <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.94, y: 12 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.94, y: 12 }}
+                className="w-full max-w-lg rounded-3xl border border-white/15 bg-[#0b1222] p-6 sm:p-7 shadow-2xl space-y-5 text-left relative overflow-hidden"
+              >
+                <div className="space-y-1.5">
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-500/15 border border-indigo-400/30 text-indigo-300 text-[11px] font-black uppercase tracking-wider">
+                    <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+                    <span>Choose How to Explore</span>
+                  </div>
+                  <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+                    Open {modePromptModal.featureLabel || 'Feature'}
+                  </h3>
+                  <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                    Every tool in <span className="notranslate font-bold text-white" translate="no">Tricky Toddlers</span> personalizes advice to a child’s profile. Choose how you would like to continue:
+                  </p>
+                </div>
+
+                <div className="space-y-3">
+                  {/* Option 1: Instant Guest Demo */}
+                  <button
+                    type="button"
+                    onClick={() =>
+                      handleQuickGuestClick(
+                        modePromptModal.targetTab,
+                        modePromptModal.targetSubTab,
+                        modePromptModal.targetPath
+                      )
+                    }
+                    className="w-full p-4 rounded-2xl border-2 border-emerald-400/50 bg-gradient-to-r from-emerald-950/80 via-teal-950/70 to-slate-900/90 hover:border-emerald-300 text-left transition-all cursor-pointer group shadow-lg"
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="inline-flex items-center gap-1.5 text-sm sm:text-base font-black text-emerald-300 group-hover:text-emerald-200">
+                        <Sparkles className="w-4 h-4 text-emerald-400 shrink-0" />
+                        <span>1. Instant Guest Demo (All Features Unlocked)</span>
+                      </span>
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-emerald-400 text-slate-950">
+                        1-Click Demo
+                      </span>
+                    </div>
+                    <p className="text-xs text-slate-300 mt-1.5 leading-relaxed">
+                      Explore immediately with our pre-loaded demo family (<strong className="text-white">Parent</strong>) and switch between <strong className="text-emerald-200">Child 1 (2 Years 6 Months · Toddler)</strong> and <strong className="text-emerald-200">Child 2 (3 Months · Infant)</strong>.
+                    </p>
+                  </button>
+
+                  {/* Option 2: Sign In / Create Personal Account */}
+                  <div className="p-4 rounded-2xl border border-indigo-400/35 bg-indigo-950/40 space-y-3">
+                    <div>
+                      <div className="text-sm sm:text-base font-black text-indigo-200 flex items-center gap-1.5">
+                        <User className="w-4 h-4 text-indigo-400 shrink-0" />
+                        <span>2. Your Own Personal Account</span>
+                      </div>
+                      <p className="text-xs text-slate-300 mt-1 leading-relaxed">
+                        Sign in or create an account to enter your own Parent Name, Child Name, Date of Birth, State/City, and Dietary Preferences across all tabs.
+                      </p>
+                    </div>
+                    <div className="flex flex-wrap items-center gap-2.5">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          playSound('click');
+                          setModePromptModal({ open: false });
+                          navigate('/login');
+                        }}
+                        className="flex-1 py-2.5 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-black text-xs text-center transition-all cursor-pointer"
+                      >
+                        Sign In to Account
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          playSound('glass');
+                          setModePromptModal({ open: false });
+                          navigate('/register');
+                        }}
+                        className="flex-1 py-2.5 px-4 rounded-xl bg-white/10 hover:bg-white/15 border border-white/20 text-white font-bold text-xs text-center transition-all cursor-pointer"
+                      >
+                        Create Personal Account
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex justify-end pt-1">
+                  <button
+                    type="button"
+                    onClick={() => setModePromptModal({ open: false })}
+                    className="px-4 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white text-xs font-bold transition-all cursor-pointer"
+                  >
+                    Stay on Landing Page
+                  </button>
+                </div>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>
       </>
     </>
   );

@@ -94,7 +94,7 @@ export const NutriBandView: React.FC<NutriBandViewProps> = ({
   onNavigateToReserveCart
 }) => {
   const navigate = useNavigate();
-  const { profile, isPremiumLocked } = useAuth();
+  const { profile, isPremiumLocked, activeChild, isAccountUser } = useAuth();
   const [, setTick] = useState(0);
 
   // Re-read if settings are updated in other views or localStorage
@@ -105,14 +105,15 @@ export const NutriBandView: React.FC<NutriBandViewProps> = ({
   }, []);
 
   const childName = (
+    activeChild?.name ||
     profile?.babyName || 
     profile?.childName || 
-    (typeof window !== 'undefined' ? localStorage.getItem('baby_name') : null) || 
-    'Ashwath'
+    (!isAccountUser && typeof window !== 'undefined' ? localStorage.getItem('baby_name') : null) || 
+    (isAccountUser ? 'Child' : 'Child 1')
   ).trim();
 
-  const birthDate = profile?.babyBirthDate || (typeof window !== 'undefined' ? localStorage.getItem('baby_birthdate') : null);
-  const rawAge = profile?.babyAge || profile?.toddlerAge || (typeof window !== 'undefined' ? localStorage.getItem('baby_age') : null);
+  const birthDate = activeChild?.birthDate || profile?.babyBirthDate || (!isAccountUser && typeof window !== 'undefined' ? localStorage.getItem('baby_birthdate') : null);
+  const rawAge = activeChild?.age || profile?.babyAge || profile?.toddlerAge || (!isAccountUser && typeof window !== 'undefined' ? localStorage.getItem('baby_age') : null);
   const childAge = formatChildAge(birthDate, rawAge);
 
   // Accordion expansion state for Live Dashboard - default to collapsed

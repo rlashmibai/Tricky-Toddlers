@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '../lib/AuthContext';
+import { useAuth, normalizeGuestParentName, normalizeGuestChild1Name, normalizeGuestChild2Name } from '../lib/AuthContext';
 import { useLanguage, SUPPORTED_LANGUAGES } from '../lib/LanguageContext';
 import { db, auth, handleFirestoreError } from '../lib/firebase';
 import { doc, updateDoc, setDoc, serverTimestamp } from 'firebase/firestore';
@@ -90,7 +90,7 @@ export const TODDLER_AGE_OPTIONS = [
 ];
 
 export const ProfilePage: React.FC = () => {
-  const { user, profile, refreshProfile, needsProfileSetup, child2NotApplicable, setChild2NotApplicable } = useAuth();
+  const { user, profile, refreshProfile, needsProfileSetup, child2NotApplicable, setChild2NotApplicable, isAccountUser } = useAuth();
   const { language, setLanguage, t } = useLanguage();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -98,7 +98,9 @@ export const ProfilePage: React.FC = () => {
   const isMandatorySetup = Boolean(searchParams.get('mandatory') === 'true' || needsProfileSetup);
 
   const [isChild2NotApplicable, setIsChild2NotApplicable] = useState<boolean>(() => {
-    return child2NotApplicable || profile?.child2NotApplicable || (typeof window !== 'undefined' && localStorage.getItem('child_2_not_applicable') === 'true') || false;
+    if (profile?.child2NotApplicable !== undefined) return Boolean(profile.child2NotApplicable);
+    if (isAccountUser && !profile?.child2?.name) return false;
+    return child2NotApplicable || (typeof window !== 'undefined' && localStorage.getItem('child_2_not_applicable') === 'true') || false;
   });
 
   // Redirect old tabs cleanly to their dedicated top-level pages
@@ -111,39 +113,42 @@ export const ProfilePage: React.FC = () => {
     }
   }, [tabParam, navigate]);
 
-  // Active guest account profile for Lashmi & Ashwath
-  const isGuestAccount = Boolean(
-    !user?.email ||
-    user?.email === 'lashmi@gmail.com' ||
-    user?.email === 'lashm@gmail.com' ||
-    user?.isAnonymous ||
-    profile?.email === 'lashmi@gmail.com' ||
-    profile?.email === 'lashm@gmail.com' ||
-    profile?.parentName === 'Lashmi' ||
-    user?.uid === 'guest_instant_user'
-  );
+  // Active guest account profile for Parent, Child 1 & Child 2
+  const isGuestAccount = !isAccountUser;
 
-  // Complete profile fields state for Ashwath & Lashmi guest account
+  // Profile fields: Guest Account uses Parent/Child 1/Child 2 demo defaults; Signed-in Account uses user's own settings
   const [firstName, setFirstName] = useState<string>(() => {
-    return profile?.firstName || profile?.parentName || profile?.name || localStorage.getItem('parent_name') || 'Lashmi';
+    if (isAccountUser) {
+      return profile?.parentName || profile?.firstName || profile?.name || localStorage.getItem('parent_name') || profile?.username || '';
+    }
+    return normalizeGuestParentName(profile?.firstName || profile?.parentName || profile?.name || localStorage.getItem('parent_name'));
   });
   const [lastName, setLastName] = useState<string>(() => {
-    return profile?.lastName || 'Ashwath';
+    if (isAccountUser) {
+      return profile?.lastName || '';
+    }
+    return (profile?.lastName && profile.lastName.toLowerCase() !== 'ashwath') ? profile.lastName : '';
   });
   const [contactEmail, setContactEmail] = useState<string>(() => {
     const saved = localStorage.getItem('user_contact_email');
-    if (saved) return saved;
+    if (saved && (!isAccountUser || saved !== 'lashm@gmail.com')) return saved;
     if (profile?.contactEmail) return profile.contactEmail;
     if (profile?.email && !profile.email.includes('securepass.internal')) return profile.email;
     if (user?.email && !user.email.includes('securepass.internal')) return user.email;
-    return 'lashm@gmail.com';
+    return isAccountUser ? '' : 'lashm@gmail.com';
   });
 
   const [indianState, setIndianState] = useState<string>(() => {
+    if (isAccountUser) {
+      return profile?.indianState || localStorage.getItem('user_indian_state') || '';
+    }
     return profile?.indianState || localStorage.getItem('user_indian_state') || 'Karnataka';
   });
 
   const [city, setCity] = useState<string>(() => {
+    if (isAccountUser) {
+      return profile?.city || localStorage.getItem('user_city') || '';
+    }
     return profile?.city || localStorage.getItem('user_city') || 'Bengaluru (Bangalore)';
   });
   const [isCustomCity, setIsCustomCity] = useState<boolean>(false);
@@ -158,13 +163,24 @@ export const ProfilePage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [allowDirectMessages, setAllowDirectMessages] = useState<boolean>(profile?.allowDirectMessages ?? true);
-  const [parentName, setParentName] = useState<string>(() => profile?.parentName || localStorage.getItem('parent_name') || 'Lashmi');
+  const [parentName, setParentName] = useState<string>(() => {
+    if (isAccountUser) {
+      return profile?.parentName || profile?.firstName || profile?.name || localStorage.getItem('parent_name') || profile?.username || '';
+    }
+    return normalizeGuestParentName(profile?.parentName || localStorage.getItem('parent_name'));
+  });
 
-  // Child 1 Profile State (Primary / Default: Ashwath)
+  // Child 1 Profile State
   const [child1Name, setChild1Name] = useState<string>(() => {
-    return profile?.child1?.name || profile?.babyName || profile?.childName || localStorage.getItem('child_1_name') || localStorage.getItem('baby_name') || 'Ashwath';
+    if (isAccountUser) {
+      return profile?.child1?.name || profile?.babyName || profile?.childName || localStorage.getItem('child_1_name') || localStorage.getItem('baby_name') || '';
+    }
+    return normalizeGuestChild1Name(profile?.child1?.name || profile?.babyName || profile?.childName || localStorage.getItem('child_1_name') || localStorage.getItem('baby_name'));
   });
   const [child1DOB, setChild1DOB] = useState<string>(() => {
+    if (isAccountUser) {
+      return profile?.child1?.birthDate || profile?.babyBirthDate || localStorage.getItem('child_1_dob') || localStorage.getItem('baby_birth_date') || '';
+    }
     return profile?.child1?.birthDate || profile?.babyBirthDate || localStorage.getItem('child_1_dob') || localStorage.getItem('baby_birth_date') || '2024-04-12';
   });
   const [child1Gender, setChild1Gender] = useState<string>(() => {
@@ -174,14 +190,23 @@ export const ProfilePage: React.FC = () => {
     return profile?.child1?.bloodGroup || profile?.bloodGroup || localStorage.getItem('child_1_blood') || 'O+';
   });
   const [child1DietaryNotes, setChild1DietaryNotes] = useState<string>(() => {
+    if (isAccountUser) {
+      return profile?.child1?.dietaryNotes || localStorage.getItem('child_1_dietary_notes') || '';
+    }
     return profile?.child1?.dietaryNotes || localStorage.getItem('child_1_dietary_notes') || 'Vegetarian, low salt, zero refined sugar';
   });
 
-  // Child 2 Profile State (Second child profile)
+  // Child 2 Profile State
   const [child2Name, setChild2Name] = useState<string>(() => {
-    return profile?.child2?.name || localStorage.getItem('child_2_name') || 'Ananya';
+    if (isAccountUser) {
+      return profile?.child2?.name || localStorage.getItem('child_2_name') || '';
+    }
+    return normalizeGuestChild2Name(profile?.child2?.name || localStorage.getItem('child_2_name'));
   });
   const [child2DOB, setChild2DOB] = useState<string>(() => {
+    if (isAccountUser) {
+      return profile?.child2?.birthDate || localStorage.getItem('child_2_dob') || '';
+    }
     return profile?.child2?.birthDate || localStorage.getItem('child_2_dob') || '2026-01-15';
   });
   const [child2Gender, setChild2Gender] = useState<string>(() => {
@@ -191,6 +216,9 @@ export const ProfilePage: React.FC = () => {
     return profile?.child2?.bloodGroup || localStorage.getItem('child_2_blood') || 'B+';
   });
   const [child2DietaryNotes, setChild2DietaryNotes] = useState<string>(() => {
+    if (isAccountUser) {
+      return profile?.child2?.dietaryNotes || localStorage.getItem('child_2_dietary_notes') || '';
+    }
     return profile?.child2?.dietaryNotes || localStorage.getItem('child_2_dietary_notes') || 'Mild lactose sensitivity, puree weaning stage';
   });
 
@@ -281,10 +309,10 @@ export const ProfilePage: React.FC = () => {
   // 2. Pediatrician Health PDF / Printable Report Export
   const handleExportPediatricianPDF = () => {
     playSound('glass');
-    const childNameDisplay = child1Name || 'Ashwath';
+    const childNameDisplay = child1Name || 'Child 1';
     const childAgeDisplay = calculateAge(child1DOB) || '2 Years';
     const childBloodDisplay = child1BloodGroup || 'O+';
-    const parentNameDisplay = parentName || 'Lashmi';
+    const parentNameDisplay = parentName || 'Parent';
     const contactEmailDisplay = contactEmail || 'Parent Contact';
     const locationDisplay = `${effectiveCity}, ${indianState}`;
     const printDate = new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
@@ -561,8 +589,8 @@ export const ProfilePage: React.FC = () => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          userId: user?.uid || 'guest_lashmi',
-          parentName: `${firstName} ${lastName}`.trim() || 'Lashmi',
+          userId: user?.uid || 'guest_parent',
+          parentName: `${firstName} ${lastName}`.trim() || 'Parent',
           consentType: 'Section 9 Verifiable Parental Consent for Processing Child Personal Data',
           granted,
           scope: ['child_profile_age_dob', 'immunization_tracker', 'dietary_allergy_preferences', 'ai_pediatric_guidance']
@@ -599,8 +627,8 @@ export const ProfilePage: React.FC = () => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          userId: user?.uid || 'guest_lashmi',
-          parentName: `${firstName} ${lastName}`.trim() || 'Lashmi',
+          userId: user?.uid || 'guest_parent',
+          parentName: `${firstName} ${lastName}`.trim() || 'Parent',
           erasedCategories: [
             'Child Meal & Barcode Scan Photos',
             'AI Assistant & NutriChef Session History',
@@ -641,8 +669,8 @@ export const ProfilePage: React.FC = () => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          userId: user?.uid || 'guest_lashmi',
-          parentName: `${firstName} ${lastName}`.trim() || 'Lashmi',
+          userId: user?.uid || 'guest_parent',
+          parentName: `${firstName} ${lastName}`.trim() || 'Parent',
           email: contactEmail || user?.email || 'lashm@gmail.com',
           subject: grievanceSubject,
           description: grievanceDetails.trim()
@@ -665,16 +693,23 @@ export const ProfilePage: React.FC = () => {
   // Sync profile fields state when data loads
   useEffect(() => {
     if (profile) {
-      if (profile.firstName || profile.parentName || profile.name) {
-        setFirstName(profile.firstName || profile.parentName || profile.name);
-      } else {
-        setFirstName('Lashmi');
+      if (profile.parentName || profile.firstName || profile.name) {
+        const rawPName = profile.parentName || profile.firstName || profile.name;
+        const pName = isAccountUser ? rawPName : normalizeGuestParentName(rawPName);
+        setFirstName(pName);
+        setParentName(pName);
+      } else if (!isAccountUser) {
+        setFirstName('Parent');
+        setParentName('Parent');
+      } else if (profile.username && !parentName) {
+        setFirstName(profile.username);
+        setParentName(profile.username);
       }
 
       if (profile.lastName !== undefined) {
-        setLastName(profile.lastName || 'Ashwath');
-      } else {
-        setLastName('Ashwath');
+        setLastName(isAccountUser ? (profile.lastName || '') : ((profile.lastName && profile.lastName.toLowerCase() !== 'ashwath') ? profile.lastName : ''));
+      } else if (!isAccountUser) {
+        setLastName('');
       }
 
       if (profile.contactEmail) {
@@ -683,24 +718,28 @@ export const ProfilePage: React.FC = () => {
       } else if (profile.email && !profile.email.includes('securepass.internal')) {
         setContactEmail(profile.email);
         localStorage.setItem('user_contact_email', profile.email);
-      } else {
+      } else if (!isAccountUser) {
         setContactEmail('lashm@gmail.com');
         localStorage.setItem('user_contact_email', 'lashm@gmail.com');
       }
 
       if (profile.child1) {
-        if (profile.child1.name) setChild1Name(profile.child1.name);
+        if (profile.child1.name) setChild1Name(isAccountUser ? profile.child1.name : normalizeGuestChild1Name(profile.child1.name));
         if (profile.child1.birthDate) setChild1DOB(profile.child1.birthDate);
         if (profile.child1.gender) setChild1Gender(profile.child1.gender);
         if (profile.child1.bloodGroup) setChild1BloodGroup(profile.child1.bloodGroup);
-        if (profile.child1.dietaryNotes) setChild1DietaryNotes(profile.child1.dietaryNotes);
+        if (profile.child1.dietaryNotes !== undefined) setChild1DietaryNotes(profile.child1.dietaryNotes);
+      } else if (profile.babyName || profile.childName) {
+        const rawC1 = profile.babyName || profile.childName;
+        setChild1Name(isAccountUser ? rawC1 : normalizeGuestChild1Name(rawC1));
+        if (profile.babyBirthDate) setChild1DOB(profile.babyBirthDate);
       }
       if (profile.child2) {
-        if (profile.child2.name) setChild2Name(profile.child2.name);
-        if (profile.child2.birthDate) setChild2DOB(profile.child2.birthDate);
+        if (profile.child2.name !== undefined) setChild2Name(isAccountUser ? profile.child2.name : normalizeGuestChild2Name(profile.child2.name));
+        if (profile.child2.birthDate !== undefined) setChild2DOB(profile.child2.birthDate);
         if (profile.child2.gender) setChild2Gender(profile.child2.gender);
         if (profile.child2.bloodGroup) setChild2BloodGroup(profile.child2.bloodGroup);
-        if (profile.child2.dietaryNotes) setChild2DietaryNotes(profile.child2.dietaryNotes);
+        if (profile.child2.dietaryNotes !== undefined) setChild2DietaryNotes(profile.child2.dietaryNotes);
       }
       if (profile.child2NotApplicable !== undefined) {
         setIsChild2NotApplicable(Boolean(profile.child2NotApplicable));
@@ -712,7 +751,7 @@ export const ProfilePage: React.FC = () => {
       if (profile.indianState) {
         setIndianState(profile.indianState);
         localStorage.setItem('user_indian_state', profile.indianState);
-      } else {
+      } else if (!isAccountUser) {
         setIndianState('Karnataka');
         localStorage.setItem('user_indian_state', 'Karnataka');
       }
@@ -729,50 +768,53 @@ export const ProfilePage: React.FC = () => {
             setIsCustomCity(false);
           }
         }
-      } else {
+      } else if (!isAccountUser) {
         setCity('Bengaluru (Bangalore)');
         localStorage.setItem('user_city', 'Bengaluru (Bangalore)');
         setIsCustomCity(false);
         setCustomCityName('');
       }
     }
-  }, [profile, isGuestAccount]);
+  }, [profile, isGuestAccount, isAccountUser]);
 
   const activePlan = profile?.plan || localStorage.getItem('user_plan') || 'free';
 
   // Validation computations
   const effectiveCity = isCustomCity ? customCityName.trim() : city.trim();
+  const effectiveParentName = (parentName || firstName).trim();
 
-  const isNameValid = Boolean(firstName.trim());
+  const isNameValid = Boolean(effectiveParentName);
   const isStateValid = Boolean(indianState.trim());
   const isCityValid = Boolean(effectiveCity);
   const isLanguageValid = Boolean(language && language.trim());
 
   // Child info from profile or Dietary Preferences
-  const savedChildName = profile?.childName || profile?.toddlerName || profile?.babyName || localStorage.getItem('baby_name') || 'Ashwath';
-  const savedChildAge = profile?.toddlerAge || profile?.babyAge || localStorage.getItem('baby_age') || '2 - 3 Years (Curious Explorer)';
+  const savedChildName = profile?.childName || profile?.toddlerName || profile?.babyName || localStorage.getItem('baby_name') || 'Child 1';
+  const savedChildAge = profile?.toddlerAge || profile?.babyAge || localStorage.getItem('baby_age') || '1 Year';
 
   // Available cities computed for selected Indian state
   const availableCities = (indianState && INDIAN_CITIES_BY_STATE[indianState]) 
     ? [...INDIAN_CITIES_BY_STATE[indianState]].sort((a, b) => a.localeCompare(b)) 
     : [];
 
-  const isAllMandatoryComplete = isNameValid && isStateValid && isCityValid && isLanguageValid;
+  const isAllMandatoryComplete = isNameValid && isStateValid && isCityValid && isLanguageValid && Boolean(child1Name.trim()) && Boolean(child1DOB);
 
   const handleUpdateProfile = async (e?: React.FormEvent | React.MouseEvent) => {
     if (e) e.preventDefault();
     if (!user || !db) return;
 
-    // Strict validation: Required fields on General profile
+    // Strict validation: Required fields on General profile & Child 1
     const missing: string[] = [];
-    if (!firstName.trim()) missing.push("Parent / First Name");
+    if (!effectiveParentName) missing.push("Parent Name");
     if (!indianState.trim()) missing.push("Indian State / UT");
     if (!effectiveCity) missing.push("City / District");
     if (!language || !language.trim()) missing.push("Language Preference");
+    if (!child1Name.trim()) missing.push("Child 1 Name");
+    if (!child1DOB) missing.push("Child 1 Date of Birth");
 
     if (missing.length > 0) {
       playSound('glass');
-      setError(`Please fill in all required fields to ensure accurate localization and care: ${missing.join(', ')}`);
+      setError(`Please fill in all required fields to personalize your account across all tabs: ${missing.join(', ')}`);
       return;
     }
 
@@ -781,19 +823,22 @@ export const ProfilePage: React.FC = () => {
     setSuccess(null);
 
     try {
-      const activeName = activeChildIndex === 1 ? child1Name.trim() : child2Name.trim();
-      const activeDOB = activeChildIndex === 1 ? child1DOB : child2DOB;
+      const effectiveChild2NA = isChild2NotApplicable || !child2Name.trim();
+      const safeActiveIndex: 1 | 2 = (effectiveChild2NA || activeChildIndex !== 2) ? 1 : 2;
+      const activeName = safeActiveIndex === 1 ? child1Name.trim() : child2Name.trim();
+      const activeDOB = safeActiveIndex === 1 ? child1DOB : child2DOB;
       const activeAge = calculateAge(activeDOB) || savedChildAge;
-      const activeGender = activeChildIndex === 1 ? child1Gender : child2Gender;
-      const activeBlood = activeChildIndex === 1 ? child1BloodGroup : child2BloodGroup;
-      const activeDiet = activeChildIndex === 1 ? child1DietaryNotes.trim() : child2DietaryNotes.trim();
+      const activeGender = safeActiveIndex === 1 ? child1Gender : child2Gender;
+      const activeBlood = safeActiveIndex === 1 ? child1BloodGroup : child2BloodGroup;
+      const activeDiet = safeActiveIndex === 1 ? child1DietaryNotes.trim() : child2DietaryNotes.trim();
 
       const userRef = doc(db, 'users', user.uid);
       const updateData: any = {
-        username: profile?.username || firstName.trim() || 'User',
-        firstName: firstName.trim(),
+        username: profile?.username || effectiveParentName || 'User',
+        name: effectiveParentName,
+        firstName: effectiveParentName,
         lastName: lastName.trim(),
-        parentName: parentName.trim(),
+        parentName: effectiveParentName,
         contactEmail: contactEmail.trim(),
         email: contactEmail.trim() || user.email,
         child1: {
@@ -810,9 +855,9 @@ export const ProfilePage: React.FC = () => {
           bloodGroup: child2BloodGroup,
           dietaryNotes: child2DietaryNotes.trim(),
         },
-        child2NotApplicable: isChild2NotApplicable,
-        hasSecondChild: !isChild2NotApplicable,
-        activeChildIndex: isChild2NotApplicable ? 1 : activeChildIndex,
+        child2NotApplicable: effectiveChild2NA,
+        hasSecondChild: !effectiveChild2NA,
+        activeChildIndex: safeActiveIndex,
         childName: activeName,
         babyName: activeName,
         toddlerName: activeName,
@@ -821,6 +866,7 @@ export const ProfilePage: React.FC = () => {
         childGender: activeGender,
         toddlerAge: activeAge,
         babyAge: activeAge,
+        childAge: activeAge,
         dietaryNotes: activeDiet,
         needsProfileSetup: false,
         profileCompleted: true,
@@ -835,7 +881,7 @@ export const ProfilePage: React.FC = () => {
 
       localStorage.setItem('needs_profile_setup', 'false');
       localStorage.setItem('profile_completed', 'true');
-      localStorage.setItem('parent_name', firstName.trim());
+      localStorage.setItem('parent_name', effectiveParentName);
       if (contactEmail.trim()) localStorage.setItem('user_contact_email', contactEmail.trim());
 
       localStorage.setItem('child_1_name', child1Name.trim());
@@ -850,12 +896,13 @@ export const ProfilePage: React.FC = () => {
       localStorage.setItem('child_2_blood', child2BloodGroup);
       localStorage.setItem('child_2_dietary_notes', child2DietaryNotes.trim());
 
-      localStorage.setItem('child_2_not_applicable', String(isChild2NotApplicable));
-      localStorage.setItem('active_child_index', String(isChild2NotApplicable ? 1 : activeChildIndex));
+      localStorage.setItem('child_2_not_applicable', String(effectiveChild2NA));
+      localStorage.setItem('active_child_index', String(safeActiveIndex));
       localStorage.setItem('baby_name', activeName);
       localStorage.setItem('child_name', activeName);
       localStorage.setItem('toddler_name', activeName);
       localStorage.setItem('baby_birth_date', activeDOB);
+      localStorage.setItem('baby_birthdate', activeDOB);
       localStorage.setItem('baby_age', activeAge);
       localStorage.setItem('toddler_age', activeAge);
 
@@ -864,17 +911,18 @@ export const ProfilePage: React.FC = () => {
       localStorage.setItem('user_language', language);
       localStorage.setItem('user_language_selected', language);
 
+      window.dispatchEvent(new Event('storage'));
       await refreshProfile();
       playSound('pop');
-      setSuccess("Profile settings saved successfully! All features and tabs are now unlocked.");
-      triggerToast(`Profile settings saved for ${firstName.trim()} & ${activeName}!`, 'success', 'Profile Saved');
+      setSuccess("Profile settings saved successfully! All features and tabs are now personalized to your settings.");
+      triggerToast(`Profile settings saved for ${effectiveParentName} & ${activeName}!`, 'success', 'Profile Saved');
       
-      // Auto-navigate to home so user can explore all tabs freely
+      // Auto-navigate to AI Assistant tab so user can immediately use personalized tools
       setTimeout(() => {
         setSuccess(null);
-        navigate('/?tab=home', { replace: true });
-        window.dispatchEvent(new CustomEvent('nav-reset-to-home'));
-      }, 1500);
+        navigate('/?tab=ai', { replace: true });
+        window.dispatchEvent(new CustomEvent('nav-tab-refresh', { detail: { tab: 'ai' } }));
+      }, 1200);
     } catch (err: any) {
       setError(err.message || "Failed to update profile");
       triggerToast(err.message || "Failed to update profile", 'error', 'Save Failed');
@@ -1052,7 +1100,7 @@ export const ProfilePage: React.FC = () => {
               <div className="mb-6 p-4 bg-white/[0.02] rounded-2xl border border-white/5 flex items-center justify-between">
                 <div>
                   <label className="block text-[10px] font-bold text-white/40 uppercase tracking-widest mb-1">{t('username') || 'Username'}</label>
-                  <p className="font-mono text-lg text-white/90">@{profile?.username || firstName || 'Lashmi'}</p>
+                  <p className="font-mono text-lg text-white/90">@{isAccountUser ? (profile?.username || firstName || 'Parent') : normalizeGuestParentName(profile?.username || firstName)}</p>
                 </div>
               </div>
 
@@ -1073,7 +1121,7 @@ export const ProfilePage: React.FC = () => {
                       setFirstName(e.target.value);
                       localStorage.setItem('parent_name', e.target.value);
                     }}
-                    placeholder="Enter parent name (e.g. Lashmi)"
+                    placeholder={isAccountUser ? "Enter your parent name" : "Enter parent name (e.g. Parent)"}
                     className={`w-full bg-[#16223a] border rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:ring-4 transition-all placeholder:text-white/20 ${
                       !parentName.trim() ? 'border-rose-500/40 focus:border-rose-400 focus:ring-rose-500/10' : 'border-white/15 focus:border-indigo-400 focus:ring-indigo-500/10'
                     }`}
@@ -1097,7 +1145,7 @@ export const ProfilePage: React.FC = () => {
                       setContactEmail(e.target.value);
                       localStorage.setItem('user_contact_email', e.target.value);
                     }}
-                    placeholder="lashm@gmail.com"
+                    placeholder={isAccountUser ? "parent@example.com" : "lashm@gmail.com"}
                     className="w-full bg-[#16223a] border border-white/15 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-400 transition-all placeholder:text-white/20"
                   />
                   <p className="text-[11px] text-white/40 ml-1">
@@ -1187,7 +1235,7 @@ export const ProfilePage: React.FC = () => {
                   </div>
                   <p className="text-xs sm:text-sm text-slate-400 mt-1">
                     {isChild2NotApplicable 
-                      ? `Managing profile for ${child1Name}. Child 2 is currently marked as Not Applicable.` 
+                      ? `Managing profile for ${child1Name || 'Child 1'}. Child 2 is currently marked as Not Applicable.` 
                       : 'Manage date of birth, gender, and blood group for each child. Select a child tab below to edit.'}
                   </p>
                 </div>
@@ -1205,7 +1253,7 @@ export const ProfilePage: React.FC = () => {
                   }`}
                 >
                   <Baby className="w-4 h-4 shrink-0" />
-                  <span className="whitespace-nowrap">Child 1: {child1Name || 'Ashwath'}</span>
+                  <span className="whitespace-nowrap">Child 1: {child1Name || 'Child 1'}</span>
                 </button>
                 {!isChild2NotApplicable && (
                   <button
@@ -1279,7 +1327,7 @@ export const ProfilePage: React.FC = () => {
                     required
                     value={child1Name}
                     onChange={(e) => setChild1Name(e.target.value)}
-                    placeholder="e.g. Ashwath"
+                    placeholder="e.g. Child 1"
                     className="w-full bg-[#16223a] border border-white/15 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-400 focus:ring-4 focus:ring-emerald-500/10 placeholder:text-slate-500 font-medium"
                   />
                 </div>
@@ -1348,7 +1396,7 @@ export const ProfilePage: React.FC = () => {
                     required
                     value={child2Name}
                     onChange={(e) => setChild2Name(e.target.value)}
-                    placeholder="e.g. Ananya"
+                    placeholder="e.g. Child 2"
                     className="w-full bg-[#16223a] border border-white/15 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-400 focus:ring-4 focus:ring-emerald-500/10 placeholder:text-slate-500 font-medium"
                   />
                 </div>

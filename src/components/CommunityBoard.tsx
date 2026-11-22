@@ -43,7 +43,7 @@ const DEFAULT_HASHTAGS = [
  * verified expert designations like DrAnitaPediatric or Nurse_Kavita.
  */
 export const cleanParentIndianUsername = (name?: string, idOrHint?: string): string => {
-  if (!name) return 'Lashmi';
+  if (!name) return 'Parent';
   const trimmed = name.trim();
   const lower = trimmed.toLowerCase();
 
@@ -74,8 +74,9 @@ export const cleanParentIndianUsername = (name?: string, idOrHint?: string): str
   }
 
   // Standardize demo accounts
-  if (lower === 'lakshmi') return 'Lashmi';
-  if (lower === 'lashmi') return 'Lashmi';
+  if (lower === 'lakshmi') return 'Parent';
+  if (lower === 'lashmi') return 'Parent';
+  if (lower === 'parent') return 'Parent';
 
   // Map legacy usernames to Indian parent handles (mix of first name only & first + last name)
   const legacyMap: Record<string, string> = {
@@ -679,7 +680,7 @@ const SEED_POSTS = [
 
 export const CommunityBoard: React.FC = () => {
   const navigate = useNavigate();
-  const { user, profile } = useAuth();
+  const { user, profile, isAccountUser } = useAuth();
   const [posts, setPosts] = useState<Post[]>([]);
   const [newPost, setNewPost] = useState('');
   const [loading, setLoading] = useState(false);
@@ -692,7 +693,11 @@ export const CommunityBoard: React.FC = () => {
   const [moderationSuccessMsg, setModerationSuccessMsg] = useState<string | null>(null);
   const [moderatingReplyId, setModeratingReplyId] = useState<string | null>(null);
   
-  const currentAuthorName = cleanParentIndianUsername(profile?.parentName || profile?.name || profile?.firstName || localStorage.getItem('parent_name') || 'Lashmi');
+  const currentAuthorName = cleanParentIndianUsername(
+    isAccountUser
+      ? (profile?.parentName || profile?.name || profile?.firstName || profile?.username || 'Parent')
+      : (profile?.parentName || profile?.name || profile?.firstName || localStorage.getItem('parent_name') || 'Parent')
+  );
   
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 

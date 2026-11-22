@@ -63,15 +63,17 @@ export const HomePage: React.FC<HomePageProps> = ({
   const handleEnterAsGuest = async () => {
     playSound('glass');
     setLanguage('en');
+    localStorage.setItem('tt_auth_mode', 'guest');
     setSessionActive(true);
     localStorage.removeItem('user_logged_out');
-    if (!localStorage.getItem('parent_name')) localStorage.setItem('parent_name', 'Lashmi');
-    if (!localStorage.getItem('baby_name')) localStorage.setItem('baby_name', 'Ashwath');
+    localStorage.setItem('parent_name', 'Parent');
+    localStorage.setItem('baby_name', 'Child 1');
     try {
       await loginAsGuest();
     } catch (err) {
       console.warn('Guest access initialized:', err);
     }
+    onNavigate('ai');
   };
 
   const handleGoToUpgradePlans = () => {
@@ -516,6 +518,14 @@ export const HomePage: React.FC<HomePageProps> = ({
               type="button"
               onClick={() => {
                 playSound('glass');
+                if (!isSessionActive) {
+                  window.dispatchEvent(
+                    new CustomEvent('tt-open-mode-prompt', {
+                      detail: { tab: 'ai', label: 'AI Assistant' },
+                    })
+                  );
+                  return;
+                }
                 onNavigate('ai');
               }}
               className="p-2 sm:p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-emerald-400/40 transition-all text-left block group cursor-pointer w-full"
@@ -700,13 +710,27 @@ export const HomePage: React.FC<HomePageProps> = ({
                 whileTap={{ scale: 0.98 }}
                 onClick={() => {
                   playSound('glass');
+                  const targetTab = (feat as any).targetTab || feat.id;
+                  const targetSubTab = (feat as any).subTab;
+                  if (!isSessionActive) {
+                    window.dispatchEvent(
+                      new CustomEvent('tt-open-mode-prompt', {
+                        detail: {
+                          tab: targetTab,
+                          subTab: targetSubTab,
+                          label: feat.name,
+                        },
+                      })
+                    );
+                    return;
+                  }
                   window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
                   document.documentElement.scrollTop = 0;
                   document.body.scrollTop = 0;
                   if (feat.id === 'store' && onOpenStore) {
                     onOpenStore('catalog');
                   } else {
-                    onNavigate((feat as any).targetTab || feat.id, (feat as any).subTab);
+                    onNavigate(targetTab, targetSubTab);
                   }
                   requestAnimationFrame(() => {
                     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });

@@ -40,7 +40,7 @@ export const CheckoutPage: React.FC = () => {
   const [cardNumber, setCardNumber] = useState('');
   const [cardExpiry, setCardExpiry] = useState('');
   const [cardCvv, setCardCvv] = useState('');
-  const [cardHolder, setCardHolder] = useState(profile?.parentName || profile?.name || user?.displayName || 'Lashmi');
+  const [cardHolder, setCardHolder] = useState(profile?.parentName || profile?.name || user?.displayName || 'Parent');
   
   const [isProcessing, setIsProcessing] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -357,7 +357,7 @@ export const CheckoutPage: React.FC = () => {
                           type="text"
                           value={cardHolder}
                           onChange={(e) => setCardHolder(e.target.value)}
-                          placeholder="e.g. Lashmi"
+                          placeholder="e.g. Parent"
                           className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 text-sm"
                         />
                       </div>
