@@ -34,7 +34,9 @@ import {
   Menu,
   UserPlus,
   LogIn,
-  Lock
+  Lock,
+  X,
+  ArrowRight
 } from 'lucide-react';
 import { playSound } from '../lib/sounds';
 import { triggerToast } from '../lib/ToastContext';
@@ -106,7 +108,16 @@ export const Navbar: React.FC = () => {
       });
     };
     window.addEventListener('tt-open-mode-prompt', handleOpenModePrompt);
-    return () => window.removeEventListener('tt-open-mode-prompt', handleOpenModePrompt);
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setModePromptModal({ open: false });
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('tt-open-mode-prompt', handleOpenModePrompt);
+      window.removeEventListener('keydown', handleKeyDown);
+    };
   }, []);
 
   // Close dropdowns when clicking anywhere outside
@@ -920,30 +931,53 @@ export const Navbar: React.FC = () => {
         ========================================================== */}
         <AnimatePresence>
           {modePromptModal.open && (
-            <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+            <div
+              onClick={() => {
+                playSound('click');
+                setModePromptModal({ open: false });
+              }}
+              className="fixed inset-0 z-[200] flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md overflow-y-auto"
+            >
               <motion.div
-                initial={{ opacity: 0, scale: 0.94, y: 12 }}
+                initial={{ opacity: 0, scale: 0.95, y: 14 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.94, y: 12 }}
-                className="w-full max-w-lg rounded-3xl border border-white/15 bg-[#0b1222] p-6 sm:p-7 shadow-2xl space-y-5 text-left relative overflow-hidden"
+                exit={{ opacity: 0, scale: 0.95, y: 14 }}
+                onClick={(e) => e.stopPropagation()}
+                className="w-full max-w-2xl rounded-3xl border border-white/20 bg-gradient-to-b from-[#0f182e] to-[#0a1020] p-6 sm:p-9 shadow-[0_25px_70px_rgba(0,0,0,0.75)] space-y-6 text-left relative overflow-hidden my-auto"
               >
-                <div className="space-y-1.5">
-                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-500/15 border border-indigo-400/30 text-indigo-300 text-[11px] font-black uppercase tracking-wider">
-                    <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+                {/* Top-Right Close Button */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    playSound('click');
+                    setModePromptModal({ open: false });
+                  }}
+                  aria-label="Close popup"
+                  title="Close"
+                  className="absolute top-5 right-5 sm:top-6 sm:right-6 inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white/10 hover:bg-rose-500/20 border border-white/15 hover:border-rose-400/50 text-slate-200 hover:text-white text-xs font-bold transition-all cursor-pointer shadow-sm"
+                >
+                  <X className="w-4 h-4" />
+                  <span>Close</span>
+                </button>
+
+                {/* Modal Header */}
+                <div className="space-y-3 pr-20">
+                  <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-500/15 border border-indigo-400/30 text-indigo-200 text-xs font-black uppercase tracking-wider">
+                    <Sparkles className="w-3.5 h-3.5 text-amber-300 shrink-0" />
                     <span>Choose How to Explore</span>
                   </div>
-                  <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+                  <h3 className="text-2xl sm:text-3xl font-black text-white tracking-tight leading-snug">
                     Open {modePromptModal.featureLabel || 'Feature'}
                   </h3>
-                  <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                  <p className="text-sm sm:text-base text-slate-300 leading-relaxed">
                     Every tool in <span className="notranslate font-bold text-white" translate="no">Tricky Toddlers</span> personalizes advice to a child’s profile. Choose how you would like to continue:
                   </p>
                 </div>
 
-                <div className="space-y-3">
+                {/* Options Container */}
+                <div className="space-y-4">
                   {/* Option 1: Instant Guest Demo */}
-                  <button
-                    type="button"
+                  <div
                     onClick={() =>
                       handleQuickGuestClick(
                         modePromptModal.targetTab,
@@ -951,34 +985,74 @@ export const Navbar: React.FC = () => {
                         modePromptModal.targetPath
                       )
                     }
-                    className="w-full p-4 rounded-2xl border-2 border-emerald-400/50 bg-gradient-to-r from-emerald-950/80 via-teal-950/70 to-slate-900/90 hover:border-emerald-300 text-left transition-all cursor-pointer group shadow-lg"
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        handleQuickGuestClick(
+                          modePromptModal.targetTab,
+                          modePromptModal.targetSubTab,
+                          modePromptModal.targetPath
+                        );
+                      }
+                    }}
+                    className="w-full p-5 sm:p-6 rounded-2xl border-2 border-emerald-400/50 bg-gradient-to-br from-emerald-950/85 via-teal-950/70 to-slate-900/95 hover:border-emerald-300 text-left transition-all cursor-pointer group shadow-xl space-y-4"
                   >
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="inline-flex items-center gap-1.5 text-sm sm:text-base font-black text-emerald-300 group-hover:text-emerald-200">
-                        <Sparkles className="w-4 h-4 text-emerald-400 shrink-0" />
-                        <span>1. Instant Guest Demo (All Features Unlocked)</span>
-                      </span>
-                      <span className="px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-emerald-400 text-slate-950">
+                    <div className="flex flex-wrap items-center justify-between gap-3">
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-9 h-9 rounded-xl bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center shrink-0">
+                          <Sparkles className="w-4 h-4 text-emerald-300" />
+                        </div>
+                        <span className="text-base sm:text-lg font-black text-emerald-200 group-hover:text-white transition-colors">
+                          1. Instant Guest Demo (All Features Unlocked)
+                        </span>
+                      </div>
+                      <span className="px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-emerald-400 text-slate-950 whitespace-nowrap shrink-0 shadow-sm">
                         1-Click Demo
                       </span>
                     </div>
-                    <p className="text-xs text-slate-300 mt-1.5 leading-relaxed">
-                      Explore immediately with our pre-loaded demo family (<strong className="text-white">Parent</strong>) and switch between <strong className="text-emerald-200">Child 1 (2 Years 6 Months · Toddler)</strong> and <strong className="text-emerald-200">Child 2 (3 Months · Infant)</strong>.
+
+                    <p className="text-sm text-slate-200 leading-relaxed">
+                      Explore immediately with our pre-loaded demo family (<strong className="text-white">Parent</strong>) and switch anytime between:
                     </p>
-                  </button>
+
+                    <div className="flex flex-wrap items-center gap-2.5">
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/15 border border-emerald-400/30 text-xs sm:text-sm font-bold text-emerald-200">
+                        <Baby className="w-3.5 h-3.5 text-emerald-300" />
+                        <span>Child 1 (2 Years 6 Months · Toddler)</span>
+                      </span>
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-teal-500/15 border border-teal-400/30 text-xs sm:text-sm font-bold text-teal-200">
+                        <Baby className="w-3.5 h-3.5 text-teal-300" />
+                        <span>Child 2 (3 Months · Infant)</span>
+                      </span>
+                    </div>
+
+                    <div className="pt-1">
+                      <span className="w-full py-3 px-5 rounded-xl bg-emerald-400 group-hover:bg-emerald-300 text-slate-950 font-black text-sm flex items-center justify-center gap-2 transition-all shadow-md">
+                        <span>Continue with Instant Guest Demo</span>
+                        <ArrowRight className="w-4 h-4" />
+                      </span>
+                    </div>
+                  </div>
 
                   {/* Option 2: Sign In / Create Personal Account */}
-                  <div className="p-4 rounded-2xl border border-indigo-400/35 bg-indigo-950/40 space-y-3">
-                    <div>
-                      <div className="text-sm sm:text-base font-black text-indigo-200 flex items-center gap-1.5">
-                        <User className="w-4 h-4 text-indigo-400 shrink-0" />
-                        <span>2. Your Own Personal Account</span>
+                  <div className="p-5 sm:p-6 rounded-2xl border border-indigo-400/35 bg-indigo-950/40 space-y-4">
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-9 h-9 rounded-xl bg-indigo-500/20 border border-indigo-400/40 flex items-center justify-center shrink-0">
+                          <User className="w-4 h-4 text-indigo-300" />
+                        </div>
+                        <span className="text-base sm:text-lg font-black text-indigo-100">
+                          2. Your Own Personal Account
+                        </span>
                       </div>
-                      <p className="text-xs text-slate-300 mt-1 leading-relaxed">
+                      <p className="text-sm text-slate-300 leading-relaxed">
                         Sign in or create an account to enter your own Parent Name, Child Name, Date of Birth, State/City, and Dietary Preferences across all tabs.
                       </p>
                     </div>
-                    <div className="flex flex-wrap items-center gap-2.5">
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
                       <button
                         type="button"
                         onClick={() => {
@@ -986,9 +1060,10 @@ export const Navbar: React.FC = () => {
                           setModePromptModal({ open: false });
                           navigate('/login');
                         }}
-                        className="flex-1 py-2.5 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-black text-xs text-center transition-all cursor-pointer"
+                        className="py-3 px-5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-black text-sm text-center transition-all cursor-pointer shadow-md flex items-center justify-center gap-2"
                       >
-                        Sign In to Account
+                        <LogIn className="w-4 h-4" />
+                        <span>Sign In to Account</span>
                       </button>
                       <button
                         type="button"
@@ -997,21 +1072,30 @@ export const Navbar: React.FC = () => {
                           setModePromptModal({ open: false });
                           navigate('/register');
                         }}
-                        className="flex-1 py-2.5 px-4 rounded-xl bg-white/10 hover:bg-white/15 border border-white/20 text-white font-bold text-xs text-center transition-all cursor-pointer"
+                        className="py-3 px-5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/25 text-white font-bold text-sm text-center transition-all cursor-pointer flex items-center justify-center gap-2"
                       >
-                        Create Personal Account
+                        <UserPlus className="w-4 h-4" />
+                        <span>Create Personal Account</span>
                       </button>
                     </div>
                   </div>
                 </div>
 
-                <div className="flex justify-end pt-1">
+                {/* Footer Close / Stay on Landing Page */}
+                <div className="flex items-center justify-between pt-2 border-t border-white/10">
+                  <span className="text-xs text-slate-400">
+                    Press Esc or click outside to close
+                  </span>
                   <button
                     type="button"
-                    onClick={() => setModePromptModal({ open: false })}
-                    className="px-4 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white text-xs font-bold transition-all cursor-pointer"
+                    onClick={() => {
+                      playSound('click');
+                      setModePromptModal({ open: false });
+                    }}
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 text-slate-200 hover:text-white text-xs sm:text-sm font-bold transition-all cursor-pointer"
                   >
-                    Stay on Landing Page
+                    <X className="w-3.5 h-3.5" />
+                    <span>Close &amp; Stay on Landing Page</span>
                   </button>
                 </div>
               </motion.div>
