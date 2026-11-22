@@ -1,5 +1,64 @@
 import express from "express";
+import crypto from "crypto";
 import { GoogleGenAI } from "@google/genai";
+
+// Server-side Admin Authentication State (no hardcoded credentials)
+let claimedAdminUsername: string | null = null;
+let claimedAdminSalt: string | null = null;
+let claimedAdminHash: Buffer | null = null;
+const activeAdminSessions = new Map<string, { username: string; expiresAt: number }>();
+
+function getConfiguredAdminUsername(): string {
+  const envUser = (process.env.ADMIN_USERNAME || "").trim().toLowerCase();
+  if (envUser) return envUser;
+  if (claimedAdminUsername) return claimedAdminUsername;
+  return "admin";
+}
+
+function isAdminPasswordConfigured(): boolean {
+  const envPass = (process.env.ADMIN_PASSWORD || "").trim();
+  return Boolean(envPass) || Boolean(claimedAdminHash && claimedAdminSalt);
+}
+
+function verifyAdminPassword(candidatePassword: string): boolean {
+  const envPass = (process.env.ADMIN_PASSWORD || "").trim();
+  if (envPass) {
+    const salt = "tt_env_admin_salt_v1";
+    const expected = crypto.scryptSync(envPass, salt, 64);
+    const actual = crypto.scryptSync(candidatePassword, salt, 64);
+    return crypto.timingSafeEqual(expected, actual);
+  }
+  if (claimedAdminHash && claimedAdminSalt) {
+    const actual = crypto.scryptSync(candidatePassword, claimedAdminSalt, 64);
+    return crypto.timingSafeEqual(claimedAdminHash, actual);
+  }
+  return false;
+}
+
+function issueAdminSessionToken(username: string): string {
+  const token = crypto.randomBytes(32).toString("hex");
+  // 12-hour session expiry
+  activeAdminSessions.set(token, {
+    username,
+    expiresAt: Date.now() + 12 * 60 * 60 * 1000,
+  });
+  return token;
+}
+
+function verifyAdminSessionToken(authHeader?: string): { valid: boolean; username?: string } {
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return { valid: false };
+  }
+  const token = authHeader.slice(7).trim();
+  const session = activeAdminSessions.get(token);
+  if (!session) return { valid: false };
+  if (Date.now() > session.expiresAt) {
+    activeAdminSessions.delete(token);
+    return { valid: false };
+  }
+  return { valid: true, username: session.username };
+}
+
 
 let aiClient: GoogleGenAI | null = null;
 function getAI(): GoogleGenAI | null {
@@ -2327,6 +2386,184 @@ Return strictly JSON:
       createdAt: new Date().toISOString(),
       status: "REGISTERED_WITH_DPO",
     });
+  });
+
+  // ============================================================================
+  // Site Analytics Context & Private Admin Authentication Endpoints
+  // ============================================================================
+  router.get("/analytics/context", (req, res) => {
+    const rawCity = String(
+      req.headers["x-appengine-city"] ||
+      req.headers["x-vercel-ip-city"] ||
+      req.headers["cf-ipcity"] ||
+      ""
+    ).trim();
+    const rawRegion = String(
+      req.headers["x-appengine-region"] ||
+      req.headers["x-vercel-ip-country-region"] ||
+      req.headers["cf-region"] ||
+      ""
+    ).trim();
+    const rawCountry = String(
+      req.headers["x-appengine-country"] ||
+      req.headers["cf-ipcountry"] ||
+      req.headers["x-vercel-ip-country"] ||
+      ""
+    ).trim();
+
+    const ua = String(req.headers["user-agent"] || "");
+    let deviceType = "Desktop";
+    if (/iPad|Tablet|PlayBook|Silk/i.test(ua)) {
+      deviceType = "Tablet";
+    } else if (/Mobile|Android|iP(hone|od)|IEMobile|BlackBerry|Kindle|Opera Mini/i.test(ua)) {
+      deviceType = "Mobile";
+    }
+
+    let browser = "Google Chrome";
+    if (/Edg\//i.test(ua)) browser = "Microsoft Edge";
+    else if (/OPR\//i.test(ua) || /Opera/i.test(ua)) browser = "Opera";
+    else if (/Firefox\//i.test(ua)) browser = "Mozilla Firefox";
+    else if (/Safari\//i.test(ua) && !/Chrome\//i.test(ua)) browser = "Apple Safari";
+
+    let os = "Desktop OS";
+    if (/Windows/i.test(ua)) os = "Windows";
+    else if (/Android/i.test(ua)) os = "Android";
+    else if (/iPhone|iPad|iPod/i.test(ua)) os = "iOS";
+    else if (/Mac OS X|Macintosh/i.test(ua)) os = "macOS";
+    else if (/Linux/i.test(ua)) os = "Linux";
+
+    const countryMap: Record<string, string> = {
+      IN: "India",
+      US: "United States",
+      GB: "United Kingdom",
+      UK: "United Kingdom",
+      AE: "United Arab Emirates",
+      SG: "Singapore",
+      CA: "Canada",
+      AU: "Australia",
+      DE: "Germany",
+    };
+
+    const country = countryMap[rawCountry.toUpperCase()] || rawCountry || "Unknown";
+    const city = rawCity ? rawCity.replace(/\b\w/g, (c) => c.toUpperCase()) : "Unknown";
+    const region = rawRegion ? rawRegion.toUpperCase() : "Unknown";
+
+    res.json({
+      city,
+      region,
+      country,
+      deviceType,
+      browser,
+      os,
+    });
+  });
+
+  router.get("/admin/status", (_req, res) => {
+    const hasEnvPassword = Boolean((process.env.ADMIN_PASSWORD || "").trim());
+    const isConfigured = isAdminPasswordConfigured();
+    res.json({
+      isConfigured,
+      hasEnvPassword,
+      adminUsername: getConfiguredAdminUsername(),
+    });
+  });
+
+  router.post("/admin/claim", (req, res) => {
+    const { username, password } = req.body || {};
+    const cleanUser = String(username || "admin").trim().toLowerCase();
+    const cleanPass = String(password || "");
+
+    if (cleanUser.length < 3 || cleanUser.length > 32 || !/^[a-z0-9_.-]+$/.test(cleanUser)) {
+      return res.status(400).json({ error: "Username must be 3-32 alphanumeric characters." });
+    }
+    if (cleanPass.length < 6 || cleanPass.length > 128) {
+      return res.status(400).json({ error: "Password must be at least 6 characters." });
+    }
+
+    // If an admin password is already configured via .env, verify against it instead of overwriting
+    if (isAdminPasswordConfigured()) {
+      const expectedUser = getConfiguredAdminUsername();
+      if (cleanUser !== expectedUser || !verifyAdminPassword(cleanPass)) {
+        return res.status(401).json({ error: "Admin account is already configured. Please sign in with your admin password." });
+      }
+      const token = issueAdminSessionToken(expectedUser);
+      return res.json({
+        success: true,
+        username: expectedUser,
+        token,
+      });
+    }
+
+    const salt = crypto.randomBytes(16).toString("hex");
+    const hash = crypto.scryptSync(cleanPass, salt, 64);
+    claimedAdminUsername = cleanUser;
+    claimedAdminSalt = salt;
+    claimedAdminHash = hash;
+
+    const token = issueAdminSessionToken(cleanUser);
+    return res.json({
+      success: true,
+      username: cleanUser,
+      token,
+    });
+  });
+
+  router.post("/admin/login", (req, res) => {
+    const { username, password } = req.body || {};
+    const cleanUser = String(username || "").trim().toLowerCase();
+    const cleanPass = String(password || "");
+
+    if (!cleanUser || !cleanPass) {
+      return res.status(400).json({ error: "Please enter both admin username and password." });
+    }
+
+    // If not yet claimed on this server instance and no .env password is set, bootstrap with the provided credentials
+    if (!isAdminPasswordConfigured()) {
+      if (cleanPass.length < 6) {
+        return res.status(400).json({ error: "Admin password must be at least 6 characters." });
+      }
+      const salt = crypto.randomBytes(16).toString("hex");
+      const hash = crypto.scryptSync(cleanPass, salt, 64);
+      claimedAdminUsername = cleanUser;
+      claimedAdminSalt = salt;
+      claimedAdminHash = hash;
+      const token = issueAdminSessionToken(cleanUser);
+      return res.json({
+        success: true,
+        username: cleanUser,
+        token,
+        claimedOnFirstLogin: true,
+      });
+    }
+
+    const expectedUser = getConfiguredAdminUsername();
+    if (cleanUser !== expectedUser || !verifyAdminPassword(cleanPass)) {
+      return res.status(401).json({ error: "Invalid admin username or password." });
+    }
+
+    const token = issueAdminSessionToken(expectedUser);
+    return res.json({
+      success: true,
+      username: expectedUser,
+      token,
+    });
+  });
+
+  router.get("/admin/verify", (req, res) => {
+    const check = verifyAdminSessionToken(req.headers.authorization);
+    if (!check.valid) {
+      return res.status(401).json({ valid: false });
+    }
+    return res.json({ valid: true, username: check.username });
+  });
+
+  router.post("/admin/logout", (req, res) => {
+    const authHeader = req.headers.authorization;
+    if (authHeader && authHeader.startsWith("Bearer ")) {
+      const token = authHeader.slice(7).trim();
+      activeAdminSessions.delete(token);
+    }
+    return res.json({ success: true });
   });
 
   return router;

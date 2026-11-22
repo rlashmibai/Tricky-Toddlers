@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { signInWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth';
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth';
 import { auth } from '../lib/firebase';
 import { useAuth, clearDemoLocalStorageForAccount } from '../lib/AuthContext';
+import { trackSiteAnalyticsEvent } from '../lib/analyticsTracker';
 import { motion, AnimatePresence } from 'motion/react';
-import { Lock, LogIn, AlertCircle, Loader2, User, Sparkles, Mail, X, CheckCircle2, KeyRound } from 'lucide-react';
+import { Lock, LogIn, AlertCircle, Loader2, User, Sparkles, Mail, X, CheckCircle2, KeyRound, ShieldCheck } from 'lucide-react';
 import { triggerToast } from '../lib/ToastContext';
 
 export const LoginForm: React.FC = () => {
@@ -31,6 +32,13 @@ export const LoginForm: React.FC = () => {
       localStorage.setItem('baby_name', 'Child 1');
       await loginAsGuest();
       setSessionActive(true);
+      trackSiteAnalyticsEvent({
+        accountType: 'Guest Account',
+        entryPoint: 'Sign-In Page (Instant Guest Access)',
+        personaName: 'Parent',
+        childProfile: 'Child 1 (2 Years 6 Months)',
+        activeTab: 'ai',
+      });
       window.dispatchEvent(new CustomEvent('nav-tab-refresh', { detail: { tab: 'ai' } }));
       navigate('/?tab=ai', { replace: true });
       triggerToast('You have now signed into Guest account.', 'success', 'Guest Session Active');
@@ -45,12 +53,42 @@ export const LoginForm: React.FC = () => {
     e.preventDefault();
     setLoading(true);
     setError(null);
+    const cleanUsername = username.toLowerCase().trim();
     try {
+      // Check if signing into the private Admin Analytics account
+      if (cleanUsername === 'admin') {
+        const adminResp = await fetch('/api/admin/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: cleanUsername, password }),
+        });
+        const adminData = await adminResp.json();
+        if (!adminResp.ok) {
+          setError(adminData.error || 'Invalid admin username or password.');
+          setLoading(false);
+          return;
+        }
+        const adminEmail = 'admin@securepass.internal';
+        try {
+          await signInWithEmailAndPassword(auth, adminEmail, password);
+        } catch (fbErr: any) {
+          if (fbErr.code === 'auth/user-not-found' || fbErr.code === 'auth/invalid-credential') {
+            await createUserWithEmailAndPassword(auth, adminEmail, password);
+          } else {
+            throw fbErr;
+          }
+        }
+        window.dispatchEvent(new CustomEvent('tt-admin-token', { detail: { token: adminData.token, username: adminData.username } }));
+        triggerToast('Signed into Private Admin Analytics Dashboard.', 'success', 'Admin Verified');
+        navigate('/admin', { state: { adminToken: adminData.token, adminUsername: adminData.username } });
+        return;
+      }
+
       localStorage.removeItem('user_logged_out');
       localStorage.setItem('tt_auth_mode', 'account');
       clearDemoLocalStorageForAccount();
       // Use internal dummy email for Firebase Auth
-      const internalEmail = `${username.toLowerCase().trim()}@securepass.internal`;
+      const internalEmail = cleanUsername.includes('@') ? cleanUsername : `${cleanUsername}@securepass.internal`;
       const cred = await signInWithEmailAndPassword(auth, internalEmail, password);
       // Clear any generic guest premium unlock unless this specific UID unlocked premium
       if (localStorage.getItem(`tricky_toddlers_premium_unlocked_${cred.user.uid}`) !== 'true') {
@@ -58,8 +96,19 @@ export const LoginForm: React.FC = () => {
         localStorage.removeItem('user_plan');
       }
       setSessionActive(true);
-      navigate('/?tab=ai');
-      window.dispatchEvent(new CustomEvent('nav-tab-refresh', { detail: { tab: 'ai' } }));
+      trackSiteAnalyticsEvent({
+        accountType: 'Personal Account',
+        entryPoint: 'Sign-In Page (Personal Account)',
+        personaName: username.trim() || 'Account User',
+        childProfile: localStorage.getItem('baby_name') || 'Child 1',
+        activeTab: 'ai',
+      });
+      if (cred.user.email === 'rlashmi086@gmail.com') {
+        navigate('/admin');
+      } else {
+        navigate('/?tab=ai');
+        window.dispatchEvent(new CustomEvent('nav-tab-refresh', { detail: { tab: 'ai' } }));
+      }
     } catch (err: any) {
       if (err.code === 'auth/invalid-credential' || err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password') {
         setError("Invalid username or password");
@@ -209,11 +258,22 @@ export const LoginForm: React.FC = () => {
             </button>
           </form>
 
-          <footer className="mt-5 text-center text-xs text-white/40">
-            Don't have an account?{' '}
-            <Link to="/register" className="text-indigo-400 hover:text-indigo-300 font-medium transition-colors">
-              Join the community
-            </Link>
+          <footer className="mt-5 text-center text-xs text-white/40 space-y-2.5">
+            <div>
+              Don't have an account?{' '}
+              <Link to="/register" className="text-indigo-400 hover:text-indigo-300 font-medium transition-colors">
+                Join the community
+              </Link>
+            </div>
+            <div className="pt-2 border-t border-white/5 flex justify-center">
+              <Link
+                to="/admin"
+                className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-slate-400 hover:text-emerald-300 transition-colors"
+              >
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Founder / Admin Analytics Portal</span>
+              </Link>
+            </div>
           </footer>
         </div>
       </motion.div>

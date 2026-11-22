@@ -30,6 +30,7 @@ import { FaqPage } from './components/FaqPage';
 import { PlansPremiumPage } from './components/PlansPremiumPage';
 import { CommunityGuidelines } from './components/CommunityGuidelines';
 import { CheckoutPage } from './components/CheckoutPage';
+import { AdminDashboard } from './components/AdminDashboard';
 import { Loader2, ArrowUp } from 'lucide-react';
 import { playSound } from './lib/sounds';
 
@@ -105,7 +106,14 @@ const AppContent: React.FC = () => {
   React.useEffect(() => {
     if (user && !loading && needsProfileSetup) {
       const p = location.pathname;
-      const isAllowed = p === '/profile' || p === '/tricky-toddlers/profile' || p === '/login' || p === '/register';
+      const isAllowed =
+        p === '/profile' ||
+        p === '/tricky-toddlers/profile' ||
+        p === '/login' ||
+        p === '/register' ||
+        p === '/admin' ||
+        p === '/admin-analytics' ||
+        p === '/tricky-toddlers/admin';
       if (!isAllowed) {
         navigate('/profile?mandatory=true', { replace: true });
       }
@@ -172,6 +180,9 @@ const AppContent: React.FC = () => {
             <Routes location={location}>
               <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
               <Route path="/tricky-toddlers" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+              <Route path="/admin" element={<AdminDashboard />} />
+              <Route path="/admin-analytics" element={<AdminDashboard />} />
+              <Route path="/tricky-toddlers/admin" element={<AdminDashboard />} />
               <Route path="/cart" element={<ProtectedRoute><NutriBandCartPage /></ProtectedRoute>} />
               <Route path="/nutriband-cart" element={<ProtectedRoute><NutriBandCartPage /></ProtectedRoute>} />
               <Route path="/tricky-toddlers/cart" element={<ProtectedRoute><NutriBandCartPage /></ProtectedRoute>} />
@@ -245,7 +256,7 @@ const AppContent: React.FC = () => {
               <Route path="/contact" element={<ContactFeedbackPage />} />
               <Route path="/feedback" element={<ContactFeedbackPage />} />
               <Route path="/tricky-toddlers/contact" element={<ContactFeedbackPage />} />
-              <Route path="/tricky-toddlers/feedback" element={<ContactFeedbackPage />} />
+              <Route path="/tricky-toddlers/feedback" element={<ProtectedRoute><ContactFeedbackPage /></ProtectedRoute>} />
               <Route path="/our-story" element={<Navigate to="/about?tab=story" replace />} />
               <Route path="/mission" element={<Navigate to="/#problem-and-mission" replace />} />
               <Route path="/tales" element={<Navigate to="/?tab=tales" replace />} />

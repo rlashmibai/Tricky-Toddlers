@@ -36,11 +36,13 @@ import {
   LogIn,
   Lock,
   X,
-  ArrowRight
+  ArrowRight,
+  BarChart3
 } from 'lucide-react';
 import { playSound } from '../lib/sounds';
 import { triggerToast } from '../lib/ToastContext';
 import { shouldLockPremiumFeature } from '../lib/premiumUtils';
+import { trackSiteAnalyticsEvent } from '../lib/analyticsTracker';
 import { motion, AnimatePresence } from 'motion/react';
 
 interface MenuItem {
@@ -369,6 +371,8 @@ export const Navbar: React.FC = () => {
 
   const handleQuickGuestClick = async (targetTabAfter?: string, targetSubTabAfter?: string, targetPathAfter?: string) => {
     playSound('glass');
+    const wasFromModal = modePromptModal.open;
+    const modalFeature = modePromptModal.featureLabel;
     setLanguage('en');
     localStorage.setItem('tt_auth_mode', 'guest');
     localStorage.removeItem('user_logged_out');
@@ -376,11 +380,12 @@ export const Navbar: React.FC = () => {
     localStorage.setItem('baby_name', 'Child 1');
     setModePromptModal({ open: false });
 
+    const destTab = targetTabAfter || 'ai';
+
     // Switch page and tab synchronously in the same frame BEFORE activating session or awaiting network calls
     if (targetPathAfter) {
       navigate(targetPathAfter);
     } else {
-      const destTab = targetTabAfter || 'ai';
       window.dispatchEvent(new CustomEvent('nav-tab-refresh', { detail: { tab: destTab, subTab: targetSubTabAfter } }));
       navigate(targetSubTabAfter ? `/?tab=${destTab}&sub=${targetSubTabAfter}` : `/?tab=${destTab}`);
     }
@@ -396,6 +401,16 @@ export const Navbar: React.FC = () => {
     } catch (err) {
       console.warn("Guest login via top bar:", err);
     }
+
+    trackSiteAnalyticsEvent({
+      accountType: 'Guest Account',
+      entryPoint: wasFromModal
+        ? `Feature Popup Modal (${modalFeature || destTab})`
+        : 'Top Navbar (Instant Guest Access)',
+      personaName: 'Parent',
+      childProfile: 'Child 1 (2 Years 6 Months)',
+      activeTab: destTab,
+    });
   };
 
   const handleLogout = () => {
@@ -677,6 +692,26 @@ export const Navbar: React.FC = () => {
                       </span>
                     )}
                   </Link>
+
+                  {/* Admin Analytics Button (Strictly visible only to authenticated Admin) */}
+                  {(user?.email === 'rlashmi086@gmail.com' || user?.email === 'admin@securepass.internal') && (
+                    <Link
+                      to="/admin"
+                      onClick={() => {
+                        playSound('glass');
+                        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+                      }}
+                      className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl border transition-all text-xs font-black ${
+                        location.pathname === '/admin' || location.pathname === '/admin-analytics'
+                          ? 'bg-cyan-500/25 text-cyan-200 border-cyan-400/50 shadow-sm shadow-cyan-500/20'
+                          : 'bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 border-cyan-400/30'
+                      }`}
+                      title="Private Admin Analytics Dashboard"
+                    >
+                      <BarChart3 className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+                      <span className="notranslate" translate="no">Admin Analytics</span>
+                    </Link>
+                  )}
 
                   {/* 7. Sign Out (Visible once Guest or Create Account is clicked) */}
                   <button

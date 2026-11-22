@@ -14,6 +14,13 @@ service cloud.firestore {
       return isSignedIn() && request.auth.uid == userId;
     }
 
+    function isAdmin() {
+      return isSignedIn() && (
+        request.auth.token.email == 'rlashmi086@gmail.com' ||
+        request.auth.token.email == 'admin@securepass.internal'
+      );
+    }
+
     // 2. Validation Blueprint (The "Anti-Update-Gap")
     function isValidUser(data) {
       return data.username is string && data.username.size() >= 3 && data.username.size() <= 32
@@ -70,9 +77,39 @@ service cloud.firestore {
           && (!('updatedAt' in data) || (data.updatedAt is string && data.updatedAt.size() <= 100));
     }
 
+    function isValidAnalyticsEvent(data) {
+      let allowedKeys = [
+        'userId', 'visitorId', 'isReturningVisitor', 'accountType', 'entryPoint',
+        'personaName', 'childProfile', 'activeTab', 'loginDate', 'dayOfWeek',
+        'loginTime', 'timeOfDaySlot', 'city', 'region', 'country', 'timezone',
+        'deviceType', 'browser', 'os', 'createdAtIso', 'createdAt'
+      ];
+      return data.keys().hasOnly(allowedKeys)
+          && data.userId is string && data.userId.size() > 0 && data.userId.size() <= 128
+          && data.visitorId is string && data.visitorId.size() > 0 && data.visitorId.size() <= 128
+          && data.isReturningVisitor is bool
+          && data.accountType is string && data.accountType.size() > 0 && data.accountType.size() <= 60
+          && data.entryPoint is string && data.entryPoint.size() > 0 && data.entryPoint.size() <= 120
+          && data.personaName is string && data.personaName.size() > 0 && data.personaName.size() <= 100
+          && data.childProfile is string && data.childProfile.size() > 0 && data.childProfile.size() <= 100
+          && (!('activeTab' in data) || (data.activeTab is string && data.activeTab.size() <= 80))
+          && data.loginDate is string && data.loginDate.size() > 0 && data.loginDate.size() <= 30
+          && data.dayOfWeek is string && data.dayOfWeek.size() > 0 && data.dayOfWeek.size() <= 30
+          && data.loginTime is string && data.loginTime.size() > 0 && data.loginTime.size() <= 60
+          && data.timeOfDaySlot is string && data.timeOfDaySlot.size() > 0 && data.timeOfDaySlot.size() <= 60
+          && data.city is string && data.city.size() > 0 && data.city.size() <= 120
+          && data.region is string && data.region.size() > 0 && data.region.size() <= 120
+          && data.country is string && data.country.size() > 0 && data.country.size() <= 120
+          && data.timezone is string && data.timezone.size() > 0 && data.timezone.size() <= 100
+          && data.deviceType is string && data.deviceType.size() > 0 && data.deviceType.size() <= 50
+          && data.browser is string && data.browser.size() > 0 && data.browser.size() <= 80
+          && (!('os' in data) || (data.os is string && data.os.size() <= 80))
+          && data.createdAtIso is string && data.createdAtIso.size() > 0 && data.createdAtIso.size() <= 60;
+    }
+
     match /users/{userId} {
       // Users can only see and manage their own profile document
-      allow get: if isOwner(userId);
+      allow get: if isOwner(userId) || isAdmin();
       
       allow create: if isOwner(userId)
                     && isValidId(userId)
@@ -121,6 +158,14 @@ service cloud.firestore {
       allow create: if isSignedIn() && isValidConsultation(incoming());
       allow update: if isSignedIn() && isValidConsultation(incoming()) && existing().userId == request.auth.uid && incoming().userId == existing().userId;
       allow delete: if isSignedIn() && existing().userId == request.auth.uid;
+    }
+
+    match /site_analytics/{eventId} {
+      // Only the authenticated admin can view or delete site analytics
+      allow get, list, delete: if isAdmin();
+      // Any authenticated session (including Guest Demo session and signed-in accounts) can log a validated visit event
+      allow create: if isSignedIn() && isValidId(eventId) && isValidAnalyticsEvent(incoming());
+      allow update: if isAdmin() && isValidId(eventId) && isValidAnalyticsEvent(incoming());
     }
 
     function incoming() {

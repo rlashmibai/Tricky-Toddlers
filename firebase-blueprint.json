@@ -111,6 +111,53 @@
           "description": "Last updated timestamp"
         }
       }
+    },
+    "AnalyticsEvent": {
+      "title": "Site Analytics Event",
+      "description": "Tracks guest account clicks, user logins, login times, days of the week, locations, and personas explored.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "Firebase Auth UID of the session" },
+        "visitorId": { "type": "string", "description": "Anonymous visitor identifier for unique vs returning tracking" },
+        "isReturningVisitor": { "type": "boolean", "description": "Whether this visitor has used the app previously" },
+        "accountType": { "type": "string", "description": "Guest Account or Personal Account" },
+        "entryPoint": { "type": "string", "description": "Button or flow that triggered the session" },
+        "personaName": { "type": "string", "description": "Parent persona name (e.g. Parent)" },
+        "childProfile": { "type": "string", "description": "Active child profile (e.g. Child 1, Child 2, General)" },
+        "activeTab": { "type": "string", "description": "Feature tab opened" },
+        "loginDate": { "type": "string", "description": "YYYY-MM-DD date string" },
+        "dayOfWeek": { "type": "string", "description": "Day of week (e.g. Monday)" },
+        "loginTime": { "type": "string", "description": "Formatted local login time" },
+        "timeOfDaySlot": { "type": "string", "description": "Morning, Afternoon, Evening, or Night" },
+        "city": { "type": "string", "description": "Detected or profile city" },
+        "region": { "type": "string", "description": "Detected or profile state/region" },
+        "country": { "type": "string", "description": "Detected country" },
+        "timezone": { "type": "string", "description": "Browser IANA timezone" },
+        "deviceType": { "type": "string", "description": "Desktop, Mobile, or Tablet" },
+        "browser": { "type": "string", "description": "Browser name" },
+        "os": { "type": "string", "description": "Operating system" },
+        "createdAtIso": { "type": "string", "description": "ISO timestamp string" }
+      },
+      "required": [
+        "userId",
+        "visitorId",
+        "isReturningVisitor",
+        "accountType",
+        "entryPoint",
+        "personaName",
+        "childProfile",
+        "loginDate",
+        "dayOfWeek",
+        "loginTime",
+        "timeOfDaySlot",
+        "city",
+        "region",
+        "country",
+        "timezone",
+        "deviceType",
+        "browser",
+        "createdAtIso"
+      ]
     }
   },
   "firestore": {
@@ -141,6 +188,10 @@
     "/consultations/{consultationId}": {
       "schema": "Consultation",
       "description": "A collection of booked pediatrician consultations."
+    },
+    "/site_analytics/{eventId}": {
+      "schema": "AnalyticsEvent",
+      "description": "Site analytics events tracking guest logins, timestamps, and geographic locations, readable only by the admin."
     }
   }
 }

@@ -40,6 +40,7 @@ import {
 import { playSound } from '../lib/sounds';
 import { useLanguage, LanguageCode } from '../lib/LanguageContext';
 import { useAuth } from '../lib/AuthContext';
+import { trackSiteAnalyticsEvent } from '../lib/analyticsTracker';
 
 interface HomePageProps {
   onNavigate: (tab: string, subTab?: string) => void;
@@ -73,6 +74,13 @@ export const HomePage: React.FC<HomePageProps> = ({
     } catch (err) {
       console.warn('Guest access initialized:', err);
     }
+    trackSiteAnalyticsEvent({
+      accountType: 'Guest Account',
+      entryPoint: 'Landing Page Hero (Instant Guest Access)',
+      personaName: 'Parent',
+      childProfile: 'Child 1 (2 Years 6 Months)',
+      activeTab: 'ai',
+    });
     onNavigate('ai');
   };
 

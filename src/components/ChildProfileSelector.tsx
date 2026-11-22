@@ -2,6 +2,7 @@ import React from 'react';
 import { Users, Check } from 'lucide-react';
 import { useAuth } from '../lib/AuthContext';
 import { playSound } from '../lib/sounds';
+import { trackSiteAnalyticsEvent } from '../lib/analyticsTracker';
 
 export type ProfileSelectorOptionId = 1 | 2 | 'general';
 
@@ -20,7 +21,7 @@ export const ChildProfileSelector: React.FC<ChildProfileSelectorProps> = ({
   allowGeneral = false,
   className = '',
 }) => {
-  const { childProfiles, switchActiveChild } = useAuth();
+  const { childProfiles, switchActiveChild, isAccountUser, profile } = useAuth();
 
   if (!childProfiles || childProfiles.length === 0) {
     return null;
@@ -56,6 +57,13 @@ export const ChildProfileSelector: React.FC<ChildProfileSelectorProps> = ({
                   if (!isGeneralSelected) {
                     playSound('pop');
                     onSelectChild('general');
+                    trackSiteAnalyticsEvent({
+                      accountType: isAccountUser ? 'Personal Account' : 'Guest Account',
+                      entryPoint: `Persona Switch (${sectionContextName})`,
+                      personaName: isAccountUser ? (profile?.parentName || profile?.username || 'Parent') : 'Parent',
+                      childProfile: 'General (All Ages)',
+                      activeTab: sectionContextName,
+                    });
                   }
                 }}
                 className={`flex items-center gap-3.5 p-3.5 sm:p-4 rounded-2xl border-2 transition-all text-left cursor-pointer shadow-lg select-none ${
@@ -119,6 +127,13 @@ export const ChildProfileSelector: React.FC<ChildProfileSelectorProps> = ({
                       switchActiveChild(cp.id);
                     }
                     onSelectChild(cp.id);
+                    trackSiteAnalyticsEvent({
+                      accountType: isAccountUser ? 'Personal Account' : 'Guest Account',
+                      entryPoint: `Persona Switch (${sectionContextName})`,
+                      personaName: isAccountUser ? (profile?.parentName || profile?.username || 'Parent') : 'Parent',
+                      childProfile: `${cp.name} (${cp.age})`,
+                      activeTab: sectionContextName,
+                    });
                   }
                 }}
                 className={`flex items-center gap-3.5 p-3.5 sm:p-4 rounded-2xl border-2 transition-all text-left cursor-pointer shadow-lg select-none ${
