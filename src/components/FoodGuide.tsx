@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { useLanguage } from '../lib/LanguageContext';
 import { useAuth } from '../lib/AuthContext';
@@ -494,7 +494,40 @@ export const FoodGuide: React.FC<FoodGuideProps> = ({ onNavigateToFoodLens }) =>
   const { language } = useLanguage();
   const { user, profile, childProfiles, activeChildIndex, isAccountUser } = useAuth();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const currentT = localT[language] || localT['en'];
+
+  // Active sub-page inside AI NutriChef ('landing' | 'maker' | 'recipes' | 'guidelines')
+  type NutriChefSubPage = 'landing' | 'maker' | 'recipes' | 'guidelines';
+  const [activeNutriChefPage, setActiveNutriChefPage] = useState<NutriChefSubPage>(() => {
+    const sub = searchParams.get('sub');
+    if (sub === 'maker' || sub === 'recipes' || sub === 'guidelines') return sub;
+    return 'landing';
+  });
+
+  useEffect(() => {
+    const sub = searchParams.get('sub');
+    if (sub === 'maker' || sub === 'recipes' || sub === 'guidelines') {
+      setActiveNutriChefPage(sub);
+    } else {
+      setActiveNutriChefPage('landing');
+    }
+  }, [searchParams]);
+
+  const openNutriChefPage = (page: NutriChefSubPage) => {
+    playSound('pop');
+    setFoodGuideSubView('main');
+    setSelectedRecipe(null);
+    setActiveNutriChefPage(page);
+    if (page === 'landing') {
+      setSearchParams({ tab: 'food' });
+    } else {
+      setSearchParams({ tab: 'food', sub: page });
+    }
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  };
 
   // Safe wrapper for translator or falls back to English
   const gt = (key: string) => {
@@ -554,10 +587,34 @@ export const FoodGuide: React.FC<FoodGuideProps> = ({ onNavigateToFoodLens }) =>
   // Custom AI generator state (Age now in Years)
   const [customAgeYears, setCustomAgeYears] = useState<string>(() => getInitialYears(profileAge));
   const [customIngredients, setCustomIngredients] = useState<string>('');
+  const [makerMealType, setMakerMealType] = useState<string>('Breakfast');
+  const [makerCookingTime, setMakerCookingTime] = useState<string>('15–30 mins');
+  const [makerDietaryPrefs, setMakerDietaryPrefs] = useState<string[]>(['Vegetarian']);
+  const [makerServings, setMakerServings] = useState<number>(2);
+  const [makerServingsLabel, setMakerServingsLabel] = useState<string>('2 Servings');
+  const [makerEquipment, setMakerEquipment] = useState<string>('Stovetop / One-Pan');
   const [applyDietaryPreferences, setApplyDietaryPreferences] = useState<boolean>(true);
   const [aiRecipe, setAiRecipe] = useState<string>('');
   const [aiLoading, setAiLoading] = useState<boolean>(false);
   const [aiTranslating, setAiTranslating] = useState<boolean>(false);
+
+  const toggleMakerDietaryPref = (pref: string) => {
+    playSound('pop');
+    setMakerDietaryPrefs((prev) =>
+      prev.includes(pref) ? prev.filter((p) => p !== pref) : [...prev, pref]
+    );
+  };
+
+  const updateMakerServingsCount = (nextVal: number, isSixPlus = false) => {
+    playSound('pop');
+    const clamped = Math.max(1, Math.min(12, nextVal));
+    setMakerServings(clamped);
+    if (isSixPlus) {
+      setMakerServingsLabel('6+ Servings');
+    } else {
+      setMakerServingsLabel(`${clamped} ${clamped === 1 ? 'Serving' : 'Servings'}`);
+    }
+  };
 
   // Sync active stage with child profile if loaded or updated
   useEffect(() => {
@@ -688,104 +745,84 @@ export const FoodGuide: React.FC<FoodGuideProps> = ({ onNavigateToFoodLens }) =>
     setAiRecipe('');
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
-    const savedDietaryPreferences = applyDietaryPreferences 
-      ? getSavedDietaryPreferences() 
-      : 'None (Use available home ingredients directly without restrictions)';
     const primaryIngredient = customIngredients.split(',')[0]?.trim() || 'wholesome grains';
+    const selectedDietSummary = makerDietaryPrefs.length > 0 ? makerDietaryPrefs.join(', ') : 'Balanced';
+    const cookDuration =
+      makerCookingTime === 'Under 15 mins'
+        ? '10 mins'
+        : makerCookingTime === '15–30 mins'
+        ? '20 mins'
+        : makerCookingTime === '30–60 mins'
+        ? '35 mins'
+        : '25 mins';
 
-    // Algorithmic high-fidelity fallback recipes ensuring 2 to 3 distinct meals
+    // Algorithmic high-fidelity fallback recipes matching all 6 user answers
     const defaultBatchRecipes: GeneratedRecipe[] = [
       {
         id: `rec-${Date.now()}-1`,
-        name: `Gentle ${primaryIngredient} & Oat Breakfast Mash`,
-        mealType: 'Breakfast',
+        name: `${primaryIngredient} ${makerMealType} Bowl (${makerEquipment})`,
+        mealType: makerMealType,
         prepTime: '5 mins',
-        cookTime: '8 mins',
-        textureGuide: `Soft, lump-free, easily swallowable consistency perfectly safe for a child aged ${customAgeYears} years.`,
+        cookTime: cookDuration,
+        textureGuide: `Prepared using ${makerEquipment} for ${makerServingsLabel} (${selectedDietSummary}).`,
         ingredients: [
-          `3 tbsp rolled oats or toasted ragi flour`,
-          `1/2 cup warm fortified milk or water`,
-          `${primaryIngredient} (thoroughly mashed or grated)`,
-          `1/4 tsp pure A2 cow ghee`,
-          `A gentle pinch of aromatic cardamom powder`
+          `${customIngredients} (scaled for ${makerServingsLabel})`,
+          `3 tbsp whole grains or oats`,
+          `1/2 cup liquid base (water, stock, or plant/dairy milk per ${selectedDietSummary} preference)`,
+          `1/2 tsp cooking fat or mild seasoning`
         ],
         instructions: [
-          `Warm 1/4 tsp cow ghee in a small saucepan, lightly toast the oats/grains for 1 minute.`,
-          `Pour in warm milk or water and simmer gently for 5 minutes, stirring continuously until smooth.`,
-          `Fold in the ${primaryIngredient} and cardamom powder. Allow to cool to safe lukewarm temperature before serving.`
+          `Pre-prep and wash ${customIngredients} for ${makerServingsLabel}.`,
+          `Using your ${makerEquipment}, combine ingredients with the base liquid and cook within ${makerCookingTime}.`,
+          `Adjust consistency and temperature before serving.`
         ],
-        nutritionBenefits: `Rich in soluble beta-glucan fiber, energy-dense carbohydrates, and natural potassium to gently fuel morning growth.`,
-        safetyAlerts: `Always check temperature on your inner wrist. Never add raw honey or artificial sweeteners if under 12 months.`
+        nutritionBenefits: `Tailored for ${selectedDietSummary} goals and balanced ${makerMealType} energy.`,
+        safetyAlerts: `Always check food temperature before serving and ensure age-appropriate bite size.`
       },
       {
         id: `rec-${Date.now()}-2`,
-        name: `Savory Moong Dal & ${primaryIngredient} Comfort Khichdi`,
-        mealType: 'Lunch',
-        prepTime: '10 mins',
-        cookTime: '15 mins',
-        textureGuide: `Tender pressure-cooked grains mashed with a wooden spoon for safe, choke-free chewing.`,
+        name: `Wholesome ${primaryIngredient} & Herb ${makerMealType} Skillet`,
+        mealType: makerMealType,
+        prepTime: '7 mins',
+        cookTime: cookDuration,
+        textureGuide: `Tender, flavorful texture cooked via ${makerEquipment} for ${makerServingsLabel}.`,
         ingredients: [
-          `2 tbsp yellow moong dal (washed & soaked 15 mins)`,
-          `2 tbsp soft sona masuri or brown rice`,
-          `${customIngredients} (finely diced or grated)`,
-          `1.5 cups filtered water`,
-          `A pinch of roasted cumin (jeera) powder`,
-          `1/2 tsp cow ghee`
+          `${customIngredients} (chopped or mashed for ${makerServingsLabel})`,
+          `2 tbsp protein-rich lentils, gram flour, or preferred protein`,
+          `A pinch of mild cumin & turmeric`,
+          `1 cup water or broth`
         ],
         instructions: [
-          `Add soaked moong dal, rice, and ${customIngredients} into a small pressure cooker with 1.5 cups water.`,
-          `Cook for 4 whistles until completely tender and soft.`,
-          `Depressurize and thoroughly mash with a spoon. Temper with 1/2 tsp ghee and a tiny pinch of cumin powder.`
+          `Place ${customIngredients} and seasoning into your ${makerEquipment}.`,
+          `Cook for ${cookDuration} until tender and aromatic.`,
+          `Portion into ${makerServingsLabel} and serve warm.`
         ],
-        nutritionBenefits: `High-quality complete plant protein from the dal-rice combination, plus gut-friendly easy digestion.`,
-        safetyAlerts: `Ensure all ingredients are mashed uniformly without hard chunks or slippery whole seeds.`
+        nutritionBenefits: `Provides sustained protein, fiber, and micronutrients matching ${selectedDietSummary}.`,
+        safetyAlerts: `Ensure all pieces are soft and uniform without hard chunks.`
       },
       {
         id: `rec-${Date.now()}-3`,
-        name: `Golden Soft ${primaryIngredient} Finger Pancakes`,
-        mealType: 'Snack',
+        name: `Quick ${primaryIngredient} ${makerMealType} Delight`,
+        mealType: makerMealType,
         prepTime: '5 mins',
-        cookTime: '6 mins',
-        textureGuide: `Pillowy, tender finger strips that toddlers can grip with ease for independent self-feeding practice.`,
+        cookTime: cookDuration,
+        textureGuide: `Easy-to-eat texture made with ${makerEquipment} for ${makerServingsLabel}.`,
         ingredients: [
-          `3 tbsp whole wheat atta or besan (gram flour)`,
-          `${primaryIngredient} (pureed or finely mashed)`,
-          `2-3 tbsp milk or warm water for batter consistency`,
-          `1/4 tsp ghee for greasing tava`
+          `${customIngredients} (prepared for ${makerServingsLabel})`,
+          `3 tbsp flour, oats, or binding base`,
+          `Mild herbs or natural aromatics`
         ],
         instructions: [
-          `Whisk flour, mashed ${primaryIngredient}, and water into a smooth, lump-free pancake batter.`,
-          `Heat a non-stick or cast iron tava, lightly brush with ghee.`,
-          `Drop small spoonfuls and cook on low heat for 2 minutes per side until golden and fluffy. Slice into finger strips.`
+          `Mix ${customIngredients} with the base ingredients in a bowl.`,
+          `Prepare using ${makerEquipment} within your ${makerCookingTime} window.`,
+          `Cool slightly and serve across ${makerServingsLabel}.`
         ],
-        nutritionBenefits: `Encourages fine motor pincer grasp and coordination while providing sustained wholesome energy.`,
-        safetyAlerts: `Always supervise self-feeding. Make sure pancakes are soft and moist, never dry or hard-crusted.`
+        nutritionBenefits: `Supports daily growth and ${selectedDietSummary} nutrition.`,
+        safetyAlerts: `Supervise young children while eating and verify safe serving temperature.`
       }
     ];
 
-    const promptText = `Generate exactly 3 DISTINCT, SAFE, and AGE-APPROPRIATE recipes for a child aged ${customAgeYears} years old using available ingredients: "${customIngredients}".
-Child's Saved Dietary Preferences & Restrictions: "${savedDietaryPreferences}".
-
-CRITICAL REQUIREMENTS:
-1. Strict adherence to dietary preferences (${savedDietaryPreferences}).
-2. Ensure textures, portion sizes, and chewing safety are perfectly tailored for a child aged ${customAgeYears} years old.
-3. The 3 recipes MUST represent 3 different types of food / meals:
-   - Recipe 1: Breakfast (Porridge, Puree, or Soft Morning Mash)
-   - Recipe 2: Lunch (Wholesome Comfort Khichdi, Dal, or Savory Mash)
-   - Recipe 3: Snack (Soft Finger Food, Pancake, or Tender Cheela)
-4. Output ONLY a valid JSON array of exactly 3 objects (no conversational preamble, no markdown code fence).
-Each object must have these exact keys:
-- "id": string (unique)
-- "name": string (engaging kid-friendly dish name)
-- "mealType": string ("Breakfast" | "Lunch" | "Snack")
-- "prepTime": string (e.g. "5 mins")
-- "cookTime": string (e.g. "10 mins")
-- "textureGuide": string (exact developmental texture suitable for ${customAgeYears} yr old)
-- "ingredients": array of strings (with precise child proportions)
-- "instructions": array of step-by-step strings
-- "nutritionBenefits": string (vitamins, minerals, growth benefits)
-- "safetyAlerts": string (temperature, choking prevention, allergen advice)
-`;
+    const summaryInput = `${customIngredients} • ${makerMealType} • ${makerCookingTime} • ${selectedDietSummary} • ${makerServingsLabel} • ${makerEquipment}`;
 
     try {
       const response = await fetch('/api/generate-recipes', {
@@ -796,6 +833,11 @@ Each object must have these exact keys:
         body: JSON.stringify({
           childAgeYears: customAgeYears,
           ingredients: customIngredients,
+          mealType: makerMealType,
+          cookingTime: makerCookingTime,
+          dietaryNeeds: makerDietaryPrefs,
+          servings: makerServingsLabel,
+          equipment: makerEquipment,
           defaultRecipes: defaultBatchRecipes,
         }),
       });
@@ -813,8 +855,8 @@ Each object must have these exact keys:
         date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
         time: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
         timestamp: Date.now(),
-        childAgeYears: `${customAgeYears} Years`,
-        ingredientsInput: customIngredients,
+        childAgeYears: `${customAgeYears === 'All Ages' ? 'All Ages' : `${customAgeYears} Years`}`,
+        ingredientsInput: summaryInput,
         recipes: recipesToUse
       };
 
@@ -828,8 +870,8 @@ Each object must have these exact keys:
         date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
         time: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
         timestamp: Date.now(),
-        childAgeYears: `${customAgeYears} Years`,
-        ingredientsInput: customIngredients,
+        childAgeYears: `${customAgeYears === 'All Ages' ? 'All Ages' : `${customAgeYears} Years`}`,
+        ingredientsInput: summaryInput,
         recipes: defaultBatchRecipes
       };
       saveRecipeBatch(fallbackBatch);
@@ -909,411 +951,933 @@ Each object must have these exact keys:
           isLoading={aiLoading}
           initialTab={foodGuideSubView === 'ai-history' ? 'history' : 'results'}
           onBackToRecipes={() => {
-            playSound('pop');
-            setFoodGuideSubView('main');
-            setTimeout(() => {
-              document.getElementById('nutritious-recipes-section')?.scrollIntoView({ behavior: 'smooth' });
-            }, 100);
+            openNutriChefPage('landing');
           }}
           onRegenerateNew={() => {
-            playSound('pop');
-            setFoodGuideSubView('main');
-            setTimeout(() => {
-              document.getElementById('ai-recipe-maker-section')?.scrollIntoView({ behavior: 'smooth' });
-            }, 100);
+            openNutriChefPage('maker');
           }}
         />
       ) : (
         <>
-      {/* Compact Flagship Hero Banner: AI NutriChef: Your Kitchen Assistant */}
-      <div id="solid-guide-title" className="scroll-mt-24 relative overflow-hidden rounded-3xl border border-emerald-500/25 p-5 sm:p-6 mb-6 bg-gradient-to-br from-[#0a1626] via-[#0f2136] to-[#08121f] shadow-xl">
-        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="space-y-1.5 max-w-4xl">
-            <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight flex flex-wrap items-center gap-2">
-              <span>AI NutriChef:</span>
-              <span className="bg-gradient-to-r from-emerald-400 via-teal-300 to-amber-300 bg-clip-text text-transparent">Your Kitchen Assistant</span>
-            </h1>
+          {/* Compact Flagship Hero Banner: AI NutriChef: Your Kitchen Assistant */}
+          <div id="solid-guide-title" className="scroll-mt-24 relative overflow-hidden rounded-3xl border border-emerald-500/25 p-5 sm:p-6 mb-6 bg-gradient-to-br from-[#0a1626] via-[#0f2136] to-[#08121f] shadow-xl">
+            <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div className="space-y-1.5 max-w-4xl">
+                <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight flex flex-wrap items-center gap-2">
+                  <span>AI NutriChef:</span>
+                  <span className="bg-gradient-to-r from-emerald-400 via-teal-300 to-amber-300 bg-clip-text text-transparent">Your Kitchen Assistant</span>
+                </h1>
 
-            <p className="text-sm sm:text-base font-bold text-emerald-200/90">
-              250+ Age-Matched Indian Recipes &amp; Custom Ingredient Cooker
-            </p>
+                <p className="text-sm sm:text-base font-bold text-emerald-200/90">
+                  250+ Age-Matched Indian Recipes &amp; Custom Ingredient Cooker
+                </p>
 
-            <p className="text-xs sm:text-sm text-white/70 leading-snug pt-0.5">
-              <strong className="text-emerald-300">Why it works:</strong> &ldquo;NutriChef&rdquo; blends scientific pediatric nutrition with cooking ease to turn pantry ingredients into doctor-approved meals for any age.
-            </p>
-          </div>
-
-          <div className="flex flex-wrap md:flex-col items-start md:items-end gap-2 text-xs font-mono text-emerald-300 shrink-0">
-            <span className="px-3 py-1 rounded-xl bg-white/5 border border-white/10 text-white/80">
-              250+ Recipes • 0 to 18 Years
-            </span>
-            <span className="px-3 py-1 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-300">
-              Instant 3-Meal Pantry Cooker
-            </span>
-          </div>
-        </div>
-      </div>
-
-      {/* Mobile Only (< 768px): Compact Quick Jump Section Selector */}
-      <div className="md:hidden mb-6 bg-slate-900/90 p-3 rounded-2xl border border-teal-500/30 shadow-lg flex items-center gap-2.5">
-        <span className="text-[11px] font-black uppercase tracking-wider text-teal-300 shrink-0">
-          Jump To:
-        </span>
-        <select
-          aria-label="Quick Jump to Nutrition Section"
-          defaultValue=""
-          onChange={(e) => {
-            const val = e.target.value;
-            if (!val) return;
-            playSound('pop');
-            if (val === 'history') {
-              navigate('/ai-recipe-history');
-            } else {
-              document.getElementById(val)?.scrollIntoView({ behavior: 'smooth' });
-            }
-            e.target.value = '';
-          }}
-          className="flex-1 min-w-0 bg-slate-800/95 border border-white/15 rounded-xl px-3 py-2 text-xs font-extrabold text-white focus:outline-none focus:border-teal-400"
-        >
-          <option value="" disabled>Select Section...</option>
-          <option value="ai-recipe-maker-section">✨ AI Recipe Maker (Custom Cooker)</option>
-          <option value="nutritious-recipes-section">🍲 Nutritious Recipes (250+ Dishes)</option>
-          <option value="history">📋 AI Recipe History Log</option>
-          <option value="select-stage-guidelines-section">📅 Stage Feeding Guidelines</option>
-        </select>
-      </div>
-
-      {/* Laptop/Desktop (>= 768px): 4 Big Attractive Navigation Menu Buttons (100% Untouched) */}
-      <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-8">
-        {/* 1. AI Recipe Maker */}
-        <button
-          type="button"
-          onClick={() => {
-            playSound('pop');
-            document.getElementById('ai-recipe-maker-section')?.scrollIntoView({ behavior: 'smooth' });
-          }}
-          className="group text-left p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-teal-950/40 via-slate-900/60 to-[#0c1424] hover:from-teal-900/50 hover:to-teal-950/60 border border-teal-500/30 hover:border-teal-400 transition-all duration-300 shadow-lg hover:shadow-teal-500/20 active:scale-98 cursor-pointer relative overflow-hidden flex flex-col justify-between min-h-[96px]"
-        >
-          <div className="w-10 h-10 rounded-xl bg-teal-500/20 border border-teal-400/40 flex items-center justify-center text-teal-300 group-hover:scale-110 transition-transform mb-3">
-            <Sparkles className="w-5 h-5 text-teal-400" />
-          </div>
-          <div>
-            <h3 className="font-black text-sm sm:text-base text-white group-hover:text-teal-200 transition-colors">
-              AI Recipe Maker
-            </h3>
-            <p className="text-[11px] text-white/60 mt-0.5 line-clamp-1">
-              Custom Ingredient Cooker
-            </p>
-          </div>
-        </button>
-
-        {/* 2. Nutritious Recipes */}
-        <button
-          type="button"
-          onClick={() => {
-            playSound('pop');
-            document.getElementById('nutritious-recipes-section')?.scrollIntoView({ behavior: 'smooth' });
-          }}
-          className="group text-left p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-amber-950/40 via-slate-900/60 to-[#0c1424] hover:from-amber-900/50 hover:to-amber-950/60 border border-amber-500/30 hover:border-amber-400 transition-all duration-300 shadow-lg hover:shadow-amber-500/20 active:scale-98 cursor-pointer relative overflow-hidden flex flex-col justify-between min-h-[96px]"
-        >
-          <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-400/40 flex items-center justify-center text-amber-300 group-hover:scale-110 transition-transform mb-3">
-            <UtensilsCrossed className="w-5 h-5 text-amber-400" />
-          </div>
-          <div>
-            <h3 className="font-black text-sm sm:text-base text-white group-hover:text-amber-200 transition-colors">
-              Nutritious Recipes
-            </h3>
-            <p className="text-[11px] text-white/60 mt-0.5 line-clamp-1">
-              250+ Age-Matched Indian Dishes
-            </p>
-          </div>
-        </button>
-
-        {/* 3. AI Recipe History */}
-        <button
-          type="button"
-          onClick={() => {
-            playSound('pop');
-            navigate('/ai-recipe-history');
-          }}
-          className="group text-left p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-indigo-950/40 via-slate-900/60 to-[#0c1424] hover:from-indigo-900/50 hover:to-indigo-950/60 border border-indigo-500/30 hover:border-indigo-400 transition-all duration-300 shadow-lg hover:shadow-indigo-500/20 active:scale-98 cursor-pointer relative overflow-hidden flex flex-col justify-between min-h-[96px]"
-        >
-          <div className="w-10 h-10 rounded-xl bg-indigo-500/20 border border-indigo-400/40 flex items-center justify-center text-indigo-300 group-hover:scale-110 transition-transform mb-3">
-            <History className="w-5 h-5 text-indigo-400" />
-          </div>
-          <div>
-            <div className="flex items-center gap-1.5">
-              <h3 className="font-black text-sm sm:text-base text-white group-hover:text-indigo-200 transition-colors">
-                AI Recipe History
-              </h3>
-              <span className="text-[9px] font-black uppercase px-1.5 py-0.2 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
-                Log
-              </span>
-            </div>
-            <p className="text-[11px] text-white/60 mt-0.5 line-clamp-1">
-              Search &amp; Filter Saved Recipes
-            </p>
-          </div>
-        </button>
-
-        {/* 4. Stage Guidelines */}
-        <button
-          type="button"
-          onClick={() => {
-            playSound('pop');
-            document.getElementById('select-stage-guidelines-section')?.scrollIntoView({ behavior: 'smooth' });
-          }}
-          className="group text-left p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-purple-950/40 via-slate-900/60 to-[#0c1424] hover:from-purple-900/50 hover:to-purple-950/60 border border-purple-500/30 hover:border-purple-400 transition-all duration-300 shadow-lg hover:shadow-purple-500/20 active:scale-98 cursor-pointer relative overflow-hidden flex flex-col justify-between min-h-[96px]"
-        >
-          <div className="w-10 h-10 rounded-xl bg-purple-500/20 border border-purple-400/40 flex items-center justify-center text-purple-300 group-hover:scale-110 transition-transform mb-3">
-            <BookOpen className="w-5 h-5 text-purple-400" />
-          </div>
-          <div>
-            <h3 className="font-black text-sm sm:text-base text-white group-hover:text-purple-200 transition-colors">
-              Stage Guidelines
-            </h3>
-            <p className="text-[11px] text-white/60 mt-0.5 line-clamp-1">
-              Textures &amp; Milestones (0-18y)
-            </p>
-          </div>
-        </button>
-      </div>
-
-      {/* =========================================================
-          3. CUSTOM AI BABY RECIPE MAKER (Free AI Tool)
-      ========================================================== */}
-      <div id="ai-recipe-maker-section" className="mb-12 scroll-mt-24">
-        <div ref={aiRecipeRef} className="glass-card p-6 sm:p-8 rounded-3xl border border-emerald-500/20 bg-gradient-to-br from-emerald-950/20 via-[#0d1e2e] to-[#091522] shadow-2xl relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-72 h-72 bg-emerald-500/5 blur-3xl rounded-full pointer-events-none" />
-          
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 pb-4 border-b border-white/10">
-            <div className="flex items-center gap-3 min-w-0 flex-1">
-              <div className="w-12 h-12 rounded-2xl bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center text-emerald-300 shrink-0 shadow-inner">
-                <Sparkles className="w-6 h-6" />
+                <p className="text-xs sm:text-sm text-white/70 leading-snug pt-0.5">
+                  <strong className="text-emerald-300">Why it works:</strong> &ldquo;NutriChef&rdquo; blends scientific pediatric nutrition with cooking ease to turn pantry ingredients into doctor-approved meals for any age.
+                </p>
               </div>
-              <div className="min-w-0 flex-1">
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="font-black text-lg sm:text-xl text-white">{gt('aiCustomizerTitle')}</span>
-                  <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-[9px] font-black uppercase tracking-wider shrink-0">
-                    Free AI Assistant
+
+              <div className="flex flex-wrap md:flex-col items-start md:items-end gap-2 text-xs font-mono text-emerald-300 shrink-0">
+                <span className="px-3 py-1 rounded-xl bg-white/5 border border-white/10 text-white/80">
+                  250+ Recipes • 0 to 18 Years
+                </span>
+                <span className="px-3 py-1 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-300">
+                  Instant 3-Meal Pantry Cooker
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Dedicated Sub-Page Top Back Bar (Visible when inside AI Recipe Maker, Nutritious Recipes, or Stage Guidelines) */}
+          {activeNutriChefPage !== 'landing' && (
+            <div className="mb-6 p-4 sm:p-5 rounded-3xl bg-slate-900/90 border border-white/15 backdrop-blur-xl shadow-xl flex flex-wrap items-center justify-between gap-3">
+              <button
+                type="button"
+                onClick={() => openNutriChefPage('landing')}
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-200 hover:text-white font-black text-xs uppercase tracking-wider border border-emerald-400/35 transition-all cursor-pointer shadow-md active:scale-95"
+              >
+                <ArrowLeft className="w-4 h-4 text-emerald-400" />
+                <span>Back to AI NutriChef</span>
+              </button>
+
+              <div className="flex flex-wrap items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => openNutriChefPage('maker')}
+                  className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer border ${
+                    activeNutriChefPage === 'maker'
+                      ? 'bg-teal-500 text-slate-950 border-teal-300 font-black shadow-md shadow-teal-500/20'
+                      : 'bg-white/5 hover:bg-white/10 text-white/75 hover:text-white border-white/10'
+                  }`}
+                >
+                  <Sparkles className="w-3.5 h-3.5" />
+                  <span>AI Recipe Maker</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => openNutriChefPage('recipes')}
+                  className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer border ${
+                    activeNutriChefPage === 'recipes'
+                      ? 'bg-amber-400 text-slate-950 border-amber-300 font-black shadow-md shadow-amber-500/20'
+                      : 'bg-white/5 hover:bg-white/10 text-white/75 hover:text-white border-white/10'
+                  }`}
+                >
+                  <UtensilsCrossed className="w-3.5 h-3.5" />
+                  <span>Nutritious Recipes</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    playSound('pop');
+                    navigate('/ai-recipe-history');
+                  }}
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold bg-white/5 hover:bg-white/10 text-white/75 hover:text-white border border-white/10 transition-all cursor-pointer"
+                >
+                  <History className="w-3.5 h-3.5 text-indigo-400" />
+                  <span>AI Recipe History</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => openNutriChefPage('guidelines')}
+                  className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer border ${
+                    activeNutriChefPage === 'guidelines'
+                      ? 'bg-purple-500 text-white border-purple-300 font-black shadow-md shadow-purple-500/20'
+                      : 'bg-white/5 hover:bg-white/10 text-white/75 hover:text-white border-white/10'
+                  }`}
+                >
+                  <BookOpen className="w-3.5 h-3.5" />
+                  <span>Stage Guidelines</span>
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* =========================================================
+              LANDING PAGE VIEW: 4 COMPACT FEATURE SECTIONS
+          ========================================================== */}
+          {activeNutriChefPage === 'landing' && (
+            <div className="space-y-6 sm:space-y-8 mb-12">
+              {/* =========================================================
+                  SECTION 1: AI RECIPE MAKER
+              ========================================================== */}
+              <section className="glass-card p-5 sm:p-7 rounded-3xl border border-teal-500/30 bg-gradient-to-br from-teal-950/25 via-[#0d1e2e] to-[#081320] shadow-2xl relative overflow-hidden space-y-5">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/10">
+                  <div className="flex items-center gap-3.5">
+                    <div className="w-12 h-12 rounded-2xl bg-teal-500/20 border border-teal-400/40 flex items-center justify-center text-teal-300 shrink-0">
+                      <Sparkles className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <h2 className="text-lg sm:text-xl font-black text-white">
+                        AI Recipe Maker
+                      </h2>
+                      <p className="text-xs text-slate-300 mt-0.5">
+                        Generate 3 custom meals from the ingredients you have.
+                      </p>
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => openNutriChefPage('maker')}
+                    className="w-full sm:w-auto shrink-0 px-5 py-3 rounded-xl bg-gradient-to-r from-emerald-400 to-teal-400 hover:from-emerald-300 hover:to-teal-300 text-slate-950 font-black text-xs uppercase tracking-wider shadow-lg shadow-teal-500/20 transition-all active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
+                  >
+                    <Sparkles className="w-4 h-4" />
+                    <span>Open AI Recipe Maker</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                  <div className="p-3.5 rounded-xl bg-white/[0.04] border border-white/10">
+                    <h3 className="text-xs sm:text-sm font-black text-teal-200">
+                      1. Core Ingredients
+                    </h3>
+                    <p className="text-xs text-slate-300 mt-1">
+                      Enter or voice-dictate what&rsquo;s in your kitchen.
+                    </p>
+                  </div>
+
+                  <div className="p-3.5 rounded-xl bg-white/[0.04] border border-white/10">
+                    <h3 className="text-xs sm:text-sm font-black text-teal-200">
+                      2. Meal Type
+                    </h3>
+                    <p className="text-xs text-slate-300 mt-1">
+                      Choose Breakfast, Lunch, Dinner, Quick Snack, or Dessert.
+                    </p>
+                  </div>
+
+                  <div className="p-3.5 rounded-xl bg-white/[0.04] border border-white/10">
+                    <h3 className="text-xs sm:text-sm font-black text-teal-200">
+                      3. Cooking Time
+                    </h3>
+                    <p className="text-xs text-slate-300 mt-1">
+                      Select Under 15 mins, 15–30 mins, 30–60 mins, or No rush.
+                    </p>
+                  </div>
+
+                  <div className="p-3.5 rounded-xl bg-white/[0.04] border border-white/10">
+                    <h3 className="text-xs sm:text-sm font-black text-teal-200">
+                      4. Dietary Preferences &amp; Goals
+                    </h3>
+                    <p className="text-xs text-slate-300 mt-1">
+                      Vegetarian, Non-Vegetarian, Vegan, Gluten-Free, Dairy-Free, High-Protein, Low-Carb / Keto.
+                    </p>
+                  </div>
+
+                  <div className="p-3.5 rounded-xl bg-white/[0.04] border border-white/10">
+                    <h3 className="text-xs sm:text-sm font-black text-teal-200">
+                      5. Servings Counter
+                    </h3>
+                    <p className="text-xs text-slate-300 mt-1">
+                      Adjust how many people you are cooking for (1, 2, 4, 6+ or stepper).
+                    </p>
+                  </div>
+
+                  <div className="p-3.5 rounded-xl bg-white/[0.04] border border-white/10">
+                    <h3 className="text-xs sm:text-sm font-black text-teal-200">
+                      6. Kitchen Equipment
+                    </h3>
+                    <p className="text-xs text-slate-300 mt-1">
+                      Stovetop / One-Pan, Oven, Air Fryer, Microwave, Instant Pot / Pressure Cooker, or No-Cook.
+                    </p>
+                  </div>
+                </div>
+              </section>
+
+              {/* =========================================================
+                  SECTION 2: NUTRITIOUS RECIPES
+              ========================================================== */}
+              <section className="glass-card p-5 sm:p-7 rounded-3xl border border-amber-500/30 bg-gradient-to-br from-amber-950/20 via-[#171828] to-[#0a101d] shadow-2xl relative overflow-hidden space-y-5">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/10">
+                  <div className="flex items-center gap-3.5">
+                    <div className="w-12 h-12 rounded-2xl bg-amber-500/20 border border-amber-400/40 flex items-center justify-center text-amber-300 shrink-0">
+                      <UtensilsCrossed className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <h2 className="text-lg sm:text-xl font-black text-white">
+                        Nutritious Recipes
+                      </h2>
+                      <p className="text-xs text-slate-300 mt-0.5">
+                        Browse 250+ Indian dishes by age stage, meal category, and region.
+                      </p>
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => openNutriChefPage('recipes')}
+                    className="w-full sm:w-auto shrink-0 px-5 py-3 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-400 hover:from-amber-300 hover:to-yellow-300 text-slate-950 font-black text-xs uppercase tracking-wider shadow-lg shadow-amber-500/20 transition-all active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
+                  >
+                    <UtensilsCrossed className="w-4 h-4" />
+                    <span>Open Nutritious Recipes</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                  <div className="p-3.5 rounded-xl bg-white/[0.04] border border-white/10">
+                    <h3 className="text-xs sm:text-sm font-black text-amber-200">
+                      1. Age Stage Selector
+                    </h3>
+                    <p className="text-xs text-slate-300 mt-1">
+                      Filter dishes by All Stages or any of 10 age stages (0–18 years).
+                    </p>
+                  </div>
+
+                  <div className="p-3.5 rounded-xl bg-white/[0.04] border border-white/10">
+                    <h3 className="text-xs sm:text-sm font-black text-amber-200">
+                      2. Meal Category Tabs
+                    </h3>
+                    <p className="text-xs text-slate-300 mt-1">
+                      Filter by All Meals, Morning/Breakfast, Lunch, Dinner, or Snacks &amp; Treats.
+                    </p>
+                  </div>
+
+                  <div className="p-3.5 rounded-xl bg-white/[0.04] border border-white/10">
+                    <h3 className="text-xs sm:text-sm font-black text-amber-200">
+                      3. Recipe Search Bar
+                    </h3>
+                    <p className="text-xs text-slate-300 mt-1">
+                      Search dishes by recipe title or ingredient keyword.
+                    </p>
+                  </div>
+
+                  <div className="p-3.5 rounded-xl bg-white/[0.04] border border-white/10">
+                    <h3 className="text-xs sm:text-sm font-black text-amber-200">
+                      4. State &amp; Regional Matching
+                    </h3>
+                    <p className="text-xs text-slate-300 mt-1">
+                      Highlights dishes matching your selected Indian state ({indianState}).
+                    </p>
+                  </div>
+
+                  <div className="p-3.5 rounded-xl bg-white/[0.04] border border-white/10">
+                    <h3 className="text-xs sm:text-sm font-black text-amber-200">
+                      5. Ingredients &amp; Instructions
+                    </h3>
+                    <p className="text-xs text-slate-300 mt-1">
+                      View ingredient list, step-by-step cooking method, prep time, and cook time.
+                    </p>
+                  </div>
+
+                  <div className="p-3.5 rounded-xl bg-white/[0.04] border border-white/10">
+                    <h3 className="text-xs sm:text-sm font-black text-amber-200">
+                      6. Per-Serving Nutrition Details
+                    </h3>
+                    <p className="text-xs text-slate-300 mt-1">
+                      Displays Calories, Protein, Iron, Calcium, Fiber, Carbs, Sodium, Salt, Sugar, and Fat.
+                    </p>
+                  </div>
+                </div>
+              </section>
+
+              {/* =========================================================
+                  SECTION 3: AI RECIPE HISTORY
+              ========================================================== */}
+              <section className="glass-card p-5 sm:p-7 rounded-3xl border border-indigo-500/30 bg-gradient-to-br from-indigo-950/25 via-[#0f172a] to-[#080d1a] shadow-2xl relative overflow-hidden space-y-5">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/10">
+                  <div className="flex items-center gap-3.5">
+                    <div className="w-12 h-12 rounded-2xl bg-indigo-500/20 border border-indigo-400/40 flex items-center justify-center text-indigo-300 shrink-0">
+                      <History className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <h2 className="text-lg sm:text-xl font-black text-white">
+                        AI Recipe History
+                      </h2>
+                      <p className="text-xs text-slate-300 mt-0.5">
+                        View, search, filter, and manage your saved AI recipes.
+                      </p>
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      playSound('pop');
+                      navigate('/ai-recipe-history');
+                    }}
+                    className="w-full sm:w-auto shrink-0 px-5 py-3 rounded-xl bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-600 hover:from-indigo-400 hover:to-purple-500 text-white font-black text-xs uppercase tracking-wider shadow-lg shadow-indigo-500/20 transition-all active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
+                  >
+                    <History className="w-4 h-4" />
+                    <span>Open AI Recipe History</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                  <div className="p-3.5 rounded-xl bg-white/[0.04] border border-white/10">
+                    <h3 className="text-xs sm:text-sm font-black text-indigo-200">
+                      1. Saved Recipe Batches
+                    </h3>
+                    <p className="text-xs text-slate-300 mt-1">
+                      Lists all previously generated AI recipe batches with date and child age.
+                    </p>
+                  </div>
+
+                  <div className="p-3.5 rounded-xl bg-white/[0.04] border border-white/10">
+                    <h3 className="text-xs sm:text-sm font-black text-indigo-200">
+                      2. Keyword Search
+                    </h3>
+                    <p className="text-xs text-slate-300 mt-1">
+                      Search saved recipes by ingredient, dish title, or date.
+                    </p>
+                  </div>
+
+                  <div className="p-3.5 rounded-xl bg-white/[0.04] border border-white/10">
+                    <h3 className="text-xs sm:text-sm font-black text-indigo-200">
+                      3. Meal Type &amp; Age Filters
+                    </h3>
+                    <p className="text-xs text-slate-300 mt-1">
+                      Filter saved batches by Breakfast, Lunch, Snack, Dinner, or child age group.
+                    </p>
+                  </div>
+
+                  <div className="p-3.5 rounded-xl bg-white/[0.04] border border-white/10">
+                    <h3 className="text-xs sm:text-sm font-black text-indigo-200">
+                      4. Date Sorting
+                    </h3>
+                    <p className="text-xs text-slate-300 mt-1">
+                      Sort saved recipe batches by Newest First or Oldest First.
+                    </p>
+                  </div>
+
+                  <div className="p-3.5 rounded-xl bg-white/[0.04] border border-white/10">
+                    <h3 className="text-xs sm:text-sm font-black text-indigo-200">
+                      5. Copy &amp; Print Recipes
+                    </h3>
+                    <p className="text-xs text-slate-300 mt-1">
+                      Copy recipe text to clipboard or print the recipe page.
+                    </p>
+                  </div>
+
+                  <div className="p-3.5 rounded-xl bg-white/[0.04] border border-white/10">
+                    <h3 className="text-xs sm:text-sm font-black text-indigo-200">
+                      6. Delete Batch or Clear All
+                    </h3>
+                    <p className="text-xs text-slate-300 mt-1">
+                      Remove an individual saved batch or clear the entire history log.
+                    </p>
+                  </div>
+                </div>
+              </section>
+
+              {/* =========================================================
+                  SECTION 4: STAGE GUIDELINES
+              ========================================================== */}
+              <section className="glass-card p-5 sm:p-7 rounded-3xl border border-purple-500/30 bg-gradient-to-br from-purple-950/25 via-[#131129] to-[#090d1a] shadow-2xl relative overflow-hidden space-y-5">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/10">
+                  <div className="flex items-center gap-3.5">
+                    <div className="w-12 h-12 rounded-2xl bg-purple-500/20 border border-purple-400/40 flex items-center justify-center text-purple-300 shrink-0">
+                      <BookOpen className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <h2 className="text-lg sm:text-xl font-black text-white">
+                        Stage Guidelines
+                      </h2>
+                      <p className="text-xs text-slate-300 mt-0.5">
+                        Feeding schedules, food textures, milestones, and safety rules (0–18 years).
+                      </p>
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => openNutriChefPage('guidelines')}
+                    className="w-full sm:w-auto shrink-0 px-5 py-3 rounded-xl bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-400 hover:to-indigo-400 text-white font-black text-xs uppercase tracking-wider shadow-lg shadow-purple-500/20 transition-all active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
+                  >
+                    <BookOpen className="w-4 h-4" />
+                    <span>Open Stage Guidelines</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                  <div className="p-3.5 rounded-xl bg-white/[0.04] border border-white/10">
+                    <h3 className="text-xs sm:text-sm font-black text-purple-200">
+                      1. 10 Age Brackets (0–18 Years)
+                    </h3>
+                    <p className="text-xs text-slate-300 mt-1">
+                      View All Stages together or filter by a specific age bracket.
+                    </p>
+                  </div>
+
+                  <div className="p-3.5 rounded-xl bg-white/[0.04] border border-white/10">
+                    <h3 className="text-xs sm:text-sm font-black text-purple-200">
+                      2. Meal Routine
+                    </h3>
+                    <p className="text-xs text-slate-300 mt-1">
+                      Daily solid meal and snack count for each age stage.
+                    </p>
+                  </div>
+
+                  <div className="p-3.5 rounded-xl bg-white/[0.04] border border-white/10">
+                    <h3 className="text-xs sm:text-sm font-black text-purple-200">
+                      3. Fluids &amp; Milk Intake
+                    </h3>
+                    <p className="text-xs text-slate-300 mt-1">
+                      Recommended breastmilk, formula, cow milk, and daily water volumes.
+                    </p>
+                  </div>
+
+                  <div className="p-3.5 rounded-xl bg-white/[0.04] border border-white/10">
+                    <h3 className="text-xs sm:text-sm font-black text-purple-200">
+                      4. Texture &amp; Form
+                    </h3>
+                    <p className="text-xs text-slate-300 mt-1">
+                      Food consistency guidance from smooth purees to regular family meals.
+                    </p>
+                  </div>
+
+                  <div className="p-3.5 rounded-xl bg-white/[0.04] border border-white/10">
+                    <h3 className="text-xs sm:text-sm font-black text-purple-200">
+                      5. Choking Safety
+                    </h3>
+                    <p className="text-xs text-slate-300 mt-1">
+                      Age-specific choking hazards and food preparation safety rules.
+                    </p>
+                  </div>
+
+                  <div className="p-3.5 rounded-xl bg-white/[0.04] border border-white/10">
+                    <h3 className="text-xs sm:text-sm font-black text-purple-200">
+                      6. Milestones &amp; Daily Schedule
+                    </h3>
+                    <p className="text-xs text-slate-300 mt-1">
+                      Feeding readiness milestones and sample daily meal timings.
+                    </p>
+                  </div>
+                </div>
+              </section>
+            </div>
+          )}
+
+          {/* =========================================================
+              DEDICATED PAGE 1: CUSTOM AI BABY RECIPE MAKER (sub=maker)
+          ========================================================== */}
+          {activeNutriChefPage === 'maker' && (
+            <div id="ai-recipe-maker-section" className="mb-12 scroll-mt-24 space-y-6">
+              <div ref={aiRecipeRef} className="glass-card p-6 sm:p-8 rounded-3xl border border-emerald-500/20 bg-gradient-to-br from-emerald-950/20 via-[#0d1e2e] to-[#091522] shadow-2xl relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-72 h-72 bg-emerald-500/5 blur-3xl rounded-full pointer-events-none" />
+                
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 pb-4 border-b border-white/10">
+                  <div className="flex items-center gap-3 min-w-0 flex-1">
+                    <div className="w-12 h-12 rounded-2xl bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center text-emerald-300 shrink-0 shadow-inner">
+                      <Sparkles className="w-6 h-6" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="font-black text-lg sm:text-xl text-white">{gt('aiCustomizerTitle')}</span>
+                        <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-[9px] font-black uppercase tracking-wider shrink-0">
+                          Free AI Assistant
+                        </span>
+                      </div>
+                      <p className="text-xs text-white/60 mt-0.5 leading-relaxed">
+                        {gt('aiCustomizerDesc')}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Child Profile & General Selector (Scoped to AI Recipe Maker) */}
+                <div className="flex justify-center mb-6 max-w-4xl mx-auto">
+                  <ChildProfileSelector
+                    selectedChildId={pageChildId}
+                    onSelectChild={(id) => {
+                      setPageChildId(id);
+                      if (id === 'general') {
+                        setCustomAgeYears('All Ages');
+                      } else if (id === 2) {
+                        setCustomAgeYears('0.3');
+                      } else {
+                        setCustomAgeYears('2.5');
+                      }
+                    }}
+                    sectionContextName="AI Recipe Maker"
+                    allowGeneral={true}
+                  />
+                </div>
+
+                {/* 6 PRE-GENERATION QUESTIONS */}
+                <div className="space-y-5 mb-7">
+                  {/* Question 1: Core Ingredients */}
+                  <div className="p-4 sm:p-5 rounded-2xl bg-white/[0.03] border border-white/10 space-y-2.5">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <div>
+                        <span className="text-[11px] font-black uppercase tracking-wider text-emerald-300">
+                          1. Core Ingredients
+                        </span>
+                        <label className="block text-sm sm:text-base font-black text-white mt-0.5">
+                          What&rsquo;s in your kitchen?
+                        </label>
+                      </div>
+                      <VoiceDictationButton
+                        language={language}
+                        label="Speak Ingredients"
+                        compact={false}
+                        onTranscript={(spoken) =>
+                          setCustomIngredients((prev) => (prev ? `${prev}, ${spoken}` : spoken))
+                        }
+                      />
+                    </div>
+                    <textarea
+                      rows={2}
+                      placeholder="e.g., banana, rolled oats, carrot, moong dal, paneer, egg..."
+                      value={customIngredients}
+                      onChange={(e) => setCustomIngredients(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.stopPropagation();
+                        }
+                      }}
+                      className="w-full bg-white/5 border border-white/15 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-emerald-400 text-sm placeholder:text-white/35 resize-y min-h-[54px] leading-relaxed"
+                    />
+                  </div>
+
+                  {/* Question 2: Meal Type (Single-Select Chips) */}
+                  <div className="p-4 sm:p-5 rounded-2xl bg-white/[0.03] border border-white/10 space-y-3">
+                    <div>
+                      <span className="text-[11px] font-black uppercase tracking-wider text-emerald-300">
+                        2. Meal Type
+                      </span>
+                      <p className="text-sm sm:text-base font-black text-white mt-0.5">
+                        What are you making?
+                      </p>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {['Breakfast', 'Lunch', 'Dinner', 'Quick Snack', 'Dessert'].map((option) => {
+                        const active = makerMealType === option;
+                        return (
+                          <button
+                            key={option}
+                            type="button"
+                            onClick={() => {
+                              playSound('pop');
+                              setMakerMealType(option);
+                            }}
+                            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer border ${
+                              active
+                                ? 'bg-emerald-400 text-slate-950 border-emerald-300 font-black shadow-md shadow-emerald-500/20'
+                                : 'bg-white/5 hover:bg-white/10 text-white/80 hover:text-white border-white/10'
+                            }`}
+                          >
+                            {option}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Question 3: Cooking Time (Single-Select Buttons) */}
+                  <div className="p-4 sm:p-5 rounded-2xl bg-white/[0.03] border border-white/10 space-y-3">
+                    <div>
+                      <span className="text-[11px] font-black uppercase tracking-wider text-emerald-300">
+                        3. Cooking Time
+                      </span>
+                      <p className="text-sm sm:text-base font-black text-white mt-0.5">
+                        How much time do you have?
+                      </p>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {['Under 15 mins', '15–30 mins', '30–60 mins', 'No rush'].map((option) => {
+                        const active = makerCookingTime === option;
+                        return (
+                          <button
+                            key={option}
+                            type="button"
+                            onClick={() => {
+                              playSound('pop');
+                              setMakerCookingTime(option);
+                            }}
+                            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer border ${
+                              active
+                                ? 'bg-teal-400 text-slate-950 border-teal-300 font-black shadow-md shadow-teal-500/20'
+                                : 'bg-white/5 hover:bg-white/10 text-white/80 hover:text-white border-white/10'
+                            }`}
+                          >
+                            {option}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Question 4: Dietary Preferences & Goals (Multi-Select Chips) */}
+                  <div className="p-4 sm:p-5 rounded-2xl bg-white/[0.03] border border-white/10 space-y-3">
+                    <div>
+                      <span className="text-[11px] font-black uppercase tracking-wider text-emerald-300">
+                        4. Dietary Preferences &amp; Goals
+                      </span>
+                      <p className="text-sm sm:text-base font-black text-white mt-0.5">
+                        Any dietary needs? <span className="text-xs font-semibold text-white/50">(Optional • Multi-Select)</span>
+                      </p>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {[
+                        'Vegetarian',
+                        'Non-Vegetarian',
+                        'Vegan',
+                        'Gluten-Free',
+                        'Dairy-Free',
+                        'High-Protein',
+                        'Low-Carb / Keto',
+                      ].map((option) => {
+                        const active = makerDietaryPrefs.includes(option);
+                        return (
+                          <button
+                            key={option}
+                            type="button"
+                            onClick={() => toggleMakerDietaryPref(option)}
+                            className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer border flex items-center gap-1.5 ${
+                              active
+                                ? 'bg-amber-400 text-slate-950 border-amber-300 font-black shadow-md shadow-amber-500/20'
+                                : 'bg-white/5 hover:bg-white/10 text-white/80 hover:text-white border-white/10'
+                            }`}
+                          >
+                            {active && <Check className="w-3.5 h-3.5 stroke-[3]" />}
+                            <span>{option}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Question 5: Servings (Stepper / Counter + Quick Buttons) */}
+                  <div className="p-4 sm:p-5 rounded-2xl bg-white/[0.03] border border-white/10 space-y-3">
+                    <div>
+                      <span className="text-[11px] font-black uppercase tracking-wider text-emerald-300">
+                        5. Servings
+                      </span>
+                      <p className="text-sm sm:text-base font-black text-white mt-0.5">
+                        How many people?
+                      </p>
+                    </div>
+                    <div className="flex flex-wrap items-center gap-3">
+                      {/* Stepper: [ - ] 2 Servings [ + ] */}
+                      <div className="inline-flex items-center gap-2 bg-white/5 border border-white/15 rounded-xl p-1">
+                        <button
+                          type="button"
+                          onClick={() => updateMakerServingsCount(makerServings - 1, false)}
+                          className="w-8 h-8 rounded-lg bg-white/10 hover:bg-white/20 text-white font-black text-base flex items-center justify-center transition-all cursor-pointer"
+                          aria-label="Decrease servings"
+                        >
+                          -
+                        </button>
+                        <span className="px-3 text-xs sm:text-sm font-black text-emerald-300 min-w-[96px] text-center">
+                          {makerServingsLabel}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => updateMakerServingsCount(makerServings + 1, false)}
+                          className="w-8 h-8 rounded-lg bg-white/10 hover:bg-white/20 text-white font-black text-base flex items-center justify-center transition-all cursor-pointer"
+                          aria-label="Increase servings"
+                        >
+                          +
+                        </button>
+                      </div>
+
+                      {/* Quick Preset Buttons: [ 1 ] [ 2 ] [ 4 ] [ 6+ ] */}
+                      <div className="flex flex-wrap items-center gap-1.5">
+                        {[
+                          { label: '1', count: 1, sixPlus: false },
+                          { label: '2', count: 2, sixPlus: false },
+                          { label: '4', count: 4, sixPlus: false },
+                          { label: '6+', count: 6, sixPlus: true },
+                        ].map((preset) => {
+                          const isSelected = preset.sixPlus
+                            ? makerServingsLabel === '6+ Servings'
+                            : makerServings === preset.count && makerServingsLabel !== '6+ Servings';
+                          return (
+                            <button
+                              key={preset.label}
+                              type="button"
+                              onClick={() => updateMakerServingsCount(preset.count, preset.sixPlus)}
+                              className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer border ${
+                                isSelected
+                                  ? 'bg-emerald-400 text-slate-950 border-emerald-300 font-black shadow-md'
+                                  : 'bg-white/5 hover:bg-white/10 text-white/75 hover:text-white border-white/10'
+                              }`}
+                            >
+                              {preset.label}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Question 6: Kitchen Equipment (Single-Select Chips) */}
+                  <div className="p-4 sm:p-5 rounded-2xl bg-white/[0.03] border border-white/10 space-y-3">
+                    <div>
+                      <span className="text-[11px] font-black uppercase tracking-wider text-emerald-300">
+                        6. Kitchen Equipment
+                      </span>
+                      <p className="text-sm sm:text-base font-black text-white mt-0.5">
+                        What do you want to cook with?
+                      </p>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {[
+                        'Stovetop / One-Pan',
+                        'Oven',
+                        'Air Fryer',
+                        'Microwave',
+                        'Instant Pot / Pressure Cooker',
+                        'No-Cook',
+                      ].map((option) => {
+                        const active = makerEquipment === option;
+                        return (
+                          <button
+                            key={option}
+                            type="button"
+                            onClick={() => {
+                              playSound('pop');
+                              setMakerEquipment(option);
+                            }}
+                            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer border ${
+                              active
+                                ? 'bg-indigo-400 text-slate-950 border-indigo-300 font-black shadow-md shadow-indigo-500/20'
+                                : 'bg-white/5 hover:bg-white/10 text-white/80 hover:text-white border-white/10'
+                            }`}
+                          >
+                            {option}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-3">
+                  <button
+                    onClick={handleGenerateAiRecipe}
+                    disabled={aiLoading || !customIngredients.trim()}
+                    className="w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-emerald-400 to-teal-400 hover:from-emerald-300 hover:to-teal-300 disabled:opacity-50 text-slate-950 font-black text-sm uppercase tracking-wider rounded-2xl transition-all shadow-xl shadow-emerald-500/20 active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
+                  >
+                    {aiLoading ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <Sparkles className="w-4 h-4" />
+                    )}
+                    <span>Generate Recipes with AI</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      playSound('pop');
+                      navigate('/ai-recipe-history');
+                    }}
+                    className="w-full sm:w-auto px-6 py-3.5 bg-white/5 hover:bg-white/10 text-white font-bold text-sm rounded-2xl border border-white/10 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                  >
+                    <History className="w-4 h-4 text-indigo-400" />
+                    <span>AI Recipe History</span>
+                  </button>
+                </div>
+
+                {/* Generated Recipe Display Area */}
+                <AnimatePresence>
+                  {aiRecipe && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      className="mt-8 pt-8 border-t border-white/10 relative"
+                    >
+                      <button
+                        onClick={() => { playSound('pop'); setAiRecipe(''); }}
+                        className="absolute top-8 right-0 text-xs font-semibold px-3 py-1.5 bg-white/5 hover:bg-white/10 text-white/50 hover:text-white rounded-xl transition-all cursor-pointer"
+                      >
+                        Close Recipe
+                      </button>
+                      <div className="flex items-center gap-2 text-emerald-400 mb-4">
+                        <Sparkles className="w-5 h-5" />
+                        <h3 className="text-xl font-bold text-white">{gt('customRecipeResult')}</h3>
+                      </div>
+
+                      <div className="prose prose-invert max-w-none text-white/90 leading-relaxed font-sans text-left bg-black/20 p-6 sm:p-8 rounded-2xl border border-white/5">
+                        <Markdown
+                          components={{
+                            h1: ({ children }) => <h1 className="text-2xl md:text-3xl font-black text-white mt-4 mb-4 flex items-center gap-2 border-b border-white/10 pb-2 tracking-tight">{children}</h1>,
+                            h2: ({ children }) => <h2 className="text-xl md:text-2xl font-black text-indigo-300 mt-6 mb-3 tracking-tight">{children}</h2>,
+                            h3: ({ children }) => <h3 className="text-lg md:text-xl font-black text-emerald-400 mt-5 mb-2 tracking-tight">{children}</h3>,
+                            p: ({ children }) => <p className="mb-4 text-white/80 leading-relaxed text-sm sm:text-base">{children}</p>,
+                            ul: ({ children }) => <ul className="list-disc pl-6 mb-5 space-y-2">{children}</ul>,
+                            ol: ({ children }) => <ol className="list-decimal pl-6 mb-5 space-y-2">{children}</ol>,
+                            li: ({ children }) => <li className="text-sm sm:text-base text-white/75 leading-relaxed">{children}</li>,
+                            strong: ({ children }) => <strong className="font-extrabold text-white">{children}</strong>,
+                            em: ({ children }) => <em className="italic text-white/60">{children}</em>,
+                          }}
+                        >
+                          {aiRecipe}
+                        </Markdown>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              <div className="flex justify-start">
+                <button
+                  type="button"
+                  onClick={() => openNutriChefPage('landing')}
+                  className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-white/5 hover:bg-white/10 text-white font-bold text-xs uppercase tracking-wider border border-white/15 transition-all cursor-pointer"
+                >
+                  <ArrowLeft className="w-4 h-4 text-emerald-400" />
+                  <span>Back to AI NutriChef</span>
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* =========================================================
+              DEDICATED PAGE 2: NUTRITIOUS RECIPES (sub=recipes)
+          ========================================================== */}
+          {activeNutriChefPage === 'recipes' && (
+            <div id="nutritious-recipes-section" className="mb-12 scroll-mt-24 space-y-6">
+              {/* Compact Age Bracket Filter Bar for Recipes */}
+              <div className="glass-card p-4 sm:p-5 border border-white/10 rounded-3xl bg-[#0c1424]/90 shadow-lg space-y-3">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <span className="text-xs font-black uppercase tracking-wider text-amber-300 flex items-center gap-2">
+                    <Baby className="w-4 h-4 text-amber-400" />
+                    <span>Filter Recipes by Age Stage:</span>
+                  </span>
+                  <span className="text-[11px] text-emerald-300 font-semibold">
+                    Personalized for {childName || 'Child'} ({profileAge} • {indianState})
                   </span>
                 </div>
-                <p className="text-xs text-white/60 mt-0.5 leading-relaxed">
-                  {gt('aiCustomizerDesc')}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Child Profile & General Selector (Scoped to AI Recipe Maker) */}
-          <div className="flex justify-center mb-6 max-w-4xl mx-auto">
-            <ChildProfileSelector
-              selectedChildId={pageChildId}
-              onSelectChild={(id) => {
-                setPageChildId(id);
-                if (id === 'general') {
-                  setCustomAgeYears('All Ages');
-                } else if (id === 2) {
-                  setCustomAgeYears('0.3');
-                } else {
-                  setCustomAgeYears('2.5');
-                }
-              }}
-              sectionContextName="AI Recipe Maker"
-              allowGeneral={true}
-            />
-          </div>
-
-          {/* Generator Inputs */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
-            <div>
-              <label className="block text-xs font-bold text-white/70 uppercase tracking-wider mb-1.5 flex items-center justify-between">
-                <span>{gt('childAgeLabel')}</span>
-                <span className="text-[10px] font-mono text-emerald-400 font-semibold">Age in years</span>
-              </label>
-              <input
-                type="text"
-                value={customAgeYears}
-                onChange={(e) => setCustomAgeYears(e.target.value)}
-                placeholder="Age in years (e.g. 2.5)"
-                className="w-full bg-white/5 border border-white/10 rounded-2xl px-4 py-3 text-white focus:outline-none focus:border-emerald-400 font-bold text-sm placeholder:text-white/30"
-              />
-              <p className="text-[11px] text-white/50 mt-1.5 font-medium">
-                Age in years (e.g. 0.5 for 6 months, 1.5 for 18 months, or 2.5).
-              </p>
-            </div>
-
-            <div>
-              <div className="flex items-center justify-between gap-2 mb-1.5">
-                <label className="block text-xs font-bold text-white/70 uppercase tracking-wider">
-                  {gt('ingredientsLabel')}
-                </label>
-                <VoiceDictationButton
-                  language={language}
-                  label="Speak Ingredients"
-                  compact={false}
-                  onTranscript={(spoken) =>
-                    setCustomIngredients((prev) => (prev ? `${prev}, ${spoken}` : spoken))
-                  }
-                />
-              </div>
-              <textarea
-                rows={2}
-                placeholder="e.g., banana, rolled oats, carrot (Press Enter for line break or tap Speak Ingredients)"
-                value={customIngredients}
-                onChange={(e) => setCustomIngredients(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    e.stopPropagation();
-                  }
-                }}
-                className="w-full bg-white/5 border border-white/10 rounded-2xl px-4 py-3 text-white focus:outline-none focus:border-emerald-400 text-sm placeholder:text-white/30 resize-y min-h-[50px] leading-relaxed"
-              />
-            </div>
-          </div>
-
-          {/* Apply Dietary Preferences Option & Note */}
-          <div className="mb-6 p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-emerald-200">
-            <div className="flex items-start gap-3">
-              <Apple className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-              <div>
-                <label className="flex items-center gap-2 cursor-pointer select-none">
-                  <input
-                    type="checkbox"
-                    checked={applyDietaryPreferences}
-                    onChange={(e) => {
-                      playSound('pop');
-                      setApplyDietaryPreferences(e.target.checked);
-                    }}
-                    className="w-4 h-4 rounded text-emerald-500 bg-white/10 border-white/20 focus:ring-emerald-400 focus:ring-offset-0 cursor-pointer accent-emerald-400"
-                  />
-                  <span className="font-bold text-white text-sm">Apply Dietary Preferences</span>
-                </label>
-                <p className="text-[11px] text-white/70 mt-1">
-                  The AI automatically applies your baby's dietary preferences and restrictions configured in your health settings.
-                </p>
-              </div>
-            </div>
-            <span className={`px-2.5 py-1 rounded-full text-[10px] font-mono font-bold self-start sm:self-center shrink-0 border ${
-              applyDietaryPreferences
-                ? 'bg-emerald-500/20 text-emerald-300 border-emerald-400/30'
-                : 'bg-white/5 text-white/50 border-white/10'
-            }`}>
-              {applyDietaryPreferences ? 'Profile Diet Enabled' : 'Home Ingredients Mode'}
-            </span>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-3">
-            <button
-              onClick={handleGenerateAiRecipe}
-              disabled={aiLoading || !customIngredients.trim()}
-              className="w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-emerald-400 to-teal-400 hover:from-emerald-300 hover:to-teal-300 disabled:opacity-50 text-slate-950 font-black text-sm uppercase tracking-wider rounded-2xl transition-all shadow-xl shadow-emerald-500/20 active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
-            >
-              {aiLoading ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
-              ) : (
-                <Sparkles className="w-4 h-4" />
-              )}
-              <span>Generate 3-Meal Recipes with AI</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => {
-                playSound('pop');
-                navigate('/ai-recipe-history');
-              }}
-              className="w-full sm:w-auto px-6 py-3.5 bg-white/5 hover:bg-white/10 text-white font-bold text-sm rounded-2xl border border-white/10 transition-all flex items-center justify-center gap-2 cursor-pointer"
-            >
-              <History className="w-4 h-4 text-indigo-400" />
-              <span>AI Recipe History</span>
-            </button>
-          </div>
-
-          {/* Generated Recipe Display Area */}
-          <AnimatePresence>
-            {aiRecipe && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                className="mt-8 pt-8 border-t border-white/10 relative"
-              >
-                <button
-                  onClick={() => { playSound('pop'); setAiRecipe(''); }}
-                  className="absolute top-8 right-0 text-xs font-semibold px-3 py-1.5 bg-white/5 hover:bg-white/10 text-white/50 hover:text-white rounded-xl transition-all cursor-pointer"
-                >
-                  Close Recipe
-                </button>
-                <div className="flex items-center gap-2 text-emerald-400 mb-4">
-                  <Sparkles className="w-5 h-5" />
-                  <h3 className="text-xl font-bold text-white">{gt('customRecipeResult')}</h3>
-                </div>
-
-                <div className="prose prose-invert max-w-none text-white/90 leading-relaxed font-sans text-left bg-black/20 p-6 sm:p-8 rounded-2xl border border-white/5">
-                  <Markdown
-                    components={{
-                      h1: ({ children }) => <h1 className="text-2xl md:text-3xl font-black text-white mt-4 mb-4 flex items-center gap-2 border-b border-white/10 pb-2 tracking-tight">{children}</h1>,
-                      h2: ({ children }) => <h2 className="text-xl md:text-2xl font-black text-indigo-300 mt-6 mb-3 tracking-tight">{children}</h2>,
-                      h3: ({ children }) => <h3 className="text-lg md:text-xl font-black text-emerald-400 mt-5 mb-2 tracking-tight">{children}</h3>,
-                      p: ({ children }) => <p className="mb-4 text-white/80 leading-relaxed text-sm sm:text-base">{children}</p>,
-                      ul: ({ children }) => <ul className="list-disc pl-6 mb-5 space-y-2">{children}</ul>,
-                      ol: ({ children }) => <ol className="list-decimal pl-6 mb-5 space-y-2">{children}</ol>,
-                      li: ({ children }) => <li className="text-sm sm:text-base text-white/75 leading-relaxed">{children}</li>,
-                      strong: ({ children }) => <strong className="font-extrabold text-white">{children}</strong>,
-                      em: ({ children }) => <em className="italic text-white/60">{children}</em>,
-                    }}
+                <div className="flex flex-wrap items-center gap-1.5">
+                  <button
+                    type="button"
+                    onClick={() => handleStageChange('all')}
+                    className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer border ${
+                      activeStage === 'all'
+                        ? 'bg-indigo-500 text-white border-indigo-300 shadow-md'
+                        : 'bg-white/5 hover:bg-white/10 text-white/70 hover:text-white border-white/10'
+                    }`}
                   >
-                    {aiRecipe}
-                  </Markdown>
+                    All Stages ({allRecipesFlat.length})
+                  </button>
+                  {ageStages.map((stage) => {
+                    const isActive = activeStage === stage.id;
+                    const isChildStage = stage.id === childStageId;
+                    return (
+                      <button
+                        key={stage.id}
+                        type="button"
+                        onClick={() => handleStageChange(stage.id)}
+                        className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer border ${
+                          isActive
+                            ? isChildStage
+                              ? 'bg-emerald-500 text-slate-950 border-emerald-300 font-black shadow-md'
+                              : 'bg-indigo-500 text-white border-indigo-300 shadow-md'
+                            : isChildStage
+                            ? 'bg-emerald-500/15 text-emerald-300 border-emerald-400/40 hover:bg-emerald-500/25'
+                            : 'bg-white/5 hover:bg-white/10 text-white/70 hover:text-white border-white/10'
+                        }`}
+                      >
+                        {stage.ageLimit} ({stage.recipes.length})
+                      </button>
+                    );
+                  })}
                 </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-      </div>
+              </div>
 
+              <div className="space-y-6">
+                {/* Header & Search */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div className="space-y-1">
+                    <h3 className="text-xl sm:text-2xl font-black text-white flex items-center gap-2.5">
+                      <ChefHat className="w-6 h-6 text-indigo-400" />
+                      <span>{gt('recipesHeader')}</span>
+                    </h3>
+                    <p className="text-xs text-emerald-300 font-semibold flex items-center gap-1.5">
+                      <Sparkles className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                      <span>Personalized for {childName || 'Child'} based on both age ({profileAge}) &amp; {indianState} cuisine</span>
+                    </p>
+                  </div>
 
-
-            {/* =========================================================
-          4. NUTRITIOUS RECIPES TO CHOOSE (With Meal Category Filter)
-      ========================================================== */}
-      <div id="nutritious-recipes-section" className="mb-12 scroll-mt-24">
-        <div className="space-y-6">
-          {/* Header & Search */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div className="space-y-1">
-              <h3 className="text-xl sm:text-2xl font-black text-white flex items-center gap-2.5">
-                <ChefHat className="w-6 h-6 text-indigo-400" />
-                <span>{gt('recipesHeader')}</span>
-
-              </h3>
-              <p className="text-xs text-emerald-300 font-semibold flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                <span>Personalized for {childName || 'Child'} based on both age ({profileAge}) & {indianState} cuisine</span>
-              </p>
-            </div>
-
-            {/* Search bar */}
-            <div className="relative w-full sm:max-w-xs">
-              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
-              <input
-                type="text"
-                placeholder={gt('searchPlaceholder')}
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-white/5 border border-white/10 rounded-2xl pl-10 pr-4 py-2.5 text-xs text-white placeholder-white/30 focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400/30 transition-all font-medium"
-              />
-              {searchQuery && (
-                <button
-                  onClick={() => setSearchQuery('')}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-white/40 hover:text-white"
-                >
-                  Clear
-                </button>
-              )}
-            </div>
-          </div>
+                  {/* Search bar */}
+                  <div className="relative w-full sm:max-w-xs">
+                    <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
+                    <input
+                      type="text"
+                      placeholder={gt('searchPlaceholder')}
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="w-full bg-white/5 border border-white/10 rounded-2xl pl-10 pr-4 py-2.5 text-xs text-white placeholder-white/30 focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400/30 transition-all font-medium"
+                    />
+                    {searchQuery && (
+                      <button
+                        onClick={() => setSearchQuery('')}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-white/40 hover:text-white"
+                      >
+                        Clear
+                      </button>
+                    )}
+                  </div>
+                </div>
 
           {/* Meal Category Filter Bar: Morning, Lunch, Dinner, Snacks */}
           <div className="flex flex-wrap items-center gap-2 pb-1">
@@ -1674,12 +2238,26 @@ Each object must have these exact keys:
               </div>
             )}
           </div>
+
+          <div className="flex justify-start pt-4">
+            <button
+              type="button"
+              onClick={() => openNutriChefPage('landing')}
+              className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-white/5 hover:bg-white/10 text-white font-bold text-xs uppercase tracking-wider border border-white/15 transition-all cursor-pointer"
+            >
+              <ArrowLeft className="w-4 h-4 text-emerald-400" />
+              <span>Back to AI NutriChef</span>
+            </button>
+          </div>
         </div>
       </div>
+          )}
 
-      {/* =========================================================
-          5. SELECT STAGE GUIDELINES (With All Button & Child Auto-Select)
-      ========================================================== */}
+          {/* =========================================================
+              DEDICATED PAGE 4: STAGE GUIDELINES (sub=guidelines)
+          ========================================================== */}
+          {activeNutriChefPage === 'guidelines' && (
+            <>
       <div id="select-stage-guidelines-section" className="mb-8 scroll-mt-24">
         <span id="select-age-section" className="sr-only" />
         <div className="glass-card p-5 sm:p-6 border border-white/10 rounded-3xl bg-[#0c1424]/90 shadow-xl">
@@ -2101,8 +2679,31 @@ Each object must have these exact keys:
               </div>
             </div>
           )}
+
+          <div className="mt-8 pt-6 border-t border-white/10 flex flex-wrap items-center justify-between gap-3">
+            <button
+              type="button"
+              onClick={() => openNutriChefPage('landing')}
+              className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-white/5 hover:bg-white/10 text-white font-bold text-xs uppercase tracking-wider border border-white/15 transition-all cursor-pointer"
+            >
+              <ArrowLeft className="w-4 h-4 text-emerald-400" />
+              <span>Back to AI NutriChef</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => openNutriChefPage('recipes')}
+              className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-gradient-to-r from-amber-400 to-yellow-400 hover:from-amber-300 hover:to-yellow-300 text-slate-950 font-black text-xs uppercase tracking-wider shadow-lg transition-all cursor-pointer"
+            >
+              <UtensilsCrossed className="w-4 h-4" />
+              <span>Explore Nutritious Recipes for This Stage</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          </div>
         </div>
       </div>
+            </>
+          )}
 
       {/* =========================================================
           7. FOOD LENS AI SCANNER

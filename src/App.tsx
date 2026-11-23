@@ -379,6 +379,23 @@ const ScrollToTop: React.FC = () => {
 };
 
 export default function App() {
+  if (
+    typeof window !== 'undefined' &&
+    window.location.hostname.toLowerCase() ===
+      'ais-pre-l45mxxgh4lq2v2k6cbni3q-26432502266.asia-southeast1.run.app'
+  ) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#060a16] text-white p-6 text-center">
+        <div className="max-w-md w-full rounded-3xl bg-[#0f172a] border border-white/15 p-8 shadow-2xl space-y-3">
+          <h1 className="text-xl font-black text-white">This Preview Link is Inactive</h1>
+          <p className="text-sm text-slate-400 leading-relaxed">
+            This temporary development link has been deactivated by the administrator and is no longer accessible.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <AuthProvider>
       <LanguageProvider>
@@ -393,3 +410,4 @@ export default function App() {
     </AuthProvider>
   );
 }
+

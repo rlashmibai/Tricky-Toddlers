@@ -34,7 +34,7 @@ export const LoginForm: React.FC = () => {
       setSessionActive(true);
       trackSiteAnalyticsEvent({
         accountType: 'Guest Account',
-        entryPoint: 'Sign-In Page (Instant Guest Access)',
+        entryPoint: 'Sign-In Page (Free Guest Access)',
         personaName: 'Parent',
         childProfile: 'Child 1 (2 Years 6 Months)',
         activeTab: 'ai',
@@ -55,16 +55,16 @@ export const LoginForm: React.FC = () => {
     setError(null);
     const cleanUsername = username.toLowerCase().trim();
     try {
-      // Check if signing into the private Admin Analytics account
-      if (cleanUsername === 'admin') {
+      // Check if signing into the private Admin Analytics account via standard Sign-In form
+      if (cleanUsername === 'admin' || cleanUsername === 'rlashmi086@gmail.com' || cleanUsername === 'rlashmi086') {
         const adminResp = await fetch('/api/admin/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ username: cleanUsername, password }),
+          body: JSON.stringify({ username: 'admin', password }),
         });
         const adminData = await adminResp.json();
         if (!adminResp.ok) {
-          setError(adminData.error || 'Invalid admin username or password.');
+          setError(adminData.error || 'Invalid username or password.');
           setLoading(false);
           return;
         }
@@ -78,9 +78,12 @@ export const LoginForm: React.FC = () => {
             throw fbErr;
           }
         }
+        localStorage.removeItem('user_logged_out');
+        localStorage.setItem('tt_auth_mode', 'account');
+        setSessionActive(true);
         window.dispatchEvent(new CustomEvent('tt-admin-token', { detail: { token: adminData.token, username: adminData.username } }));
-        triggerToast('Signed into Private Admin Analytics Dashboard.', 'success', 'Admin Verified');
-        navigate('/admin', { state: { adminToken: adminData.token, adminUsername: adminData.username } });
+        triggerToast('Signed into Admin Analytics Portal.', 'success', 'Admin Verified');
+        navigate('/admin', { state: { adminToken: adminData.token, adminUsername: adminData.username }, replace: true });
         return;
       }
 
@@ -103,8 +106,8 @@ export const LoginForm: React.FC = () => {
         childProfile: localStorage.getItem('baby_name') || 'Child 1',
         activeTab: 'ai',
       });
-      if (cred.user.email === 'rlashmi086@gmail.com') {
-        navigate('/admin');
+      if (cred.user.email === 'rlashmi086@gmail.com' || cred.user.email === 'admin@securepass.internal') {
+        navigate('/admin', { replace: true });
       } else {
         navigate('/?tab=ai');
         window.dispatchEvent(new CustomEvent('nav-tab-refresh', { detail: { tab: 'ai' } }));
@@ -141,7 +144,7 @@ export const LoginForm: React.FC = () => {
       } else if (err.code === 'auth/invalid-email') {
         setResetError("Please enter a valid email address.");
       } else {
-        setResetError(err.message || "Unable to send reset link. Please verify your email or use Instant Guest Access (No login required).");
+        setResetError(err.message || "Unable to send reset link. Please verify your email or use Free Guest Access (No login required).");
       }
     } finally {
       setResetLoading(false);
@@ -177,12 +180,12 @@ export const LoginForm: React.FC = () => {
                 <Sparkles className="w-5 h-5 text-amber-400 group-hover:rotate-12 transition-transform shrink-0" />
               )}
               <div className="flex flex-col items-center leading-tight">
-                <span className="text-base font-bold text-white">Instant Guest Access</span>
-                <span className="text-[11px] font-semibold text-amber-300/90 tracking-wide mt-0.5">No login required</span>
+                <span className="text-base font-bold text-white">Free Guest Access</span>
+                <span className="text-[11px] font-semibold text-amber-300/90 tracking-wide mt-0.5">Free access to explore all features · No login required</span>
               </div>
             </button>
             <p className="text-[11px] text-white/40 text-center mt-1.5 font-medium">
-              ✨ Anyone can view and use the app instantly without signing in
+              ✨ Free access if you want to explore all the features immediately without signing in
             </p>
           </div>
 
@@ -258,22 +261,11 @@ export const LoginForm: React.FC = () => {
             </button>
           </form>
 
-          <footer className="mt-5 text-center text-xs text-white/40 space-y-2.5">
-            <div>
-              Don't have an account?{' '}
-              <Link to="/register" className="text-indigo-400 hover:text-indigo-300 font-medium transition-colors">
-                Join the community
-              </Link>
-            </div>
-            <div className="pt-2 border-t border-white/5 flex justify-center">
-              <Link
-                to="/admin"
-                className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-slate-400 hover:text-emerald-300 transition-colors"
-              >
-                <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-                <span>Founder / Admin Analytics Portal</span>
-              </Link>
-            </div>
+          <footer className="mt-5 text-center text-xs text-white/40">
+            Don't have an account?{' '}
+            <Link to="/register" className="text-indigo-400 hover:text-indigo-300 font-medium transition-colors">
+              Join the community
+            </Link>
           </footer>
         </div>
       </motion.div>

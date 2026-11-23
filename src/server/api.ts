@@ -1004,14 +1004,19 @@ Session Turn Type: ${isFollowUp ? 'FOLLOW-UP TURN IN ONGOING CONVERSATION (Do NO
   * Put a blank line between each bullet point (\`* \`) or numbered step (\`1. \`) so that sections and points never run together into dense blocks of text.
 - **STRICT PROHIBITION**: NEVER reuse the exact generic heading "Practical Steps for [Parent]" or "Understanding What [Child] Needs" in every answer. Headings MUST be rich, diverse, and contextual with relevant emojis.
 
-### 5. EXPLAINABILITY & REFERENCE LINKS AT THE END OF THE POST (STRICT REQUIREMENT)
+### 5. REAL-TIME GOOGLE SEARCH GROUNDING, SMART TOPIC ROUTING & EXPLAINABILITY LINKS (STRICT REQUIREMENT)
+- You are connected to real-time **Google Search Grounding** (\`googleSearch\`). Always use top-ranked, high-authority Google Search results and never invent ad-hoc or unverified claims:
+  * **For Recipes, Meal Ideas, Tiffins, Snacks, Cooking, Play & Rhymes**:
+    - Draw variety from **top-ranked, trusted Indian & global cooking blogs, culinary websites, and popular YouTube recipe/parenting channels**.
+    - **Mandatory Pediatric Safety Filter on Every Recipe**: Automatically adapt any blog or YouTube recipe to ${cName}'s exact age (${age}) and dietary settings—enforcing age-safe texture (smooth puree/mash for infants under 12m; soft gum-pinchable finger foods for toddlers) and stripping unsafe ingredients (strictly NO honey under 12 months, NO whole choking-hazard nuts, NO raw chilies, low sodium, and zero refined sugar).
+  * **For Medical Symptoms, Vaccines, Fever, Milestones, Sleep & Clinical Care**:
+    - Strictly ground facts in **top-ranked pediatric authorities, accredited hospital networks, and official clinical guidelines** (Indian Academy of Pediatrics [IAP], ICMR-NIN, FSSAI, WHO, UNICEF, AAP, Mayo Clinic, Cloudnine, Apollo).
+    - If a specific clinical claim cannot be verified from official pediatric sources, clearly state that and advise consulting their pediatrician rather than guessing.
+  * **Strict Rumor & Forum Blacklist**:
+    - NEVER use, trust, or cite unverified anonymous comment forums (such as Reddit, Quora, 4chan, anonymous message boards, or commercial spam sites).
 - At the end of your main guidance (immediately BEFORE ---CLARIFICATION_OPTIONS--- or ---RELATED_QUESTIONS---), you MUST include a section titled:
   ### 🔗 Explainability & Reference Links
-- Inside this section, provide **1 or 2 clickable Markdown links** (\`[Source Title](URL)\`) related to the answer from trusted Indian pediatric and nutrition authorities, such as:
-  * \`[Indian Academy of Pediatrics (IAP) Parental Guidelines](https://iapindia.org/parental-guidelines/)\`
-  * \`[ICMR-National Institute of Nutrition (NIN)](https://www.nin.res.in)\`
-  * \`[FSSAI Eat Right India & Child Nutrition Standards](https://fssai.gov.in)\`
-- Include a brief 1-sentence explanation next to each link describing how that clinical source explains or supports the answer.
+- Inside this section, provide **1 to 3 clickable Markdown links** (\`[Source Title](URL)\`) from the top-ranked sources used to ground the answer (e.g., official IAP/ICMR/FSSAI/WHO pages for health & nutrition topics, or top-ranked trusted cooking blogs / YouTube recipe links for recipe & activity requests), along with a 1-sentence note on how each source supports the guidance.
 
 ### 6. CONVERSATIONAL CONTINUITY & MULTI-TURN MEMORY
 - You will receive previous messages in the conversation. Use earlier turns to understand context.
@@ -1037,6 +1042,40 @@ Session Turn Type: ${isFollowUp ? 'FOLLOW-UP TURN IN ONGOING CONVERSATION (Do NO
 ${greetingInstruction}
 - Mention ${cName} naturally where relevant. Do not robotically repeat ${cName}'s name in every single sentence.
 - Plain language: translate complex medical jargon into intuitive words (e.g., explain "sensory overload" in simple daily terms).`;
+}
+
+// Blacklist of unverified forums, rumor boards, and spam domains excluded from search grounding citations
+const BLACKLISTED_FORUM_DOMAINS = [
+  "reddit.com",
+  "quora.com",
+  "4chan.org",
+  "8kun.top",
+  "tumblr.com",
+  "answers.yahoo.com",
+  "ask.fm",
+  "blogspot.spam",
+];
+
+function filterTrustedGroundingChunks(chunks?: any[]): Array<{ title: string; uri: string }> {
+  if (!Array.isArray(chunks)) return [];
+  const seenUris = new Set<string>();
+  const trusted: Array<{ title: string; uri: string }> = [];
+
+  for (const chunk of chunks) {
+    const uri = String(chunk?.web?.uri || "").trim();
+    const title = String(chunk?.web?.title || "Verified Google Search Source").trim();
+    if (!uri || !uri.startsWith("http")) continue;
+
+    const lowerUri = uri.toLowerCase();
+    if (BLACKLISTED_FORUM_DOMAINS.some((domain) => lowerUri.includes(domain))) {
+      continue;
+    }
+    if (seenUris.has(uri)) continue;
+    seenUris.add(uri);
+    trusted.push({ title, uri });
+    if (trusted.length >= 3) break;
+  }
+  return trusted;
 }
 
 // In-memory fast cache for repeated pediatric responses
@@ -1549,10 +1588,14 @@ ${languagePromptModifier ? `\n\nREMINDER: Entire response must be in the request
         try {
           const isGemini4 = modelName.startsWith("gemini-4");
           const modelConfig: any = isGemini4
-            ? { systemInstruction }
+            ? {
+                systemInstruction,
+                tools: [{ googleSearch: {} }],
+              }
             : {
                 systemInstruction,
-                temperature: 0.65,
+                tools: [{ googleSearch: {} }],
+                temperature: 0.5,
                 maxOutputTokens: 1050,
               };
 
@@ -1562,10 +1605,15 @@ ${languagePromptModifier ? `\n\nREMINDER: Entire response must be in the request
             config: modelConfig
           });
 
-          // Wait up to 6.5s for initial stream response from high-speed flash-lite model
+          // Wait up to 6.5s for initial stream response from high-speed grounded model
           const responseStream = await withTimeout(streamPromise, 6500);
+          const collectedGroundingChunks: any[] = [];
 
           for await (const chunk of readStreamWithTimeout(responseStream, 3500)) {
+            const gChunks = (chunk as any)?.candidates?.[0]?.groundingMetadata?.groundingChunks;
+            if (Array.isArray(gChunks) && gChunks.length > 0) {
+              collectedGroundingChunks.push(...gChunks);
+            }
             if (chunk?.text) {
               const cleanedText = sanitizeAIOutput(chunk.text, parentName);
               if (cleanedText) {
@@ -1580,6 +1628,21 @@ ${languagePromptModifier ? `\n\nREMINDER: Entire response must be in the request
           }
 
           if (streamedAny) {
+            // If Google Search returned live high-ranked web sources that weren't already formatted in the text,
+            // append them cleanly before any trailing delimiter or at the end
+            const trustedSources = filterTrustedGroundingChunks(collectedGroundingChunks);
+            if (
+              trustedSources.length > 0 &&
+              !accumulatedOutput.includes("Explainability & Reference Links")
+            ) {
+              const sourceBlock =
+                "\n\n### 🔗 Explainability & Reference Links\n" +
+                trustedSources.map((s) => `* [${s.title}](${s.uri})`).join("\n") +
+                "\n";
+              accumulatedOutput += sourceBlock;
+              res.write(sourceBlock);
+            }
+
             modelSucceeded = true;
             if (accumulatedOutput.length > 50 && !isFollowUp) {
               if (aiAssistantServerCache.size > 250) {
@@ -1630,33 +1693,55 @@ ${languagePromptModifier ? `\n\nREMINDER: Entire response must be in the request
 
   // Dedicated Recipe Generation endpoint (for FoodGuide)
   router.post("/generate-recipes", async (req, res) => {
-    const { childAgeYears, ingredients, defaultRecipes } = req.body;
+    const {
+      childAgeYears,
+      ingredients,
+      mealType,
+      cookingTime,
+      dietaryNeeds,
+      servings,
+      equipment,
+      defaultRecipes,
+    } = req.body;
     const defaultBatchRecipes = Array.isArray(defaultRecipes) ? defaultRecipes : [];
+    const targetMealType = mealType || "Breakfast";
+    const targetCookTime = cookingTime || "15–30 mins";
+    const targetDietary =
+      Array.isArray(dietaryNeeds) && dietaryNeeds.length > 0
+        ? dietaryNeeds.join(", ")
+        : typeof dietaryNeeds === "string" && dietaryNeeds.trim()
+        ? dietaryNeeds
+        : "No specific restriction";
+    const targetServings = servings || "2 Servings";
+    const targetEquipment = equipment || "Stovetop / One-Pan";
 
     const promptText = `
-You are an expert pediatric nutritionist and master chef specializing in toddler solid foods.
-Construct a healthy, developmentally safe, and culturally authentic 3-recipe meal plan tailored to child age: ${childAgeYears || '1.5'} years.
-Pantry Ingredients or Preferences provided by parent: "${ingredients || 'Moong dal, oats, banana, spinach'}".
+You are an expert pediatric nutritionist and master chef specializing in child and family meals.
+Construct 3 healthy, developmentally safe, and delicious recipes tailored to:
+- Target Child / Family Age Group: ${childAgeYears || 'All Ages'}
+- Core Kitchen Ingredients: "${ingredients || 'Moong dal, oats, banana, spinach'}"
+- Meal Type Requested: "${targetMealType}"
+- Cooking Time Limit: "${targetCookTime}"
+- Dietary Preferences & Goals: "${targetDietary}"
+- Number of Servings: "${targetServings}"
+- Kitchen Equipment to Use: "${targetEquipment}"
 
 Guidelines:
-1. Every recipe must pass the toddler gum-pinch / palmar grasp safety test.
-2. Seasoning must be gentle (low sodium, no refined sugar, pure A2 ghee or cold-pressed oil, mild pediatric spices).
-3. Generate exactly 3 recipes:
-   - Recipe 1: Breakfast (Soft Porridge, Idli, Steamed Mash, or Warm Cereal)
-   - Recipe 2: Lunch (Wholesome Comfort Khichdi, Dal, or Savory Mash)
-   - Recipe 3: Snack (Soft Finger Food, Pancake, or Tender Cheela)
+1. Every recipe MUST match the requested Meal Type ("${targetMealType}"), respect the Cooking Time ("${targetCookTime}"), use the specified Kitchen Equipment ("${targetEquipment}"), scale ingredient quantities for "${targetServings}", and strictly follow Dietary Preferences ("${targetDietary}").
+2. Seasoning must be wholesome and age-appropriate.
+3. Generate exactly 3 distinct recipe variations for "${targetMealType}".
 4. Output ONLY a valid JSON array of exactly 3 objects (no conversational preamble, no markdown code fence).
 Each object must have these exact keys:
 - "id": string (unique)
-- "name": string (engaging kid-friendly dish name)
-- "mealType": string ("Breakfast" | "Lunch" | "Snack")
+- "name": string (engaging dish name)
+- "mealType": string ("${targetMealType}")
 - "prepTime": string (e.g. "5 mins")
-- "cookTime": string (e.g. "10 mins")
-- "textureGuide": string (exact developmental texture suitable for ${childAgeYears || '1.5'} yr old)
-- "ingredients": array of strings (with precise child proportions)
-- "instructions": array of step-by-step strings
-- "nutritionBenefits": string (vitamins, minerals, growth benefits)
-- "safetyAlerts": string (temperature, choking prevention, allergen advice)
+- "cookTime": string (fitting within "${targetCookTime}")
+- "textureGuide": string (texture, serving size for ${targetServings}, and ${targetEquipment} cooking note)
+- "ingredients": array of strings (scaled for ${targetServings})
+- "instructions": array of step-by-step strings using ${targetEquipment}
+- "nutritionBenefits": string (vitamins, minerals, and "${targetDietary}" nutritional benefits)
+- "safetyAlerts": string (temperature, choking prevention, and allergen advice)
 `;
 
     try {
@@ -1665,7 +1750,7 @@ Each object must have these exact keys:
         return res.json({ recipes: defaultBatchRecipes });
       }
 
-      const candidateModels = ["gemini-3.1-flash-lite", "gemini-flash-latest", "gemini-3.8-flash"];
+      const candidateModels = ["gemini-4-hydrogen", "gemini-3.1-flash-lite", "gemini-flash-latest", "gemini-3.8-flash"];
       let resultText = "";
       for (const model of candidateModels) {
         try {
@@ -1674,11 +1759,11 @@ Each object must have these exact keys:
               model,
               contents: promptText,
               config: {
-                systemInstruction: "You are an expert pediatric nutritionist and master chef specializing in toddler solid foods. Return only a valid JSON array of 3 distinct recipes.",
-                responseMimeType: "application/json"
+                systemInstruction: "You are an expert pediatric nutritionist and master chef. Ground your recipes in trusted Indian and global culinary guidelines and IAP/ICMR-NIN pediatric nutrition standards while strictly enforcing the user's selected meal type, cooking time, dietary preferences, servings, and kitchen equipment. Return only a valid JSON array of 3 distinct recipes.",
+                tools: [{ googleSearch: {} }],
               }
             }),
-            5000
+            5500
           );
           if (result.text) {
             resultText = result.text;
@@ -1691,19 +1776,22 @@ Each object must have these exact keys:
 
       if (resultText) {
         const cleanedText = resultText.replace(/```json/g, '').replace(/```/g, '').trim();
-        const parsed = JSON.parse(cleanedText);
+        const jsonStart = cleanedText.indexOf('[');
+        const jsonEnd = cleanedText.lastIndexOf(']');
+        const sliceText = (jsonStart !== -1 && jsonEnd !== -1) ? cleanedText.slice(jsonStart, jsonEnd + 1) : cleanedText;
+        const parsed = JSON.parse(sliceText);
         if (Array.isArray(parsed) && parsed.length >= 2) {
           const formatted = parsed.map((item: any, idx: number) => ({
             id: item.id || `rec-${Date.now()}-${idx}`,
-            name: item.name || `Nutritious Meal ${idx + 1}`,
-            mealType: item.mealType || (idx === 0 ? 'Breakfast' : idx === 1 ? 'Lunch' : 'Snack'),
-            prepTime: item.prepTime || '10 mins',
-            cookTime: item.cookTime || '12 mins',
-            textureGuide: item.textureGuide || `Safe texture for ${childAgeYears || '1.5'} yr old`,
+            name: item.name || `${targetMealType} Recipe ${idx + 1}`,
+            mealType: item.mealType || targetMealType,
+            prepTime: item.prepTime || '5 mins',
+            cookTime: item.cookTime || '15 mins',
+            textureGuide: item.textureGuide || `Prepared with ${targetEquipment} for ${targetServings}`,
             ingredients: Array.isArray(item.ingredients) ? item.ingredients : [String(item.ingredients)],
             instructions: Array.isArray(item.instructions) ? item.instructions : [String(item.instructions)],
-            nutritionBenefits: item.nutritionBenefits || 'Rich in essential micronutrients for toddler growth.',
-            safetyAlerts: item.safetyAlerts || 'Check temperature before serving. Supervise toddler while eating.'
+            nutritionBenefits: item.nutritionBenefits || 'Rich in essential micronutrients.',
+            safetyAlerts: item.safetyAlerts || 'Check temperature before serving. Supervise children while eating.'
           }));
           return res.json({ recipes: formatted });
         }
@@ -1744,16 +1832,19 @@ Please construct a comprehensive, positive, and beautiful daily hour-by-hour sch
         });
       }
 
-      const candidateModels = ["gemini-3.1-flash-lite", "gemini-flash-latest", "gemini-3.8-flash"];
+      const candidateModels = ["gemini-4-hydrogen", "gemini-3.1-flash-lite", "gemini-flash-latest", "gemini-3.8-flash"];
       let routineText = "";
       for (const model of candidateModels) {
         try {
           const response = await withTimeout(
             ai.models.generateContent({
               model,
-              contents: promptText
+              contents: promptText,
+              config: {
+                tools: [{ googleSearch: {} }],
+              }
             }),
-            5000
+            5500
           );
           if (response.text) {
             routineText = response.text;
@@ -1811,7 +1902,7 @@ Always include a subtle reminder that for acute illnesses or high persistent fev
         });
       }
 
-      const candidateModels = ["gemini-3.1-flash-lite", "gemini-flash-latest", "gemini-3.8-flash"];
+      const candidateModels = ["gemini-4-hydrogen", "gemini-3.1-flash-lite", "gemini-flash-latest", "gemini-3.8-flash"];
       let replyText = "";
       for (const model of candidateModels) {
         try {
@@ -1820,10 +1911,11 @@ Always include a subtle reminder that for acute illnesses or high persistent fev
               model,
               contents: prompt,
               config: {
-                systemInstruction: `You are ${doc.name} (${doc.degrees}), a verified, friendly, comforting pediatric doctor at ${doc.hospital}, ${doc.location}. You address the parent warmly as ${pName} and their toddler as ${cName}. You explain things simply with compassionate bedside manners and zero jargon.`
+                systemInstruction: `You are ${doc.name} (${doc.degrees}), a verified, friendly, comforting pediatric doctor at ${doc.hospital}, ${doc.location}. Ground all clinical facts in top-ranked pediatric medical authorities (IAP, ICMR, WHO, AAP) and never use unverified forums or guesswork. You address the parent warmly as ${pName} and their toddler as ${cName}.`,
+                tools: [{ googleSearch: {} }],
               }
             }),
-            5000
+            5500
           );
           if (result.text) {
             replyText = result.text;
@@ -1864,7 +1956,7 @@ Always include a subtle reminder that for acute illnesses or high persistent fev
     const pName = parentName || "Parent";
     const cName = childName || "your child";
 
-    const systemInstruction = `You are ${doc.name} (${doc.degrees}), a verified, friendly, comforting pediatric doctor at ${doc.hospital}, ${doc.location} in ${doc.city}. You address the parent warmly as ${pName} and their child as ${cName}. Explain things simply with compassionate bedside manners aligned with Indian Academy of Pediatrics (IAP) guidelines.`;
+    const systemInstruction = `You are ${doc.name} (${doc.degrees}), a verified, friendly, comforting pediatric doctor at ${doc.hospital}, ${doc.location} in ${doc.city}. Ground all clinical facts in top-ranked pediatric medical authorities (IAP, ICMR-NIN, WHO, AAP) and never rely on unverified forums or guesswork. You address the parent warmly as ${pName} and their child as ${cName}. Explain things simply with compassionate bedside manners aligned with Indian Academy of Pediatrics (IAP) guidelines.`;
     const prompt = `The parent, ${pName}, is asking you a clinical/developmental query regarding ${cName}: "${userText || 'General pediatric health question'}".
 Provide a warm, reassuring, highly qualified pediatric response addressed to ${pName}.
 Use clear bullet points if recommending steps or nutritional tips. Keep it concise (under 3 short paragraphs).
@@ -1894,7 +1986,10 @@ Include a brief reminder that for acute illnesses or persistent high fevers, an 
           const streamPromise = ai.models.generateContentStream({
             model: modelName,
             contents: prompt,
-            config: { systemInstruction }
+            config: {
+              systemInstruction,
+              tools: [{ googleSearch: {} }],
+            }
           });
           const responseStream = await withTimeout(streamPromise, 6000);
           for await (const chunk of readStreamWithTimeout(responseStream, 3500)) {

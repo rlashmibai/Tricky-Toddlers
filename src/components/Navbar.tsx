@@ -406,7 +406,7 @@ export const Navbar: React.FC = () => {
       accountType: 'Guest Account',
       entryPoint: wasFromModal
         ? `Feature Popup Modal (${modalFeature || destTab})`
-        : 'Top Navbar (Instant Guest Access)',
+        : 'Top Navbar (Free Guest Access)',
       personaName: 'Parent',
       childProfile: 'Child 1 (2 Years 6 Months)',
       activeTab: destTab,
@@ -726,15 +726,15 @@ export const Navbar: React.FC = () => {
                 </>
               ) : (
                 <>
-                  {/* Instant Guest Access */}
+                  {/* Free Guest Access */}
                   <button
                     type="button"
                     onClick={() => handleQuickGuestClick()}
                     className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 text-xs font-black transition-all shadow-md shadow-emerald-500/20 cursor-pointer"
-                    title="Instant Guest Access"
+                    title="Free Guest Access"
                   >
                     <Sparkles className="w-3.5 h-3.5 text-slate-950 shrink-0" />
-                    <span className="notranslate" translate="no">Instant Guest Access</span>
+                    <span className="notranslate" translate="no">Free Guest Access</span>
                   </button>
 
                   {/* Create Account */}
@@ -1011,7 +1011,7 @@ export const Navbar: React.FC = () => {
 
                 {/* Options Container */}
                 <div className="space-y-4">
-                  {/* Option 1: Instant Guest Demo */}
+                  {/* Option 1: Free Guest Access */}
                   <div
                     onClick={() =>
                       handleQuickGuestClick(
@@ -1040,16 +1040,16 @@ export const Navbar: React.FC = () => {
                           <Sparkles className="w-4 h-4 text-emerald-300" />
                         </div>
                         <span className="text-base sm:text-lg font-black text-emerald-200 group-hover:text-white transition-colors">
-                          1. Instant Guest Demo (All Features Unlocked)
+                          1. Free Guest Access (All Features Unlocked Free)
                         </span>
                       </div>
                       <span className="px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-emerald-400 text-slate-950 whitespace-nowrap shrink-0 shadow-sm">
-                        1-Click Demo
+                        1-Click Free Access
                       </span>
                     </div>
 
                     <p className="text-sm text-slate-200 leading-relaxed">
-                      Explore immediately with our pre-loaded demo family (<strong className="text-white">Parent</strong>) and switch anytime between:
+                      <strong className="text-emerald-300">Free access</strong> if you want to explore all the features immediately with our pre-loaded demo family (<strong className="text-white">Parent</strong>) and switch anytime between:
                     </p>
 
                     <div className="flex flex-wrap items-center gap-2.5">
@@ -1065,7 +1065,7 @@ export const Navbar: React.FC = () => {
 
                     <div className="pt-1">
                       <span className="w-full py-3 px-5 rounded-xl bg-emerald-400 group-hover:bg-emerald-300 text-slate-950 font-black text-sm flex items-center justify-center gap-2 transition-all shadow-md">
-                        <span>Continue with Instant Guest Demo</span>
+                        <span>Continue with Free Guest Access</span>
                         <ArrowRight className="w-4 h-4" />
                       </span>
                     </div>

@@ -1,7 +1,7 @@
 export interface GeneratedRecipe {
   id: string;
   name: string;
-  mealType: 'Breakfast' | 'Lunch' | 'Snack' | 'Dinner';
+  mealType: 'Breakfast' | 'Lunch' | 'Snack' | 'Quick Snack' | 'Dinner' | 'Dessert' | string;
   prepTime: string;
   cookTime: string;
   textureGuide: string;

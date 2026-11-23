@@ -76,7 +76,7 @@ export const HomePage: React.FC<HomePageProps> = ({
     }
     trackSiteAnalyticsEvent({
       accountType: 'Guest Account',
-      entryPoint: 'Landing Page Hero (Instant Guest Access)',
+      entryPoint: 'Landing Page Hero (Free Guest Access)',
       personaName: 'Parent',
       childProfile: 'Child 1 (2 Years 6 Months)',
       activeTab: 'ai',
@@ -1051,9 +1051,9 @@ export const HomePage: React.FC<HomePageProps> = ({
                 'Yes! You can switch the app interface and AI guidance across 12 supported Indian languages, including English, Hindi, Tamil, Telugu, Kannada, Malayalam, Marathi, Gujarati, Bengali, Punjabi, Assamese, and Odia, from the top language selector.'
             },
             {
-              question: 'How does Instant Guest Access work, and is my family’s data private?',
+              question: 'How does Free Guest Access work, and is my family’s data private?',
               answer:
-                'Clicking Instant Guest Access lets you explore all 14 features immediately with a pre-loaded sample profile without signing up. When you create your own account, your child’s logs, photos, and health records are stored privately in your encrypted account and never shared publicly unless you choose to post in Community Help or Parent Connect.'
+                'Clicking Free Guest Access gives you free access to explore all features immediately with a pre-loaded sample profile without signing up. When you create your own account, your child’s logs, photos, and health records are stored privately in your encrypted account and never shared publicly unless you choose to post in Community Help or Parent Connect.'
             },
             {
               question: 'What is the difference between the Free plan and Premium plans?',

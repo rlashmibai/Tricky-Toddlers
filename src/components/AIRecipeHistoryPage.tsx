@@ -192,13 +192,9 @@ export const AIRecipeHistoryPage: React.FC = () => {
     }
   };
 
-  const handleCookAgainInGenerator = (batch: AIRecipeBatchRecord) => {
+  const handleCookAgainInGenerator = (_batch: AIRecipeBatchRecord) => {
     playSound('glass');
-    // Navigate to food guide with tab
-    navigate('/?tab=solid-food-guide');
-    setTimeout(() => {
-      document.getElementById('ai-recipe-maker-section')?.scrollIntoView({ behavior: 'smooth' });
-    }, 150);
+    navigate('/?tab=food&sub=maker');
   };
 
   const getMealBadgeColor = (type: string) => {
@@ -255,18 +251,18 @@ export const AIRecipeHistoryPage: React.FC = () => {
             <button
               onClick={() => {
                 playSound('glass');
-                navigate('/?tab=solid-food-guide');
+                navigate('/?tab=food');
               }}
               className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-white/5 hover:bg-white/10 text-slate-200 hover:text-white text-xs font-bold uppercase tracking-wider border border-white/10 transition-all cursor-pointer shadow-md active:scale-95"
             >
               <ArrowLeft className="w-4 h-4 text-emerald-400" />
-              <span>Back to Solid Food Guide</span>
+              <span>Back to AI NutriChef</span>
             </button>
 
             <span className="text-white/20 hidden sm:inline">•</span>
 
             <span className="text-xs text-white/50 hidden sm:inline font-medium">
-              AI NutriChef Kitchen Assistant
+              AI NutriChef: Your Kitchen Assistant
             </span>
           </div>
 
@@ -274,15 +270,12 @@ export const AIRecipeHistoryPage: React.FC = () => {
             <button
               onClick={() => {
                 playSound('pop');
-                navigate('/?tab=solid-food-guide');
-                setTimeout(() => {
-                  document.getElementById('ai-recipe-maker-section')?.scrollIntoView({ behavior: 'smooth' });
-                }, 150);
+                navigate('/?tab=food&sub=maker');
               }}
               className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 text-xs font-black uppercase tracking-wider transition-all cursor-pointer shadow-lg shadow-emerald-500/20 active:scale-95"
             >
               <Sparkles className="w-3.5 h-3.5" />
-              <span>Generate New Recipes</span>
+              <span>Open AI Recipe Maker</span>
             </button>
 
             {batches.length > 0 && (
@@ -531,10 +524,7 @@ export const AIRecipeHistoryPage: React.FC = () => {
               <button
                 onClick={() => {
                   playSound('glass');
-                  navigate('/?tab=solid-food-guide');
-                  setTimeout(() => {
-                    document.getElementById('ai-recipe-maker-section')?.scrollIntoView({ behavior: 'smooth' });
-                  }, 150);
+                  navigate('/?tab=food&sub=maker');
                 }}
                 className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-emerald-400 to-teal-400 text-slate-950 font-black text-xs uppercase tracking-wider shadow-lg shadow-emerald-400/20 cursor-pointer"
               >
@@ -854,12 +844,12 @@ export const AIRecipeHistoryPage: React.FC = () => {
                     <button
                       onClick={() => {
                         playSound('glass');
-                        navigate('/?tab=solid-food-guide');
+                        navigate('/?tab=food');
                       }}
                       className="px-5 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-white text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 cursor-pointer"
                     >
                       <ArrowLeft className="w-3.5 h-3.5 text-emerald-400" />
-                      <span>Back to Solid Food Guide</span>
+                      <span>Back to AI NutriChef</span>
                     </button>
 
                     <button

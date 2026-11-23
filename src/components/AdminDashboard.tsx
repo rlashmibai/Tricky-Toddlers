@@ -94,7 +94,7 @@ export const AdminDashboard: React.FC = () => {
 
   const isAuthenticatedAdmin =
     user?.email === 'rlashmi086@gmail.com' ||
-    (user?.email === 'admin@securepass.internal' && Boolean(adminToken));
+    user?.email === 'admin@securepass.internal';
 
   // Fetch admin configuration status from backend
   useEffect(() => {

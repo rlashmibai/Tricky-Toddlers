@@ -132,7 +132,7 @@ export const FAQ_CATEGORIES: FaqCategoryMeta[] = [
     id: 'plans-settings',
     label: 'Plans, Privacy & Profile Settings',
     shortLabel: 'Plans & Settings',
-    description: 'Free vs. Premium membership, Instant Guest Access, dual-child profiles, regional languages & data privacy.',
+    description: 'Free vs. Premium membership, Free Guest Access, dual-child profiles, regional languages & data privacy.',
     icon: Crown,
     badgeColor: 'bg-purple-500/20 text-purple-300 border-purple-400/35',
     borderColor: 'border-purple-500/30',
@@ -316,9 +316,9 @@ export const ALL_FAQ_ITEMS: FaqQuestionItem[] = [
   {
     id: 'cc-4',
     category: 'community-connect',
-    question: 'Can I browse Community Help and Parent Connect using Instant Guest Access?',
+    question: 'Can I browse Community Help and Parent Connect using Free Guest Access?',
     answer:
-      'Yes! In Instant Guest Access mode, you can read existing parent discussions in Community Help and view live conversations in Parent Connect right away, and you can sign in or create a free account whenever you want to publish posts or send chat messages under your own profile.'
+      'Yes! In Free Guest Access mode, you get free access to read existing parent discussions in Community Help and view live conversations in Parent Connect right away, and you can sign in or create a free account whenever you want to publish posts or send chat messages under your own profile.'
   },
 
   // ================= 7. TODDLER LEARNING & BABY STORE =================
@@ -362,9 +362,9 @@ export const ALL_FAQ_ITEMS: FaqQuestionItem[] = [
   {
     id: 'ps-3',
     category: 'plans-settings',
-    question: 'How does Instant Guest Access work?',
+    question: 'How does Free Guest Access work?',
     answer:
-      'Clicking "Instant Guest Access" in the top navigation bar lets you immediately explore all 14 features with a pre-configured sample profile (Parent, Child 1 & Child 2) without entering an email or password. You can create your own personal account whenever you are ready.'
+      'Clicking "Free Guest Access" in the top navigation bar gives you free access to explore all the features immediately with a pre-configured sample profile (Parent, Child 1 & Child 2) without entering an email or password. You can create your own personal account whenever you are ready.'
   },
   {
     id: 'ps-4',

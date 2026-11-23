@@ -850,9 +850,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const isAdminAccount =
+    user?.email === 'admin@securepass.internal' ||
+    user?.email === 'rlashmi086@gmail.com';
+
   const needsProfileSetup = Boolean(
     user &&
     !isDemoSession &&
+    !isAdminAccount &&
     (
       profile?.needsProfileSetup === true ||
       (typeof window !== 'undefined' && localStorage.getItem('needs_profile_setup') === 'true') ||

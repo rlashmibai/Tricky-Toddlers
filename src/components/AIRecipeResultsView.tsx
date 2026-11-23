@@ -150,19 +150,28 @@ export const AIRecipeResultsView: React.FC<AIRecipeResultsViewProps> = ({
     <div className="min-h-screen pb-20">
       {/* Top Navigation Bar */}
       <div className="mb-6 p-4 sm:p-5 rounded-3xl bg-slate-900/80 border border-white/10 backdrop-blur-xl shadow-xl flex flex-wrap items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2.5">
           <button
             type="button"
             onClick={onBackToRecipes}
             className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-white/10 hover:bg-white/15 text-white font-bold text-xs uppercase tracking-wider transition-all duration-200 cursor-pointer shadow-md active:scale-95 border border-white/10"
           >
             <ArrowLeft className="w-4 h-4 text-emerald-400" />
-            <span>Back to Recipes</span>
+            <span>Back to AI NutriChef</span>
           </button>
 
-          <div className="h-6 w-px bg-white/10 hidden sm:block" />
+          <button
+            type="button"
+            onClick={onRegenerateNew}
+            className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-200 hover:text-white font-bold text-xs uppercase tracking-wider transition-all duration-200 cursor-pointer shadow-md active:scale-95 border border-emerald-400/30"
+          >
+            <Sparkles className="w-4 h-4 text-emerald-400" />
+            <span>Back to AI Recipe Maker</span>
+          </button>
 
-          <div className="hidden sm:flex items-center gap-2">
+          <div className="h-6 w-px bg-white/10 hidden md:block" />
+
+          <div className="hidden md:flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
             <span className="text-xs font-black text-emerald-300 uppercase tracking-widest">
               AI NutriChef: Your Kitchen Assistant
