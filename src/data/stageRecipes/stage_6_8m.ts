@@ -14,223 +14,286 @@ export const stageData_6_8_months: AgeGroupData = {
     {
       id: '6_8_months_rec_1',
       name: "Moong Dal Water (Clear Lentil Soup)",
-      localName: "\u092e\u0942\u0902\u0917 \u0926\u093e\u0932 \u0915\u093e \u092a\u093e\u0928\u0940 / \u0baa\u0bb0\u0bc1\u0baa\u0bcd\u0baa\u0bc1 \u0ba8\u0bc0\u0bb0\u0bcd",
-      prepTime: "5 mins",
+      localName: "मूंग दाल का पानी / பருப்பு நீர்",
+      prepTime: "5 mins (+ 15 mins soaking)",
       cookTime: "15 mins",
       category: 'Morning',
       region: 'Pan-Indian',
       ingredients: [
-        "2 tablespoons Yellow Moong Dal (washed)",
-        "1 cup Water",
-        "A tiny pinch of Turmeric powder (Haldi)"
+        "2 tbsp split yellow moong dal (washed cleanly)",
+        "1.5 cups clean drinking water",
+        "1 tiny pinch pure turmeric powder (haldi)",
+        "1/4 tsp pure homemade ghee (optional, once 7 months+)"
       ],
       instructions: [
-        "Wash the moong dal thoroughly under clean running water.",
-        "Pressure cook or boil the dal with 1 cup of water and turmeric until completely mushy and dissolved (approx 3-4 whistles).",
-        "Mash the dal fully inside the hot water, then strain the golden liquid through a clean sieve.",
-        "Serve the warm, nutritious lentil broth in a baby cup."
+        "Firstly, wash the yellow moong dal 3–4 times under running water until the water turns completely clear.",
+        "Soak the washed dal in ¼ cup water for 15 minutes so it cooks down soft and gentle on baby's gut.",
+        "Transfer the soaked dal into a pressure cooker with 1.5 cups fresh water and a tiny pinch of turmeric.",
+        "Pressure cook on medium flame for 4 whistles until the lentils split and turn completely mushy.",
+        "Allow the cooker pressure to drop naturally before opening the lid.",
+        "Mash the hot cooked dal gently with the back of a clean ladle inside the cooking water.",
+        "Pour through a fine-mesh strainer into a sterile baby bowl, pressing lightly so a thin, cloudy golden broth collects.",
+        "If introducing healthy fats at 7+ months, swirl in ¼ teaspoon of pure warm ghee.",
+        "Cool down to lukewarm, test temperature on your inner wrist, and serve fresh with a soft baby spoon."
       ],
-      benefits: "Highly digestible protein broth that is gentle on baby\\",
-      safety: "Serve clear dal water. Do not add any salt, black pepper, or tempering (tadka) at this tender age.",
-      icon: "\ud83e\udd63"
+      benefits: "Highly digestible plant-protein broth that is exceptionally gentle on a 6–8 month baby's developing stomach and boosts energy.",
+      safety: "Serve smooth clear-to-thin lentil broth. Never add salt, chili, black pepper, or heavy tadka under 12 months.",
+      icon: "🥣"
     },
     {
       id: '6_8_months_rec_2',
-      name: "Golden Sweet Potato Pur\u00e9e",
-      localName: "\u0936\u0915\u0930\u0915\u0902\u0926 \u092a\u094d\u092f\u0942\u0930\u0940 / \u0b9a\u0bb0\u0bcd\u0b95\u0bcd\u0b95\u0bb0\u0bc8\u0bb5\u0bb3\u0bcd\u0bb3\u0bbf \u0b95\u0bc2\u0bb4\u0bcd",
+      name: "Golden Sweet Potato Purée",
+      localName: "शकरकंद प्यूरी / சர்க்கரைவள்ளி கூழ்",
       prepTime: "5 mins",
       cookTime: "12 mins",
       category: 'Morning',
       region: 'Pan-Indian',
       ingredients: [
-        "1 Medium Sweet Potato",
-        "Water for boiling/steaming",
-        "A pinch of roasted Cumin (Jeera) powder"
+        "1 medium sweet potato (shakarkand)",
+        "1.5 cups clean drinking water (for steaming)",
+        "1 tiny pinch roasted cumin (jeera) powder",
+        "2 tbsp warm breastmilk, formula, or steaming water (for thinning)"
       ],
       instructions: [
-        "Peel and wash the sweet potato, cutting it into small uniform rounds.",
-        "Steam or pressure cook until a fork passes through them with absolute ease.",
-        "Blend with a small splash of the steaming water and cumin powder to create a comforting, golden, smooth puree."
+        "Firstly, scrub the sweet potato clean under running water, peel off the outer skin, and cut away any bruised spots.",
+        "Slice the peeled sweet potato into uniform ½-inch rounds or small cubes.",
+        "Place the cubes in a steamer basket over simmering water (or in a pressure cooker bowl with ½ cup water).",
+        "Cover tightly and steam on medium flame for 10 to 12 minutes (or 2 cooker whistles).",
+        "Test doneness by piercing a cube with a fork; it should collapse cleanly with zero woody resistance.",
+        "Transfer the soft warm cubes into a blender or clean mashing bowl along with the tiny pinch of roasted jeera powder.",
+        "Blend or mash thoroughly until completely creamy, then slowly whisk in warm breastmilk, formula, or reserved steaming water.",
+        "Press through a fine sieve if any sweet potato stringiness remains so the puree is velvety smooth.",
+        "Let cool to lukewarm, check temperature on your wrist, and feed fresh."
       ],
-      benefits: "Rich in beta-carotene, dietary fiber, and Vitamin A, which supports healthy eyesight.",
-      safety: "Ensure the sweet potato has no fibrous hard chunks remaining.",
-      icon: "\ud83c\udf60"
+      benefits: "Rich in natural beta-carotene, potassium, and prebiotic dietary fiber supporting healthy vision and smooth digestion.",
+      safety: "Ensure zero fibrous chunks or hard skins remain; always dilute thick mash enough for easy swallowing.",
+      icon: "🍠"
     },
     {
       id: '6_8_months_rec_3',
       name: "Carrot & Pumpkin Velvet Blend",
-      localName: "\u0915\u0926\u094d\u0926\u0942 \u0914\u0930 \u0917\u093e\u091c\u0930 \u092a\u094d\u092f\u0942\u0930\u0940 / \u0baa\u0bc2\u0b9a\u0ba3\u0bbf \u0b95\u0bc7\u0bb0\u0b9f\u0bcd \u0b95\u0bb2\u0bb5\u0bc8",
+      localName: "कद्दू और गाजर प्यूरी / பூசணி கேரட் கலவை",
       prepTime: "5 mins",
-      cookTime: "10 mins",
+      cookTime: "12 mins",
       category: 'Lunch',
       region: 'Pan-Indian',
       ingredients: [
-        "1/2 cup Chopped Yellow Pumpkin",
-        "1/4 cup Chopped Peeled Carrot",
-        "1/2 cup Water"
+        "1/2 cup fresh yellow pumpkin (kaddu) cubes, peeled and deseeded",
+        "1/4 cup fresh red or orange carrot cubes, peeled",
+        "1 cup clean drinking water (for steaming)",
+        "1/4 tsp pure ghee (optional, for fat-soluble vitamin A absorption)"
       ],
       instructions: [
-        "Clean, peel, and chop the pumpkin and carrots into tiny cubes.",
-        "Steam them together until fully softened.",
-        "Puree in a blender until smooth. Warm slightly and serve."
+        "Firstly, wash, peel, and deseed the yellow pumpkin and scrub, peel, and trim the carrot.",
+        "Dice both vegetables into uniform tiny ½-inch cubes so the denser carrots finish softening with the pumpkin.",
+        "Place the chopped cubes into a steamer basket or small saucepan with 1 cup clean water.",
+        "Bring to a boil on medium heat, then cover tightly and simmer on low-to-medium flame for 10–12 minutes.",
+        "Check that both carrot and pumpkin cubes squish effortlessly between your fingers.",
+        "Transfer the cooked veggies with 2–3 tablespoons of steaming water into a blender jar.",
+        "Blend at high speed for 30 seconds until vibrant orange and completely lump-free.",
+        "Pour into a baby bowl, stir in ¼ teaspoon ghee to aid vitamin A absorption, and cool to lukewarm before serving."
       ],
-      benefits: "Naturally sweet and highly soothing for teething babies. High in antioxidants.",
-      safety: "Only buy fresh pumpkin. Ensure the puree contains no tough fiber threads.",
-      icon: "\ud83c\udf83"
+      benefits: "Naturally sweet, deeply comforting for teething babies, and loaded with vitamin A antioxidants for immunity.",
+      safety: "Buy fresh firm pumpkin and discard all tough strings; never add salt, sugar, or nutmeg/heavy spices.",
+      icon: "🎃"
     },
     {
       id: '6_8_months_rec_4',
-      name: "Teething Soother Stewed Pear Pur\u00e9e",
-      localName: "\u092a\u0915\u093e \u0939\u0941\u0906 \u0928\u093e\u0936\u092a\u093e\u0924\u0940 \u092a\u094d\u092f\u0942\u0930\u0940 / \u0baa\u0bc7\u0bb0\u0bbf\u0b95\u0bcd\u0b95\u0bbe\u0baf\u0bcd \u0b95\u0bc2\u0bb4\u0bcd",
+      name: "Teething Soother Stewed Pear Purée",
+      localName: "पका हुआ नाशपाती प्यूरी / பேரிக்காய் கூழ்",
       prepTime: "5 mins",
       cookTime: "8 mins",
       category: 'Lunch',
       region: 'Pan-Indian',
       ingredients: [
-        "1 Ripe Pear",
-        "Water for steaming"
+        "1 ripe sweet pear",
+        "1/2 cup clean drinking water (for stewing)",
+        "1 tsp warm breastmilk or formula (optional, for serving)"
       ],
       instructions: [
-        "Peel the pear, cut it in half, and scoop out the seeds and hard center.",
-        "Chop into cubes and steam for 8 minutes until mushy.",
-        "Blend or mash thoroughly. Serve lukewarm or cool to soothe sore gums."
+        "Firstly, wash the pear under clean water, peel off the entire skin cleanly, and slice in half.",
+        "Use a spoon or paring knife to scoop out the seeds and the gritty woody center core.",
+        "Chop the clean pear flesh into small even ½-inch cubes.",
+        "Put the cubes and ½ cup water into a small saucepan over low-to-medium heat.",
+        "Cover with a lid and stew gently for 7 to 8 minutes, stirring once halfway, until completely mushy.",
+        "Remove from heat and blend or mash thoroughly with a fork until smooth and creamy.",
+        "Pass through a sieve if needed so there are zero gritty pear granules.",
+        "Serve lukewarm or slightly cool (not fridge-cold) to gently soothe swollen teething gums."
       ],
-      benefits: "Aids bowel movements, gentle on sensitive stomachs, and has high water content.",
-      safety: "Always skin the pear completely as pear skin can be hard to swallow and digest.",
-      icon: "\ud83c\udf50"
+      benefits: "Supports gentle bowel movements, hydrates naturally, and provides calming relief on tender gums.",
+      safety: "Always peel pear skin completely and discard seeds before stewing to avoid choking or indigestion.",
+      icon: "🍐"
     },
     {
       id: '6_8_months_rec_5',
       name: "Sprouted Ragi & Stewed Apple Porridge",
-      localName: "\u0930\u093e\u0917\u0940 \u0938\u0947\u092c \u0926\u0932\u093f\u092f\u093e / \u0bb0\u0bbe\u0b95\u0bbf \u0b86\u0baa\u0bcd\u0baa\u0bbf\u0bb3\u0bcd \u0b95\u0bc2\u0bb4\u0bcd",
+      localName: "रागी सेब दलिया / ராகி ஆப்பிள் கூழ்",
       prepTime: "5 mins",
       cookTime: "10 mins",
       category: 'Lunch',
       region: 'Pan-Indian',
       ingredients: [
-        "1 tablespoon Sprouted Ragi Flour",
-        "1/2 Apple (steamed and pur\u00e9ed)",
-        "1 cup Water",
-        "1/4 teaspoon Ghee"
+        "1 tbsp sprouted ragi (finger millet) flour",
+        "1/2 sweet apple, peeled, cored, and diced",
+        "1 cup clean drinking water (divided)",
+        "1/4 tsp pure homemade ghee"
       ],
       instructions: [
-        "Mix ragi flour in water without lumps.",
-        "Cook on low heat stirring constantly for 7 minutes until glossy.",
-        "Stir in the steamed apple puree and drop of ghee. Cook for 1 more minute and cool."
+        "Firstly, steam the peeled and diced apple cubes for 6–7 minutes until soft, then mash or puree completely smooth.",
+        "In a cold heavy saucepan, whisk 1 tablespoon sprouted ragi flour with ¼ cup water until zero lumps remain.",
+        "Stir in the remaining ¾ cup water and place the pan on low flame.",
+        "Stir continuously in steady circles for 6 to 7 minutes as the ragi thickens and turns dark glossy brown.",
+        "Ensure it bubbles gently for at least 2 minutes at the end so the millet starch cooks thoroughly.",
+        "Stir in the prepared smooth apple puree and ¼ teaspoon pure ghee into the glossy porridge.",
+        "Cook together on lowest flame for 1 more minute, mixing well until silky and uniform.",
+        "Transfer to a baby bowl, let cool to lukewarm (porridge thickens slightly as it cools), test on wrist, and feed fresh."
       ],
-      benefits: "Iron and calcium powerhouse combined with natural pectin from apples.",
-      safety: "Ensure ragi is thoroughly cooked to avoid tummy ache.",
-      icon: "\ud83c\udf3e"
+      benefits: "Combines bioavailable iron and calcium from sprouted ragi with natural pectin and sweetness from apples.",
+      safety: "Cook ragi thoroughly without lumps to avoid indigestion; never add jaggery, honey, or sugar.",
+      icon: "🌾"
     },
     {
       id: '6_8_months_rec_6',
       name: "Warm Oats & Mashed Banana Porridge",
-      localName: "\u0913\u091f\u094d\u0938 \u0915\u0947\u0932\u093e \u092e\u0948\u0936 / \u0b93\u0b9f\u0bcd\u0bb8\u0bcd \u0bb5\u0bbe\u0bb4\u0bc8\u0baa\u0bcd\u0baa\u0bb4\u0bae\u0bcd \u0b95\u0bc2\u0bb4\u0bcd",
+      localName: "ओट्स केला मैश / ஓட்ஸ் வாழைப்பழம் கூழ்",
       prepTime: "5 mins",
       cookTime: "7 mins",
       category: 'Dinner',
       region: 'Pan-Indian',
       ingredients: [
-        "2 tablespoons Powdered Rolled Oats",
-        "1/2 Ripe Banana (mashed)",
-        "1 cup Water"
+        "2 tbsp powdered rolled oats (dry-roasted and ground fine)",
+        "1/2 ripe banana (with brown spots, peeled)",
+        "1 cup clean drinking water",
+        "1 tbsp warm breastmilk or formula (optional, added after cooling)"
       ],
       instructions: [
-        "Boil powdered oats with water for 5 minutes until creamy.",
-        "Turn off flame and mix in the mashed ripe banana.",
-        "Whisk well to form a lump-free breakfast porridge."
+        "Firstly, dry-roast rolled oats for 2 minutes if unroasted, cool, and grind into a fine baby-safe oats powder.",
+        "In a small saucepan, whisk 2 tablespoons of powdered oats with 1 cup water until smooth.",
+        "Place on low-to-medium heat and simmer for 5 to 6 minutes, stirring continuously so it does not stick.",
+        "Meanwhile, mash ½ ripe banana thoroughly in a sterile baby bowl using a clean fork until creamy.",
+        "Once the oats turn soft, thick, and porridge-like, turn off the stove.",
+        "Transfer the cooked oats into a bowl and let cool for 2 minutes until warm (not piping hot).",
+        "Fold the smooth mashed banana into the warm oats and whip well with a spoon until completely uniform.",
+        "Splash in a tablespoon of warm breastmilk or formula if a thinner consistency is preferred, check warmth, and serve."
       ],
-      benefits: "Provides steady energy, promotes fullness, and aids sound sleep.",
-      safety: "Never add cow milk before 12 months; use water or breastmilk.",
-      icon: "\ud83e\udd63"
+      benefits: "Rich in soluble beta-glucan fiber, potassium, and calming slow-release carbs supporting restful evening sleep.",
+      safety: "Never cook with cow's milk under 12 months; use water for boiling and thin with breastmilk or formula afterward.",
+      icon: "🥣"
     },
     {
       id: '6_8_months_rec_7',
-      name: "Rosy Beetroot & Potato Pur\u00e9e",
-      localName: "\u091a\u0941\u0915\u0902\u0926\u0930 \u0906\u0932\u0942 \u092a\u094d\u092f\u0942\u0930\u0940 / \u0baa\u0bc0\u0b9f\u0bcd\u0bb0\u0bc2\u0b9f\u0bcd \u0b89\u0bb0\u0bc1\u0bb3\u0bc8\u0b95\u0bcd\u0b95\u0bbf\u0bb4\u0b99\u0bcd\u0b95\u0bc1 \u0b95\u0bc2\u0bb4\u0bcd",
+      name: "Rosy Beetroot & Potato Purée",
+      localName: "चुकंदर आलू प्यूरी / பீட்ரூட் உருளைக்கிழங்கு கூழ்",
       prepTime: "5 mins",
       cookTime: "12 mins",
       category: 'Dinner',
       region: 'Pan-Indian',
       ingredients: [
-        "1/4 Beetroot (peeled and diced)",
-        "1/2 Small Potato (peeled and diced)",
-        "Water for steaming"
+        "1/4 small fresh beetroot, peeled and finely diced",
+        "1/2 small potato, peeled and diced",
+        "1 cup clean drinking water (for steaming)",
+        "1/4 tsp pure ghee or olive oil",
+        "2 tbsp warm steaming water or breastmilk (for thinning)"
       ],
       instructions: [
-        "Steam beetroot and potato together until completely tender.",
-        "Blend to a smooth, vibrant pink puree with a little warm water.",
-        "Serve lukewarm."
+        "Firstly, wash, peel, and chop both the fresh beetroot and potato into tiny ½-inch cubes.",
+        "Place the diced beetroot and potato into a steamer basket or cooker vessel with 1 cup water.",
+        "Steam or pressure cook for 12 minutes (3 whistles) until a fork slips easily through both vegetables.",
+        "Drain and reserve the nutrient-rich pink steaming water in a cup.",
+        "Transfer the steamed beetroot and potato into a blender (avoid food processor gummy over-blending on potato; pulse gently).",
+        "Add 2 tablespoons of the reserved pink steaming water and ¼ teaspoon ghee.",
+        "Blend briefly until smooth, creamy, and bright magenta without turning sticky.",
+        "Cool to lukewarm, test on your wrist, and feed fresh."
       ],
-      benefits: "High in iron, folate, and potassium with a vibrant natural color.",
-      safety: "Introduce in small quantities as beetroot is earthy and fibrous.",
-      icon: "\ud83e\udd54"
+      benefits: "High in natural iron, folate, vitamin C, and comforting starchy energy with an appealing pink color.",
+      safety: "Discard any green-skinned potato spots before cooking; pink urine or stool after beetroot is completely normal.",
+      icon: "🥔"
     },
     {
       id: '6_8_months_rec_8',
       name: "Gentle Bottle Gourd (Lauki) & Moong Soup",
-      localName: "\u0932\u094c\u0915\u0940 \u092e\u0942\u0902\u0917 \u0915\u093e \u0938\u0942\u092a / \u0b9a\u0bc1\u0bb0\u0bc8\u0b95\u0bcd\u0b95\u0bbe\u0baf\u0bcd \u0baa\u0bbe\u0b9a\u0bbf\u0baa\u0bcd\u0baa\u0bb0\u0bc1\u0baa\u0bcd\u0baa\u0bc1 \u0b9a\u0bc2\u0baa\u0bcd",
-      prepTime: "5 mins",
+      localName: "लौकी मूंग का सूप / சுரைக்காய் பாசிப்பருப்பு சூப்",
+      prepTime: "5 mins (+ 15 mins soaking)",
       cookTime: "12 mins",
       category: 'Dinner',
       region: 'Pan-Indian',
       ingredients: [
-        "1/2 cup Peeled Lauki cubes",
-        "1 tablespoon Yellow Moong Dal",
-        "Pinch of Cumin powder"
+        "1/2 cup fresh peeled & deseeded lauki (bottle gourd) cubes",
+        "1 tbsp split yellow moong dal (washed and soaked)",
+        "1 cup clean drinking water",
+        "1 tiny pinch roasted cumin (jeera) powder",
+        "1/4 tsp pure ghee"
       ],
       instructions: [
-        "Pressure cook lauki and moong dal with 1 cup water for 3 whistles.",
-        "Blend and strain into a silky, comforting soup.",
-        "Stir in a pinch of roasted jeera powder."
+        "Firstly, peel the lauki, remove seeds, and taste a tiny raw sliver to confirm it is sweet and not bitter.",
+        "Rinse and soak the moong dal for 15 minutes, then drain cleanly.",
+        "Combine the diced lauki, soaked moong dal, and 1 cup clean water in a small pressure cooker.",
+        "Cook on medium flame for 3 to 4 whistles until both gourd and lentils are completely soft and mushy.",
+        "Let pressure drop naturally, open the lid, and stir gently.",
+        "Transfer the mixture to a blender (once slightly cooled) and blend for 20 seconds into a silky green-gold soup.",
+        "Strain through a coarse-to-fine baby sieve if any gourd strings remain.",
+        "Pour into a warm bowl, stir in roasted cumin powder and ¼ tsp ghee, check warmth, and serve fresh."
       ],
-      benefits: "Cooling, extremely easy to digest, and hydrates the body naturally.",
-      safety: "Taste the lauki raw beforehand to ensure it is not bitter.",
-      icon: "\ud83e\udd52"
+      benefits: "Exceptionally hydrating, cooling, and protein-balanced dinner soup that soothes tummy heat.",
+      safety: "Always taste a tiny piece of raw bottle gourd beforehand; never cook bitter lauki.",
+      icon: "🥒"
     },
     {
       id: '6_8_months_rec_9',
-      name: "Mild Palak & Potato Pur\u00e9e",
-      localName: "\u092a\u093e\u0932\u0915 \u0906\u0932\u0942 \u092a\u094d\u092f\u0942\u0930\u0940 / \u0b95\u0bc0\u0bb0\u0bc8 \u0b89\u0bb0\u0bc1\u0bb3\u0bc8\u0b95\u0bcd\u0b95\u0bbf\u0bb4\u0b99\u0bcd\u0b95\u0bc1 \u0b95\u0bc2\u0bb4\u0bcd",
-      prepTime: "5 mins",
+      name: "Mild Palak & Potato Purée",
+      localName: "पालक आलू प्यूरी / கீரை உருளைக்கிழங்கு கூழ்",
+      prepTime: "8 mins",
       cookTime: "10 mins",
       category: 'Snacks',
       region: 'Pan-Indian',
       ingredients: [
-        "5-6 Fresh washed Spinach leaves",
-        "1/2 Small Boiled Potato",
-        "Pinch of roasted Cumin"
+        "6 fresh tender spinach (palak) leaves, tough stems removed",
+        "1/2 small potato, peeled and cubed",
+        "1 cup clean drinking water",
+        "1 tiny pinch roasted cumin (jeera) powder",
+        "1/4 tsp pure ghee"
       ],
       instructions: [
-        "Blanch clean spinach leaves in boiling water for 2 minutes and cool immediately.",
-        "Blend blanched spinach with boiled potato and cumin into a silky green mash.",
-        "Warm gently before serving."
+        "Firstly, wash the fresh spinach leaves thoroughly in clean water 2–3 times and pluck off thick fibrous stems.",
+        "Boil or steam the peeled potato cubes separately in ½ cup water for 10 minutes until completely fork-tender.",
+        "Bring another small pot of water to a rolling boil, drop in the clean spinach leaves, and blanch for just 90 seconds.",
+        "Immediately lift out the blanched spinach leaves with tongs and plunge into cold water to lock in bright green color and reduce oxalates.",
+        "Combine the blanched spinach, soft boiled potato, roasted cumin powder, and 2 tbsp warm water in a blender.",
+        "Pulse briefly until silky green and creamy—avoid over-blending potato or it can turn gluey.",
+        "Stir in ¼ teaspoon pure ghee in the baby bowl for creamy flavor and iron-friendly vitamin intake.",
+        "Test temperature on wrist and serve fresh (do not store cooked spinach purée overnight)."
       ],
-      benefits: "Packed with plant-based iron, magnesium, and dietary fiber.",
-      safety: "Blanch spinach quickly to preserve nutrients without turning bitter.",
-      icon: "\ud83e\udd6c"
+      benefits: "Rich in folate, magnesium, vitamin K, and soothing potassium-rich potato starch.",
+      safety: "Serve spinach fresh—never reheat leftover cooked spinach purée due to natural nitrate conversion.",
+      icon: "🥬"
     },
     {
       id: '6_8_months_rec_10',
       name: "Warm Spiced Stewed Apple Mash",
-      localName: "\u0926\u093e\u0932\u091a\u0940\u0928\u0940 \u0938\u0947\u092c \u092e\u0948\u0936 / \u0b87\u0bb2\u0bb5\u0b99\u0bcd\u0b95\u0baa\u0bcd\u0baa\u0b9f\u0bcd\u0b9f\u0bc8 \u0b86\u0baa\u0bcd\u0baa\u0bbf\u0bb3\u0bcd \u0bae\u0b9a\u0bbf\u0baf\u0bb2\u0bcd",
+      localName: "दालचीनी सेब मैश / இலவங்கப்பட்டை ஆப்பிள் மசியல்",
       prepTime: "5 mins",
       cookTime: "10 mins",
       category: 'Snacks',
       region: 'Pan-Indian',
       ingredients: [
-        "1 Sweet Apple (peeled & diced)",
-        "A tiny speck of Ceylon Cinnamon powder",
-        "1/2 cup Water"
+        "1 sweet apple (peeled, cored, and diced fine)",
+        "1/2 cup clean drinking water",
+        "1 microscopic pinch true Ceylon cinnamon (dalchini) powder",
+        "1/4 tsp unsalted butter or ghee (optional)"
       ],
       instructions: [
-        "Cook chopped apple with water on medium heat until mushy.",
-        "Add a microscopic speck of true Ceylon cinnamon powder.",
-        "Mash finely with a fork and serve warm."
+        "Firstly, wash, peel, core, and dice the sweet apple into small even ¼-inch cubes.",
+        "Add the diced apples and ½ cup clean water into a heavy-bottomed saucepan.",
+        "Cover with a lid and cook over medium heat for 4 minutes, then drop to low flame.",
+        "Uncover, sprinkle in a microscopic pinch of Ceylon cinnamon powder, and stir well.",
+        "Continue simmering gently for 4 to 5 minutes until all water evaporates into a light glaze and cubes turn mushy.",
+        "Turn off the stove and mash thoroughly with a clean fork (or pass through a sieve for younger 6m eaters).",
+        "Stir in a tiny drop of ghee or unsalted butter if desired for soothing warmth.",
+        "Cool down to comfortable lukewarm temperature, test on wrist, and feed fresh."
       ],
-      benefits: "Cinnamon adds gentle warmth and natural aromatics to expand palate.",
-      safety: "Use only a tiny hint of cinnamon powder; avoid cassia cinnamon.",
-      icon: "\ud83c\udf4f"
+      benefits: "Warm Ceylon cinnamon introduces gentle aromatic spice training while aiding digestion and comforting colds.",
+      safety: "Use only a tiny speck of true Ceylon cinnamon rather than strong cassia cinnamon; keep puree completely soft.",
+      icon: "🍏"
     }
   ]
 };

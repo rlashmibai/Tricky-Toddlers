@@ -82,7 +82,7 @@ export const FAQ_CATEGORIES: FaqCategoryMeta[] = [
     id: 'ai-nutrichef',
     label: 'AI NutriChef & Meal Planning',
     shortLabel: 'AI NutriChef',
-    description: 'Custom kitchen ingredient cooker, 250+ age-matched Indian kids recipes, Sample Foods & Daily Dish Log.',
+    description: 'Custom kitchen ingredient cooker, 300+ age-matched Indian & global kids recipes, Sample Foods & Daily Dish Log.',
     icon: Utensils,
     badgeColor: 'bg-green-500/20 text-green-300 border-green-400/35',
     borderColor: 'border-green-500/30',
@@ -221,7 +221,7 @@ export const ALL_FAQ_ITEMS: FaqQuestionItem[] = [
     category: 'ai-nutrichef',
     question: 'Does AI NutriChef respect regional Indian diets, Jain/Sattvic rules, and food allergies?',
     answer:
-      'Yes! AI NutriChef offers 250+ age-matched Indian and global recipes and automatically filters every recipe against your saved Dietary Preferences, including Vegetarian, Non-Vegetarian, Eggitarian, Vegan, Jain (no root vegetables), Sattvic, and Halal, while strictly excluding any allergens saved in your child’s profile.'
+      'Yes! AI NutriChef offers 300+ age-matched Indian and global recipes and automatically filters every recipe against your saved Dietary Preferences, including Vegetarian, Non-Vegetarian, Eggitarian, Vegan, Jain (no root vegetables), Sattvic, and Halal, while strictly excluding any allergens saved in your child’s profile.'
   },
   {
     id: 'chef-3',

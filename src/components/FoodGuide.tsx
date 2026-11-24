@@ -41,7 +41,9 @@ import {
   History,
   Copy,
   Trash2,
-  CheckCircle2
+  CheckCircle2,
+  CheckSquare,
+  Square
 } from 'lucide-react';
 import { Recipe, AgeGroupData, ageStagesData, MealCategory, getRecipeCategory } from '../data/foodGuideData';
 import { getRecipeNutrientDetails } from '../lib/recipeNutrition';
@@ -73,7 +75,7 @@ const localT: Record<string, Record<string, string>> = {
   en: {
     solidFoodBadge: 'Smart Guide to First Foods at Every Age',
     solidFoodTitle: 'AI NutriChef: Your Kitchen Assistant',
-    solidFoodDesc: '250+ Age-Matched Indian Recipes & Custom Ingredient Cooker. Blends scientific pediatric nutrition with cooking ease.',
+    solidFoodDesc: '',
     selectAgeGroup: 'Select Stage Guidelines',
     readinessMilestones: 'Developmental Eating Milestones',
     feedingGuidelines: 'Feeding Guidelines & Schedule',
@@ -88,7 +90,7 @@ const localT: Record<string, Record<string, string>> = {
     searchPlaceholder: 'Search recipes (e.g. apple, khichdi, ragi)...',
     allRecipes: 'All Recipes',
     aiCustomizerTitle: 'AI Recipe Maker: Custom Ingredient Cooker',
-    aiCustomizerDesc: '250+ Age-Matched Indian Recipes & Custom Ingredient Cooker. Blends scientific pediatric nutrition with cooking ease for all ages.',
+    aiCustomizerDesc: '',
     childAgeLabel: 'Age (in Years)',
     ingredientsLabel: 'Ingredients you have (e.g., banana, rice, carrot)',
     dietaryLabel: 'Dietary Preferences / Restrictions',
@@ -382,6 +384,70 @@ const localT: Record<string, Record<string, string>> = {
     translateRecipe: 'ਅਨੁਵਾਦ ਕਰੋ',
     translating: 'ਏਆਈ ਦੁਆਰਾ ਅਨੁਵਾਦ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ...',
     disclaimer: 'ਆਪਣੇ ਬੱਚੇ ਨੂੰ ਕੋਈ ਵੀ ਨਵੀਂ ਚੀਜ਼ ਖੁਆਉਣ ਤੋਂ ਪਹਿਲਾਂ ਹਮੇਸ਼ਾ ਆਪਣੇ ਬਾਲ ਰੋਗ ਮਾਹਰ ਨਾਲ ਸਲਾਹ ਕਰੋ।'
+  },
+  as: {
+    solidFoodBadge: 'প্ৰতিটো বয়সৰ বাবে প্ৰথম খাদ্যৰ স্মাৰ্ট গাইড',
+    solidFoodTitle: 'AI NutriChef: আপোনাৰ পাকঘৰৰ সহায়ক',
+    solidFoodDesc: 'সন্তানৰ বিকাশৰ প্ৰতিটো পৰ্যায়ৰ বাবে যুগুতোৱা খাদ্য নিৰ্দেশনা আৰু পুষ্টিকৰ ৰেচিপি।',
+    selectAgeGroup: 'পৰ্যায় বাছনি কৰক',
+    readinessMilestones: 'খাদ্য গ্ৰহণৰ বিকাশমূলক মাইলষ্টোন',
+    feedingGuidelines: 'খাদ্য তালিকা আৰু সময়সূচী',
+    recipesHeader: 'বাছনি কৰিবলৈ পুষ্টিকৰ ৰেচিপি',
+    cookTime: 'ৰন্ধনৰ সময়',
+    prepTime: 'প্ৰস্তুতিৰ সময়',
+    ingredients: 'উপকৰণসমূহ',
+    instructions: 'প্ৰস্তুত প্ৰণালী',
+    nutritionBenefits: 'পুষ্টিগত উপকাৰিতা',
+    safetyWarning: 'সুৰক্ষা আৰু এলাৰ্জী সতৰ্কতা',
+    closeRecipe: 'ৰেচিপিলৈ উভতি যাওক',
+    searchPlaceholder: 'ৰেচিপি সন্ধান কৰক (যেনে আপেল, খিচিৰি, ৰাগী)...',
+    allRecipes: 'সকলো ৰেচিপি',
+    aiCustomizerTitle: 'AI Recipe Maker: কাষ্টম ৰেচিপি নিৰ্মাতা',
+    aiCustomizerDesc: 'আপোনাৰ পাকঘৰত থকা উপকৰণসমূহ লিখক আৰু নিমিষতে পুষ্টিকৰ ৰেচিপি পাওক।',
+    childAgeLabel: 'বয়স (বছৰত)',
+    ingredientsLabel: 'আপোনাৰ হাতত থকা উপকৰণ',
+    dietaryLabel: 'খাদ্যৰ পছন্দ / নিষেধাজ্ঞা',
+    noRestrictions: 'কোনো নিষেধাজ্ঞা নাই',
+    vegetarian: 'নিৰামিষ',
+    vegan: 'আমিষ',
+    allergyAlert: 'কণী / দুগ্ধজাত সামগ্ৰী বৰ্জিত',
+    generateButton: 'AI-ৰ জৰিয়তে ৰেচিপি বনাওক',
+    customRecipeResult: 'আপোনাৰ বাবে নিৰ্মিত AI ৰেচিপি',
+    translateRecipe: 'অনুবাদ কৰক',
+    translating: 'AI-ৰ জৰিয়তে অনুবাদ হৈ আছে...',
+    disclaimer: 'সন্তানক নতুন খাদ্য দিয়াৰ আগতে সদায় শিশুৰোগ বিশেষজ্ঞৰ পৰামৰ্শ লওক।'
+  },
+  or: {
+    solidFoodBadge: 'ପ୍ରତି ବୟସ ପାଇଁ ପ୍ରଥମ ଖାଦ୍ୟର ସ୍ମାର୍ଟ ଗାଇଡ୍',
+    solidFoodTitle: 'AI NutriChef: ଆପଣଙ୍କ ରୋଷେଇ ସହାୟକ',
+    solidFoodDesc: 'ଶିଶୁର ବିକାଶର ପ୍ରତି ସ୍ତର ପାଇଁ ପ୍ରସ୍ତୁତ ଖାଦ୍ୟ ମାର୍ଗଦର୍ଶିକା ଏବଂ ପୁଷ୍ଟିକର ରେସିପି।',
+    selectAgeGroup: 'ସ୍ତର ବାଛନ୍ତୁ',
+    readinessMilestones: 'ଖାଦ୍ୟ ସମ୍ବନ୍ଧୀୟ ବିକାଶ ମାଇଲଖୁଣ୍ଟ',
+    feedingGuidelines: 'ଖାଦ୍ୟ ମାର୍ଗଦର୍ଶିକା ଏବଂ ସମୟସୂଚୀ',
+    recipesHeader: 'ବାଛିବା ପାଇଁ ପୁଷ୍ଟିକର ରେସିପି',
+    cookTime: 'ରାନ୍ଧିବା ସମୟ',
+    prepTime: 'ପ୍ରସ୍ତୁତି ସମୟ',
+    ingredients: 'ସାମଗ୍ରୀ ତାଲିକା',
+    instructions: 'ପ୍ରସ୍ତୁତି ପ୍ରଣାଳୀ',
+    nutritionBenefits: 'ପୁଷ୍ଟିଗତ ଉପକାରିତା',
+    safetyWarning: 'ସୁରକ୍ଷା ଏବଂ ଆଲର୍ଜି ସତର୍କତା',
+    closeRecipe: 'ରେସିପିକୁ ଫେରନ୍ତୁ',
+    searchPlaceholder: 'ରେସିପି ଖୋଜନ୍ତୁ (ଯେପରିକି ସେଓ, ଖେଚୁଡ଼ି, ମାଣ୍ଡିଆ)...',
+    allRecipes: 'ସମସ୍ତ ରେସିପି',
+    aiCustomizerTitle: 'AI Recipe Maker: କଷ୍ଟମ୍ ରେସିପି ନିର୍ମାତା',
+    aiCustomizerDesc: 'ରୋଷେଇ ଘରେ ଥିବା ସାମଗ୍ରୀ ଲେଖନ୍ତୁ ଏବଂ ତୁରନ୍ତ ପୁଷ୍ଟିକର ରେସିପି ପାଆନ୍ତୁ।',
+    childAgeLabel: 'ବୟସ (ବର୍ଷରେ)',
+    ingredientsLabel: 'ଆପଣଙ୍କ ପାଖରେ ଥିବା ସାମଗ୍ରୀ',
+    dietaryLabel: 'ଖାଦ୍ୟ ପସନ୍ଦ / ପ୍ରତିବନ୍ଧକ',
+    noRestrictions: 'କୌଣସି ପ୍ରତିବନ୍ଧକ ନାହିଁ',
+    vegetarian: 'ଶାକାହାରୀ',
+    vegan: 'ଆମିଷ',
+    allergyAlert: 'ଅଣ୍ଡା / ଦୁଗ୍ଧ ବିନା',
+    generateButton: 'AI ଦ୍ୱାରା ରେସିପି ପ୍ରସ୍ତୁତ କରନ୍ତୁ',
+    customRecipeResult: 'ଆପଣଙ୍କ କଷ୍ଟମ୍ AI ରେସିପି',
+    translateRecipe: 'ଅନୁବାଦ କରନ୍ତୁ',
+    translating: 'AI ଦ୍ୱାରା ଅନୁବାଦ ଚାଲିଛି...',
+    disclaimer: 'ଶିଶୁକୁ କୌଣସି ନୂଆ ଖାଦ୍ୟ ଦେବା ପୂର୍ବରୁ ସର୍ବଦା ଶିଶୁରୋଗ ବିଶେଷଜ୍ଞଙ୍କ ପରାମର୍ଶ ନିଅନ୍ତୁ।'
   }
 };
 
@@ -491,7 +557,7 @@ export interface FoodGuideProps {
 }
 
 export const FoodGuide: React.FC<FoodGuideProps> = ({ onNavigateToFoodLens }) => {
-  const { language } = useLanguage();
+  const { language, getAIPromptModifier } = useLanguage();
   const { user, profile, childProfiles, activeChildIndex, isAccountUser } = useAuth();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -552,10 +618,86 @@ export const FoodGuide: React.FC<FoodGuideProps> = ({ onNavigateToFoodLens }) =>
   const [activeStage, setActiveStage] = useState<string>(() => childStageId);
   const [selectedMealCategory, setSelectedMealCategory] = useState<'All' | MealCategory>('All');
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
+  const [checkedRecipeIngredients, setCheckedRecipeIngredients] = useState<Record<number, boolean>>({});
+  const [translatedRecipe, setTranslatedRecipe] = useState<Partial<Recipe> | null>(null);
+  const [isTranslatingRecipe, setIsTranslatingRecipe] = useState<boolean>(false);
 
   useEffect(() => {
     setActiveStage(childStageId);
   }, [childStageId]);
+
+  useEffect(() => {
+    setCheckedRecipeIngredients({});
+  }, [selectedRecipe?.id]);
+
+  // Translate selected recipe dynamically into active language selection
+  useEffect(() => {
+    let cancelled = false;
+    if (!selectedRecipe || !language || language === 'en') {
+      setTranslatedRecipe(null);
+      setIsTranslatingRecipe(false);
+      return;
+    }
+
+    const cacheKey = `tt_recipe_tr_${language}_${selectedRecipe.id}_${selectedRecipe.instructions.length}`;
+    try {
+      const cached = localStorage.getItem(cacheKey);
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (parsed && Array.isArray(parsed.ingredients) && Array.isArray(parsed.instructions)) {
+          setTranslatedRecipe(parsed);
+          setIsTranslatingRecipe(false);
+          return;
+        }
+      }
+    } catch {}
+
+    setTranslatedRecipe(null);
+    setIsTranslatingRecipe(true);
+
+    // Also re-trigger Google Translate DOM pass for instant UI text translation
+    try {
+      const gtSelect = document.querySelector('.goog-te-combo') as HTMLSelectElement | null;
+      if (gtSelect && gtSelect.value !== language) {
+        gtSelect.value = language;
+        gtSelect.dispatchEvent(new Event('change'));
+      }
+    } catch {}
+
+    fetch('/api/translate-recipe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        recipeId: selectedRecipe.id,
+        targetLang: language,
+        recipe: selectedRecipe,
+      }),
+    })
+      .then((res) => (res.ok ? res.json() : { translated: null }))
+      .then((data) => {
+        if (cancelled) return;
+        if (data?.translated && Array.isArray(data.translated.ingredients)) {
+          setTranslatedRecipe(data.translated);
+          try {
+            localStorage.setItem(cacheKey, JSON.stringify(data.translated));
+          } catch {}
+        }
+      })
+      .catch(() => {})
+      .finally(() => {
+        if (!cancelled) setIsTranslatingRecipe(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [selectedRecipe, language]);
+
+  const toggleRecipeIngredient = (idx: number) => {
+    playSound('click');
+    setCheckedRecipeIngredients((prev) => ({ ...prev, [idx]: !prev[idx] }));
+  };
+
   const selectedRecipeNutrients = useMemo(() => {
     return selectedRecipe ? getRecipeNutrientDetails(selectedRecipe) : null;
   }, [selectedRecipe]);
@@ -596,6 +738,7 @@ export const FoodGuide: React.FC<FoodGuideProps> = ({ onNavigateToFoodLens }) =>
   const [applyDietaryPreferences, setApplyDietaryPreferences] = useState<boolean>(true);
   const [aiRecipe, setAiRecipe] = useState<string>('');
   const [aiLoading, setAiLoading] = useState<boolean>(false);
+  const [aiError, setAiError] = useState<string | null>(null);
   const [aiTranslating, setAiTranslating] = useState<boolean>(false);
 
   const toggleMakerDietaryPref = (pref: string) => {
@@ -734,7 +877,7 @@ export const FoodGuide: React.FC<FoodGuideProps> = ({ onNavigateToFoodLens }) =>
     }
   }, [selectedRecipe]);
 
-  // AI Baby Recipe Generator: Generates 3 distinct meal recipes & opens in dedicated view
+  // AI Baby Recipe Generator: Generates 3 authentic Google Search-grounded recipes & opens in dedicated view
   const handleGenerateAiRecipe = async () => {
     if (!customIngredients.trim()) return;
     playSound('glass');
@@ -742,86 +885,12 @@ export const FoodGuide: React.FC<FoodGuideProps> = ({ onNavigateToFoodLens }) =>
     // Instantly transition to dedicated AI Results view and scroll to top
     setFoodGuideSubView('ai-results');
     setAiLoading(true);
+    setAiError(null);
     setAiRecipe('');
+    setCurrentBatch(null);
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
-    const primaryIngredient = customIngredients.split(',')[0]?.trim() || 'wholesome grains';
     const selectedDietSummary = makerDietaryPrefs.length > 0 ? makerDietaryPrefs.join(', ') : 'Balanced';
-    const cookDuration =
-      makerCookingTime === 'Under 15 mins'
-        ? '10 mins'
-        : makerCookingTime === '15–30 mins'
-        ? '20 mins'
-        : makerCookingTime === '30–60 mins'
-        ? '35 mins'
-        : '25 mins';
-
-    // Algorithmic high-fidelity fallback recipes matching all 6 user answers
-    const defaultBatchRecipes: GeneratedRecipe[] = [
-      {
-        id: `rec-${Date.now()}-1`,
-        name: `${primaryIngredient} ${makerMealType} Bowl (${makerEquipment})`,
-        mealType: makerMealType,
-        prepTime: '5 mins',
-        cookTime: cookDuration,
-        textureGuide: `Prepared using ${makerEquipment} for ${makerServingsLabel} (${selectedDietSummary}).`,
-        ingredients: [
-          `${customIngredients} (scaled for ${makerServingsLabel})`,
-          `3 tbsp whole grains or oats`,
-          `1/2 cup liquid base (water, stock, or plant/dairy milk per ${selectedDietSummary} preference)`,
-          `1/2 tsp cooking fat or mild seasoning`
-        ],
-        instructions: [
-          `Pre-prep and wash ${customIngredients} for ${makerServingsLabel}.`,
-          `Using your ${makerEquipment}, combine ingredients with the base liquid and cook within ${makerCookingTime}.`,
-          `Adjust consistency and temperature before serving.`
-        ],
-        nutritionBenefits: `Tailored for ${selectedDietSummary} goals and balanced ${makerMealType} energy.`,
-        safetyAlerts: `Always check food temperature before serving and ensure age-appropriate bite size.`
-      },
-      {
-        id: `rec-${Date.now()}-2`,
-        name: `Wholesome ${primaryIngredient} & Herb ${makerMealType} Skillet`,
-        mealType: makerMealType,
-        prepTime: '7 mins',
-        cookTime: cookDuration,
-        textureGuide: `Tender, flavorful texture cooked via ${makerEquipment} for ${makerServingsLabel}.`,
-        ingredients: [
-          `${customIngredients} (chopped or mashed for ${makerServingsLabel})`,
-          `2 tbsp protein-rich lentils, gram flour, or preferred protein`,
-          `A pinch of mild cumin & turmeric`,
-          `1 cup water or broth`
-        ],
-        instructions: [
-          `Place ${customIngredients} and seasoning into your ${makerEquipment}.`,
-          `Cook for ${cookDuration} until tender and aromatic.`,
-          `Portion into ${makerServingsLabel} and serve warm.`
-        ],
-        nutritionBenefits: `Provides sustained protein, fiber, and micronutrients matching ${selectedDietSummary}.`,
-        safetyAlerts: `Ensure all pieces are soft and uniform without hard chunks.`
-      },
-      {
-        id: `rec-${Date.now()}-3`,
-        name: `Quick ${primaryIngredient} ${makerMealType} Delight`,
-        mealType: makerMealType,
-        prepTime: '5 mins',
-        cookTime: cookDuration,
-        textureGuide: `Easy-to-eat texture made with ${makerEquipment} for ${makerServingsLabel}.`,
-        ingredients: [
-          `${customIngredients} (prepared for ${makerServingsLabel})`,
-          `3 tbsp flour, oats, or binding base`,
-          `Mild herbs or natural aromatics`
-        ],
-        instructions: [
-          `Mix ${customIngredients} with the base ingredients in a bowl.`,
-          `Prepare using ${makerEquipment} within your ${makerCookingTime} window.`,
-          `Cool slightly and serve across ${makerServingsLabel}.`
-        ],
-        nutritionBenefits: `Supports daily growth and ${selectedDietSummary} nutrition.`,
-        safetyAlerts: `Supervise young children while eating and verify safe serving temperature.`
-      }
-    ];
-
     const summaryInput = `${customIngredients} • ${makerMealType} • ${makerCookingTime} • ${selectedDietSummary} • ${makerServingsLabel} • ${makerEquipment}`;
 
     try {
@@ -838,16 +907,13 @@ export const FoodGuide: React.FC<FoodGuideProps> = ({ onNavigateToFoodLens }) =>
           dietaryNeeds: makerDietaryPrefs,
           servings: makerServingsLabel,
           equipment: makerEquipment,
-          defaultRecipes: defaultBatchRecipes,
+          languagePromptModifier: getAIPromptModifier(),
         }),
       });
 
-      let recipesToUse = defaultBatchRecipes;
-      if (response.ok) {
-        const data = await response.json();
-        if (Array.isArray(data.recipes) && data.recipes.length >= 2) {
-          recipesToUse = data.recipes;
-        }
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok || !Array.isArray(data?.recipes) || data.recipes.length === 0) {
+        throw new Error(data?.error || 'Could not retrieve authentic recipes via Google Search. Please try again.');
       }
 
       const newBatch: AIRecipeBatchRecord = {
@@ -857,25 +923,16 @@ export const FoodGuide: React.FC<FoodGuideProps> = ({ onNavigateToFoodLens }) =>
         timestamp: Date.now(),
         childAgeYears: `${customAgeYears === 'All Ages' ? 'All Ages' : `${customAgeYears} Years`}`,
         ingredientsInput: summaryInput,
-        recipes: recipesToUse
+        recipes: data.recipes,
+        sources: Array.isArray(data.sources) ? data.sources : [],
       };
 
       saveRecipeBatch(newBatch);
       setCurrentBatch(newBatch);
       playSound('pop');
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error generating AI recipes:', error);
-      const fallbackBatch: AIRecipeBatchRecord = {
-        id: `batch-${Date.now()}`,
-        date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-        time: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
-        timestamp: Date.now(),
-        childAgeYears: `${customAgeYears === 'All Ages' ? 'All Ages' : `${customAgeYears} Years`}`,
-        ingredientsInput: summaryInput,
-        recipes: defaultBatchRecipes
-      };
-      saveRecipeBatch(fallbackBatch);
-      setCurrentBatch(fallbackBatch);
+      setAiError(error?.message || 'Unable to generate authentic recipes right now. Please try again.');
     } finally {
       setAiLoading(false);
     }
@@ -949,11 +1006,15 @@ export const FoodGuide: React.FC<FoodGuideProps> = ({ onNavigateToFoodLens }) =>
         <AIRecipeResultsView
           batch={currentBatch}
           isLoading={aiLoading}
+          error={aiError}
+          onRetry={handleGenerateAiRecipe}
           initialTab={foodGuideSubView === 'ai-history' ? 'history' : 'results'}
           onBackToRecipes={() => {
+            setAiError(null);
             openNutriChefPage('landing');
           }}
           onRegenerateNew={() => {
+            setAiError(null);
             openNutriChefPage('maker');
           }}
         />
@@ -967,19 +1028,11 @@ export const FoodGuide: React.FC<FoodGuideProps> = ({ onNavigateToFoodLens }) =>
                   <span>AI NutriChef:</span>
                   <span className="bg-gradient-to-r from-emerald-400 via-teal-300 to-amber-300 bg-clip-text text-transparent">Your Kitchen Assistant</span>
                 </h1>
-
-                <p className="text-sm sm:text-base font-bold text-emerald-200/90">
-                  250+ Age-Matched Indian Recipes &amp; Custom Ingredient Cooker
-                </p>
-
-                <p className="text-xs sm:text-sm text-white/70 leading-snug pt-0.5">
-                  <strong className="text-emerald-300">Why it works:</strong> &ldquo;NutriChef&rdquo; blends scientific pediatric nutrition with cooking ease to turn pantry ingredients into doctor-approved meals for any age.
-                </p>
               </div>
 
               <div className="flex flex-wrap md:flex-col items-start md:items-end gap-2 text-xs font-mono text-emerald-300 shrink-0">
                 <span className="px-3 py-1 rounded-xl bg-white/5 border border-white/10 text-white/80">
-                  250+ Recipes • 0 to 18 Years
+                  300+ Recipes • 0 to 18 Years
                 </span>
                 <span className="px-3 py-1 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-300">
                   Instant 3-Meal Pantry Cooker
@@ -1161,7 +1214,7 @@ export const FoodGuide: React.FC<FoodGuideProps> = ({ onNavigateToFoodLens }) =>
                         Nutritious Recipes
                       </h2>
                       <p className="text-xs text-slate-300 mt-0.5">
-                        Browse 250+ Indian dishes by age stage, meal category, and region.
+                        Browse 300+ Indian &amp; global dishes (Veg, Eggitarian &amp; Non-Veg) by age stage, meal category, and region.
                       </p>
                     </div>
                   </div>
@@ -1430,12 +1483,9 @@ export const FoodGuide: React.FC<FoodGuideProps> = ({ onNavigateToFoodLens }) =>
                       <div className="flex flex-wrap items-center gap-2">
                         <span className="font-black text-lg sm:text-xl text-white">{gt('aiCustomizerTitle')}</span>
                         <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-[9px] font-black uppercase tracking-wider shrink-0">
-                          Free AI Assistant
+                          Google Search Grounded
                         </span>
                       </div>
-                      <p className="text-xs text-white/60 mt-0.5 leading-relaxed">
-                        {gt('aiCustomizerDesc')}
-                      </p>
                     </div>
                   </div>
                 </div>
@@ -1948,77 +1998,133 @@ export const FoodGuide: React.FC<FoodGuideProps> = ({ onNavigateToFoodLens }) =>
                 </button>
 
                 {/* Recipe Header */}
-                <div className="flex items-start gap-4 mb-6">
-                  <div className="w-16 h-16 rounded-2xl bg-white/5 flex items-center justify-center text-3xl shrink-0 shadow-inner">
-                    {selectedRecipe.icon}
-                  </div>
-                  <div>
-                    <h2 className="text-2xl font-black text-white leading-tight">
-                      {getRecipeTitle(selectedRecipe)}
-                    </h2>
-                    {getRecipeSubtitle(selectedRecipe) && (
-                      <p className="text-xs font-semibold text-white/50 mt-1">
-                        {getRecipeSubtitle(selectedRecipe)}
-                      </p>
-                    )}
-                    <div className="flex items-center gap-4 mt-3 text-xs text-white/50 font-medium">
-                      <span className="flex items-center gap-1">
-                        <Clock className="w-3.5 h-3.5 text-indigo-400" />
-                        {gt('prepTime')}: {selectedRecipe.prepTime}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <Flame className="w-3.5 h-3.5 text-orange-400" />
-                        {gt('cookTime')}: {selectedRecipe.cookTime}
-                      </span>
+                <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-6">
+                  <div className="flex items-start gap-4">
+                    <div className="w-16 h-16 rounded-2xl bg-white/5 flex items-center justify-center text-3xl shrink-0 shadow-inner">
+                      {selectedRecipe.icon}
+                    </div>
+                    <div className={translatedRecipe ? 'notranslate' : ''} translate={translatedRecipe ? 'no' : 'yes'}>
+                      <h2 className="text-2xl font-black text-white leading-tight">
+                        {translatedRecipe?.name || getRecipeTitle(selectedRecipe)}
+                      </h2>
+                      {!translatedRecipe && getRecipeSubtitle(selectedRecipe) && (
+                        <p className="text-xs font-semibold text-white/50 mt-1">
+                          {getRecipeSubtitle(selectedRecipe)}
+                        </p>
+                      )}
+                      <div className="flex flex-wrap items-center gap-4 mt-3 text-xs text-white/60 font-medium">
+                        <span className="flex items-center gap-1.5">
+                          <Clock className="w-3.5 h-3.5 text-indigo-400" />
+                          {gt('prepTime')}: {translatedRecipe?.prepTime || selectedRecipe.prepTime}
+                        </span>
+                        <span className="flex items-center gap-1.5">
+                          <Flame className="w-3.5 h-3.5 text-orange-400" />
+                          {gt('cookTime')}: {translatedRecipe?.cookTime || selectedRecipe.cookTime}
+                        </span>
+                      </div>
                     </div>
                   </div>
+
+                  {isTranslatingRecipe && language !== 'en' && (
+                    <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-indigo-500/15 border border-indigo-400/30 text-indigo-200 text-xs font-semibold shrink-0">
+                      <Loader2 className="w-3.5 h-3.5 animate-spin text-indigo-400" />
+                      <span>{gt('translating')}</span>
+                    </div>
+                  )}
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-12 gap-8 border-t border-white/5 pt-6">
-                  {/* Ingredients */}
-                  <div className="md:col-span-5 space-y-4">
-                    <h3 className="text-xs font-black text-indigo-300 uppercase tracking-widest">
-                      {gt('ingredients')}
-                    </h3>
-                    <ul className="space-y-2.5">
-                      {selectedRecipe.ingredients.map((ing, i) => (
-                        <li key={i} className="flex items-start gap-2.5 text-sm text-white/70">
-                          <Check className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                          <span>{ing}</span>
-                        </li>
-                      ))}
+                {/* TOP & BOTTOM LAYOUT: 1. Detailed Ingredients Checklist (TOP), 2. Step-by-Step Instructions (BOTTOM) */}
+                <div className="space-y-6 border-t border-white/10 pt-6">
+                  {/* TOP SECTION: Detailed Ingredients List */}
+                  <div className="p-5 sm:p-6 rounded-2xl bg-white/[0.03] border border-emerald-500/20 space-y-4">
+                    <div className="flex items-center justify-between gap-2 pb-2 border-b border-white/10">
+                      <h3 className="text-xs sm:text-sm font-black text-emerald-300 uppercase tracking-widest flex items-center gap-2">
+                        <Apple className="w-4 h-4 text-emerald-400" />
+                        <span>{gt('ingredients')}</span>
+                      </h3>
+                      <span className="text-[11px] font-mono text-white/45">
+                        {(translatedRecipe?.ingredients || selectedRecipe.ingredients).length} items • Tap to check
+                      </span>
+                    </div>
+                    <ul className={`grid grid-cols-1 sm:grid-cols-2 gap-2.5 ${translatedRecipe ? 'notranslate' : ''}`} translate={translatedRecipe ? 'no' : 'yes'}>
+                      {(translatedRecipe?.ingredients || selectedRecipe.ingredients).map((ing, i) => {
+                        const isChecked = !!checkedRecipeIngredients[i];
+                        return (
+                          <li key={i}>
+                            <button
+                              type="button"
+                              onClick={() => toggleRecipeIngredient(i)}
+                              className={`w-full text-left flex items-start gap-2.5 p-2.5 rounded-xl border transition-all cursor-pointer text-sm ${
+                                isChecked
+                                  ? 'bg-emerald-500/15 border-emerald-500/30 text-white/50 line-through'
+                                  : 'bg-white/[0.03] hover:bg-white/[0.07] border-white/10 text-white/85'
+                              }`}
+                            >
+                              <span className="mt-0.5 shrink-0 text-emerald-400">
+                                {isChecked ? (
+                                  <CheckSquare className="w-4 h-4" />
+                                ) : (
+                                  <Square className="w-4 h-4 text-white/45" />
+                                )}
+                              </span>
+                              <span className="leading-snug">{ing}</span>
+                            </button>
+                          </li>
+                        );
+                      })}
                     </ul>
                   </div>
 
-                  {/* Instructions */}
-                  <div className="md:col-span-7 space-y-4">
-                    <h3 className="text-xs font-black text-indigo-300 uppercase tracking-widest">
-                      {gt('instructions')}
-                    </h3>
-                    <ol className="space-y-4 text-sm text-white/75 leading-relaxed">
-                      {selectedRecipe.instructions.map((step, i) => (
-                        <li key={i} className="flex gap-3">
-                          <span className="w-5 h-5 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-[10px] font-black font-mono text-indigo-400 shrink-0 mt-0.5">
+                  {/* BOTTOM SECTION: Detailed Step-by-Step Instructions */}
+                  <div className="p-5 sm:p-6 rounded-2xl bg-white/[0.03] border border-indigo-400/25 space-y-4">
+                    <div className="flex items-center justify-between gap-2 pb-2 border-b border-white/10">
+                      <h3 className="text-xs sm:text-sm font-black text-indigo-300 uppercase tracking-widest flex items-center gap-2">
+                        <UtensilsCrossed className="w-4 h-4 text-indigo-400" />
+                        <span>{gt('instructions')}</span>
+                      </h3>
+                      <span className="text-[11px] font-mono text-white/45">
+                        {(translatedRecipe?.instructions || selectedRecipe.instructions).length} detailed steps
+                      </span>
+                    </div>
+                    <ol className={`space-y-3 text-sm text-white/85 leading-relaxed ${translatedRecipe ? 'notranslate' : ''}`} translate={translatedRecipe ? 'no' : 'yes'}>
+                      {(translatedRecipe?.instructions || selectedRecipe.instructions).map((step, i) => (
+                        <li
+                          key={i}
+                          className="flex items-start gap-3.5 p-3.5 rounded-xl bg-white/[0.03] border border-white/10"
+                        >
+                          <span className="w-6 h-6 rounded-lg bg-indigo-500/25 border border-indigo-400/40 flex items-center justify-center text-xs font-black font-mono text-indigo-200 shrink-0 mt-0.5">
                             {i + 1}
                           </span>
-                          <span>{step}</span>
+                          <span className="leading-relaxed">{step}</span>
                         </li>
                       ))}
                     </ol>
                   </div>
                 </div>
 
-                {/* Culinary & Growth Benefits */}
-                <div className="mt-8 border-t border-white/5 pt-6">
+                {/* Culinary & Growth Benefits + Safety Advisory */}
+                <div className="mt-6 grid grid-cols-1 gap-4 border-t border-white/5 pt-6">
                   <div className="bg-emerald-500/[0.04] border border-emerald-500/20 p-5 rounded-2xl">
                     <h4 className="text-xs font-black text-emerald-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
                       <Apple className="w-4 h-4" />
                       {gt('nutritionBenefits')}
                     </h4>
-                    <p className="text-xs text-white/70 leading-relaxed">
-                      {selectedRecipe.benefits}
+                    <p className={`text-xs sm:text-sm text-white/80 leading-relaxed ${translatedRecipe ? 'notranslate' : ''}`} translate={translatedRecipe ? 'no' : 'yes'}>
+                      {translatedRecipe?.benefits || selectedRecipe.benefits}
                     </p>
                   </div>
+
+                  {(translatedRecipe?.safety || selectedRecipe.safety) && (
+                    <div className="bg-amber-500/[0.05] border border-amber-500/25 p-5 rounded-2xl">
+                      <h4 className="text-xs font-black text-amber-300 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                        <ShieldAlert className="w-4 h-4 text-amber-400" />
+                        {gt('safetyWarning')}
+                      </h4>
+                      <p className={`text-xs sm:text-sm text-amber-100/85 leading-relaxed ${translatedRecipe ? 'notranslate' : ''}`} translate={translatedRecipe ? 'no' : 'yes'}>
+                        {translatedRecipe?.safety || selectedRecipe.safety}
+                      </p>
+                    </div>
+                  )}
                 </div>
 
                 {/* KEY NUTRIENT DETAILS (PER SERVING): Protein, Iron, Calcium & Energy */}

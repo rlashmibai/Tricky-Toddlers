@@ -1,6 +1,6 @@
 import express from "express";
 import crypto from "crypto";
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenAI, ThinkingLevel, Type } from "@google/genai";
 
 // Server-side Admin Authentication State (no hardcoded credentials)
 let claimedAdminUsername: string | null = null;
@@ -1691,7 +1691,154 @@ ${languagePromptModifier ? `\n\nREMINDER: Entire response must be in the request
     }
   });
 
-  // Dedicated Recipe Generation endpoint (for FoodGuide)
+  // Helper to fetch authentic real-world recipes & source links from free public culinary APIs (TheMealDB, Wikibooks Cookbook, Wikipedia)
+  async function fetchFreeWebRecipeReferences(rawIngredients: string, mealType: string): Promise<{
+    contextText: string;
+    sources: Array<{ title: string; uri: string }>;
+  }> {
+    const typoMap: Record<string, string> = {
+      panner: "paneer",
+      panir: "paneer",
+      tometo: "tomato",
+      poteto: "potato",
+      spinich: "spinach",
+      chiken: "chicken",
+      brocoli: "broccoli",
+      bananna: "banana",
+      oates: "oats",
+    };
+    const terms = rawIngredients
+      .split(/[,&+/]+|\band\b/i)
+      .map((s) => {
+        const cleaned = s.trim().toLowerCase().replace(/[^a-zA-Z0-9\s-]/g, "");
+        return typoMap[cleaned] || cleaned;
+      })
+      .filter((s) => s.length >= 2)
+      .slice(0, 3);
+    const primaryTerm = terms[0] || rawIngredients.trim().split(/\s+/)[0] || "rice";
+
+    const sources: Array<{ title: string; uri: string }> = [];
+    const seenUris = new Set<string>();
+    const snippets: string[] = [];
+
+    const addSource = (title: string, uri: string) => {
+      const cleanUri = String(uri || "").trim();
+      const cleanTitle = String(title || "").trim();
+      if (!cleanUri.startsWith("http") || !cleanTitle || seenUris.has(cleanUri)) return;
+      seenUris.add(cleanUri);
+      sources.push({ title: cleanTitle, uri: cleanUri });
+    };
+
+    const fetchJsonWithTimeout = async (url: string, ms = 4000) => {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), ms);
+      try {
+        const resp = await fetch(url, {
+          signal: controller.signal,
+          headers: { "User-Agent": "TrickyToddlersApp/1.0" },
+        });
+        if (!resp.ok) return null;
+        return await resp.json();
+      } catch {
+        return null;
+      } finally {
+        clearTimeout(timer);
+      }
+    };
+
+    const searchQueries = Array.from(new Set([primaryTerm, `${primaryTerm} ${mealType}`]));
+
+    const [mealDbSearch, mealDbFilter, wikibooksSearch, wikiSearch] = await Promise.allSettled([
+      fetchJsonWithTimeout(`https://www.themealdb.com/api/json/v1/1/search.php?s=${encodeURIComponent(primaryTerm)}`),
+      fetchJsonWithTimeout(`https://www.themealdb.com/api/json/v1/1/filter.php?i=${encodeURIComponent(primaryTerm)}`),
+      fetchJsonWithTimeout(
+        `https://en.wikibooks.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(
+          `Cookbook:${searchQueries[0]}`
+        )}&format=json&srlimit=4`
+      ),
+      fetchJsonWithTimeout(
+        `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(
+          `${rawIngredients} ${mealType} recipe dish`
+        )}&format=json&srlimit=4`
+      ),
+    ]);
+
+    // 1. Parse TheMealDB full recipe matches
+    if (mealDbSearch.status === "fulfilled" && Array.isArray(mealDbSearch.value?.meals)) {
+      for (const meal of mealDbSearch.value.meals.slice(0, 3)) {
+        const ingLines: string[] = [];
+        for (let idx = 1; idx <= 20; idx++) {
+          const ing = String(meal[`strIngredient${idx}`] || "").trim();
+          const meas = String(meal[`strMeasure${idx}`] || "").trim();
+          if (ing) ingLines.push(meas ? `${meas} ${ing}` : ing);
+        }
+        const mealUrl = meal.strSource && String(meal.strSource).startsWith("http")
+          ? meal.strSource
+          : `https://www.themealdb.com/meal/${meal.idMeal}`;
+        addSource(`${meal.strMeal} (TheMealDB)`, mealUrl);
+        snippets.push(
+          `Reference Dish (TheMealDB): ${meal.strMeal} (${meal.strArea || ""} ${meal.strCategory || ""})\nIngredients: ${ingLines.join(", ")}\nMethod Excerpt: ${String(meal.strInstructions || "").slice(0, 450)}`
+        );
+      }
+    }
+
+    // 2. Parse TheMealDB ingredient filter matches (if search.php returned few/none)
+    if (mealDbFilter.status === "fulfilled" && Array.isArray(mealDbFilter.value?.meals)) {
+      for (const meal of mealDbFilter.value.meals.slice(0, 2)) {
+        addSource(`${meal.strMeal} (TheMealDB)`, `https://www.themealdb.com/meal/${meal.idMeal}`);
+        snippets.push(`Related Real Dish: ${meal.strMeal}`);
+      }
+    }
+
+    // 3. Parse Wikibooks Cookbook real open-licensed recipes + extract text
+    if (wikibooksSearch.status === "fulfilled" && Array.isArray(wikibooksSearch.value?.query?.search)) {
+      const topTitles = wikibooksSearch.value.query.search
+        .map((s: any) => String(s.title || ""))
+        .filter((t: string) => t.startsWith("Cookbook:"))
+        .slice(0, 2);
+
+      for (const title of topTitles) {
+        addSource(
+          title.replace("Cookbook:", "") + " (Wikibooks Cookbook)",
+          `https://en.wikibooks.org/wiki/${encodeURIComponent(title.replace(/ /g, "_"))}`
+        );
+      }
+
+      if (topTitles.length > 0) {
+        const extractData = await fetchJsonWithTimeout(
+          `https://en.wikibooks.org/w/api.php?action=query&prop=extracts&explaintext=1&exchars=1200&titles=${encodeURIComponent(
+            topTitles.join("|")
+          )}&format=json`,
+          3500
+        );
+        const pages = extractData?.query?.pages || {};
+        for (const page of Object.values(pages) as any[]) {
+          if (page?.extract) {
+            snippets.push(`Wikibooks Cookbook (${page.title}):\n${String(page.extract).slice(0, 700)}`);
+          }
+        }
+      }
+    }
+
+    // 4. Add Wikipedia culinary dish context if we still have fewer than 3 sources
+    if (sources.length < 3 && wikiSearch.status === "fulfilled" && Array.isArray(wikiSearch.value?.query?.search)) {
+      for (const item of wikiSearch.value.query.search.slice(0, 2)) {
+        const title = String(item.title || "");
+        if (!title) continue;
+        addSource(
+          `${title} (Culinary Reference)`,
+          `https://en.wikipedia.org/wiki/${encodeURIComponent(title.replace(/ /g, "_"))}`
+        );
+      }
+    }
+
+    return {
+      contextText: snippets.join("\n\n"),
+      sources: sources.slice(0, 5),
+    };
+  }
+
+  // Dedicated Recipe Generation endpoint (for FoodGuide) using Google Search Grounding with automatic free-tier web recipe fallback
   router.post("/generate-recipes", async (req, res) => {
     const {
       childAgeYears,
@@ -1701,9 +1848,8 @@ ${languagePromptModifier ? `\n\nREMINDER: Entire response must be in the request
       dietaryNeeds,
       servings,
       equipment,
-      defaultRecipes,
+      languagePromptModifier,
     } = req.body;
-    const defaultBatchRecipes = Array.isArray(defaultRecipes) ? defaultRecipes : [];
     const targetMealType = mealType || "Breakfast";
     const targetCookTime = cookingTime || "15–30 mins";
     const targetDietary =
@@ -1711,96 +1857,367 @@ ${languagePromptModifier ? `\n\nREMINDER: Entire response must be in the request
         ? dietaryNeeds.join(", ")
         : typeof dietaryNeeds === "string" && dietaryNeeds.trim()
         ? dietaryNeeds
-        : "No specific restriction";
+        : "Vegetarian";
     const targetServings = servings || "2 Servings";
     const targetEquipment = equipment || "Stovetop / One-Pan";
+    const langClause = languagePromptModifier ? `\n${languagePromptModifier}` : '';
+    const rawIngredients = String(ingredients || "").trim();
 
-    const promptText = `
-You are an expert pediatric nutritionist and master chef specializing in child and family meals.
-Construct 3 healthy, developmentally safe, and delicious recipes tailored to:
+    if (!rawIngredients) {
+      return res.status(400).json({ error: "Please enter at least one kitchen ingredient." });
+    }
+
+    const baseCriteriaBlock = `
+- Core Kitchen Ingredients (correct obvious typos like "panner" -> "paneer"): "${rawIngredients}"
 - Target Child / Family Age Group: ${childAgeYears || 'All Ages'}
-- Core Kitchen Ingredients: "${ingredients || 'Moong dal, oats, banana, spinach'}"
-- Meal Type Requested: "${targetMealType}"
+- Meal Type: "${targetMealType}"
 - Cooking Time Limit: "${targetCookTime}"
 - Dietary Preferences & Goals: "${targetDietary}"
-- Number of Servings: "${targetServings}"
+- Number of Servings (scale all ingredient quantities accurately): "${targetServings}"
 - Kitchen Equipment to Use: "${targetEquipment}"
 
-Guidelines:
-1. Every recipe MUST match the requested Meal Type ("${targetMealType}"), respect the Cooking Time ("${targetCookTime}"), use the specified Kitchen Equipment ("${targetEquipment}"), scale ingredient quantities for "${targetServings}", and strictly follow Dietary Preferences ("${targetDietary}").
-2. Seasoning must be wholesome and age-appropriate.
-3. Generate exactly 3 distinct recipe variations for "${targetMealType}".
-4. Output ONLY a valid JSON array of exactly 3 objects (no conversational preamble, no markdown code fence).
-Each object must have these exact keys:
+Strict Culinary & Authenticity Rules:
+1. Return 3 DISTINCT, real, well-known Indian or global dishes (e.g., Paneer Bhurji, Instant Pot Moong Dal Paneer Khichdi, Paneer & Vegetable Cheela, Ven Pongal, Palak Paneer Pulao, etc. — NEVER invent generic placeholder titles like "Paneer Breakfast Bowl").
+2. Every recipe MUST genuinely work in "${targetEquipment}", finish within "${targetCookTime}", strictly adhere to "${targetDietary}", and be developmentally safe for age "${childAgeYears || 'All Ages'}" (no raw hard choking chunks for toddlers; no honey/salt/added sugar if under 12 months).
+3. List EVERY single required ingredient individually with exact household measurements scaled for "${targetServings}" (e.g., "150g fresh paneer, crumbled", "1 small onion, finely chopped", "1/2 tsp cumin seeds (jeera)", "1/4 tsp turmeric powder", "1 tbsp desi ghee", "1/2 cup water"). EVERY ingredient mentioned in the steps (including tempering spices, cashews, oil/ghee, water, salt) MUST appear in "ingredients".
+4. Write 8 to 12 detailed, granular cooking steps in "instructions" covering prep/soaking, ${targetEquipment} mode/flame/temperature, tempering spices, sautéing/cooking duration, visual doneness indicators, cooling check, and serving tips.
+5. Output ONLY a valid JSON array of exactly 3 recipe objects (no markdown code fence, no extra prose).${langClause}
+
+Each JSON object MUST have these exact keys:
 - "id": string (unique)
-- "name": string (engaging dish name)
+- "name": string (authentic dish name)
+- "summary": string (1–2 sentence appetizing dish overview)
 - "mealType": string ("${targetMealType}")
-- "prepTime": string (e.g. "5 mins")
+- "prepTime": string (e.g. "10 mins")
 - "cookTime": string (fitting within "${targetCookTime}")
-- "textureGuide": string (texture, serving size for ${targetServings}, and ${targetEquipment} cooking note)
-- "ingredients": array of strings (scaled for ${targetServings})
-- "instructions": array of step-by-step strings using ${targetEquipment}
-- "nutritionBenefits": string (vitamins, minerals, and "${targetDietary}" nutritional benefits)
-- "safetyAlerts": string (temperature, choking prevention, and allergen advice)
+- "textureGuide": string (texture, ${targetServings} portion note, and ${targetEquipment} cooking tip)
+- "ingredients": string[] (8 to 14 itemized ingredients with exact measurements for ${targetServings})
+- "instructions": string[] (8 to 12 detailed step-by-step cooking instructions)
+- "nutritionBenefits": string (key vitamins, minerals, protein, and "${targetDietary}" benefits)
+- "safetyAlerts": string (temperature, choking prevention, and allergen notes)
 `;
+
+    const recipeSchema = {
+      type: Type.ARRAY,
+      items: {
+        type: Type.OBJECT,
+        properties: {
+          id: { type: Type.STRING },
+          name: { type: Type.STRING },
+          summary: { type: Type.STRING },
+          mealType: { type: Type.STRING },
+          prepTime: { type: Type.STRING },
+          cookTime: { type: Type.STRING },
+          textureGuide: { type: Type.STRING },
+          ingredients: { type: Type.ARRAY, items: { type: Type.STRING } },
+          instructions: { type: Type.ARRAY, items: { type: Type.STRING } },
+          nutritionBenefits: { type: Type.STRING },
+          safetyAlerts: { type: Type.STRING },
+        },
+        required: ["name", "ingredients", "instructions"],
+      },
+    };
 
     try {
       const ai = getAI();
       if (!ai) {
-        return res.json({ recipes: defaultBatchRecipes });
+        return res.status(503).json({
+          error: "Gemini API is not configured on the server. Please check Settings > Secrets.",
+        });
       }
 
-      const candidateModels = ["gemini-4-hydrogen", "gemini-3.1-flash-lite", "gemini-flash-latest", "gemini-3.8-flash"];
       let resultText = "";
+      let collectedSources: Array<{ title: string; uri: string }> = [];
+      let lastError: any = null;
+      let usedGoogleSearch = false;
+
+      // 1. Try Google Search Grounding first (succeeds when Search Grounding quota / billing key is available)
+      try {
+        const groundedResult = await withTimeout(
+          ai.models.generateContent({
+            model: "gemini-4-hydrogen",
+            contents: `Use Google Search to find 3 authentic, real-world, popular culinary recipes matching ALL of these exact criteria:\n${baseCriteriaBlock}`,
+            config: {
+              systemInstruction:
+                "You are an expert pediatric nutritionist and culinary chef. Always run Google Search to verify authentic real-world recipes and exact ingredient proportions. Output ONLY a valid JSON array of 3 distinct recipes.",
+              tools: [{ googleSearch: {} }],
+              thinkingConfig: { thinkingLevel: ThinkingLevel.LOW },
+            },
+          }),
+          25000
+        );
+
+        const chunks = (groundedResult as any)?.candidates?.[0]?.groundingMetadata?.groundingChunks;
+        if (Array.isArray(chunks)) {
+          const seen = new Set<string>();
+          for (const c of chunks) {
+            const uri = c?.web?.uri;
+            const title = c?.web?.title;
+            if (uri && title && !seen.has(uri)) {
+              seen.add(uri);
+              collectedSources.push({ title, uri });
+            }
+          }
+        }
+
+        if (groundedResult.text && groundedResult.text.trim()) {
+          resultText = groundedResult.text.trim();
+          usedGoogleSearch = true;
+        }
+      } catch (searchErr: any) {
+        lastError = searchErr;
+        console.warn("Google Search Grounding unavailable, switching to free web recipe APIs + standard Gemini:", searchErr?.message || searchErr);
+      }
+
+      // 2. Free-Tier Path (No paid Gemini Search Grounding plan needed):
+      // Fetch authentic recipe references from TheMealDB + Wikibooks Cookbook + Wikipedia, then structure via free-tier Gemini
+      if (!resultText) {
+        const webRefs = await fetchFreeWebRecipeReferences(rawIngredients, targetMealType);
+        collectedSources = webRefs.sources;
+
+        const webRefSection = webRefs.contextText
+          ? `\nRetrieved Real-World Culinary References:\n${webRefs.contextText}\n`
+          : "";
+
+        const standardPrompt = `Create 3 authentic, real-world, traditional Indian or global recipes matching ALL of these exact criteria:\n${baseCriteriaBlock}${webRefSection}`;
+        const freeTierModels: Array<{ model: string; config: any }> = [
+          {
+            model: "gemini-3.1-flash-lite",
+            config: {
+              systemInstruction:
+                "You are an expert pediatric nutritionist and Indian & global culinary chef. Provide 3 authentic real-world recipes with exact household measurements and detailed steps. Every ingredient used in instructions must be listed in ingredients.",
+              responseMimeType: "application/json",
+              responseSchema: recipeSchema,
+            },
+          },
+          {
+            model: "gemini-4-hydrogen",
+            config: {
+              systemInstruction:
+                "You are an expert pediatric nutritionist and Indian & global culinary chef. Provide 3 authentic real-world recipes with exact household measurements and detailed steps. Every ingredient used in instructions must be listed in ingredients.",
+              responseMimeType: "application/json",
+              responseSchema: recipeSchema,
+              thinkingConfig: { thinkingLevel: ThinkingLevel.LOW },
+            },
+          },
+          {
+            model: "gemini-flash-latest",
+            config: {
+              systemInstruction:
+                "You are an expert pediatric nutritionist and culinary chef. Output ONLY a valid JSON array of 3 authentic recipes.",
+              responseMimeType: "application/json",
+              responseSchema: recipeSchema,
+            },
+          },
+        ];
+
+        for (const candidate of freeTierModels) {
+          try {
+            const resp = await withTimeout(
+              ai.models.generateContent({
+                model: candidate.model,
+                contents: standardPrompt,
+                config: candidate.config,
+              }),
+              25000
+            );
+            if (resp.text && resp.text.trim()) {
+              resultText = resp.text.trim();
+              break;
+            }
+          } catch (mErr: any) {
+            lastError = mErr;
+            console.warn(`Free-tier recipe model ${candidate.model} failed:`, mErr?.message || mErr);
+          }
+        }
+      }
+
+      if (!resultText) {
+        const rawErrMsg = String(lastError?.message || lastError || "");
+        const isQuota = rawErrMsg.includes("429") || rawErrMsg.includes("RESOURCE_EXHAUSTED") || rawErrMsg.toLowerCase().includes("quota");
+        const isAuth = rawErrMsg.includes("403") || rawErrMsg.includes("PERMISSION_DENIED") || rawErrMsg.includes("API_KEY_INVALID");
+
+        if (isQuota) {
+          return res.status(429).json({
+            error:
+              "Gemini API free-tier rate limit reached (429 RESOURCE_EXHAUSTED). Please wait a minute and click Retry, or add a key with higher quota in Settings > Secrets.",
+            status: "RESOURCE_EXHAUSTED",
+          });
+        }
+        if (isAuth) {
+          return res.status(403).json({
+            error:
+              "Gemini API key permission or validation error. Please verify your API key in the Settings > Secrets panel.",
+          });
+        }
+        return res.status(502).json({
+          error: "Unable to retrieve authentic recipes right now. Please try again in a moment.",
+        });
+      }
+
+      const parseRecipesArray = (raw: string): any[] | null => {
+        try {
+          const cleaned = raw.replace(/```json/gi, "").replace(/```/g, "").trim();
+          const start = cleaned.indexOf("[");
+          const end = cleaned.lastIndexOf("]");
+          const slice = start !== -1 && end !== -1 ? cleaned.slice(start, end + 1) : cleaned;
+          const parsed = JSON.parse(slice);
+          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        } catch {}
+        return null;
+      };
+
+      let parsedRecipes = parseRecipesArray(resultText);
+
+      // If Google Search returned markdown/prose instead of strict JSON, structure it cleanly via responseSchema
+      if (!parsedRecipes) {
+        try {
+          const repairResp = await withTimeout(
+            ai.models.generateContent({
+              model: "gemini-3.1-flash-lite",
+              contents: `Convert the following recipe output into a valid JSON array of 3 recipe objects matching the schema. Preserve all authentic dish names, itemized quantities, and detailed steps:\n\n${resultText}`,
+              config: {
+                responseMimeType: "application/json",
+                responseSchema: recipeSchema,
+              },
+            }),
+            15000
+          );
+          if (repairResp.text) {
+            parsedRecipes = parseRecipesArray(repairResp.text);
+          }
+        } catch (repairErr: any) {
+          console.warn("Recipe JSON structuring pass failed:", repairErr?.message || repairErr);
+        }
+      }
+
+      if (!parsedRecipes || parsedRecipes.length === 0) {
+        return res.status(502).json({
+          error: "Could not parse the retrieved recipes into a structured format. Please try generating again.",
+        });
+      }
+
+      const formatted = parsedRecipes.slice(0, 3).map((item: any, idx: number) => ({
+        id: item.id || `rec-${Date.now()}-${idx}`,
+        name: item.name || `${targetMealType} Option ${idx + 1}`,
+        summary: item.summary || item.textureGuide || "",
+        mealType: item.mealType || targetMealType,
+        prepTime: item.prepTime || "10 mins",
+        cookTime: item.cookTime || "15 mins",
+        textureGuide: item.textureGuide || `Prepared with ${targetEquipment} for ${targetServings}`,
+        ingredients: Array.isArray(item.ingredients) ? item.ingredients : [String(item.ingredients)],
+        instructions: Array.isArray(item.instructions) ? item.instructions : [String(item.instructions)],
+        nutritionBenefits: item.nutritionBenefits || "Rich in balanced pediatric nutrients.",
+        safetyAlerts: item.safetyAlerts || "Check temperature before serving. Supervise children while eating.",
+        sources: collectedSources.slice(0, 5),
+      }));
+
+      return res.json({
+        recipes: formatted,
+        sources: collectedSources.slice(0, 5),
+        grounded: collectedSources.length > 0,
+        sourceMode: usedGoogleSearch ? "google-search" : "free-web-culinary-apis",
+      });
+    } catch (err: any) {
+      console.error("Recipe generation error:", err);
+      return res.status(500).json({
+        error: err?.message || "Failed to generate authentic recipes.",
+      });
+    }
+  });
+
+  // Cached AI Recipe Translation endpoint for all 12 supported languages
+  const recipeTranslationCache = new Map<string, any>();
+  const LANGUAGE_NAMES: Record<string, string> = {
+    hi: 'Hindi (Devanagari script)',
+    ta: 'Tamil (Tamil script)',
+    te: 'Telugu (Telugu script)',
+    kn: 'Kannada (Kannada script)',
+    ml: 'Malayalam (Malayalam script)',
+    mr: 'Marathi (Devanagari script)',
+    bn: 'Bengali (Bengali script)',
+    gu: 'Gujarati (Gujarati script)',
+    pa: 'Punjabi (Gurmukhi script)',
+    as: 'Assamese (Assamese/Bengali script)',
+    or: 'Odia (Odia script)'
+  };
+
+  router.post("/translate-recipe", async (req, res) => {
+    const { recipeId, targetLang, recipe } = req.body;
+    const langCode = String(targetLang || 'en').toLowerCase();
+    if (!recipe || langCode === 'en' || !LANGUAGE_NAMES[langCode]) {
+      return res.json({ translated: null });
+    }
+
+    const cacheKey = `${recipeId || recipe.name}:${langCode}:${(recipe.instructions || []).length}`;
+    if (recipeTranslationCache.has(cacheKey)) {
+      return res.json({ translated: recipeTranslationCache.get(cacheKey) });
+    }
+
+    try {
+      const ai = getAI();
+      if (!ai) {
+        return res.json({ translated: null });
+      }
+
+      const targetLanguageDesc = LANGUAGE_NAMES[langCode];
+      const payloadToTranslate = {
+        name: recipe.name,
+        prepTime: recipe.prepTime,
+        cookTime: recipe.cookTime,
+        textureGuide: recipe.textureGuide || undefined,
+        ingredients: recipe.ingredients || [],
+        instructions: recipe.instructions || [],
+        benefits: recipe.benefits || recipe.nutritionBenefits || '',
+        safety: recipe.safety || recipe.safetyAlerts || ''
+      };
+
+      const promptText = `
+Translate the following pediatric culinary recipe JSON accurately into ${targetLanguageDesc}.
+Rules:
+1. Preserve exact quantities, measurements, numbers, cooking times, temperatures (°C), and step order.
+2. Use natural home-cooking culinary terminology in authentic ${targetLanguageDesc}.
+3. Keep arrays exact 1-to-1 length: "ingredients" must have ${payloadToTranslate.ingredients.length} items, and "instructions" must have ${payloadToTranslate.instructions.length} items.
+4. Output ONLY a valid JSON object matching the input keys (no markdown fences, no commentary).
+
+Input JSON:
+${JSON.stringify(payloadToTranslate)}
+`;
+
+      const candidateModels = ["gemini-3.1-flash-lite", "gemini-flash-latest", "gemini-4-hydrogen"];
       for (const model of candidateModels) {
         try {
           const result = await withTimeout(
             ai.models.generateContent({
               model,
               contents: promptText,
-              config: {
-                systemInstruction: "You are an expert pediatric nutritionist and master chef. Ground your recipes in trusted Indian and global culinary guidelines and IAP/ICMR-NIN pediatric nutrition standards while strictly enforcing the user's selected meal type, cooking time, dietary preferences, servings, and kitchen equipment. Return only a valid JSON array of 3 distinct recipes.",
-                tools: [{ googleSearch: {} }],
-              }
             }),
-            5500
+            8000
           );
           if (result.text) {
-            resultText = result.text;
-            break;
+            const cleaned = result.text.replace(/```json/g, '').replace(/```/g, '').trim();
+            const start = cleaned.indexOf('{');
+            const end = cleaned.lastIndexOf('}');
+            const jsonStr = start !== -1 && end !== -1 ? cleaned.slice(start, end + 1) : cleaned;
+            const parsed = JSON.parse(jsonStr);
+            if (parsed && Array.isArray(parsed.ingredients) && Array.isArray(parsed.instructions)) {
+              if (recipeTranslationCache.size > 600) {
+                const firstKey = recipeTranslationCache.keys().next().value;
+                if (firstKey) recipeTranslationCache.delete(firstKey);
+              }
+              recipeTranslationCache.set(cacheKey, parsed);
+              return res.json({ translated: parsed });
+            }
           }
-        } catch (mErr) {
-          // try next model or timeout
+        } catch {
+          // try next model
         }
       }
 
-      if (resultText) {
-        const cleanedText = resultText.replace(/```json/g, '').replace(/```/g, '').trim();
-        const jsonStart = cleanedText.indexOf('[');
-        const jsonEnd = cleanedText.lastIndexOf(']');
-        const sliceText = (jsonStart !== -1 && jsonEnd !== -1) ? cleanedText.slice(jsonStart, jsonEnd + 1) : cleanedText;
-        const parsed = JSON.parse(sliceText);
-        if (Array.isArray(parsed) && parsed.length >= 2) {
-          const formatted = parsed.map((item: any, idx: number) => ({
-            id: item.id || `rec-${Date.now()}-${idx}`,
-            name: item.name || `${targetMealType} Recipe ${idx + 1}`,
-            mealType: item.mealType || targetMealType,
-            prepTime: item.prepTime || '5 mins',
-            cookTime: item.cookTime || '15 mins',
-            textureGuide: item.textureGuide || `Prepared with ${targetEquipment} for ${targetServings}`,
-            ingredients: Array.isArray(item.ingredients) ? item.ingredients : [String(item.ingredients)],
-            instructions: Array.isArray(item.instructions) ? item.instructions : [String(item.instructions)],
-            nutritionBenefits: item.nutritionBenefits || 'Rich in essential micronutrients.',
-            safetyAlerts: item.safetyAlerts || 'Check temperature before serving. Supervise children while eating.'
-          }));
-          return res.json({ recipes: formatted });
-        }
-      }
-
-      return res.json({ recipes: defaultBatchRecipes });
+      return res.json({ translated: null });
     } catch (err) {
-      console.warn("Recipe generation error, returning default recipes:", err);
-      return res.json({ recipes: defaultBatchRecipes });
+      console.warn("Recipe translation error:", err);
+      return res.json({ translated: null });
     }
   });
 

@@ -839,6 +839,27 @@ export const AIRecipeHistoryPage: React.FC = () => {
                     </div>
                   </div>
 
+                  {((activeRecipe.sources && activeRecipe.sources.length > 0) || (activeBatch?.sources && activeBatch.sources.length > 0)) && (
+                    <div className="mt-4 p-4 rounded-2xl bg-white/[0.02] border border-white/10 text-left space-y-2">
+                      <h4 className="text-[11px] font-black uppercase tracking-wider text-emerald-300">
+                        Verified Google Search Culinary Sources
+                      </h4>
+                      <div className="flex flex-wrap gap-2">
+                        {(activeRecipe.sources && activeRecipe.sources.length > 0 ? activeRecipe.sources : activeBatch?.sources || []).map((src, sIdx) => (
+                          <a
+                            key={sIdx}
+                            href={src.uri}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white/5 hover:bg-emerald-500/15 border border-white/10 text-white/80 hover:text-emerald-200 text-[11px] font-medium transition-all"
+                          >
+                            <span className="truncate max-w-[240px]">{src.title}</span>
+                          </a>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
                   {/* Bottom Footer Actions */}
                   <div className="mt-8 pt-6 border-t border-white/10 flex flex-wrap items-center justify-between gap-4">
                     <button

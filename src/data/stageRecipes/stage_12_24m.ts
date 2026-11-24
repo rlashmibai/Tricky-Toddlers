@@ -1,4 +1,5 @@
 import { Recipe, AgeGroupData } from '../foodGuideData';
+import { buildSharedCoreRecipes } from './sharedCoreRecipes';
 
 export const stageData_12_24_months: AgeGroupData = {
   id: '12_24_months',
@@ -14,577 +15,328 @@ export const stageData_12_24_months: AgeGroupData = {
     {
       id: '12_24_months_rec_1',
       name: "Mild Savory Vegetable Upma",
-      localName: "\u0938\u092c\u094d\u091c\u0940 \u0909\u092a\u092e\u093e / \u0b95\u0bbe\u0baf\u0bcd\u0b95\u0bb1\u0bbf \u0b89\u0baa\u0bcd\u0baa\u0bc1\u0bae\u0bbe",
+      localName: "सब्जी उपमा / காய்கறி உப்புமா",
       prepTime: "10 mins",
       cookTime: "10 mins",
       category: 'Morning',
       region: 'Pan-Indian',
       ingredients: [
-        "3 tablespoons Semolina (Rava)",
-        "1 tablespoon Finely chopped boiled Peas & Carrots",
-        "1/4 teaspoon Ghee",
-        "A pinch of Mustard seeds and Curry leaf",
-        "1/4 teaspoon Salt"
+        "3 tbsp fine semolina (Bombay rava / suji)",
+        "2 tbsp very finely chopped carrot & soft green peas",
+        "1 tbsp finely chopped fresh coriander leaves",
+        "1/2 tsp pure homemade desi ghee",
+        "1/4 tsp black mustard seeds (rai)",
+        "3 fresh curry leaves (finely torn or removed before serving)",
+        "1 pinch turmeric powder (optional)",
+        "1/4 tsp salt (or a light toddler pinch)",
+        "1 cup clean hot drinking water"
       ],
       instructions: [
-        "Dry roast rava in a pan on low heat until slightly fragrant. Set aside.",
-        "Heat ghee, add mustard seeds and a curry leaf. Add chopped veggies and saut\u00e9.",
-        "Pour in 1 cup of water and salt, bringing it to a boil.",
-        "Slowly add rava while stirring continuously to prevent clumps. Cover and cook on low for 3 mins."
+        "Firstly, dry-roast the semolina (rava) in a heavy pan on low flame for 3 minutes until warm and fragrant without browning, then transfer to a dry plate.",
+        "Steam or boil the finely chopped carrots and green peas for 5 minutes until fork-tender; squish peas gently flat for toddlers.",
+        "Bring 1 cup of water to a rolling boil in a separate kettle or small vessel and keep ready.",
+        "Heat ½ teaspoon ghee in the pan on low flame, add mustard seeds, and let them pop cleanly before adding torn curry leaves.",
+        "Toss in the soft-boiled carrots and peas and sauté gently for 1 minute with a light pinch of turmeric and salt.",
+        "Carefully pour in the 1 cup hot water and bring it to a brisk simmer.",
+        "Reduce flame to minimum and drizzle in the roasted rava in a steady thin stream while stirring continuously to prevent lumps.",
+        "Cover with a tight lid and cook on lowest flame for 3 minutes until the rava swells soft, moist, and fluffy.",
+        "Turn off the stove, fluff lightly with a fork, garnish with chopped coriander, cool to lukewarm, and serve fresh."
       ],
-      benefits: "Iron-rich, easy-to-chew savory cereal filled with colorful, vitamins-loaded veggies.",
-      safety: "Chop peas and carrots into tiny, soft-boiled pieces. Remove curry leaf before serving.",
-      icon: "\ud83c\udf3e"
+      benefits: "Iron-friendly savory semolina cereal combined with vitamin-rich soft veggies and butterfat energy.",
+      safety: "Remove whole curry leaves before serving and squish peas lightly so toddlers under 2 chew safely.",
+      icon: "🌾"
     },
     {
       id: '12_24_months_rec_2',
       name: "Soft Ghee-brushed Aloo Paratha",
-      localName: "\u0928\u0930\u092e \u0906\u0932\u0942 \u092a\u0930\u093e\u0920\u093e / \u0bae\u0bc6\u0ba9\u0bcd\u0bae\u0bc8\u0baf\u0bbe\u0ba9 \u0b89\u0bb0\u0bc1\u0bb3\u0bc8\u0b95\u0bcd\u0b95\u0bbf\u0bb4\u0b99\u0bcd\u0b95\u0bc1 \u0baa\u0bb0\u0bcb\u0b9f\u0bcd\u0b9f\u0bbe",
-      prepTime: "15 mins",
+      localName: "नरम आलू पराठा / மென்மையான உருளைக்கிழங்கு பரோட்டா",
+      prepTime: "15 mins (+ 10 mins resting)",
       cookTime: "10 mins",
       category: 'Morning',
       region: 'Pan-Indian',
       ingredients: [
-        "1/2 cup Whole Wheat Flour",
-        "1/4 cup Boiled Mashed Potato",
-        "A pinch of Cumin powder",
-        "Coriander powder",
-        "and Salt",
-        "1/2 teaspoon Ghee"
+        "1/2 cup whole wheat flour (atta)",
+        "3 tbsp warm water or milk (to knead extra-soft dough)",
+        "1/4 cup boiled and smoothly mashed potato (no lumps)",
+        "1 tbsp finely chopped fresh coriander leaves",
+        "1/4 tsp roasted cumin (jeera) powder",
+        "1/4 tsp coriander (dhania) powder",
+        "1/4 tsp mild salt (or light pinch)",
+        "1 tsp pure homemade desi ghee (for dough and roasting)",
+        "1 tbsp dry whole wheat flour (for dusting)"
       ],
       instructions: [
-        "Knead flour and water into a very soft dough. Rest for 10 minutes.",
-        "Mash the potato with a pinch of cumin, coriander, and salt.",
-        "Roll out a small dough ball, stuff with potato, roll gently, and roast on hot tawa brushing with ghee until soft and golden."
+        "Firstly, mix whole wheat flour and ¼ teaspoon ghee in a bowl; add warm water gradually and knead for 4 minutes into a very soft, pliable dough.",
+        "Cover the dough with a damp cloth and rest it for 10 minutes so the paratha rolls easily without turning tough.",
+        "Meanwhile, mash the boiled potato completely smooth with cumin powder, coriander powder, chopped coriander, and mild salt.",
+        "Divide dough into two equal balls and mash filling into two small lemon-sized portions.",
+        "Flatten one dough ball with dusted flour, press a shallow well in the center, and place the spiced mashed potato inside.",
+        "Gather the dough edges cleanly to seal, pinch off any excess, flatten gently with your palm, and dust lightly with dry atta.",
+        "Roll evenly with gentle strokes into a 5-inch disc without letting stuffing tear out.",
+        "Place onto a heated tawa on medium flame; flip after 25 seconds when light bubbles appear.",
+        "Brush ½ teaspoon ghee on both sides and press lightly with a spatula until soft golden-brown spots form.",
+        "Cool slightly, slice into soft toddler-sized strips or triangles, and serve warm with fresh curd."
       ],
-      benefits: "Packed with clean carbohydrates, healthy fats, and dietary fiber for energetic toddlers.",
-      safety: "Brush with ghee to keep it very soft. Cut into thin, manageable strips for easy self-feeding.",
-      icon: "\ud83e\uded3"
+      benefits: "Clean complex carbs, potassium, and healthy ghee fats supporting active toddler mobility and weight gain.",
+      safety: "Brush lightly with ghee and stack covered briefly so the paratha stays pillowy soft rather than crisp-dry.",
+      icon: "🫓"
     },
     {
       id: '12_24_months_rec_3',
       name: "Creamy Oats & Berry Porridge",
-      localName: "\u0913\u091f\u094d\u0938 \u0914\u0930 \u092c\u0947\u0930\u0940 \u0926\u0932\u093f\u092f\u093e / \u0b93\u0b9f\u0bcd\u0bb8\u0bcd \u0baa\u0bc6\u0bb0\u0bcd\u0bb0\u0bbf \u0b95\u0b9e\u0bcd\u0b9a\u0bbf",
+      localName: "ओट्स और बेरी दलिया / ஓட்ஸ் பெர்ரி கஞ்சி",
       prepTime: "5 mins",
       cookTime: "8 mins",
       category: 'Morning',
       region: 'Pan-Indian',
       ingredients: [
-        "3 tablespoons Rolled Oats",
-        "1/2 cup Milk (Cow\\'s milk or Breastmilk)",
-        "1 tablespoon Finely chopped Strawberries/Blueberries",
-        "1/2 teaspoon Honey or Jaggery (Optional)"
+        "3 tbsp rolled oats (pulsed lightly if finer texture preferred)",
+        "1/2 cup whole cow's milk (or fortified plant milk)",
+        "1/4 cup clean drinking water",
+        "2 tbsp finely chopped ripe strawberries or halved blueberries",
+        "1/2 tsp raw honey or organic jaggery powder (safe for 12m+)",
+        "1 tiny pinch Ceylon cinnamon powder",
+        "1/4 tsp pure butter or almond butter (optional)"
       ],
       instructions: [
-        "Cook oats in milk and water over medium heat for 5-6 minutes until soft and creamy.",
-        "Stir in the finely chopped berries and honey.",
-        "Let it simmer for 1 more minute, then cool and serve warm."
+        "Firstly, wash fresh strawberries or blueberries thoroughly and chop them into tiny, quartered toddler-safe pieces.",
+        "Heat a small heavy-bottomed saucepan on low flame and dry-toast the rolled oats for 90 seconds until lightly aromatic.",
+        "Pour in ¼ cup water and ½ cup whole milk while stirring steadily.",
+        "Bring to a gentle simmer on low-to-medium heat, then reduce flame to minimum.",
+        "Cook for 5 to 6 minutes, stirring continuously from the bottom until the oats thicken into a velvety porridge.",
+        "Fold in the chopped berries and Ceylon cinnamon powder; simmer for 1 more minute so berries soften and turn juicy.",
+        "Turn off the stove and let the porridge cool for 2 minutes before stirring in ½ teaspoon honey or jaggery.",
+        "Test warmth on your inner wrist, verify all berries are soft-squished, and feed warm by spoon."
       ],
-      benefits: "High in antioxidants, calcium, and beta-glucan fiber which helps sustain energy.",
-      safety: "Honey is now perfectly safe for toddlers over 12 months. Do not feed honey to babies under 1 year.",
-      icon: "\ud83e\udd63"
+      benefits: "Anthocyanin antioxidants from berries, calcium from milk, and soluble beta-glucan fiber for steady toddler energy.",
+      safety: "Quarter whole blueberries cleanly so no round berry can slip whole down the windpipe; honey is safe from 12 months onward.",
+      icon: "🥣"
     },
     {
       id: '12_24_months_rec_4',
       name: "Mini Steamed Veggie Uttapams",
-      localName: "\u092e\u093f\u0928\u0940 \u0909\u0924\u094d\u0924\u092a\u092e / \u0bae\u0bbf\u0ba9\u0bbf \u0b8a\u0ba4\u0bcd\u0ba4\u0baa\u0bcd\u0baa\u0bae\u0bcd",
+      localName: "मिनी उत्तपम / மினி ஊத்தப்பம்",
       prepTime: "10 mins",
       cookTime: "8 mins",
       category: 'Lunch',
       region: 'Pan-Indian',
       ingredients: [
-        "1/2 cup fermented Dosa Batter",
-        "2 tablespoons finely grated carrot and beetroot",
-        "1/4 teaspoon Ghee"
+        "1/2 cup fresh fermented dosa/idli batter (thick consistency)",
+        "2 tbsp very finely grated fresh carrot",
+        "2 tbsp very finely grated beetroot",
+        "1 tbsp finely chopped fresh coriander leaves",
+        "1 tiny pinch roasted cumin powder (optional)",
+        "1/2 tsp pure homemade ghee (for griddling)"
       ],
       instructions: [
-        "Heat a griddle and grease with ghee. Pour small circles of dosa batter.",
-        "Sprinkle the grated carrots and beets on top of each mini pancake.",
-        "Drizzle ghee, flip, and cook well on both sides until soft and spongy."
+        "Firstly, wash, peel, and finely grate the carrot and beetroot onto a clean plate; mix gently with chopped coriander.",
+        "Stir the fermented batter until smooth and thick enough to hold shapes (not runny).",
+        "Heat a flat skillet or tawa on low-to-medium flame and brush lightly with ¼ teaspoon ghee.",
+        "Pour small silver-dollar ladles (2 tbsp each) of batter onto the griddle to form 3-inch mini uttapams.",
+        "Immediately scatter 1 tablespoon of the colorful grated carrot-beetroot mix on top of each pancake.",
+        "Press the veggies gently into the wet batter with the back of a spoon so they adhere cleanly.",
+        "Drizzle a drop of ghee around the edges, cover tightly with a lid, and steam-cook on low flame for 2–3 minutes.",
+        "Flip gently once set and cook the veggie side down for 90 seconds until veggies turn tender and sweet.",
+        "Cool slightly on a plate, cut into soft quarters, and serve warm with mild curd or coconut chutney."
       ],
-      benefits: "Fermented foods are wonderful for digestion and gut flora. Spongy texture is fun to hold.",
-      safety: "Ensure veggies are finely grated so they cook thoroughly and become soft.",
-      icon: "\ud83e\udd5e"
+      benefits: "Gut-friendly fermented rice-lentil batter enriched with colorful iron, folate, and beta-carotene.",
+      safety: "Cover with a lid while cooking so grated vegetables steam soft inside without drying out.",
+      icon: "🥞"
     },
     {
       id: '12_24_months_rec_5',
       name: "Mild Palak Paneer with Soft Steamed Rice",
-      localName: "\u092a\u093e\u0932\u0915 \u092a\u0928\u0940\u0930 \u091a\u093e\u0935\u0932 / \u0baa\u0bbe\u0bb2\u0b95\u0bcd \u0baa\u0ba9\u0bcd\u0ba9\u0bc0\u0bb0\u0bcd \u0b9a\u0bbe\u0ba4\u0bae\u0bcd",
+      localName: "पालक पनीर चावल / பாலக் பன்னீர் சாதம்",
       prepTime: "10 mins",
       cookTime: "12 mins",
       category: 'Lunch',
       region: 'Pan-Indian',
       ingredients: [
-        "1/2 cup Boiled Rice",
-        "1/4 cup Mild Spinach Pur\u00e9e",
-        "2 tablespoons Soft Paneer cubes",
-        "1/4 teaspoon Ghee and pinch of Cumin"
+        "1/2 cup cooked soft steamed white rice",
+        "1 cup fresh tender baby spinach (palak) leaves, washed",
+        "1/3 cup soft homemade paneer, diced into small ½-inch cubes",
+        "1/2 small ripe tomato (finely chopped)",
+        "1/2 tsp pure desi ghee",
+        "1/4 tsp cumin seeds (jeera) & 1 tiny clove garlic (minced)",
+        "1 tiny pinch turmeric powder",
+        "1/4 tsp mild salt (or light pinch)",
+        "2 tbsp fresh plain curd (for serving)"
       ],
       instructions: [
-        "Warm ghee in a pan, toss paneer cubes and spinach puree gently.",
-        "Stir in soft cooked rice and a pinch of salt.",
-        "Simmer for 2 minutes and serve warm with a spoonful of yogurt."
+        "Firstly, wash fresh spinach leaves 3 times cleanly, blanch in boiling water for 90 seconds, then cool in cold water and blend into a smooth green puree.",
+        "Heat ½ teaspoon desi ghee in a small pan over low flame; add cumin seeds and minced garlic for 15 seconds until fragrant.",
+        "Add finely chopped tomato and sauté gently for 3 minutes until completely soft and mushy.",
+        "Stir in the bright green spinach puree, turmeric powder, and light salt; simmer gently on low flame for 3 minutes.",
+        "Gently fold in the small soft paneer cubes and splash in 1–2 tablespoons warm water if overly thick.",
+        "Simmer 2 minutes only so paneer stays pillowy soft without turning chewy.",
+        "Serve warm spooned alongside or gently mixed into soft steamed rice with a spoonful of fresh curd."
       ],
-      benefits: "Rich in iron, vitamin K, and bone-building calcium.",
-      safety: "Ensure paneer cubes are soft and manageable for toddler teeth.",
-      icon: "\ud83c\udf5b"
+      benefits: "Bone-strengthening calcium and protein paired with vitamin K, folate, and vibrant green iron.",
+      safety: "Keep paneer cubes small and tender; avoid excess chili or garam masala for toddlers.",
+      icon: "🍛"
     },
     {
       id: '12_24_months_rec_6',
       name: "Crispy Sprouted Ragi & Ghee Dosa",
-      localName: "\u0930\u093e\u0917\u0940 \u0921\u094b\u0938\u093e / \u0bb0\u0bbe\u0b95\u0bbf \u0ba4\u0bcb\u0b9a\u0bc8",
-      prepTime: "5 mins",
+      localName: "रागी डोसा / ராகி தோசை",
+      prepTime: "8 mins (+ 10 mins resting)",
       cookTime: "6 mins",
       category: 'Lunch',
       region: 'Pan-Indian',
       ingredients: [
-        "1/2 cup Sprouted Ragi flour and rice batter",
-        "1/2 teaspoon Ghee",
-        "Pinch of Salt"
+        "1/4 cup pure sprouted ragi (finger millet) flour",
+        "1/4 cup fermented idli/dosa batter (or rice flour + 2 tbsp curd)",
+        "1/3 cup clean drinking water (as needed for thin batter)",
+        "1/4 tsp cumin powder",
+        "1/4 tsp salt (light toddler pinch)",
+        "1/2 tsp pure homemade ghee (for roasting)",
+        "2 tbsp mild fresh coconut chutney (for dipping)"
       ],
       instructions: [
-        "Mix ragi batter with a pinch of salt and water to pouring consistency.",
-        "Pour thin circle on a hot tawa and drizzle ghee.",
-        "Flip when golden and serve with mild coconut chutney."
+        "Firstly, whisk sprouted ragi flour and fermented batter together in a bowl, adding water gradually until smooth and pourable.",
+        "Stir in cumin powder and mild salt; let the batter rest for 10 minutes to hydrate evenly.",
+        "Heat a flat skillet or cast-iron tawa on medium flame until moderately hot, then reduce to low-medium.",
+        "Brush lightly with a drop of ghee and pour one ladle of batter onto the center.",
+        "Spread quickly in gentle circular motion into a thin 6-inch crepe (leave slightly thicker for softer chewing if preferred).",
+        "Drizzle ½ teaspoon ghee along the edges and top center.",
+        "Cook for 2 minutes until edges lift and base turns crisp-golden, then flip briefly for 30 seconds to ensure full cooking.",
+        "Transfer onto a plate, roll warmly or slice into soft bite-sized strips, and serve with mild coconut chutney."
       ],
-      benefits: "Superior calcium content builds strong toddler bones and teeth.",
-      safety: "Serve rolled or cut into strips for easy handling.",
-      icon: "\ud83c\udf2f"
+      benefits: "High natural calcium and sprouted iron supporting growing toddler bones and healthy hemoglobin.",
+      safety: "Slice crisp edges away if too brittle, or serve warm while still supple for 12–18 month toddlers.",
+      icon: "🌯"
     },
     {
       id: '12_24_months_rec_7',
       name: "Soft Gujarati Methi Thepla Strips",
-      localName: "\u092e\u0947\u0925\u0940 \u0925\u0947\u092a\u0932\u093e / \u0bb5\u0bc6\u0ba8\u0bcd\u0ba4\u0baf\u0b95\u0bcd\u0b95\u0bc0\u0bb0\u0bc8 \u0b9a\u0baa\u0bcd\u0baa\u0bbe\u0ba4\u0bcd\u0ba4\u0bbf",
-      prepTime: "10 mins",
+      localName: "मेथी थेपला / வெந்தயக்கீரை சப்பாத்தி",
+      prepTime: "12 mins (+ 15 mins resting)",
       cookTime: "8 mins",
       category: 'Dinner',
       region: 'Pan-Indian',
       ingredients: [
-        "1/2 cup Whole wheat flour",
-        "2 tablespoons Finely chopped fresh Methi leaves",
-        "1 tablespoon Fresh curd (for softness)",
-        "Pinch of Turmeric",
-        "Cumin",
-        "and Ghee"
+        "1/2 cup whole wheat flour (atta)",
+        "2 tbsp finely chopped fresh tender methi (fenugreek) leaves",
+        "1 tbsp fresh plain curd (for tenderness)",
+        "1/4 tsp pure turmeric powder (haldi)",
+        "1/4 tsp roasted cumin (jeera) powder",
+        "1 tiny pinch ajwain (carom seeds)",
+        "1/4 tsp salt (light pinch)",
+        "1/2 tsp pure desi ghee (for kneading and brushing)",
+        "2 to 3 tbsp warm water (as needed to knead)"
       ],
       instructions: [
-        "Knead flour, methi, curd, and spices into a very soft pliable dough.",
-        "Roll thin and roast quickly on high heat brushing with ghee so it remains super soft.",
-        "Cut into finger strips."
+        "Firstly, wash fresh tender methi leaves thoroughly, discard stems, and chop the leaves very finely.",
+        "In a bowl, combine whole wheat flour, chopped methi leaves, curd, turmeric, cumin powder, ajwain, salt, and ¼ tsp ghee.",
+        "Rub the ingredients together evenly so leaves coat uniformly in flour.",
+        "Add warm water 1 teaspoon at a time and knead for 4 minutes into a smooth, soft, non-sticky dough; rest covered for 15 minutes.",
+        "Divide into 3 small balls, dust lightly with wheat flour, and roll each into a thin, even 5-inch round.",
+        "Heat a tawa on medium-high flame; lay the rolled thepla flat and cook 20 seconds until tiny surface bubbles appear.",
+        "Flip, brush lightly with ¼ teaspoon ghee, flip again, and press gently for 15–20 seconds until golden spots form.",
+        "Remove quickly so it never dries crisp; wrap in a soft cloth for 1 minute, slice into finger strips, and serve warm with curd."
       ],
-      benefits: "Fenugreek leaves provide iron, minerals, and aid healthy gut digestion.",
-      safety: "Cook quickly on hot tawa so it stays tender and does not harden.",
-      icon: "\ud83e\uded3"
+      benefits: "Iron-rich fenugreek greens with digestive carom seeds (ajwain) in a soft handheld flatbread.",
+      safety: "Roast quickly over medium-high heat so the flatbread stays ultra-soft and moist rather than leathery.",
+      icon: "🫓"
     },
     {
       id: '12_24_months_rec_8',
       name: "Soft Stewed Rajma & Rice Bowl",
-      localName: "\u0930\u093e\u091c\u092e\u093e \u091a\u093e\u0935\u0932 / \u0bb0\u0bbe\u0b9c\u0bcd\u0bae\u0bbe \u0b9a\u0bbe\u0ba4\u0bae\u0bcd",
-      prepTime: "10 mins",
-      cookTime: "20 mins",
+      localName: "राजमा चावल / ராஜ்மா சாதம்",
+      prepTime: "12 mins (+ overnight soaking)",
+      cookTime: "22 mins",
       category: 'Dinner',
       region: 'Pan-Indian',
       ingredients: [
-        "1/4 cup Overcooked soft Rajma (Kidney beans)",
-        "1/2 cup Soft steamed rice",
-        "1/4 teaspoon Ghee and pinch of Cumin"
+        "1/4 cup dried red kidney beans (rajma), soaked overnight",
+        "1/2 cup soft-cooked steamed rice",
+        "1 small ripe red tomato (finely pureed or grated)",
+        "1/2 tsp pure desi ghee",
+        "1/4 tsp cumin seeds (jeera) & 1 pinch hing",
+        "1/4 tsp mild turmeric & coriander powder",
+        "1/4 tsp salt (light toddler pinch)",
+        "1.5 cups clean water (for pressure cooking)"
       ],
       instructions: [
-        "Pressure cook soaked rajma until totally soft and squishy.",
-        "Mash beans slightly with gravy and fold into warm rice with ghee.",
-        "Serve at a warm, pleasant temperature."
+        "Firstly, drain overnight-soaked rajma, rinse freshly, and place into a pressure cooker with 1.5 cups water and a pinch of salt.",
+        "Cook for 6 to 7 whistles on medium flame until every kidney bean crushes completely smoothly between fingers.",
+        "Meanwhile, heat ½ teaspoon ghee in a small pan on low flame; add cumin seeds and asafoetida until fragrant.",
+        "Add grated tomato, turmeric, and coriander powder; simmer 4 minutes until tomatoes turn rich and jammy.",
+        "Pour the boiled rajma along with ¼ cup of its cooking broth into the tomato pan.",
+        "Using a potato masher or back of a ladle, gently mash half to three-quarters of the kidney beans to create a thick, smooth gravy.",
+        "Simmer gently on low flame for 5 minutes until creamy and well blended.",
+        "Cool slightly to lukewarm and fold generously into soft steamed rice so every mouthful is moist and easy to swallow."
       ],
-      benefits: "Excellent source of complex carbs, zinc, and muscle-strengthening plant protein.",
-      safety: "Always mash the kidney beans so no tough skins or round shapes remain.",
-      icon: "\ud83e\udd63"
+      benefits: "Rich plant protein, zinc, folate, and slow-burning carbohydrates supporting toddler growth and fullness.",
+      safety: "Mash rajma thoroughly with its creamy gravy—whole firm kidney bean skins can be difficult for 12–18m toddlers.",
+      icon: "🥣"
     },
     {
       id: '12_24_months_rec_9',
       name: "Wholesome Cracked Wheat Veggie Khichdi",
-      localName: "\u0926\u0932\u093f\u092f\u093e \u0935\u0947\u091c \u0916\u093f\u091a\u0921\u093c\u0940 / \u0b95\u0bcb\u0ba4\u0bc1\u0bae\u0bc8 \u0bb0\u0bb5\u0bc8 \u0b95\u0bbf\u0b9a\u0bcd\u0b9a\u0b9f\u0bbf",
+      localName: "दलिया वेज खिचड़ी / கோதுமை ரவை கிச்சடி",
       prepTime: "10 mins",
       cookTime: "15 mins",
       category: 'Snacks',
       region: 'Pan-Indian',
       ingredients: [
-        "1/4 cup Roasted Dalia",
-        "2 tablespoons Moong Dal",
-        "2 tablespoons Chopped beans & carrots",
-        "1/2 teaspoon Ghee"
+        "1/4 cup dry-roasted broken wheat (dalia)",
+        "2 tbsp split yellow moong dal (washed)",
+        "2 tbsp finely chopped tender carrots & French beans",
+        "1/2 tsp pure homemade desi ghee",
+        "1/4 tsp cumin seeds (jeera)",
+        "1 tiny pinch turmeric powder (haldi)",
+        "1/4 tsp salt (light toddler pinch)",
+        "1.5 cups clean drinking water",
+        "2 tbsp fresh homemade curd (for serving)"
       ],
       instructions: [
-        "Pressure cook dalia, dal, and vegetables with water for 3-4 whistles.",
-        "Open cooker and stir vigorously with ghee to create a comforting thick porridge.",
-        "Serve with fresh home curd."
+        "Firstly, dry-roast the broken wheat (dalia) in a dry pan on low flame for 2 minutes until aromatic, then transfer out.",
+        "Wash the yellow moong dal cleanly 3 times and soak 10 minutes; finely dice peeled carrots and French beans.",
+        "Heat ½ teaspoon pure desi ghee in a pressure cooker on low flame; crackle cumin seeds gently.",
+        "Add diced carrots and beans and sauté 2 minutes before adding roasted dalia and drained moong dal.",
+        "Sprinkle in turmeric and light salt, pour in 1.5 cups clean water, and stir thoroughly.",
+        "Seal the cooker lid and cook for 4 whistles on medium heat, then let steam release naturally.",
+        "Open the lid, stir vigorously with a spoon (or mash lightly) until soft, creamy, and porridge-like.",
+        "Cool down to lukewarm and serve topped with a drop of fresh ghee alongside plain curd."
       ],
-      benefits: "Sustained energy release without glycemic spikes, keeping toddlers active.",
-      safety: "Cook until cracked wheat is soft and fluffy.",
-      icon: "\ud83c\udf72"
+      benefits: "Sustained complex energy and insoluble dietary fiber preventing toddler constipation without sugar spikes.",
+      safety: "Ensure dalia grains are fully swollen, soft, and moist rather than sticky or firm.",
+      icon: "🍲"
     },
     {
       id: '12_24_months_rec_10',
       name: "Jaggery Sweetened Whole Wheat Banana Muffin",
-      localName: "\u0915\u0947\u0932\u093e \u092e\u092b\u093f\u0928 / \u0bb5\u0bbe\u0bb4\u0bc8\u0baa\u0bcd\u0baa\u0bb4\u0bae\u0bcd \u0bae\u0b83\u0baa\u0bbf\u0ba9\u0bcd",
+      localName: "केला मफिन / வாழைப்பழம் மஃபின்",
       prepTime: "10 mins",
-      cookTime: "15 mins",
+      cookTime: "18 mins",
       category: 'Snacks',
       region: 'Pan-Indian',
       ingredients: [
-        "1/2 cup Whole wheat flour",
-        "1 Ripe Banana (mashed)",
-        "1 tablespoon Jaggery powder",
-        "1 tablespoon Melted butter or Ghee",
-        "1/4 cup Milk"
+        "1/2 cup whole wheat flour (atta)",
+        "1 large ripe sweet banana (peeled and mashed smooth)",
+        "1 tbsp organic jaggery powder",
+        "1 tbsp melted unsalted butter or pure desi ghee",
+        "1/4 cup warm whole milk (plus 1 tbsp if needed)",
+        "1/4 tsp baking powder & 1 pinch baking soda",
+        "1/4 tsp green cardamom or Ceylon cinnamon powder",
+        "1/4 tsp butter or oil (for greasing mini muffin moulds)"
       ],
       instructions: [
-        "Whisk mashed banana, jaggery, and melted butter together.",
-        "Fold in flour and milk to make a thick batter.",
-        "Spoon into muffin cups and steam or bake for 15 minutes until spongy."
+        "Firstly, preheat an oven to 180°C (or prepare a steamer pot with water) and lightly grease 4–5 mini muffin cups.",
+        "In a clean mixing bowl, mash the ripe banana completely smooth using a fork.",
+        "Add jaggery powder, melted butter or ghee, and warm milk; whisk smoothly until jaggery dissolves cleanly.",
+        "Place a small sieve over the bowl and sift in whole wheat flour, baking powder, baking soda, and cardamom/cinnamon.",
+        "Fold dry and wet ingredients gently with a spatula just until combined (do not over-mix or muffins turn dense).",
+        "Spoon the thick batter evenly into the greased mini muffin moulds, filling two-thirds full.",
+        "Bake at 180°C for 16–18 minutes (or steam covered for 15 minutes) until risen and golden.",
+        "Insert a clean toothpick into the center—if it comes out dry, remove from heat and cool completely on a rack.",
+        "Break into soft, fluffy bite-sized toddler chunks and serve fresh or store airtight for up to 2 days."
       ],
-      benefits: "Completely refined-sugar free snack loaded with potassium and wholesome grains.",
-      safety: "Let muffins cool completely before offering in bite sizes.",
-      icon: "\ud83e\uddc1"
+      benefits: "Refined-sugar-free wholesome baked snack packed with potassium, iron-rich jaggery, and whole grain fiber.",
+      safety: "Always cool muffins down completely so steam trapped inside does not burn toddler fingers or mouth.",
+      icon: "🧁"
     },
-    {
-      id: '12_24_months_rec_11',
-      name: "Soft Multigrain Khichdi with Ghee",
-      localName: "\u092e\u0932\u094d\u091f\u0940\u0917\u094d\u0930\u0947\u0928 \u0916\u093f\u091a\u0921\u093c\u0940 / \u0baa\u0bb2\u0ba4\u0bbe\u0ba9\u0bbf\u0baf \u0b95\u0bbf\u0b9a\u0bcd\u0b9a\u0b9f\u0bbf",
-      prepTime: "8 mins",
-      cookTime: "15 mins",
-      category: 'Lunch',
-      region: 'North',
-      ingredients: [
-        "Rice and mixed lentils",
-        "Chopped carrots & beans",
-        "Desi ghee",
-        "Pinch of jeera and turmeric"
-      ],
-      instructions: [
-        "Wash grains and lentils; saute cumin and veggies in ghee.",
-        "Add 3 cups water and pressure cook for 3 whistles until very soft.",
-        "Mash gently and serve with fresh curd."
-      ],
-      benefits: "Complete vegetarian protein, dietary fiber, and healthy fats.",
-      safety: "Ensure vegetables are soft and tender.",
-      icon: "\ud83c\udf72"
-    },
-    {
-      id: '12_24_months_rec_12',
-      name: "Mild Vegetable Poha with Peas",
-      localName: "\u092a\u094b\u0939\u093e / \u0b95\u0bbe\u0baf\u0bcd\u0b95\u0bb1\u0bbf \u0b85\u0bb5\u0bb2\u0bcd",
-      prepTime: "5 mins",
-      cookTime: "8 mins",
-      category: 'Morning',
-      region: 'West',
-      ingredients: [
-        "Flattened rice (poha)",
-        "Steamed peas & potatoes",
-        "Turmeric and mustard seeds",
-        "Lemon juice"
-      ],
-      instructions: [
-        "Rinse poha and drain.",
-        "Saute mild mustard seeds and veggies in ghee.",
-        "Toss in softened poha with turmeric and steam covered for 2 minutes."
-      ],
-      benefits: "Rich in bioavailable non-heme iron and easily digestible complex carbohydrates.",
-      safety: "Keep peas soft and mashed for younger eaters.",
-      icon: "\ud83e\udd63"
-    },
-    {
-      id: '12_24_months_rec_13',
-      name: "Soft Methi Thepla with Curd",
-      localName: "\u092e\u0947\u0925\u0940 \u0925\u0947\u092a\u0932\u093e / \u0bb5\u0bc6\u0ba8\u0bcd\u0ba4\u0baf \u0b9a\u0baa\u0bcd\u0baa\u0bbe\u0ba4\u0bcd\u0ba4\u0bbf",
-      prepTime: "8 mins",
-      cookTime: "6 mins",
-      category: 'Morning',
-      region: 'West',
-      ingredients: [
-        "Whole wheat flour (atta)",
-        "Fresh chopped methi leaves",
-        "Turmeric and ajwain",
-        "Desi ghee"
-      ],
-      instructions: [
-        "Knead soft dough with methi, spices, and splash of water.",
-        "Roll thin flatbreads and cook on tawa with drops of ghee.",
-        "Serve warm with cooling curd."
-      ],
-      benefits: "High dietary iron, vitamins A & K, and aids natural digestion.",
-      safety: "Roll soft and brush with ghee to keep tender.",
-      icon: "\ud83e\uded3"
-    },
-    {
-      id: '12_24_months_rec_14',
-      name: "Steamed Corn & Veggie Dhokla",
-      localName: "\u0935\u0947\u091c \u0922\u094b\u0915\u0932\u093e / \u0b95\u0bbe\u0baf\u0bcd\u0b95\u0bb1\u0bbf \u0b9f\u0bcb\u0b95\u0bcd\u0bb3\u0bbe",
-      prepTime: "8 mins",
-      cookTime: "15 mins",
-      category: 'Snacks',
-      region: 'West',
-      ingredients: [
-        "Besan (gram flour)",
-        "Sweet corn puree",
-        "Pinch of turmeric",
-        "Mild mustard seasoning"
-      ],
-      instructions: [
-        "Mix besan, corn puree, and water into batter.",
-        "Steam in greased tray for 12-15 minutes until spongy.",
-        "Cut into soft squares and serve warm."
-      ],
-      benefits: "Light, steamed vegetarian protein with zero oil frying.",
-      safety: "Cut into bite-sized portions.",
-      icon: "\ud83d\udfe1"
-    },
-    {
-      id: '12_24_months_rec_15',
-      name: "Homestyle Yellow Dal Tadka with Phulka",
-      localName: "\u0926\u093e\u0932 \u0924\u0921\u093c\u0915\u093e \u092b\u0941\u0932\u094d\u0915\u093e / \u0ba4\u0bbe\u0bb2\u0bcd \u0ba4\u0b9f\u0bcd\u0b95\u0bbe \u0bb0\u0bca\u0b9f\u0bcd\u0b9f\u0bbf",
-      prepTime: "8 mins",
-      cookTime: "15 mins",
-      category: 'Dinner',
-      region: 'North',
-      ingredients: [
-        "Toor or moong dal",
-        "Ripe tomatoes and cumin",
-        "Desi ghee",
-        "Soft whole wheat phulka"
-      ],
-      instructions: [
-        "Cook dal with turmeric until tender.",
-        "Tempering of jeera and tomatoes in ghee.",
-        "Serve warm with soft phulkas torn into pieces."
-      ],
-      benefits: "Essential amino acids, iron, and sustained dinner comfort.",
-      safety: "Tear phulka into soft pieces and dip in warm dal.",
-      icon: "\ud83c\udf72"
-    },
-    {
-      id: '12_24_months_rec_16',
-      name: "Creamy Curd Rice with Pomegranate",
-      localName: "\u0926\u0939\u0940 \u092d\u093e\u0924 / \u0ba4\u0baf\u0bbf\u0bb0\u0bcd \u0b9a\u0bbe\u0ba4\u0bae\u0bcd",
-      prepTime: "5 mins",
-      cookTime: "10 mins",
-      category: 'Lunch',
-      region: 'South',
-      ingredients: [
-        "Soft cooked rice",
-        "Fresh home-set dahi (curd)",
-        "Mustard & curry leaf tempering in ghee",
-        "Pomegranate pearls"
-      ],
-      instructions: [
-        "Mash cooked rice warmly, stir in fresh curd and splash of milk.",
-        "Add mild tempering.",
-        "Top with sweet juicy pomegranate pearls."
-      ],
-      benefits: "Active probiotic cultures, gut soothe, and bone calcium.",
-      safety: "Ensure pomegranate seeds are soft and easy to chew.",
-      icon: "\ud83c\udf5a"
-    },
-    {
-      id: '12_24_months_rec_17',
-      name: "Ghee Roasted Makhana (Foxnuts)",
-      localName: "\u092d\u0941\u0928\u093e \u092e\u0916\u093e\u0928\u093e / \u0bb5\u0bb1\u0bc1\u0ba4\u0bcd\u0ba4 \u0ba4\u0bbe\u0bae\u0bb0\u0bc8 \u0bb5\u0bbf\u0ba4\u0bc8",
-      prepTime: "2 mins",
-      cookTime: "5 mins",
-      category: 'Snacks',
-      region: 'North',
-      ingredients: [
-        "Foxnuts (phool makhana)",
-        "Desi ghee",
-        "Pinch of roasted jeera powder"
-      ],
-      instructions: [
-        "Heat ghee in heavy-bottom pan.",
-        "Roast makhana on low flame until crisp and crunchy.",
-        "Toss with jeera powder."
-      ],
-      benefits: "Dense calcium, magnesium, and antioxidant fiber snack.",
-      safety: "Check each makhana for hardness before serving.",
-      icon: "\ud83c\udf7f"
-    },
-    {
-      id: '12_24_months_rec_18',
-      name: "Oats & Banana Cinnamon Porridge",
-      localName: "\u0913\u091f\u094d\u0938 \u0926\u0932\u093f\u092f\u093e / \u0b93\u0b9f\u0bcd\u0bb8\u0bcd \u0b95\u0b9e\u0bcd\u0b9a\u0bbf",
-      prepTime: "3 mins",
-      cookTime: "7 mins",
-      category: 'Morning',
-      region: 'Pan-Indian',
-      ingredients: [
-        "Rolled oats",
-        "Mashed ripe banana",
-        "Whole milk or almond milk",
-        "Pinch of Ceylon cinnamon"
-      ],
-      instructions: [
-        "Simmer oats in milk until creamy and thick.",
-        "Fold in mashed sweet banana and cinnamon.",
-        "Serve warm."
-      ],
-      benefits: "Beta-glucan soluble fiber for healthy cholesterol and sustained energy.",
-      safety: "Serve lukewarm, check sweetness naturally from banana.",
-      icon: "\ud83e\udd63"
-    },
-    {
-      id: '12_24_months_rec_19',
-      name: "Paneer & Green Peas Pulao",
-      localName: "\u092a\u0928\u0940\u0930 \u092e\u091f\u0930 \u092a\u0941\u0932\u093e\u0935 / \u0baa\u0ba9\u0bcd\u0ba9\u0bc0\u0bb0\u0bcd \u0baa\u0bc1\u0bb2\u0bbe\u0bb5\u0bcd",
-      prepTime: "8 mins",
-      cookTime: "15 mins",
-      category: 'Dinner',
-      region: 'North',
-      ingredients: [
-        "Basmati rice",
-        "Fresh paneer cubes",
-        "Sweet green peas",
-        "Whole mild spices and ghee"
-      ],
-      instructions: [
-        "Saute cumin and paneer cubes in ghee.",
-        "Add washed rice, peas, and water.",
-        "Pressure cook 2 whistles and fluff with fork."
-      ],
-      benefits: "Complete dairy protein, complex carbs, and phosphorus.",
-      safety: "Cut paneer into small soft cubes.",
-      icon: "\ud83c\udf72"
-    },
-    {
-      id: '12_24_months_rec_20',
-      name: "Sprouted Ragi Malt Drink",
-      localName: "\u0930\u093e\u0917\u0940 \u092e\u093e\u0932\u094d\u091f / \u0bb0\u0bbe\u0b95\u0bbf \u0bae\u0bbe\u0bb2\u0bcd\u0b9f\u0bcd",
-      prepTime: "3 mins",
-      cookTime: "6 mins",
-      category: 'Morning',
-      region: 'South',
-      ingredients: [
-        "Sprouted ragi flour",
-        "Warm milk or water",
-        "Organic jaggery or date powder",
-        "Cardamom"
-      ],
-      instructions: [
-        "Mix ragi flour in cold water until smooth.",
-        "Simmer on low heat with milk until glossy.",
-        "Flavour with cardamom and jaggery."
-      ],
-      benefits: "Dense calcium (344 mg/100g) building strong bones and teeth.",
-      safety: "Cool down completely before drinking.",
-      icon: "\ud83e\udd5b"
-    },
-    {
-      id: '12_24_months_rec_21',
-      name: "Carrot Tomato Soup with Croutons",
-      localName: "\u0917\u093e\u091c\u0930 \u091f\u092e\u093e\u091f\u0930 \u0938\u0942\u092a / \u0b95\u0bc7\u0bb0\u0b9f\u0bcd \u0ba4\u0b95\u0bcd\u0b95\u0bbe\u0bb3\u0bbf \u0b9a\u0bc2\u0baa\u0bcd",
-      prepTime: "8 mins",
-      cookTime: "12 mins",
-      category: 'Dinner',
-      region: 'North',
-      ingredients: [
-        "Fresh red carrots",
-        "Ripe tomatoes",
-        "Butter or olive oil",
-        "Pinch of black pepper and toast cubes"
-      ],
-      instructions: [
-        "Steam carrots and tomatoes until tender; blend and strain.",
-        "Simmer with a dab of butter.",
-        "Serve warm with whole wheat croutons."
-      ],
-      benefits: "Beta-carotene, lycopene, and vitamin C immunity boost.",
-      safety: "Ensure soup is not hot; soften croutons in soup.",
-      icon: "\ud83c\udf72"
-    },
-    {
-      id: '12_24_months_rec_22',
-      name: "Mixed Dry Fruit & Date Ladoo",
-      localName: "\u0916\u091c\u0942\u0930 \u0921\u094d\u0930\u093e\u0908 \u092b\u094d\u0930\u0942\u091f \u0932\u0921\u094d\u0921\u0942 / \u0baa\u0bc7\u0bb0\u0bc0\u0b9a\u0bcd\u0b9a\u0bae\u0bcd\u0baa\u0bb4 \u0bb2\u0b9f\u0bcd\u0b9f\u0bc1",
-      prepTime: "10 mins",
-      cookTime: "5 mins",
-      category: 'Snacks',
-      region: 'Pan-Indian',
-      ingredients: [
-        "Soft seedless dates",
-        "Roasted almonds and cashews (powdered)",
-        "Desi ghee"
-      ],
-      instructions: [
-        "Saute date puree in ghee until soft.",
-        "Mix in powdered roasted nuts.",
-        "Roll into mini bite-sized energy balls."
-      ],
-      benefits: "Concentrated iron, healthy omega fats, and zero refined sugar.",
-      safety: "Nuts must be finely ground to prevent choking.",
-      icon: "\ud83e\uddc6"
-    },
-    {
-      id: '12_24_months_rec_23',
-      name: "Palak Paneer with Soft Steamed Rice",
-      localName: "\u092a\u093e\u0932\u0915 \u092a\u0928\u0940\u0930 \u092d\u093e\u0924 / \u0baa\u0bbe\u0bb2\u0b95\u0bcd \u0baa\u0ba9\u0bcd\u0ba9\u0bc0\u0bb0\u0bcd \u0b9a\u0bbe\u0ba4\u0bae\u0bcd",
-      prepTime: "8 mins",
-      cookTime: "12 mins",
-      category: 'Lunch',
-      region: 'North',
-      ingredients: [
-        "Fresh spinach leaves (pureed)",
-        "Soft paneer cubes",
-        "Cumin and ghee",
-        "Steamed rice"
-      ],
-      instructions: [
-        "Blanch and puree spinach.",
-        "Simmer with paneer cubes and mild cumin ghee.",
-        "Mix with soft steamed warm rice."
-      ],
-      benefits: "Iron, calcium, and folate supporting growth and blood vitality.",
-      safety: "Ensure spinach puree is smooth and paneer is soft.",
-      icon: "\ud83c\udf5b"
-    },
-    {
-      id: '12_24_months_rec_24',
-      name: "Moong Dal Cheela with Mint Curd",
-      localName: "\u092e\u0942\u0902\u0917 \u0926\u093e\u0932 \u091a\u0940\u0932\u093e / \u0baa\u0bbe\u0b9a\u0bbf\u0baa\u0bcd\u0baa\u0bb0\u0bc1\u0baa\u0bcd\u0baa\u0bc1 \u0b85\u0b9f\u0bc8",
-      prepTime: "8 mins",
-      cookTime: "8 mins",
-      category: 'Morning',
-      region: 'North',
-      ingredients: [
-        "Soaked yellow moong dal batter",
-        "Grated carrots and paneer",
-        "Desi ghee"
-      ],
-      instructions: [
-        "Spread ladle of moong batter on warm tawa.",
-        "Top with grated paneer and drizzle ghee.",
-        "Fold golden and slice into finger strips."
-      ],
-      benefits: "High vegetarian protein and dietary iron.",
-      safety: "Slice into soft finger strips for easy chewing.",
-      icon: "\ud83e\uded3"
-    },
-    {
-      id: '12_24_months_rec_25',
-      name: "Moong Sprout & Sweet Corn Chaat",
-      localName: "\u092e\u0942\u0902\u0917 \u0915\u0949\u0930\u094d\u0928 \u091a\u093e\u091f / \u0bae\u0bc1\u0bb3\u0bc8\u0b95\u0b9f\u0bcd\u0b9f\u0bbf\u0baf \u0baa\u0baf\u0bb1\u0bc1 \u0b9a\u0bbe\u0b9f\u0bcd",
-      prepTime: "5 mins",
-      cookTime: "5 mins",
-      category: 'Snacks',
-      region: 'Pan-Indian',
-      ingredients: [
-        "Steamed sprouted moong",
-        "Steamed sweet corn",
-        "Pinch of chaat masala & lemon juice"
-      ],
-      instructions: [
-        "Steam sprouted moong and sweet corn until tender.",
-        "Toss in a bowl with fresh lemon juice and cumin.",
-        "Serve warm or room temperature."
-      ],
-      benefits: "Bioavailable vitamin C, dietary fiber, and plant protein.",
-      safety: "Always steam sprouts thoroughly before serving.",
-      icon: "\ud83e\udd57"
-    }
+    ...buildSharedCoreRecipes('12_24_months', 11)
   ]
 };

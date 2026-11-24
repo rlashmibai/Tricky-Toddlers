@@ -1,6 +1,12 @@
+export interface RecipeSourceLink {
+  title: string;
+  uri: string;
+}
+
 export interface GeneratedRecipe {
   id: string;
   name: string;
+  summary?: string;
   mealType: 'Breakfast' | 'Lunch' | 'Snack' | 'Quick Snack' | 'Dinner' | 'Dessert' | string;
   prepTime: string;
   cookTime: string;
@@ -9,6 +15,7 @@ export interface GeneratedRecipe {
   instructions: string[];
   nutritionBenefits: string;
   safetyAlerts: string;
+  sources?: RecipeSourceLink[];
 }
 
 export interface AIRecipeBatchRecord {
@@ -19,6 +26,7 @@ export interface AIRecipeBatchRecord {
   childAgeYears: string;
   ingredientsInput: string;
   recipes: GeneratedRecipe[];
+  sources?: RecipeSourceLink[];
 }
 
 const STORAGE_KEY = 'tt_ai_baby_recipe_history_v2';

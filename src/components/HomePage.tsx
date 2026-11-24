@@ -144,7 +144,7 @@ export const HomePage: React.FC<HomePageProps> = ({
       name: 'AI NutriChef',
       category: 'care',
       tag: 'Kitchen Assistant',
-      desc: '250+ age-matched Indian recipes & custom ingredient cooker for all ages.',
+      desc: '300+ age-matched Indian & global recipes & custom ingredient cooker for all ages.',
       icon: Utensils,
       color: 'from-green-400 to-emerald-500',
       textColor: 'text-green-300',

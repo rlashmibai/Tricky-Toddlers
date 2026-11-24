@@ -29,11 +29,14 @@ import {
   ExternalLink
 } from 'lucide-react';
 import { playSound } from '../lib/sounds';
+import { useLanguage } from '../lib/LanguageContext';
 import { GeneratedRecipe, AIRecipeBatchRecord, getSavedRecipeHistory, deleteRecipeBatch } from '../lib/aiRecipeHistory';
 
 export interface AIRecipeResultsViewProps {
   batch: AIRecipeBatchRecord | null;
   isLoading: boolean;
+  error?: string | null;
+  onRetry?: () => void;
   onBackToRecipes: () => void;
   onRegenerateNew: () => void;
   initialTab?: 'results' | 'history';
@@ -42,15 +45,19 @@ export interface AIRecipeResultsViewProps {
 export const AIRecipeResultsView: React.FC<AIRecipeResultsViewProps> = ({
   batch,
   isLoading,
+  error = null,
+  onRetry,
   onBackToRecipes,
   onRegenerateNew,
   initialTab = 'results'
 }) => {
   const navigate = useNavigate();
+  const { language } = useLanguage();
   const [viewTab, setViewTab] = useState<'results' | 'history'>(initialTab);
-  const [selectedRecipe, setSelectedRecipe] = useState<GeneratedRecipe | null>(() => {
-    return batch?.recipes?.[0] || null;
-  });
+  const [selectedRecipe, setSelectedRecipe] = useState<GeneratedRecipe | null>(null);
+  const [translatedRecipe, setTranslatedRecipe] = useState<Partial<GeneratedRecipe> | null>(null);
+  const [isTranslating, setIsTranslating] = useState(false);
+  const detailRef = React.useRef<HTMLDivElement>(null);
 
   // History state
   const [historyList, setHistoryList] = useState<AIRecipeBatchRecord[]>(() => getSavedRecipeHistory());
@@ -59,13 +66,92 @@ export const AIRecipeResultsView: React.FC<AIRecipeResultsViewProps> = ({
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [checkedIngredients, setCheckedIngredients] = useState<Record<string, boolean>>({});
 
-  // Auto-select first recipe if batch updates
+  // When a fresh search batch arrives, present the 3 options cleanly first so the user picks one
   React.useEffect(() => {
-    if (batch?.recipes && batch.recipes.length > 0) {
-      setSelectedRecipe(batch.recipes[0]);
-      setCheckedIngredients({});
+    setSelectedRecipe(null);
+    setCheckedIngredients({});
+  }, [batch?.id]);
+
+  // Translate selected AI recipe automatically if non-English language is selected
+  React.useEffect(() => {
+    let cancelled = false;
+    if (!selectedRecipe || !language || language === 'en') {
+      setTranslatedRecipe(null);
+      setIsTranslating(false);
+      return;
     }
-  }, [batch]);
+
+    const cacheKey = `tt_ai_recipe_tr_${language}_${selectedRecipe.id}`;
+    try {
+      const cached = localStorage.getItem(cacheKey);
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (parsed && Array.isArray(parsed.ingredients) && Array.isArray(parsed.instructions)) {
+          setTranslatedRecipe({
+            name: parsed.name,
+            prepTime: parsed.prepTime,
+            cookTime: parsed.cookTime,
+            textureGuide: parsed.textureGuide,
+            ingredients: parsed.ingredients,
+            instructions: parsed.instructions,
+            nutritionBenefits: parsed.benefits || parsed.nutritionBenefits,
+            safetyAlerts: parsed.safety || parsed.safetyAlerts,
+          });
+          setIsTranslating(false);
+          return;
+        }
+      }
+    } catch {}
+
+    setTranslatedRecipe(null);
+    setIsTranslating(true);
+
+    fetch('/api/translate-recipe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        recipeId: selectedRecipe.id,
+        targetLang: language,
+        recipe: {
+          name: selectedRecipe.name,
+          prepTime: selectedRecipe.prepTime,
+          cookTime: selectedRecipe.cookTime,
+          textureGuide: selectedRecipe.textureGuide,
+          ingredients: selectedRecipe.ingredients,
+          instructions: selectedRecipe.instructions,
+          benefits: selectedRecipe.nutritionBenefits,
+          safety: selectedRecipe.safetyAlerts,
+        },
+      }),
+    })
+      .then((res) => (res.ok ? res.json() : { translated: null }))
+      .then((data) => {
+        if (cancelled) return;
+        if (data?.translated && Array.isArray(data.translated.ingredients)) {
+          setTranslatedRecipe({
+            name: data.translated.name,
+            prepTime: data.translated.prepTime,
+            cookTime: data.translated.cookTime,
+            textureGuide: data.translated.textureGuide,
+            ingredients: data.translated.ingredients,
+            instructions: data.translated.instructions,
+            nutritionBenefits: data.translated.benefits || data.translated.nutritionBenefits,
+            safetyAlerts: data.translated.safety || data.translated.safetyAlerts,
+          });
+          try {
+            localStorage.setItem(cacheKey, JSON.stringify(data.translated));
+          } catch {}
+        }
+      })
+      .catch(() => {})
+      .finally(() => {
+        if (!cancelled) setIsTranslating(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [selectedRecipe, language]);
 
   const toggleIngredientCheck = (idx: number) => {
     playSound('click');
@@ -98,7 +184,18 @@ export const AIRecipeResultsView: React.FC<AIRecipeResultsViewProps> = ({
     setSelectedRecipe(recipe);
     setViewTab('results');
     setCheckedIngredients({});
-    window.scrollTo({ top: 350, behavior: 'smooth' });
+    setTimeout(() => {
+      detailRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 80);
+  };
+
+  const handleSelectOption = (recipe: GeneratedRecipe) => {
+    playSound('glass');
+    setSelectedRecipe(recipe);
+    setCheckedIngredients({});
+    setTimeout(() => {
+      detailRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 80);
   };
 
   // Filtered history records
@@ -220,16 +317,49 @@ export const AIRecipeResultsView: React.FC<AIRecipeResultsViewProps> = ({
             <Loader2 className="w-8 h-8" />
           </div>
           <h2 className="text-xl sm:text-2xl font-black text-white mb-2">
-            AI Baby Chef is Crafting 3 Tailored Recipes...
+            Searching Authentic Recipes...
           </h2>
           <p className="text-sm text-white/60 max-w-md mx-auto">
-            Analyzing child developmental age, safety textures, allergy parameters, and your kitchen ingredients for balanced nutrition.
+            Finding 3 verified, real-world recipes matching your ingredients, cooking time, equipment, dietary goals, and child&apos;s age.
           </p>
         </div>
       )}
 
-      {/* VIEW 1: GENERATED RECIPES (2 to 3 Different Meal Types) */}
-      {!isLoading && viewTab === 'results' && (
+      {/* Error State */}
+      {!isLoading && error && viewTab === 'results' && (
+        <div className="p-8 sm:p-10 text-center rounded-3xl bg-rose-950/30 border border-rose-500/30 my-8 space-y-4">
+          <div className="w-14 h-14 mx-auto rounded-2xl bg-rose-500/20 border border-rose-400/40 flex items-center justify-center text-rose-300">
+            <ShieldAlert className="w-7 h-7" />
+          </div>
+          <h2 className="text-xl font-black text-white">
+            Could Not Retrieve Authentic Recipes
+          </h2>
+          <p className="text-sm text-rose-100/80 max-w-lg mx-auto leading-relaxed">
+            {error}
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+            {onRetry && (
+              <button
+                type="button"
+                onClick={onRetry}
+                className="px-6 py-2.5 rounded-xl bg-emerald-400 hover:bg-emerald-300 text-slate-950 text-xs font-black uppercase tracking-wider cursor-pointer transition-all"
+              >
+                Retry Recipe Search
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={onRegenerateNew}
+              className="px-6 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-white text-xs font-bold uppercase tracking-wider border border-white/15 cursor-pointer transition-all"
+            >
+              Adjust Ingredients
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* VIEW 1: GENERATED RECIPES (3 Google Search Recipe Options) */}
+      {!isLoading && !error && viewTab === 'results' && (
         <div className="space-y-8">
           {/* Header Summary Banner */}
           <div className="relative overflow-hidden rounded-3xl border border-emerald-500/30 bg-gradient-to-br from-emerald-950/40 via-slate-900/90 to-teal-950/40 p-6 sm:p-8 shadow-2xl">
@@ -237,13 +367,13 @@ export const AIRecipeResultsView: React.FC<AIRecipeResultsViewProps> = ({
               <div>
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-400/15 border border-emerald-400/30 text-emerald-300 text-xs font-black uppercase tracking-wider mb-2">
                   <Sparkles className="w-3.5 h-3.5" />
-                  3-Meal Nutritional Menu
+                  Verified Authentic Options
                 </div>
                 <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-                  Personalized AI Recipes Ready!
+                  3 Authentic Recipe Options Ready
                 </h1>
                 <p className="text-xs sm:text-sm text-white/70 mt-1 max-w-2xl leading-relaxed">
-                  Crafted 3 different meals (Breakfast, Lunch &amp; Snack) matching your child&apos;s chewing milestones and pantry ingredients. Select any recipe below to view detailed cooking steps.
+                  Select any of the 3 authentic recipes below to open the full ingredients checklist and detailed step-by-step preparation guide.
                 </p>
               </div>
 
@@ -280,7 +410,7 @@ export const AIRecipeResultsView: React.FC<AIRecipeResultsViewProps> = ({
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {batch.recipes.map((rec) => {
+                {batch.recipes.map((rec, idx) => {
                   const isSelected = selectedRecipe?.id === rec.id;
                   const styling = getMealBadgeColor(rec.mealType);
                   const IconComp = styling.icon;
@@ -289,28 +419,27 @@ export const AIRecipeResultsView: React.FC<AIRecipeResultsViewProps> = ({
                     <button
                       key={rec.id}
                       type="button"
-                      onClick={() => {
-                        playSound('glass');
-                        setSelectedRecipe(rec);
-                        setCheckedIngredients({});
-                      }}
-                      className={`text-left p-5 rounded-2xl border transition-all duration-300 cursor-pointer relative overflow-hidden flex flex-col justify-between min-h-[170px] shadow-lg ${
+                      onClick={() => handleSelectOption(rec)}
+                      className={`text-left p-5 rounded-2xl border transition-all duration-300 cursor-pointer relative overflow-hidden flex flex-col justify-between min-h-[190px] shadow-lg ${
                         isSelected
                           ? `bg-slate-800/90 border-emerald-400 ring-2 ${styling.activeRing} scale-[1.02] shadow-emerald-500/20`
-                          : 'bg-slate-900/50 border-white/10 hover:border-white/25 hover:bg-slate-900/80'
+                          : 'bg-slate-900/50 border-white/10 hover:border-emerald-400/40 hover:bg-slate-900/85'
                       }`}
                     >
-                      {/* Selected Indicator Pill */}
+                      {/* Option Badge & Selected Indicator */}
                       {isSelected && (
                         <div className="absolute top-3 right-3 flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-400 text-slate-950 font-black text-[10px] uppercase tracking-wider shadow">
                           <Check className="w-3 h-3 stroke-[3]" />
-                          <span>Active</span>
+                          <span>Selected</span>
                         </div>
                       )}
 
                       <div>
-                        {/* Meal Type Tag */}
+                        {/* Option Number + Meal Type Tag */}
                         <div className="flex items-center gap-2 mb-2.5">
+                          <span className="px-2 py-0.5 rounded-md bg-white/10 text-white/80 text-[10px] font-mono font-bold">
+                            Option {idx + 1}
+                          </span>
                           <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-lg text-[10px] font-black uppercase tracking-wider border ${styling.bg} ${styling.text} ${styling.border}`}>
                             <IconComp className="w-3 h-3" />
                             {rec.mealType}
@@ -321,8 +450,8 @@ export const AIRecipeResultsView: React.FC<AIRecipeResultsViewProps> = ({
                           {rec.name}
                         </h4>
 
-                        <p className="text-[11px] text-white/60 mt-1 line-clamp-2 leading-relaxed">
-                          {rec.textureGuide}
+                        <p className="text-[11px] text-white/65 mt-1.5 line-clamp-2 leading-relaxed">
+                          {rec.summary || rec.textureGuide}
                         </p>
                       </div>
 
@@ -339,7 +468,7 @@ export const AIRecipeResultsView: React.FC<AIRecipeResultsViewProps> = ({
                           </span>
                         </div>
                         <span className="text-[11px] text-emerald-400 font-bold flex items-center gap-0.5">
-                          {isSelected ? 'Viewing' : 'Tap to View'}
+                          {isSelected ? 'Viewing' : 'Select Recipe'}
                           <ChevronRight className="w-3.5 h-3.5" />
                         </span>
                       </div>
@@ -350,12 +479,13 @@ export const AIRecipeResultsView: React.FC<AIRecipeResultsViewProps> = ({
             </div>
           )}
 
-          {/* SELECTED RECIPE DETAIL CARD (Displayed directly below the 3 recipe cards) */}
+          {/* SELECTED RECIPE DETAIL CARD (Displayed once the user selects one of the 3 options) */}
+          <div ref={detailRef} className="scroll-mt-24">
           {selectedRecipe ? (
-            <div className="rounded-3xl border border-white/15 bg-slate-900/90 shadow-2xl p-6 sm:p-8 backdrop-blur-2xl relative">
+            <div className="rounded-3xl border border-emerald-400/25 bg-slate-900/90 shadow-2xl p-6 sm:p-8 backdrop-blur-2xl relative">
               {/* Header */}
               <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-6 border-b border-white/10">
-                <div>
+                <div className={translatedRecipe ? 'notranslate' : ''} translate={translatedRecipe ? 'no' : 'yes'}>
                   <div className="flex flex-wrap items-center gap-2 mb-2">
                     <span className="px-3 py-1 rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-xs font-black uppercase tracking-wider flex items-center gap-1.5">
                       <Sparkles className="w-3.5 h-3.5" />
@@ -366,13 +496,19 @@ export const AIRecipeResultsView: React.FC<AIRecipeResultsViewProps> = ({
                         Age: {batch.childAgeYears}
                       </span>
                     )}
+                    {isTranslating && language !== 'en' && (
+                      <span className="px-2.5 py-1 rounded-xl bg-indigo-500/15 text-indigo-200 border border-indigo-400/30 text-xs font-semibold flex items-center gap-1.5">
+                        <Loader2 className="w-3 h-3 animate-spin" />
+                        Translating...
+                      </span>
+                    )}
                   </div>
 
                   <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-                    {selectedRecipe.name}
+                    {translatedRecipe?.name || selectedRecipe.name}
                   </h2>
                   <p className="text-xs sm:text-sm text-emerald-300/90 font-medium mt-1">
-                    Texture Guidance: {selectedRecipe.textureGuide}
+                    Texture Guidance: {translatedRecipe?.textureGuide || selectedRecipe.textureGuide}
                   </p>
                 </div>
 
@@ -380,11 +516,11 @@ export const AIRecipeResultsView: React.FC<AIRecipeResultsViewProps> = ({
                 <div className="flex flex-wrap items-center gap-2.5">
                   <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-xs text-white/80 font-mono">
                     <Clock className="w-4 h-4 text-indigo-400" />
-                    <span>Prep: {selectedRecipe.prepTime}</span>
+                    <span>Prep: {translatedRecipe?.prepTime || selectedRecipe.prepTime}</span>
                   </div>
                   <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-xs text-white/80 font-mono">
                     <Flame className="w-4 h-4 text-orange-400" />
-                    <span>Cook: {selectedRecipe.cookTime}</span>
+                    <span>Cook: {translatedRecipe?.cookTime || selectedRecipe.cookTime}</span>
                   </div>
                   <button
                     type="button"
@@ -406,22 +542,22 @@ export const AIRecipeResultsView: React.FC<AIRecipeResultsViewProps> = ({
                 </div>
               </div>
 
-              {/* Recipe Body: Two Column Layout */}
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mt-6">
-                {/* Left: Ingredients Checklist (5 cols) */}
-                <div className="lg:col-span-5 space-y-4">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-xs font-black uppercase tracking-wider text-emerald-300 flex items-center gap-2">
+              {/* Recipe Body: TOP (Ingredients Checklist) -> BOTTOM (Detailed Instructions) */}
+              <div className="space-y-6 mt-6">
+                {/* TOP: Ingredients Checklist */}
+                <div className="p-5 sm:p-6 rounded-2xl bg-white/[0.03] border border-emerald-500/20 space-y-4">
+                  <div className="flex items-center justify-between pb-2 border-b border-white/10">
+                    <h3 className="text-xs sm:text-sm font-black uppercase tracking-wider text-emerald-300 flex items-center gap-2">
                       <Apple className="w-4 h-4 text-emerald-400" />
                       <span>Ingredients &amp; Quantities</span>
                     </h3>
-                    <span className="text-[10px] text-white/40 uppercase font-mono">
+                    <span className="text-[11px] text-white/45 uppercase font-mono">
                       Tap to check off
                     </span>
                   </div>
 
-                  <div className="space-y-2">
-                    {selectedRecipe.ingredients.map((ing, idx) => {
+                  <div className={`grid grid-cols-1 sm:grid-cols-2 gap-2.5 ${translatedRecipe ? 'notranslate' : ''}`} translate={translatedRecipe ? 'no' : 'yes'}>
+                    {(translatedRecipe?.ingredients || selectedRecipe.ingredients).map((ing, idx) => {
                       const isChecked = checkedIngredients[idx];
                       return (
                         <button
@@ -446,55 +582,83 @@ export const AIRecipeResultsView: React.FC<AIRecipeResultsViewProps> = ({
                       );
                     })}
                   </div>
+                </div>
 
-                  {/* Nutrition Insights Block */}
-                  <div className="p-4 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 text-xs space-y-1.5 mt-6">
+                {/* BOTTOM: Step-by-Step Instructions */}
+                <div className="p-5 sm:p-6 rounded-2xl bg-white/[0.03] border border-indigo-400/25 space-y-4">
+                  <div className="flex items-center justify-between pb-2 border-b border-white/10">
+                    <h3 className="text-xs sm:text-sm font-black uppercase tracking-wider text-indigo-300 flex items-center gap-2">
+                      <UtensilsCrossed className="w-4 h-4 text-indigo-400" />
+                      <span>Cooking &amp; Preparation Steps</span>
+                    </h3>
+                    <span className="text-[11px] font-mono text-white/45">
+                      {(translatedRecipe?.instructions || selectedRecipe.instructions).length} steps
+                    </span>
+                  </div>
+
+                  <div className={`space-y-3 ${translatedRecipe ? 'notranslate' : ''}`} translate={translatedRecipe ? 'no' : 'yes'}>
+                    {(translatedRecipe?.instructions || selectedRecipe.instructions).map((step, idx) => (
+                      <div
+                        key={idx}
+                        className="flex items-start gap-3.5 p-4 rounded-2xl bg-white/[0.03] border border-white/10"
+                      >
+                        <div className="w-7 h-7 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-500 text-slate-950 font-black text-xs flex items-center justify-center shrink-0 shadow-sm mt-0.5">
+                          {idx + 1}
+                        </div>
+                        <p className="text-sm text-white/90 leading-relaxed">
+                          {step}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Nutrition Insights & Safety Alerts */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="p-4 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 text-xs space-y-1.5">
                     <h4 className="font-black text-indigo-300 uppercase tracking-wider flex items-center gap-1.5 text-[11px]">
                       <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
                       <span>Pediatric Nutrient Benefits</span>
                     </h4>
-                    <p className="text-white/80 leading-relaxed">
-                      {selectedRecipe.nutritionBenefits}
+                    <p className={`text-white/80 leading-relaxed ${translatedRecipe ? 'notranslate' : ''}`} translate={translatedRecipe ? 'no' : 'yes'}>
+                      {translatedRecipe?.nutritionBenefits || selectedRecipe.nutritionBenefits}
                     </p>
                   </div>
-                </div>
 
-                {/* Right: Step-by-Step Instructions & Safety (7 cols) */}
-                <div className="lg:col-span-7 space-y-6">
-                  <div>
-                    <h3 className="text-xs font-black uppercase tracking-wider text-indigo-300 flex items-center gap-2 mb-4">
-                      <UtensilsCrossed className="w-4 h-4 text-indigo-400" />
-                      <span>Cooking &amp; Preparation Steps</span>
-                    </h3>
-
-                    <div className="space-y-3.5">
-                      {selectedRecipe.instructions.map((step, idx) => (
-                        <div
-                          key={idx}
-                          className="flex items-start gap-3.5 p-4 rounded-2xl bg-white/[0.03] border border-white/10"
-                        >
-                          <div className="w-7 h-7 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-500 text-slate-950 font-black text-xs flex items-center justify-center shrink-0 shadow-sm mt-0.5">
-                            {idx + 1}
-                          </div>
-                          <p className="text-sm text-white/90 leading-relaxed">
-                            {step}
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Safety & Allergy Alerts */}
                   <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/25 text-xs space-y-1.5">
                     <h4 className="font-black text-amber-300 uppercase tracking-wider flex items-center gap-1.5 text-[11px]">
                       <ShieldAlert className="w-4 h-4 text-amber-400 shrink-0" />
                       <span>Safety, Texture &amp; Temperature Advisory</span>
                     </h4>
-                    <p className="text-amber-100/80 leading-relaxed">
-                      {selectedRecipe.safetyAlerts}
+                    <p className={`text-amber-100/80 leading-relaxed ${translatedRecipe ? 'notranslate' : ''}`} translate={translatedRecipe ? 'no' : 'yes'}>
+                      {translatedRecipe?.safetyAlerts || selectedRecipe.safetyAlerts}
                     </p>
                   </div>
                 </div>
+
+                {/* Verified Google Search Sources */}
+                {((selectedRecipe.sources && selectedRecipe.sources.length > 0) || (batch?.sources && batch.sources.length > 0)) && (
+                  <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/10 text-xs space-y-2">
+                    <h4 className="font-black text-emerald-300 uppercase tracking-wider text-[11px] flex items-center gap-1.5">
+                      <ExternalLink className="w-3.5 h-3.5 text-emerald-400" />
+                      <span>Verified Culinary Sources</span>
+                    </h4>
+                    <div className="flex flex-wrap gap-2">
+                      {(selectedRecipe.sources && selectedRecipe.sources.length > 0 ? selectedRecipe.sources : batch?.sources || []).map((src, sIdx) => (
+                        <a
+                          key={sIdx}
+                          href={src.uri}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 hover:bg-emerald-500/15 border border-white/10 hover:border-emerald-400/35 text-white/80 hover:text-emerald-200 transition-all text-[11px] font-medium"
+                        >
+                          <span className="truncate max-w-[240px]">{src.title}</span>
+                          <ExternalLink className="w-3 h-3 shrink-0 text-emerald-400" />
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Bottom Action Footer */}
@@ -521,10 +685,11 @@ export const AIRecipeResultsView: React.FC<AIRecipeResultsViewProps> = ({
               </div>
             </div>
           ) : (
-            <div className="p-8 text-center rounded-3xl bg-slate-900/50 border border-white/10 text-white/50 text-sm">
-              Please select one of the recipes above to view full preparation details.
+            <div className="p-8 text-center rounded-3xl bg-slate-900/50 border border-emerald-400/20 text-white/70 text-sm">
+              Choose one of the 3 recipe options above to inspect its full ingredients checklist and detailed step-by-step preparation guide.
             </div>
           )}
+          </div>
         </div>
       )}
 

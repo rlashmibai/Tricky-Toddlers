@@ -8,238 +8,304 @@ export const stageData_10_12_months: AgeGroupData = {
   milestones: [
     "Picks up small foods easily and feeds self with precision.",
     "Can chew soft foods like boiled potatoes, soft carrots, and pasta easily.",
-    "Shows preference for specific tastes and tries to grab parents\\"
+    "Shows preference for specific tastes and reaches eagerly for family table foods."
   ],
   recipes: [
     {
       id: '10_12_months_rec_1',
       name: "Soft Jeera Paneer Bites",
-      localName: "\u091c\u0940\u0930\u093e \u092a\u0928\u0940\u0930 / \u0b9a\u0bc0\u0bb0\u0b95 \u0baa\u0ba9\u0bcd\u0ba9\u0bc0\u0bb0\u0bcd \u0ba4\u0bc1\u0ba3\u0bcd\u0b9f\u0bc1\u0b95\u0bb3\u0bcd",
+      localName: "जीरा पनीर / சீரக பன்னீர் துண்டுகள்",
       prepTime: "5 mins",
       cookTime: "5 mins",
       category: 'Morning',
       region: 'Pan-Indian',
       ingredients: [
-        "50g Fresh Soft Paneer or Tofu",
-        "1/4 teaspoon Butter or Ghee",
-        "A tiny pinch of Cumin (Jeera) powder",
-        "A pinch of Turmeric"
+        "50g fresh soft homemade paneer (cottage cheese)",
+        "1/4 tsp pure homemade butter or ghee",
+        "1 tiny pinch roasted cumin (jeera) powder",
+        "1 tiny pinch pure turmeric powder (haldi)",
+        "1 tsp warm water (optional, to keep moist)"
       ],
       instructions: [
-        "Cut paneer into small, child-friendly cubes (easy to hold with tiny fingers).",
-        "Heat ghee in a pan and toss the paneer cubes gently for 1-2 minutes until warm and soft.",
-        "Sprinkle cumin and turmeric powder. Let it cool slightly before serving."
+        "Firstly, soak fresh paneer cubes in warm water for 5 minutes if store-bought, then pat dry gently so they stay extra tender.",
+        "Slice the soft paneer into ½-inch pea-sized or flat oblong strips easy for pincer grip.",
+        "Heat ¼ teaspoon pure ghee or butter in a non-stick skillet over the lowest flame.",
+        "Sprinkle the turmeric and cumin powder directly into the melted ghee and stir for 5 seconds.",
+        "Add the paneer cubes gently and toss for 60 to 90 seconds just until warmed through and coated golden.",
+        "Do NOT sear or brown the paneer—keep every edge melt-in-the-mouth soft.",
+        "Turn off the heat, transfer to a cool plate, and test one cube between your thumb and finger to confirm softness.",
+        "Cool to lukewarm and place a few pieces at a time on baby's tray for self-feeding."
       ],
-      benefits: "Fabulous source of calcium, healthy fats, and protein. Soft texture is perfect for teething gums.",
-      safety: "Do not fry the paneer until hard or crispy, keep it melt-in-the-mouth soft.",
-      icon: "\ud83e\uddc0"
+      benefits: "Rich source of complete milk protein, calcium, and healthy butterfat supporting bone and tooth enamel growth.",
+      safety: "Never fry paneer crisp or chewy; keep cubes soft enough to mash easily with gums.",
+      icon: "🧀"
     },
     {
       id: '10_12_months_rec_2',
       name: "Banana & Oats Mini Pancakes",
-      localName: "\u0915\u0947\u0932\u093e \u0913\u091f\u094d\u0938 \u092a\u0948\u0928\u0915\u0947\u0915 / \u0bb5\u0bbe\u0bb4\u0bc8\u0baa\u0bcd\u0baa\u0bb4\u0bae\u0bcd \u0b93\u0b9f\u0bcd\u0bb8\u0bcd \u0baa\u0bbe\u0ba9\u0bcd\u0b95\u0bc7\u0b95\u0bcd",
-      prepTime: "10 mins",
+      localName: "केला ओट्स पैनकेक / வாழைப்பழம் ஓட்ஸ் பான்கேக்",
+      prepTime: "8 mins",
       cookTime: "8 mins",
       category: 'Morning',
       region: 'Pan-Indian',
       ingredients: [
-        "2 tablespoons Powdered Rolled Oats",
-        "1/2 Ripe Banana (mashed)",
-        "3-4 tablespoons Milk or water",
-        "A drop of Ghee for frying"
+        "3 tbsp finely powdered rolled oats",
+        "1/2 ripe sweet banana (well mashed)",
+        "3 to 4 tbsp water, breastmilk, or yogurt",
+        "1 tiny pinch cinnamon or cardamom powder",
+        "1/2 tsp pure ghee (for greasing pan)"
       ],
       instructions: [
-        "In a bowl, mix powdered oats, mashed banana, and milk into a thick pourable batter.",
-        "Grease a non-stick griddle with a tiny bit of ghee.",
-        "Pour small silver-dollar sized pancakes and cook on low heat for 2-3 minutes per side until fully cooked and soft.",
-        "Break into small bite-sized pieces and serve."
+        "Firstly, grind rolled oats in a dry mixer jar into a fine flour and place in a mixing bowl.",
+        "Add the mashed ripe banana and cardamom powder, and mash together thoroughly with a fork.",
+        "Gradually stir in 3–4 tablespoons of water or yogurt until a thick, scoopable pancake batter forms.",
+        "Let the batter rest for 3 minutes so the oat flour hydrates slightly.",
+        "Heat a flat tawa or non-stick skillet on low flame and brush lightly with pure ghee.",
+        "Drop tablespoon-sized rounds of batter onto the warm skillet and gently flatten slightly (do not spread too thin).",
+        "Cover with a lid and cook on low heat for 2–3 minutes until tiny bubbles appear and edges set softly.",
+        "Flip carefully and cook the other side for 2 minutes until pale golden and cooked through inside.",
+        "Cool slightly, tear into bite-sized soft pieces, and serve fresh for self-feeding."
       ],
-      benefits: "High fiber, complex carbs for steady energy, and naturally sweet without sugar.",
-      safety: "Make sure the pancake is soft and moist, serve in tiny hand-held pieces.",
-      icon: "\ud83e\udd5e"
+      benefits: "Complex carbohydrates, soluble fiber, and potassium naturally sweetened without any added sugar.",
+      safety: "Keep pancakes moist and soft inside—if edges crisp up, trim away crisp bits before offering.",
+      icon: "🥞"
     },
     {
       id: '10_12_months_rec_3',
       name: "Soft Besan Carrot Cheela",
-      localName: "\u092c\u0947\u0938\u0928 \u0917\u093e\u091c\u0930 \u091a\u0940\u0932\u093e / \u0b95\u0b9f\u0bb2\u0bc8 \u0bae\u0bbe\u0bb5\u0bc1 \u0b95\u0bc7\u0bb0\u0b9f\u0bcd \u0b85\u0b9f\u0bc8",
-      prepTime: "10 mins",
+      localName: "बेसन गाजर चीला / கடலை மாவு கேரட் அடை",
+      prepTime: "8 mins",
       cookTime: "8 mins",
       category: 'Morning',
       region: 'Pan-Indian',
       ingredients: [
-        "3 tablespoons Besan (Gram Flour)",
-        "2 tablespoons Finely Grated Carrot",
-        "A pinch of Turmeric and Cumin powder",
-        "Water to make batter",
-        "1/4 teaspoon Ghee"
+        "3 tbsp besan (fine chickpea / gram flour)",
+        "2 tbsp very finely grated fresh carrot",
+        "1 tbsp finely chopped fresh coriander leaves",
+        "1 tiny pinch turmeric powder (haldi)",
+        "1 tiny pinch roasted cumin (jeera) powder",
+        "4 to 5 tbsp clean water (to make smooth batter)",
+        "1/2 tsp pure ghee (for cooking)"
       ],
       instructions: [
-        "Whisk gram flour, grated carrot, spices, and water into a thin smooth batter.",
-        "Heat a pan with ghee, pour a thin ladles-worth of batter, and spread gently.",
-        "Cook on medium heat until golden brown on both sides. Ensure the grated carrot is fully softened."
+        "Firstly, sift the besan into a mixing bowl to remove any dry lumps.",
+        "Grate the peeled carrot on the finest microplane setting so strands melt quickly while cooking.",
+        "Add the finely grated carrot, chopped coriander, turmeric, and cumin powder to the besan.",
+        "Pour in water little by little while whisking briskly to make a smooth, medium-thin pouring batter.",
+        "Heat a non-stick pan or cast-iron tawa on low-to-medium flame and grease with ¼ teaspoon ghee.",
+        "Pour a small ladle of batter onto the center and spread gently into a soft, small 4-inch mini cheela.",
+        "Cover with a lid for 2 minutes on low flame so steam softens the grated carrots completely.",
+        "Drizzle a drop of ghee on top, flip, and cook 2 more minutes until golden without turning dry or brittle.",
+        "Cool slightly, slice into soft baby finger strips, and serve lukewarm."
       ],
-      benefits: "High protein, iron, and loaded with essential beta-carotenes from the grated carrots.",
-      safety: "Grate carrots extremely fine so they do not pose a choking hazard.",
-      icon: "\ud83c\udf73"
+      benefits: "Rich in chickpea protein, iron, folate, and beta-carotene in a gentle savory Indian pancake.",
+      safety: "Grate carrots ultra-fine and cover while cooking so no crisp raw carrot bits remain.",
+      icon: "🍳"
     },
     {
       id: '10_12_months_rec_4',
       name: "Soothing Creamy Curd Rice",
-      localName: "\u0926\u0939\u0940 \u091a\u093e\u0935\u0932 / \u0ba4\u0baf\u0bbf\u0bb0\u0bcd \u0b9a\u0bbe\u0ba4\u0bae\u0bcd",
+      localName: "दही चावल / தயிர் சாதம்",
       prepTime: "5 mins",
       cookTime: "5 mins",
       category: 'Morning',
       region: 'Pan-Indian',
       ingredients: [
-        "1/2 cup Well-cooked Rice (mashed)",
-        "3 tablespoons Fresh Yogurt",
-        "1 teaspoon Milk (to reduce sourness)",
-        "A tiny pinch of Cumin powder"
+        "1/2 cup very soft over-cooked white rice",
+        "3 tbsp fresh homemade full-fat curd (non-sour yogurt)",
+        "1 to 2 tbsp boiled cooled water or small splash of whole milk",
+        "1 tiny pinch roasted cumin (jeera) powder",
+        "1 tbsp finely grated soft cucumber (peeled & deseeded, optional)"
       ],
       instructions: [
-        "Mash hot cooked rice thoroughly with the back of a spoon until completely mushy.",
-        "Let it cool, then mix in yogurt, milk, and a tiny pinch of cumin powder.",
-        "Stir into a creamy, smooth spoonable dish."
+        "Firstly, take warm, extra-soft cooked white rice in a clean bowl.",
+        "Mash the warm rice thoroughly with the back of a spoon until mostly broken down into a soft mash.",
+        "Allow the mashed rice to cool down completely to room temperature (hot rice makes yogurt curdle or turn sour).",
+        "In a small bowl, whisk fresh non-sour curd with 1–2 tablespoons water or milk until silky smooth.",
+        "Fold the whisked curd into the cooled rice mash along with roasted cumin powder.",
+        "Mix well until the curd rice becomes creamy, glossy, and soft enough to glide off a spoon cleanly.",
+        "Optionally stir in finely grated peeled cucumber for extra cooling crunch-free hydration.",
+        "Serve at comfortable room temperature; avoid serving chilled straight from the refrigerator."
       ],
-      benefits: "Provides cooling relief for teething inflammation, is easily digestible, and supports gut health.",
-      safety: "Never serve ice-cold. Keep it at comfortable room temperature.",
-      icon: "\ud83c\udf5a"
+      benefits: "Provides cooling gum relief during teething, probiotic gut support, calcium, and gentle hydration.",
+      safety: "Check curd by tasting first to make sure it is sweet and fresh, never tangy or sour.",
+      icon: "🍚"
     },
     {
       id: '10_12_months_rec_5',
       name: "Mini Tricolor Veggie Idlis",
-      localName: "\u0938\u092c\u094d\u091c\u0940 \u0907\u0921\u0932\u0940 / \u0bae\u0bbf\u0ba9\u0bbf \u0b95\u0bbe\u0baf\u0bcd\u0b95\u0bb1\u0bbf \u0b87\u0b9f\u0bcd\u0bb2\u0bbf",
+      localName: "सब्जी इडली / மினி காய்கறி இட்லி",
       prepTime: "10 mins",
       cookTime: "10 mins",
       category: 'Lunch',
       region: 'Pan-Indian',
       ingredients: [
-        "1/2 cup Fermented Idli Batter",
-        "1 tablespoon Finely grated carrot",
-        "1 tablespoon Finely grated beetroot",
-        "Drop of Ghee"
+        "1/2 cup fresh fermented idli batter (thick consistency)",
+        "1 tbsp very finely grated carrot",
+        "1 tbsp very finely grated beetroot (squeezed lightly)",
+        "1 tbsp finely chopped blanched spinach",
+        "1/4 tsp pure ghee (for greasing mini idli plates)"
       ],
       instructions: [
-        "Divide batter into two portions: stir carrot into one, beetroot into the other.",
-        "Pour into greased mini-idli moulds.",
-        "Steam for 8-10 minutes until fluffy. Cut into quarters for finger food."
+        "Firstly, grease mini idli mould cavities lightly with pure melted ghee and bring steamer water to a simmer.",
+        "Divide the fresh fermented idli batter equally into three small bowls.",
+        "Stir finely grated carrot into the first bowl, finely grated beetroot into the second, and blanched minced spinach into the third.",
+        "Mix each bowl gently so airiness stays intact without over-thinning the batter.",
+        "Spoon the three colorful batters into the greased mini-idli moulds.",
+        "Place the tray inside the hot steamer, cover tightly with a lid, and steam on medium flame for 8 to 10 minutes.",
+        "Insert a clean toothpick into the center of one idli; it should emerge completely clean.",
+        "Let cool for 3 minutes, gently pop out the spongy mini idlis with a wet spoon, and quarter each into soft bite-sized morsels."
       ],
-      benefits: "Fermented grains aid digestion while colorful veggies add micronutrients.",
-      safety: "Cut mini idlis into bite-sized quarters so baby cannot choke.",
-      icon: "\u26aa"
+      benefits: "Pre-digested fermented rice-urad batter enriched with natural iron, beta-carotene, and folate.",
+      safety: "Cut even mini idlis into soft quarters so baby cannot stuff a whole idli into their mouth.",
+      icon: "⚪"
     },
     {
       id: '10_12_months_rec_6',
       name: "Sprouted Moong Chilla Finger Strips",
-      localName: "\u092e\u0942\u0902\u0917 \u091a\u0940\u0932\u093e \u0938\u094d\u091f\u094d\u0930\u093f\u092a\u094d\u0938 / \u0baa\u0bbe\u0b9a\u0bbf\u0baa\u0bcd\u0baa\u0baf\u0bb1\u0bc1 \u0ba4\u0bcb\u0b9a\u0bc8 \u0ba4\u0bc1\u0ba3\u0bcd\u0b9f\u0bc1\u0b95\u0bb3\u0bcd",
-      prepTime: "10 mins",
+      localName: "मूंग चीला स्ट्रिप्स / பாசிப்பயறு தோசை துண்டுகள்",
+      prepTime: "10 mins (+ overnight soaking)",
       cookTime: "8 mins",
       category: 'Lunch',
       region: 'Pan-Indian',
       ingredients: [
-        "1/2 cup Soaked Moong Dal paste",
-        "Pinch of Cumin and Turmeric",
-        "1/4 teaspoon Ghee"
+        "1/2 cup soaked or sprouted green moong (or yellow moong dal)",
+        "1/4 inch small piece fresh ginger (optional)",
+        "1/4 cup clean drinking water (for grinding)",
+        "1 tiny pinch turmeric powder (haldi)",
+        "1 tiny pinch roasted cumin (jeera) powder",
+        "1/2 tsp pure ghee (for cooking)"
       ],
       instructions: [
-        "Grind soaked moong into a smooth batter with water and cumin.",
-        "Spread thinly on a hot tawa with a drizzle of ghee.",
-        "Cook until tender and soft on both sides, then slice into finger strips."
+        "Firstly, rinse soaked or sprouted moong cleanly and transfer into a mixer jar with ginger and ¼ cup water.",
+        "Grind into a completely smooth, creamy pancake batter, scraping down the sides once.",
+        "Pour the batter into a bowl and stir in turmeric and cumin powder.",
+        "Heat a flat pan on low flame and brush with a thin coat of pure ghee.",
+        "Pour 2 tablespoons of batter and spread gently into a soft, slightly thick 4-inch mini dosa (not crisp paper-thin).",
+        "Cover with a lid for 2 minutes so the center steams soft and fluffy.",
+        "Drizzle a tiny drop of ghee, flip, and cook 1–2 more minutes until tender and lightly golden.",
+        "Let cool slightly on a plate, slice into soft ½-inch finger strips, and serve lukewarm for easy gripping."
       ],
-      benefits: "Power-packed plant protein with minimal fat, ideal for self-feeding.",
-      safety: "Keep the chilla soft and thin so it melts in the mouth without catching.",
-      icon: "\ud83e\uded3"
+      benefits: "Bioavailable sprouted plant protein, B vitamins, and iron with minimal fat in an easy handheld format.",
+      safety: "Keep the chilla soft and tender rather than crispy so it softens rapidly against baby's gums.",
+      icon: "🫓"
     },
     {
       id: '10_12_months_rec_7',
       name: "Soft Mild Veggie Poha",
-      localName: "\u0928\u0930\u092e \u092a\u094b\u0939\u093e / \u0bae\u0bc6\u0ba9\u0bcd\u0bae\u0bc8\u0baf\u0bbe\u0ba9 \u0b85\u0bb5\u0bb2\u0bcd \u0b95\u0bbf\u0b9a\u0bcd\u0b9a\u0b9f\u0bbf",
+      localName: "नरम पोहा / மென்மையான அவல் கிச்சடி",
       prepTime: "5 mins",
       cookTime: "8 mins",
       category: 'Dinner',
       region: 'Pan-Indian',
       ingredients: [
-        "1/2 cup Thick Poha (flattened rice",
-        "washed soft)",
-        "2 tablespoons Boiled green peas & grated carrot",
-        "Pinch of Turmeric & Cumin",
-        "1/4 teaspoon Ghee"
+        "1/2 cup thick flattened rice (poha)",
+        "2 tbsp sweet boiled green peas (squished flat)",
+        "1 tbsp very finely grated carrot",
+        "1/2 tsp pure homemade ghee",
+        "1 tiny pinch mustard seeds (rai)",
+        "1 tiny pinch turmeric powder (haldi)",
+        "2 tbsp warm water (for steaming soft)"
       ],
       instructions: [
-        "Wash poha in a colander until completely softened and soaked.",
-        "Heat ghee, add cumin, turmeric, and boiled veggies.",
-        "Toss softened poha gently and steam covered for 2 minutes."
+        "Firstly, place thick poha in a strainer and rinse gently under clean running water for 15 seconds until completely softened.",
+        "Drain well and let the rinsed poha sit in the strainer for 5 minutes so every flake absorbs moisture evenly without turning mushy.",
+        "Boil green peas and finely grated carrot until soft, then squish every green pea flat with a fork.",
+        "Heat ½ teaspoon ghee in a small pan on low flame; let mustard seeds pop cleanly (or omit whole seeds if baby prefers smooth).",
+        "Add grated carrot, squished peas, and turmeric powder; sauté gently for 1 minute.",
+        "Fold in the softened poha gently along with 2 tablespoons of warm water.",
+        "Cover tightly with a lid and steam on the lowest flame for 2 minutes until moist, fluffy, and cohesive.",
+        "Cool to lukewarm, pinch lightly between fingers to check tenderness, and serve fresh."
       ],
-      benefits: "Light, iron-rich, and easy for developing teeth to chew.",
-      safety: "Ensure poha is moist and soft, never dry or flaky.",
-      icon: "\ud83c\udf3e"
+      benefits: "Easily digested iron-friendly carbohydrates paired with gentle cooked vegetables and healthy fats.",
+      safety: "Never serve dry crumbly poha; always steam with a splash of water and squish peas flat before mixing.",
+      icon: "🌾"
     },
     {
       id: '10_12_months_rec_8',
       name: "Soft Butter Egg Scramble with Turmeric",
-      localName: "\u0905\u0902\u0921\u093e \u092d\u0941\u0930\u094d\u091c\u0940 / \u0bae\u0bc6\u0ba9\u0bcd\u0bae\u0bc8\u0baf\u0bbe\u0ba9 \u0bae\u0bc1\u0b9f\u0bcd\u0b9f\u0bc8 \u0baa\u0bca\u0bb0\u0bbf\u0baf\u0bb2\u0bcd",
+      localName: "अंडा भुर्जी / மென்மையான முட்டை பொரியல்",
       prepTime: "3 mins",
       cookTime: "5 mins",
       category: 'Dinner',
       region: 'Pan-Indian',
       ingredients: [
-        "1 Egg (whisked)",
-        "1 teaspoon Butter or Ghee",
-        "Pinch of Turmeric powder"
+        "1 fresh whole egg",
+        "1 tbsp clean water or whole milk (for soft curds)",
+        "1 tsp unsalted butter or pure ghee",
+        "1 tiny pinch pure turmeric powder (haldi)",
+        "1 tiny pinch freshly ground mild black pepper (optional)"
       ],
       instructions: [
-        "Whisk egg thoroughly with turmeric and a tablespoon of water.",
-        "Melt butter in a small pan over very low heat.",
-        "Pour egg and gently stir until velvety soft curds form; do not overcook."
+        "Firstly, crack the whole egg into a small clean bowl and discard any stray shell bits.",
+        "Add 1 tablespoon water (or milk) and a tiny pinch of turmeric powder.",
+        "Whisk vigorously with a fork for 20 seconds until completely frothy and uniform.",
+        "Melt unsalted butter or ghee in a small non-stick pan over the very lowest flame.",
+        "Pour in the whisked egg mixture and wait 15 seconds until edges begin to set.",
+        "Using a silicone spatula, gently push and fold the egg slowly across the pan to form large, velvety soft curds.",
+        "Remove the pan from the heat just as the egg is completely set and moist—never dry, rubbery, or browned.",
+        "Allow curds to cool slightly, break into soft grape-sized clusters, test warmth, and serve fresh."
       ],
-      benefits: "High biological value protein, choline for brain development, and vitamins.",
-      safety: "Ensure eggs are fully cooked through, but soft and custard-like.",
-      icon: "\ud83c\udf73"
+      benefits: "Complete biological-value protein, brain-boosting choline, vitamin D, and vitamin B12.",
+      safety: "Cook egg thoroughly so zero raw liquid egg remains, while keeping curds moist and soft rather than dry.",
+      icon: "🍳"
     },
     {
       id: '10_12_months_rec_9',
       name: "Baked Sweet Potato & Green Pea Patty",
-      localName: "\u0936\u0915\u0930\u0915\u0902\u0926 \u091f\u093f\u0915\u094d\u0915\u0940 / \u0b9a\u0bb0\u0bcd\u0b95\u0bcd\u0b95\u0bb0\u0bc8\u0bb5\u0bb3\u0bcd\u0bb3\u0bbf \u0b95\u0b9f\u0bcd\u0bb2\u0bc6\u0b9f\u0bcd",
+      localName: "शकरकंद टिक्की / சர்க்கரைவள்ளி கட்லெட்",
       prepTime: "10 mins",
       cookTime: "10 mins",
       category: 'Snacks',
       region: 'Pan-Indian',
       ingredients: [
-        "1/2 cup Boiled mashed sweet potato",
-        "2 tablespoons Mashed green peas",
-        "1 tablespoon Roasted oats flour for binding",
-        "Drop of Ghee"
+        "1/2 cup boiled and smoothly mashed sweet potato",
+        "2 tbsp boiled and squished green peas",
+        "1.5 tbsp dry-roasted oats flour or rava (for gentle binding)",
+        "1 tiny pinch roasted cumin (jeera) powder",
+        "1/2 tsp pure homemade ghee (for pan-searing)"
       ],
       instructions: [
-        "Mix sweet potato, mashed peas, and oats flour into a soft dough.",
-        "Shape into small toddler patties.",
-        "Pan-sear in ghee on low heat until golden on both sides."
+        "Firstly, steam sweet potato and green peas until soft; peel sweet potato and mash cleanly while squishing peas completely flat.",
+        "Combine the mashed sweet potato, squished peas, and cumin powder in a mixing bowl.",
+        "Sprinkle in the roasted oats flour 1 teaspoon at a time, mixing gently until a soft, non-sticky dough forms.",
+        "Grease your palms with a drop of ghee and divide into 4 small walnut-sized portions.",
+        "Shape gently into plump ½-inch thick mini patties sized easily for small toddler hands.",
+        "Heat a skillet on lowest flame and brush lightly with ½ teaspoon ghee.",
+        "Place patties onto the warm pan (or bake at 180°C for 15 minutes) and cook 3–4 minutes per side until lightly golden.",
+        "Keep the outside tender rather than crunchy-crisp; cool to lukewarm and serve broken in halves."
       ],
-      benefits: "High dietary fiber and beta-carotene with a delicious natural sweetness.",
-      safety: "Make sure the crust remains soft, not brittle or hard.",
-      icon: "\ud83e\uddc6"
+      benefits: "Rich in prebiotic fiber, beta-carotene, and plant protein in a fun hand-held cutlet shape.",
+      safety: "Ensure no hard crusty edges form; squishing peas completely eliminates round choking risks.",
+      icon: "🧆"
     },
     {
       id: '10_12_months_rec_10',
       name: "Fresh Mango & Hung Curd Swirl",
-      localName: "\u0906\u092e \u0936\u094d\u0930\u0940\u0916\u0902\u0921 / \u0bae\u0bbe\u0bae\u0bcd\u0baa\u0bb4 \u0ba4\u0baf\u0bbf\u0bb0\u0bcd \u0bae\u0b9a\u0bbf\u0baf\u0bb2\u0bcd",
-      prepTime: "5 mins",
+      localName: "आम श्रीखंड / மாம்பழ தயிர் மசியல்",
+      prepTime: "5 mins (+ 2 hrs draining curd)",
       cookTime: "0 mins",
       category: 'Snacks',
       region: 'Pan-Indian',
       ingredients: [
-        "3 tablespoons Fresh thick hung curd",
-        "2 tablespoons Fresh sweet ripe mango pur\u00e9e",
-        "Pinch of Cardamom powder"
+        "3 tbsp thick fresh homemade hung curd (chakka dahi)",
+        "2 tbsp naturally sweet ripe Alphonso or Kesar mango purée",
+        "1 tiny pinch green cardamom (elaichi) powder",
+        "1/4 tsp finely minced soft mango bits (optional, for 11m+ texture)"
       ],
       instructions: [
-        "Whisk hung curd and fresh sweet mango puree until creamy.",
-        "Sprinkle a tiny hint of cardamom powder.",
-        "Serve at room temperature."
+        "Firstly, prepare hung curd by tying fresh, non-sour curd in clean muslin cloth over a bowl in the fridge for 2 hours to drain whey.",
+        "Wash a ripe sweet non-fibrous mango (Alphonso/Kesar), peel cleanly, and scoop out the sweet pulp.",
+        "Blend or pass the mango flesh through a fine sieve so zero stringy fibers remain.",
+        "Whisk the chilled thick hung curd in a bowl for 30 seconds until smooth and velvety like cream.",
+        "Let the hung curd come close to room temperature so it isn't shockingly cold for baby's throat.",
+        "Swirl in the sweet ripe mango puree and a tiny pinch of cardamom powder.",
+        "Optionally fold in ¼ teaspoon tiny, soft mango dices for gentle pincer-grasp practice.",
+        "Serve immediately as a probiotic-rich natural dessert with zero added sugar."
       ],
-      benefits: "Packed with gut-friendly probiotics, protein, and vitamin A.",
-      safety: "Use only sweet naturally ripe mangoes, avoiding sour fruits.",
-      icon: "\ud83e\udd6d"
+      benefits: "Probiotic gut protection paired with concentrated vitamin A, vitamin C, and natural creamy milk fats.",
+      safety: "Use naturally sweet, fiber-free ripe mangoes and fresh non-sour curd; avoid serving ice cold.",
+      icon: "🥭"
     }
   ]
 };
