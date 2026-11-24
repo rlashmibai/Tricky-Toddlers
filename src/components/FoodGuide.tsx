@@ -1093,55 +1093,55 @@ export const FoodGuide: React.FC<FoodGuideProps> = ({ onNavigateToFoodLens }) =>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                   <div className="p-3.5 rounded-xl bg-white/[0.04] border border-white/10">
                     <h3 className="text-xs sm:text-sm font-black text-teal-200">
-                      1. Core Ingredients
+                      1. Child Profile Mode
                     </h3>
                     <p className="text-xs text-slate-300 mt-1">
-                      Enter or voice-dictate what&rsquo;s in your kitchen.
+                      Switch between Child 1, Child 2, or General mode before generating.
                     </p>
                   </div>
 
                   <div className="p-3.5 rounded-xl bg-white/[0.04] border border-white/10">
                     <h3 className="text-xs sm:text-sm font-black text-teal-200">
-                      2. Meal Type
+                      2. Text &amp; Voice Pantry Input
                     </h3>
                     <p className="text-xs text-slate-300 mt-1">
-                      Choose Breakfast, Lunch, Dinner, Quick Snack, or Dessert.
+                      Type available kitchen items or dictate them using Speak Ingredients.
                     </p>
                   </div>
 
                   <div className="p-3.5 rounded-xl bg-white/[0.04] border border-white/10">
                     <h3 className="text-xs sm:text-sm font-black text-teal-200">
-                      3. Cooking Time
+                      3. Custom Preferences &amp; Servings
                     </h3>
                     <p className="text-xs text-slate-300 mt-1">
-                      Select Under 15 mins, 15–30 mins, 30–60 mins, or No rush.
+                      Customize recipes by meal type, dietary needs, time, equipment, and portions.
                     </p>
                   </div>
 
                   <div className="p-3.5 rounded-xl bg-white/[0.04] border border-white/10">
                     <h3 className="text-xs sm:text-sm font-black text-teal-200">
-                      4. Dietary Preferences &amp; Goals
+                      4. 3 Recipe Variations
                     </h3>
                     <p className="text-xs text-slate-300 mt-1">
-                      Vegetarian, Non-Vegetarian, Vegan, Gluten-Free, Dairy-Free, High-Protein, Low-Carb / Keto.
+                      Generates 3 distinct recipe options matched to your selected criteria.
                     </p>
                   </div>
 
                   <div className="p-3.5 rounded-xl bg-white/[0.04] border border-white/10">
                     <h3 className="text-xs sm:text-sm font-black text-teal-200">
-                      5. Servings Counter
+                      5. Prep Steps &amp; Safety Notes
                     </h3>
                     <p className="text-xs text-slate-300 mt-1">
-                      Adjust how many people you are cooking for (1, 2, 4, 6+ or stepper).
+                      Shows prep time, cook time, steps, texture guide, and safety warnings.
                     </p>
                   </div>
 
                   <div className="p-3.5 rounded-xl bg-white/[0.04] border border-white/10">
                     <h3 className="text-xs sm:text-sm font-black text-teal-200">
-                      6. Kitchen Equipment
+                      6. Auto-Save to History
                     </h3>
                     <p className="text-xs text-slate-300 mt-1">
-                      Stovetop / One-Pan, Oven, Air Fryer, Microwave, Instant Pot / Pressure Cooker, or No-Cook.
+                      Automatically saves generated recipe batches to AI Recipe History.
                     </p>
                   </div>
                 </div>
@@ -1577,7 +1577,7 @@ export const FoodGuide: React.FC<FoodGuideProps> = ({ onNavigateToFoodLens }) =>
                       {[
                         'Vegetarian',
                         'Non-Vegetarian',
-                        'Vegan',
+                        'Eggitarian',
                         'Gluten-Free',
                         'Dairy-Free',
                         'High-Protein',

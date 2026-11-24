@@ -24,7 +24,7 @@ export const triggerToast = (
   message: string,
   type: ToastType = 'success',
   title?: string,
-  duration = 3800
+  duration = 5000
 ) => {
   if (typeof window !== 'undefined') {
     window.dispatchEvent(
@@ -37,13 +37,18 @@ export const triggerToast = (
 
 export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [toasts, setToasts] = useState<ToastItem[]>([]);
+  const timersRef = React.useRef<Record<string, ReturnType<typeof setTimeout>>>({});
 
   const dismissToast = useCallback((id: string) => {
+    if (timersRef.current[id]) {
+      clearTimeout(timersRef.current[id]);
+      delete timersRef.current[id];
+    }
     setToasts((prev) => prev.filter((t) => t.id !== id));
   }, []);
 
   const showToast = useCallback(
-    (message: string, type: ToastType = 'success', title?: string, duration = 3800) => {
+    (message: string, type: ToastType = 'success', title?: string, duration = 5000) => {
       const id = `toast-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
       const defaultTitles: Record<ToastType, string> = {
         success: 'Changes Saved',
@@ -53,24 +58,33 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         error: 'Action Needed',
       };
 
+      const effectiveDuration = typeof duration === 'number' ? duration : 5000;
+
       const newToast: ToastItem = {
         id,
         title: title || defaultTitles[type],
         message,
         type,
-        duration,
+        duration: effectiveDuration,
       };
 
-      setToasts((prev) => [...prev.slice(-3), newToast]);
+      setToasts((prev) => [...prev.slice(-2), newToast]);
 
-      if (duration > 0) {
-        setTimeout(() => {
+      if (effectiveDuration > 0) {
+        timersRef.current[id] = setTimeout(() => {
           dismissToast(id);
-        }, duration);
+        }, effectiveDuration);
       }
     },
     [dismissToast]
   );
+
+  useEffect(() => {
+    return () => {
+      Object.values(timersRef.current).forEach((timerId) => clearTimeout(timerId));
+      timersRef.current = {};
+    };
+  }, []);
 
   useEffect(() => {
     const handleGlobalToast = (e: Event) => {
@@ -101,7 +115,6 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
           border: 'border-amber-400/40 bg-gradient-to-r from-[#17130a]/95 via-[#0f172a]/95 to-[#0b1329]/95',
           iconBg: 'bg-amber-400/20 border-amber-400/40 text-amber-300',
           titleColor: 'text-amber-200',
-          barColor: 'from-amber-400 to-yellow-300',
           Icon: ShoppingBag,
         };
       case 'info':
@@ -109,7 +122,6 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
           border: 'border-cyan-400/40 bg-gradient-to-r from-[#091926]/95 via-[#0f172a]/95 to-[#0b1329]/95',
           iconBg: 'bg-cyan-400/20 border-cyan-400/40 text-cyan-300',
           titleColor: 'text-cyan-200',
-          barColor: 'from-cyan-400 to-indigo-400',
           Icon: Sparkles,
         };
       case 'warning':
@@ -117,7 +129,6 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
           border: 'border-amber-500/40 bg-gradient-to-r from-[#1c1208]/95 via-[#0f172a]/95 to-[#0b1329]/95',
           iconBg: 'bg-amber-500/20 border-amber-400/40 text-amber-300',
           titleColor: 'text-amber-200',
-          barColor: 'from-amber-400 to-orange-400',
           Icon: AlertTriangle,
         };
       case 'error':
@@ -125,7 +136,6 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
           border: 'border-rose-500/45 bg-gradient-to-r from-[#1f0a12]/95 via-[#0f172a]/95 to-[#0b1329]/95',
           iconBg: 'bg-rose-500/20 border-rose-400/40 text-rose-300',
           titleColor: 'text-rose-200',
-          barColor: 'from-rose-500 to-pink-500',
           Icon: AlertCircle,
         };
       case 'success':
@@ -134,7 +144,6 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
           border: 'border-emerald-400/40 bg-gradient-to-r from-[#071c18]/95 via-[#0f172a]/95 to-[#0b1329]/95',
           iconBg: 'bg-emerald-500/20 border-emerald-400/40 text-emerald-300',
           titleColor: 'text-emerald-200',
-          barColor: 'from-emerald-400 to-teal-300',
           Icon: CheckCircle2,
         };
     }
@@ -150,7 +159,7 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         aria-atomic="true"
         className="fixed top-20 right-3 sm:right-6 z-[250] flex flex-col gap-2.5 w-[calc(100vw-1.5rem)] max-w-sm pointer-events-none"
       >
-        <AnimatePresence mode="popLayout">
+        <AnimatePresence>
           {toasts.map((toast) => {
             const style = getToastStyles(toast.type);
             const IconComponent = style.Icon;
@@ -158,11 +167,10 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
             return (
               <motion.div
                 key={toast.id}
-                layout
-                initial={{ opacity: 0, x: 40, scale: 0.95 }}
+                initial={{ opacity: 0, x: 30, scale: 0.96 }}
                 animate={{ opacity: 1, x: 0, scale: 1 }}
-                exit={{ opacity: 0, x: 40, scale: 0.95 }}
-                transition={{ duration: 0.22, ease: 'easeOut' }}
+                exit={{ opacity: 0, x: 30, scale: 0.96 }}
+                transition={{ duration: 0.2, ease: 'easeOut' }}
                 className={`pointer-events-auto relative overflow-hidden glass-card rounded-2xl border ${style.border} backdrop-blur-2xl shadow-2xl shadow-black/60 p-3.5 sm:p-4`}
               >
                 <div className="flex items-start gap-3">
@@ -195,16 +203,6 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
                     <X className="w-3.5 h-3.5" />
                   </button>
                 </div>
-
-                {/* Animated Progress Bar */}
-                {toast.duration && toast.duration > 0 && (
-                  <motion.div
-                    initial={{ width: '100%' }}
-                    animate={{ width: '0%' }}
-                    transition={{ duration: toast.duration / 1000, ease: 'linear' }}
-                    className={`absolute bottom-0 left-0 h-0.5 bg-gradient-to-r ${style.barColor}`}
-                  />
-                )}
               </motion.div>
             );
           })}

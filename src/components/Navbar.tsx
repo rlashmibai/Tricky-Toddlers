@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../lib/AuthContext';
 import { useLanguage, SUPPORTED_LANGUAGES } from '../lib/LanguageContext';
@@ -394,7 +395,7 @@ export const Navbar: React.FC = () => {
     document.documentElement.scrollTop = 0;
     document.body.scrollTop = 0;
 
-    triggerToast('You have now signed into Guest account.', 'success', 'Guest Session Active');
+    triggerToast('You have now signed into Guest account.', 'success', 'Guest Session Active', 5000);
 
     try {
       await loginAsGuest();
@@ -426,7 +427,7 @@ export const Navbar: React.FC = () => {
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
     document.documentElement.scrollTop = 0;
     document.body.scrollTop = 0;
-    triggerToast('You have been signed out safely.', 'info', 'Signed Out');
+    triggerToast('You have been signed out safely.', 'info', 'Signed Out', 5000);
 
     if (wasAccountUser && auth) {
       signOut(auth).catch((error) => {
@@ -964,179 +965,206 @@ export const Navbar: React.FC = () => {
             LANDING PAGE FEATURE CLICK PROMPT MODAL
             Prompts visitors to pick Guest Demo vs Personal Account
         ========================================================== */}
-        <AnimatePresence>
-          {modePromptModal.open && (
-            <div
-              onClick={() => {
-                playSound('click');
-                setModePromptModal({ open: false });
-              }}
-              className="fixed inset-0 z-[200] flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md overflow-y-auto"
-            >
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95, y: 14 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.95, y: 14 }}
-                onClick={(e) => e.stopPropagation()}
-                className="w-full max-w-2xl rounded-3xl border border-white/20 bg-gradient-to-b from-[#0f182e] to-[#0a1020] p-6 sm:p-9 shadow-[0_25px_70px_rgba(0,0,0,0.75)] space-y-6 text-left relative overflow-hidden my-auto"
-              >
-                {/* Top-Right Close Button */}
-                <button
-                  type="button"
+        {typeof document !== 'undefined' &&
+          createPortal(
+            <AnimatePresence>
+              {modePromptModal.open && (
+                <div
                   onClick={() => {
                     playSound('click');
                     setModePromptModal({ open: false });
                   }}
-                  aria-label="Close popup"
-                  title="Close"
-                  className="absolute top-5 right-5 sm:top-6 sm:right-6 inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white/10 hover:bg-rose-500/20 border border-white/15 hover:border-rose-400/50 text-slate-200 hover:text-white text-xs font-bold transition-all cursor-pointer shadow-sm"
+                  className="fixed inset-0 z-[200] flex items-center justify-center p-3 sm:p-5 bg-black/80 backdrop-blur-md overflow-y-auto md:overflow-hidden"
                 >
-                  <X className="w-4 h-4" />
-                  <span>Close</span>
-                </button>
-
-                {/* Modal Header */}
-                <div className="space-y-3 pr-20">
-                  <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-500/15 border border-indigo-400/30 text-indigo-200 text-xs font-black uppercase tracking-wider">
-                    <Sparkles className="w-3.5 h-3.5 text-amber-300 shrink-0" />
-                    <span>Choose How to Explore</span>
-                  </div>
-                  <h3 className="text-2xl sm:text-3xl font-black text-white tracking-tight leading-snug">
-                    Open {modePromptModal.featureLabel || 'Feature'}
-                  </h3>
-                  <p className="text-sm sm:text-base text-slate-300 leading-relaxed">
-                    Every tool in <span className="notranslate font-bold text-white" translate="no">Tricky Toddlers</span> personalizes advice to a child’s profile. Choose how you would like to continue:
-                  </p>
-                </div>
-
-                {/* Options Container */}
-                <div className="space-y-4">
-                  {/* Option 1: Free Guest Access */}
-                  <div
-                    onClick={() =>
-                      handleQuickGuestClick(
-                        modePromptModal.targetTab,
-                        modePromptModal.targetSubTab,
-                        modePromptModal.targetPath
-                      )
-                    }
-                    role="button"
-                    tabIndex={0}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        handleQuickGuestClick(
-                          modePromptModal.targetTab,
-                          modePromptModal.targetSubTab,
-                          modePromptModal.targetPath
-                        );
-                      }
-                    }}
-                    className="w-full p-5 sm:p-6 rounded-2xl border-2 border-emerald-400/50 bg-gradient-to-br from-emerald-950/85 via-teal-950/70 to-slate-900/95 hover:border-emerald-300 text-left transition-all cursor-pointer group shadow-xl space-y-4"
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.96, y: 12 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.96, y: 12 }}
+                    onClick={(e) => e.stopPropagation()}
+                    className="w-full max-w-[1080px] rounded-3xl border border-white/15 bg-gradient-to-br from-[#0e172c] via-[#0b1326] to-[#080e1d] p-4 sm:p-6 shadow-[0_30px_90px_rgba(0,0,0,0.85)] text-left relative overflow-hidden my-auto"
                   >
-                    <div className="flex flex-wrap items-center justify-between gap-3">
-                      <div className="flex items-center gap-2.5">
-                        <div className="w-9 h-9 rounded-xl bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center shrink-0">
-                          <Sparkles className="w-4 h-4 text-emerald-300" />
+                    {/* Subtle Ambient Glows */}
+                    <div className="absolute -top-24 -left-24 w-72 h-72 bg-emerald-500/10 blur-3xl rounded-full pointer-events-none" />
+                    <div className="absolute -bottom-24 -right-24 w-72 h-72 bg-indigo-500/10 blur-3xl rounded-full pointer-events-none" />
+
+                    {/* Top-Right Close Button */}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        playSound('click');
+                        setModePromptModal({ open: false });
+                      }}
+                      aria-label="Close popup"
+                      title="Close"
+                      className="absolute top-4 right-4 sm:top-5 sm:right-6 z-10 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/10 hover:bg-rose-500/20 border border-white/15 hover:border-rose-400/50 text-slate-200 hover:text-white text-xs font-bold transition-all cursor-pointer shadow-sm"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                      <span>Close</span>
+                    </button>
+
+                    {/* Compact Elegant Modal Header */}
+                    <div className="relative z-10 flex flex-col gap-1.5 pr-24 pb-3 border-b border-white/10">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-500/15 border border-indigo-400/30 text-indigo-200 text-[11px] font-black uppercase tracking-wider">
+                          <Sparkles className="w-3.5 h-3.5 text-amber-300 shrink-0" />
+                          <span>Choose How to Explore</span>
                         </div>
-                        <span className="text-base sm:text-lg font-black text-emerald-200 group-hover:text-white transition-colors">
-                          1. Free Guest Access (All Features Unlocked Free)
-                        </span>
                       </div>
-                      <span className="px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-emerald-400 text-slate-950 whitespace-nowrap shrink-0 shadow-sm">
-                        1-Click Free Access
-                      </span>
+                      <div className="flex flex-col md:flex-row md:items-baseline md:justify-between gap-1.5">
+                        <h3 className="text-xl sm:text-2xl lg:text-[26px] font-black text-white tracking-tight leading-tight">
+                          Open {modePromptModal.featureLabel || 'Feature'}
+                        </h3>
+                        <p className="text-xs sm:text-sm text-slate-300">
+                          Every tool in <span className="notranslate font-bold text-white" translate="no">Tricky Toddlers</span> personalizes advice to a child&rsquo;s profile.
+                        </p>
+                      </div>
                     </div>
 
-                    <p className="text-sm text-slate-200 leading-relaxed">
-                      <strong className="text-emerald-300">Free access</strong> if you want to explore all the features immediately with our pre-loaded demo family (<strong className="text-white">Parent</strong>) and switch anytime between:
-                    </p>
+                    {/* Side-by-Side 2-Column Options Container */}
+                    <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-4 pt-3.5 sm:pt-4 items-stretch">
+                      {/* Option 1: Free Guest Access */}
+                      <div
+                        onClick={() =>
+                          handleQuickGuestClick(
+                            modePromptModal.targetTab,
+                            modePromptModal.targetSubTab,
+                            modePromptModal.targetPath
+                          )
+                        }
+                        role="button"
+                        tabIndex={0}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            handleQuickGuestClick(
+                              modePromptModal.targetTab,
+                              modePromptModal.targetSubTab,
+                              modePromptModal.targetPath
+                            );
+                          }
+                        }}
+                        className="flex flex-col justify-between p-4 sm:p-5 rounded-2xl border-2 border-emerald-400/50 bg-gradient-to-br from-emerald-950/75 via-teal-950/55 to-slate-900/90 hover:border-emerald-300 text-left transition-all cursor-pointer group shadow-xl"
+                      >
+                        <div className="space-y-3">
+                          <div className="flex items-start justify-between gap-2">
+                            <div className="flex items-center gap-3">
+                              <div className="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center shrink-0">
+                                <Sparkles className="w-5 h-5 text-emerald-300" />
+                              </div>
+                              <div>
+                                <span className="text-base sm:text-lg lg:text-xl font-black text-emerald-200 group-hover:text-white transition-colors block leading-snug">
+                                  1. Free Guest Access
+                                </span>
+                                <span className="text-xs sm:text-sm font-semibold text-emerald-300/85">
+                                  All Features Unlocked Free • No Login Required
+                                </span>
+                              </div>
+                            </div>
+                            <span className="px-2.5 py-1 rounded-full text-[11px] font-black uppercase tracking-wider bg-emerald-400 text-slate-950 whitespace-nowrap shrink-0 shadow-sm">
+                              No Login Required
+                            </span>
+                          </div>
 
-                    <div className="flex flex-wrap items-center gap-2.5">
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/15 border border-emerald-400/30 text-xs sm:text-sm font-bold text-emerald-200">
-                        <Baby className="w-3.5 h-3.5 text-emerald-300" />
-                        <span>Child 1 (2 Years 6 Months · Toddler)</span>
-                      </span>
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-teal-500/15 border border-teal-400/30 text-xs sm:text-sm font-bold text-teal-200">
-                        <Baby className="w-3.5 h-3.5 text-teal-300" />
-                        <span>Child 2 (3 Months · Infant)</span>
-                      </span>
-                    </div>
+                          <p className="text-sm sm:text-[15px] text-slate-200 leading-relaxed">
+                            <strong className="text-emerald-300">Free access (no login required)</strong> if you want to explore all the features immediately with our pre-loaded demo family (<strong className="text-white">Parent</strong>) and switch anytime between:
+                          </p>
 
-                    <div className="pt-1">
-                      <span className="w-full py-3 px-5 rounded-xl bg-emerald-400 group-hover:bg-emerald-300 text-slate-950 font-black text-sm flex items-center justify-center gap-2 transition-all shadow-md">
-                        <span>Continue with Free Guest Access</span>
-                        <ArrowRight className="w-4 h-4" />
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Option 2: Sign In / Create Personal Account */}
-                  <div className="p-5 sm:p-6 rounded-2xl border border-indigo-400/35 bg-indigo-950/40 space-y-4">
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2.5">
-                        <div className="w-9 h-9 rounded-xl bg-indigo-500/20 border border-indigo-400/40 flex items-center justify-center shrink-0">
-                          <User className="w-4 h-4 text-indigo-300" />
+                          <div className="flex flex-wrap items-center gap-2">
+                            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/15 border border-emerald-400/30 text-xs sm:text-sm font-bold text-emerald-200">
+                              <Baby className="w-4 h-4 text-emerald-300 shrink-0" />
+                              <span>Child 1 (2y 6m · Toddler)</span>
+                            </span>
+                            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-teal-500/15 border border-teal-400/30 text-xs sm:text-sm font-bold text-teal-200">
+                              <Baby className="w-4 h-4 text-teal-300 shrink-0" />
+                              <span>Child 2 (3m · Infant)</span>
+                            </span>
+                          </div>
                         </div>
-                        <span className="text-base sm:text-lg font-black text-indigo-100">
-                          2. Your Own Personal Account
-                        </span>
+
+                        <div className="pt-3.5 mt-1">
+                          <span className="w-full py-2.5 sm:py-3 px-4 rounded-xl bg-emerald-400 group-hover:bg-emerald-300 text-slate-950 font-black text-sm sm:text-[15px] flex items-center justify-center gap-2 transition-all shadow-md">
+                            <span>Continue with Free Guest Access</span>
+                            <ArrowRight className="w-4 h-4" />
+                          </span>
+                        </div>
                       </div>
-                      <p className="text-sm text-slate-300 leading-relaxed">
-                        Sign in or create an account to enter your own Parent Name, Child Name, Date of Birth, State/City, and Dietary Preferences across all tabs.
-                      </p>
+
+                      {/* Option 2: Sign In / Create Personal Account */}
+                      <div className="flex flex-col justify-between p-4 sm:p-5 rounded-2xl border border-indigo-400/35 bg-gradient-to-br from-indigo-950/50 via-slate-900/80 to-[#0c1224] shadow-xl">
+                        <div className="space-y-3">
+                          <div className="flex items-start justify-between gap-2">
+                            <div className="flex items-center gap-3">
+                              <div className="w-10 h-10 rounded-xl bg-indigo-500/20 border border-indigo-400/40 flex items-center justify-center shrink-0">
+                                <User className="w-5 h-5 text-indigo-300" />
+                              </div>
+                              <div>
+                                <span className="text-base sm:text-lg lg:text-xl font-black text-indigo-100 block leading-snug">
+                                  2. Your Own Personal Account
+                                </span>
+                                <span className="text-xs sm:text-sm font-semibold text-indigo-300/80">
+                                  Saved Family Profile &amp; History
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+
+                          <p className="text-sm sm:text-[15px] text-slate-300 leading-relaxed">
+                            Sign in or create an account to enter your own <strong className="text-white">Parent Name</strong>, <strong className="text-white">Child Name</strong>, <strong className="text-white">Date of Birth</strong>, <strong className="text-white">State/City</strong>, and <strong className="text-white">Dietary Preferences</strong> across all tabs.
+                          </p>
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-3.5 mt-1">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              playSound('click');
+                              setModePromptModal({ open: false });
+                              navigate('/login');
+                            }}
+                            className="py-2.5 sm:py-3 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-black text-sm sm:text-[15px] text-center transition-all cursor-pointer shadow-md flex items-center justify-center gap-1.5"
+                          >
+                            <LogIn className="w-4 h-4 shrink-0" />
+                            <span>Sign In</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              playSound('glass');
+                              setModePromptModal({ open: false });
+                              navigate('/register');
+                            }}
+                            className="py-2.5 sm:py-3 px-4 rounded-xl bg-white/10 hover:bg-white/15 border border-white/25 text-white font-bold text-sm sm:text-[15px] text-center transition-all cursor-pointer flex items-center justify-center gap-1.5"
+                          >
+                            <UserPlus className="w-4 h-4 shrink-0" />
+                            <span>Create Account</span>
+                          </button>
+                        </div>
+                      </div>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                    {/* Compact Footer */}
+                    <div className="relative z-10 flex flex-wrap items-center justify-between gap-2 pt-3 mt-3.5 border-t border-white/10">
+                      <span className="text-xs text-slate-400">
+                        Press <kbd className="px-1.5 py-0.5 rounded bg-white/10 text-slate-200 font-mono text-[10px]">Esc</kbd> or click outside to close
+                      </span>
                       <button
                         type="button"
                         onClick={() => {
                           playSound('click');
                           setModePromptModal({ open: false });
-                          navigate('/login');
                         }}
-                        className="py-3 px-5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-black text-sm text-center transition-all cursor-pointer shadow-md flex items-center justify-center gap-2"
+                        className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 text-slate-200 hover:text-white text-xs font-bold transition-all cursor-pointer"
                       >
-                        <LogIn className="w-4 h-4" />
-                        <span>Sign In to Account</span>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          playSound('glass');
-                          setModePromptModal({ open: false });
-                          navigate('/register');
-                        }}
-                        className="py-3 px-5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/25 text-white font-bold text-sm text-center transition-all cursor-pointer flex items-center justify-center gap-2"
-                      >
-                        <UserPlus className="w-4 h-4" />
-                        <span>Create Personal Account</span>
+                        <X className="w-3.5 h-3.5" />
+                        <span>Close &amp; Stay on Landing Page</span>
                       </button>
                     </div>
-                  </div>
+                  </motion.div>
                 </div>
-
-                {/* Footer Close / Stay on Landing Page */}
-                <div className="flex items-center justify-between pt-2 border-t border-white/10">
-                  <span className="text-xs text-slate-400">
-                    Press Esc or click outside to close
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      playSound('click');
-                      setModePromptModal({ open: false });
-                    }}
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 text-slate-200 hover:text-white text-xs sm:text-sm font-bold transition-all cursor-pointer"
-                  >
-                    <X className="w-3.5 h-3.5" />
-                    <span>Close &amp; Stay on Landing Page</span>
-                  </button>
-                </div>
-              </motion.div>
-            </div>
+              )}
+            </AnimatePresence>,
+            document.body
           )}
-        </AnimatePresence>
       </>
     </>
   );

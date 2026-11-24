@@ -41,7 +41,7 @@ export const LoginForm: React.FC = () => {
       });
       window.dispatchEvent(new CustomEvent('nav-tab-refresh', { detail: { tab: 'ai' } }));
       navigate('/?tab=ai', { replace: true });
-      triggerToast('You have now signed into Guest account.', 'success', 'Guest Session Active');
+      triggerToast('You have now signed into Guest account.', 'success', 'Guest Session Active', 5000);
     } catch (err: any) {
       setError("Could not launch guest mode. Please try signing in below.");
     } finally {
