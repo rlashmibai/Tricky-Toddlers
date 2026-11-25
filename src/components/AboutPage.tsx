@@ -32,22 +32,34 @@ export const AboutPage: React.FC<{ embedded?: boolean }> = ({ embedded = false }
           <div className="absolute -top-24 -right-24 w-72 h-72 bg-pink-500/10 rounded-full blur-3xl pointer-events-none" />
           <div className="absolute -bottom-24 -left-24 w-72 h-72 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
 
-          {/* Ashwath Amudhan Intro */}
-          <div className="pb-8 border-b border-white/10 text-left">
-            <div className="space-y-2.5 text-left">
-              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight leading-snug text-balance">
-                The Story Behind <span className="notranslate" translate="no">Tricky Toddlers</span>
-              </h1>
-              <div className="text-slate-200 text-base sm:text-lg leading-relaxed space-y-2 text-left pt-2">
-                <p className="text-left">
-                  Hi, I’m <strong className="notranslate text-white font-bold" translate="no">Ashwath Amudhan</strong>, a Young Innovator and Startup Entrepreneur with a passion for technology and problem-solving.
-                </p>
-                <p className="text-left">
-                  I often wondered, if technology can simplify so many parts of our lives, why can’t it make parenting simpler too?
-                </p>
-                <p className="text-indigo-300 font-semibold text-left">
-                  That question led me to create <span className="notranslate text-amber-300 font-bold" translate="no">Tricky Toddlers</span>.
-                </p>
+          {/* Ashwath Amudhan Intro (Image Left, Heading & Bio Right; Rest Full Width Below) */}
+          <div className="pb-8 border-b border-white/10 text-left relative z-10">
+            <div className="flex flex-col md:flex-row items-center md:items-start gap-6 lg:gap-8">
+              <div className="w-48 sm:w-56 md:w-60 shrink-0">
+                <div className="rounded-2xl overflow-hidden border border-indigo-400/30 bg-white shadow-xl shadow-indigo-950/50">
+                  <img
+                    src="/assets/aistudio/Ashwath_Passport_Size_Photo_70b2381c.jpg"
+                    alt="Ashwath Amudhan, Founder of Tricky Toddlers"
+                    className="w-full h-auto block"
+                  />
+                </div>
+              </div>
+
+              <div className="flex-1 space-y-2.5 text-left">
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight leading-snug text-balance">
+                  The Story Behind <span className="notranslate" translate="no">Tricky Toddlers</span>
+                </h1>
+                <div className="text-slate-200 text-base sm:text-lg leading-relaxed space-y-2 text-left pt-2">
+                  <p className="text-left">
+                    Hi, I’m <strong className="notranslate text-white font-bold" translate="no">Ashwath Amudhan</strong>, a Young Innovator and Startup Entrepreneur with a passion for technology and problem-solving.
+                  </p>
+                  <p className="text-left">
+                    I often wondered, if technology can simplify so many parts of our lives, why can’t it make parenting simpler too?
+                  </p>
+                  <p className="text-indigo-300 font-semibold text-left">
+                    That question led me to create <span className="notranslate text-amber-300 font-bold" translate="no">Tricky Toddlers</span>.
+                  </p>
+                </div>
               </div>
             </div>
           </div>

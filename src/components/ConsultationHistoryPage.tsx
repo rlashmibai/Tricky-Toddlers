@@ -596,19 +596,25 @@ export const ConsultationHistoryPage: React.FC = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            onClick={(e) => {
+              if (e.target === e.currentTarget) setSelectedClinicalSlip(null);
+            }}
             className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
           >
             <motion.div
               initial={{ scale: 0.95, y: 15 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.95, y: 15 }}
+              onClick={(e) => e.stopPropagation()}
               className="max-w-2xl w-full bg-slate-900 border border-white/15 rounded-3xl overflow-hidden shadow-2xl text-left"
             >
               {/* Slip Header */}
               <div className="p-6 bg-gradient-to-r from-indigo-900/60 to-purple-900/40 border-b border-white/10 relative">
                 <button
+                  type="button"
+                  aria-label="Close modal"
                   onClick={() => setSelectedClinicalSlip(null)}
-                  className="absolute right-5 top-5 p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs transition-colors"
+                  className="absolute right-5 top-5 z-20 p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs transition-colors cursor-pointer"
                 >
                   <X className="w-4 h-4" />
                 </button>

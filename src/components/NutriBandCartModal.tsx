@@ -182,11 +182,20 @@ export const NutriBandCartModal: React.FC<NutriBandCartModalProps> = ({
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 overflow-y-auto bg-black/85 backdrop-blur-md">
+      <div
+        onClick={(e) => {
+          if (e.target === e.currentTarget) {
+            playSound('pop');
+            onClose();
+          }
+        }}
+        className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 overflow-y-auto bg-black/85 backdrop-blur-md"
+      >
         <motion.div
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
+          onClick={(e) => e.stopPropagation()}
           className="relative w-full max-w-3xl bg-gradient-to-b from-[#0e1b2f] via-[#0b1424] to-[#070d18] border border-cyan-500/30 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh]"
         >
           {/* Header (Clean, without Demo Mode) */}

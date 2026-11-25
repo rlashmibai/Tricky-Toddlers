@@ -208,6 +208,8 @@ const AppContent: React.FC = () => {
               <Route path="/tricky-toddlers/login" element={<LoginForm />} />
               <Route path="/register" element={<RegisterForm />} />
               <Route path="/tricky-toddlers/register" element={<RegisterForm />} />
+              <Route path="/forgot-password" element={<ForgotPasswordForm />} />
+              <Route path="/tricky-toddlers/forgot-password" element={<ForgotPasswordForm />} />
               <Route 
                 path="/profile" 
                 element={

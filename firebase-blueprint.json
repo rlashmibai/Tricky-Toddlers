@@ -158,12 +158,29 @@
         "browser",
         "createdAtIso"
       ]
+    },
+    "UsernameLookup": {
+      "title": "Username Lookup",
+      "description": "Maps unique lowercase usernames to their registered email for sign-in and password reset lookup.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "Firebase Auth UID of the account owner" },
+        "username": { "type": "string", "description": "Unique lowercase username" },
+        "email": { "type": "string", "description": "Registered email address for auth and password reset" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "username", "email", "createdAt"]
     }
   },
   "firestore": {
     "/users/{userId}": {
       "schema": "User",
       "description": "A collection of user profiles keyed by their authentication UID."
+    },
+    "/usernames/{username}": {
+      "schema": "UsernameLookup",
+      "description": "Username-to-email lookup index for username sign-in and password reset."
     },
     "/user_routines/{userId}": {
       "schema": "UserRoutine",

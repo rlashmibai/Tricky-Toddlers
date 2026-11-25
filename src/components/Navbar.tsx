@@ -990,13 +990,14 @@ export const Navbar: React.FC = () => {
                     {/* Top-Right Close Button */}
                     <button
                       type="button"
-                      onClick={() => {
+                      onClick={(e) => {
+                        e.stopPropagation();
                         playSound('click');
                         setModePromptModal({ open: false });
                       }}
                       aria-label="Close popup"
                       title="Close"
-                      className="absolute top-4 right-4 sm:top-5 sm:right-6 z-10 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/10 hover:bg-rose-500/20 border border-white/15 hover:border-rose-400/50 text-slate-200 hover:text-white text-xs font-bold transition-all cursor-pointer shadow-sm"
+                      className="absolute top-4 right-4 sm:top-5 sm:right-6 z-30 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/10 hover:bg-rose-500/20 border border-white/15 hover:border-rose-400/50 text-slate-200 hover:text-white text-xs font-bold transition-all cursor-pointer shadow-sm"
                     >
                       <X className="w-3.5 h-3.5" />
                       <span>Close</span>
@@ -1149,11 +1150,12 @@ export const Navbar: React.FC = () => {
                       </span>
                       <button
                         type="button"
-                        onClick={() => {
+                        onClick={(e) => {
+                          e.stopPropagation();
                           playSound('click');
                           setModePromptModal({ open: false });
                         }}
-                        className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 text-slate-200 hover:text-white text-xs font-bold transition-all cursor-pointer"
+                        className="relative z-30 inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 text-slate-200 hover:text-white text-xs font-bold transition-all cursor-pointer"
                       >
                         <X className="w-3.5 h-3.5" />
                         <span>Close &amp; Stay on Landing Page</span>

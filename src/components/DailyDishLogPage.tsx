@@ -477,16 +477,26 @@ export const DailyDishLogPage: React.FC = () => {
 
         {/* Add Custom Dish Modal */}
         {showAddModal && (
-          <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-            <div className="bg-[#0f172a] border border-white/20 rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl text-left space-y-4">
+          <div
+            onClick={(e) => {
+              if (e.target === e.currentTarget) setShowAddModal(false);
+            }}
+            className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4"
+          >
+            <div
+              onClick={(e) => e.stopPropagation()}
+              className="bg-[#0f172a] border border-white/20 rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl text-left space-y-4"
+            >
               <div className="flex items-center justify-between pb-3 border-b border-white/10">
                 <h3 className="text-lg font-black text-white flex items-center gap-2">
                   <Plus className="w-5 h-5 text-amber-400" />
                   <span>Log Dish for {formatFriendlyDate(selectedDate)}</span>
                 </h3>
                 <button
+                  type="button"
+                  aria-label="Close modal"
                   onClick={() => setShowAddModal(false)}
-                  className="p-1 rounded-lg text-slate-400 hover:text-white"
+                  className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
                 >
                   <X className="w-5 h-5" />
                 </button>

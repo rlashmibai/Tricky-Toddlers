@@ -562,11 +562,17 @@ export const AIChatHistoryPage: React.FC = () => {
       {/* Confirmation Modal for Clearing History */}
       <AnimatePresence>
         {showClearConfirm && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+          <div
+            onClick={(e) => {
+              if (e.target === e.currentTarget) setShowClearConfirm(false);
+            }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+          >
             <motion.div
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
               className="w-full max-w-md p-6 rounded-3xl bg-slate-900 border border-white/10 shadow-2xl text-center"
             >
               <div className="w-12 h-12 rounded-2xl bg-rose-500/15 border border-rose-500/30 text-rose-400 flex items-center justify-center mx-auto mb-4">

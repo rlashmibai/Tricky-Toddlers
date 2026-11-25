@@ -3773,17 +3773,26 @@ export const ExpertPediatricianSection: React.FC = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            onClick={(e) => {
+              if (e.target === e.currentTarget) {
+                setShowReportModal(false);
+                playSound('click');
+              }
+            }}
             className="fixed inset-0 bg-neutral-950/90 backdrop-blur-lg z-50 overflow-y-auto p-4 md:p-8 flex items-center justify-center font-sans"
           >
             <motion.div
               initial={{ scale: 0.9, y: 30 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 30 }}
+              onClick={(e) => e.stopPropagation()}
               className="max-w-3xl w-full bg-neutral-900 border border-white/10 rounded-[2.5rem] overflow-hidden shadow-2xl relative"
             >
               <button
+                type="button"
+                aria-label="Close modal"
                 onClick={() => { setShowReportModal(false); playSound('click'); }}
-                className="absolute top-5 right-5 p-2 bg-white/5 border border-white/5 hover:bg-white/10 text-white rounded-xl transition-all"
+                className="absolute top-5 right-5 z-20 p-2 bg-white/10 border border-white/10 hover:bg-white/20 text-white rounded-xl transition-all cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -3901,17 +3910,26 @@ export const ExpertPediatricianSection: React.FC = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            onClick={(e) => {
+              if (e.target === e.currentTarget) {
+                setSelectedPastBookingModal(null);
+                playSound('click');
+              }
+            }}
             className="fixed inset-0 bg-neutral-950/90 backdrop-blur-md z-50 overflow-y-auto p-4 md:p-8 flex items-center justify-center font-sans"
           >
             <motion.div
               initial={{ scale: 0.94, y: 20 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.94, y: 20 }}
+              onClick={(e) => e.stopPropagation()}
               className="max-w-2xl w-full bg-neutral-900 border border-white/15 rounded-3xl overflow-hidden shadow-2xl relative text-left"
             >
               <button
+                type="button"
+                aria-label="Close modal"
                 onClick={() => { setSelectedPastBookingModal(null); playSound('click'); }}
-                className="absolute top-5 right-5 p-2 bg-white/10 hover:bg-white/20 text-white rounded-xl transition-all cursor-pointer"
+                className="absolute top-5 right-5 z-20 p-2 bg-white/10 hover:bg-white/20 text-white rounded-xl transition-all cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>

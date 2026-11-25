@@ -430,6 +430,12 @@ function generateTailoredFallbackRaw(q: string, pName: string, cName: string, ag
 3. **Repeat Cycles of 5 & 5**: Alternate **5 back blows** and **5 thrusts** continuously until the object is dislodged or emergency medical help takes over.
 4. **Never Do a Blind Finger Sweep**: Do **NOT** reach into ${cName}'s mouth unless you can clearly see the loose object, as blind sweeping can push the item deeper into the airway.
 
+### 🗣️ Calm Emergency Scripts to Speak Right Away
+* **Directing a Helper Immediately**: *"Please call 112 or 108 right now—tell them my child is ${age} old and is choking at our address!"*
+* **Encouraging an Active Cough**: *"You are doing great, ${cName}—keep coughing big and strong! Keep coughing it out, I am right here."*
+* **Reassuring During First Aid**: *"I've got you safely, ${cName}. Listen to my voice—I am helping your tummy and airway clear right now."*
+* **Post-Clearance Comfort & Doctor Transition**: *"The airway is clear now, sweetheart. Breathe slow with me—we are taking you straight to the pediatrician to make sure you are 100% okay."*
+
 ### 🩺 Consult Your Pediatrician Immediately
 * **Even after the object comes out**, take ${cName} to your **Pediatrician or nearest hospital** right away to examine the airway for residual irritation, swelling, or micro-aspiration.
 * You can also open the **Pediatric Care** tab in Tricky Toddlers for follow-up doctor consultation once ${cName} is stabilized.
@@ -452,6 +458,12 @@ function generateTailoredFallbackRaw(q: string, pName: string, cName: string, ag
 1. **Airway & Positioning**: Keep ${cName} upright or in a comfortable semi-reclined position for breathing distress. If a febrile seizure occurs, lay ${cName} gently on their **side (recovery position)** on a flat surface, clear nearby hard objects, and time the episode; never put anything inside the mouth.
 2. **Safe Fever Comfort (Indian IAP Guidelines)**: Dress ${cName} in a single breathable cotton layer and sponge gently with **lukewarm water** (never use ice-cold water or alcohol rubs, which cause shivering and spike core temperature).
 3. **Frequent Sips of Fluids**: Offer small, frequent sips of breast milk, formula, or Indian IAP-approved ORS solution (for children over 6 months) if ${cName} is fully awake and able to swallow safely.
+
+### 🗣️ Calm Scripts During Fever or Breathing Care
+* **Soothing During Lukewarm Sponging**: *"Your body feels hot and tired right now, ${cName}. This warm water cloth will help you feel cool while we head to the doctor."*
+* **Guiding Slow Breathing / Positioning**: *"Rest right against my chest, ${cName}. Keep your chin up and breathe slow with me—I am right beside you."*
+* **Gently Encouraging Hydration**: *"Let's take just two tiny magic sips from the spoon so your body stays strong."*
+* **Clear Triage Update for the Doctor / 112**: *"My child ${cName} is ${age} old, currently experiencing [fever/breathing/seizure symptoms] since [time], and we are heading to the clinic now."*
 
 ### 🩺 Direct Pediatrician Evaluation
 * Please take ${cName} to your **Pediatrician** for an in-person clinical examination (chest auscultation, hydration check, and exact weight-based treatment). Never self-medicate without a doctor's evaluation.
@@ -490,9 +502,11 @@ At 3 months, crying is an infant's primary voice, not defiance or behavioral tan
 * **Warm Coconut Oil Clockwise Circles**: Gently massage ${cName}'s lower abdomen clockwise (following the anatomical path of the colon).
 * **Mid-Feed Burping**: Burp ${cName} halfway through bottle or breast sessions to release air pockets before milk settles.
 
-### 🗣️ Calming Scripts & Lori for ${pName} to Speak
-* *"Mamma is right here, ${cName}. Your little tummy is safe and warm. We are resting together."*
-* Sing a low, gentle lullaby (*Jo Achyutananda* or *Lalla Lalla Lori*); the maternal vibratory frequency lowers cortisol in infants within 90 seconds.
+### 🗣️ Calming Scripts & Gentle Words for ${pName} to Say
+* **Evening Witching-Hour Hold**: *"I am right here, ${cName}. Your day was big and bright, and you are completely safe in my arms."*
+* **During Bicycle Legs for Gas**: *"Let's wiggle those little bubbles out together—cycle, cycle, soft tummy relief."*
+* **Whispering Next to the Ear Before Shushing**: *"Shhh, little heart. Listen to my steady breathing—your tummy is warm and I am holding you close."*
+* **Parent Grounding Check (When Overwhelmed)**: *"This cry is communication, not a crisis. Let me drop my shoulders, breathe out slow, and keep ${cName} safe."* *(Plus sing a soft lullaby like Jo Achyutananda or Lalla Lalla Lori to lower stress hormones).*
 
 ### 🛑 Urgent Pediatric Red Flags (Seek Immediate Medical Care)
 * Inconsolable high-pitched screeching lasting more than 3 consecutive hours.
@@ -529,6 +543,12 @@ At 3 months, crying is an infant's primary voice, not defiance or behavioral tan
 3. **White Noise at 50 dB**: Constant low-frequency rain or womb sound masks household noises.
 4. **Rhythmic Indian Patting (Thappi)**: Lay ${cName} drowsy but awake on a flat, firm mattress and pat her bottom or thigh in a slow heartbeat rhythm.
 
+### 💬 Gentle Bedtime & Naptime Scripts to Say
+* **Cueing the Wind-Down**: *"Lights are going soft and sleepy now, ${cName}. Time to give your busy eyes a cozy rest."*
+* **Placing in the Crib Drowsy-but-Awake**: *"You are safe on your snuggly bed, ${cName}. My hand is right here on your tummy while you drift off."*
+* **Calm Night-Waking Resettlement**: *"It is still dark and sleepy time, little one. Just a quiet feed, soft pat-pat, and back to sweet dreams."*
+* **Short-Nap Transition Whisper**: *"Shhh, one sleep cycle finished—stay cozy and close your eyes for a little bit longer."*
+
 ### 🛡️ Preparing for the 4-Month Sleep Regression
 Around 14–18 weeks, infant sleep biology permanently matures from 2 stages into adult-like 4-stage sleep cycles. Start practicing putting ${cName} down slightly drowsy so she learns to connect sleep cycles independently.
 
@@ -560,6 +580,12 @@ Around 14–18 weeks, infant sleep biology permanently matures from 2 stages int
 2. **Active Signs**: Squirming, stretching, breathing faster.
 3. **Late Signs (Calm before feeding)**: Crying and red face. If crying, soothe ${cName} first for 1 minute before latching to avoid swallowing excess air.
 
+### 🗣️ Soothing Feeding & Hunger-Cue Scripts
+* **Responding to Early Rooting Cues**: *"I see those sweet hungry lips smacking, ${cName}! Warm milk is coming right now."*
+* **Calming Before Latching During Fussy Cries**: *"Wait one soft breath, sweetheart—let's calm your cheeks against my shoulder first so you can drink comfortably."*
+* **Gentle Mid-Feed Burping Break**: *"Let's pause halfway for one big bubble burp, and then you can have the rest of your milk."*
+* **Polite Boundary for Well-Meaning Relatives (On Starting Early Solids)**: *"Thank you so much for caring—our pediatrician advised waiting until 6 full months before water or ragi so ${cName}'s tiny tummy stays protected."*
+
 ### 🛑 Infant Feeding Mistakes to Avoid
 * ❌ Never add baby cereal, ragi flour, or sugar to a bottle to "make them sleep through the night" (proven choking hazard).
 * ❌ Never give honey to an infant under 12 months (severe infant botulism risk).
@@ -589,6 +615,12 @@ At 3 months, ${cName} is discovering her hands, smiling responsively at familiar
 4. **Bicycle Kicking with Sensory Socks**: Put soft patterned baby booties or wrist rattles on ${cName} so she discovers cause-and-effect as she kicks her legs.
 5. **Warm Coconut Oil Infant Massage (Abhyanga)**: A 5-minute gentle massage after bathtime stimulates vagal nerve tone, promotes digestion, and improves sleep.
 
+### 💬 Encouraging Play & Tummy-Time Scripts
+* **Chest-to-Chest Encouragement**: *"Look up, ${cName}! Can you push up strong on your little elbows and see my big smile?"*
+* **High-Contrast Tracking Prompt**: *"Watch the bright stripes glide—left to center to right! Your eyes are working so hard."*
+* **Respecting Tummy-Time Fatigue**: *"You lifted your head so high for two minutes! You worked hard—let's roll onto your cozy back for a cuddle break now."*
+* **Responding to Cooing Sounds**: *"Ooh, ahhh! Are you telling me a story? I am listening to every little sound you make."*
+
 ### ⏱️ Tummy Time Progression: What if She Cries?
 * Aim for **3 to 5 minutes at a time**, 3 to 4 times a day, immediately after a diaper change when she is alert and not hungry or overly full.
 * If she fusses, place a small rolled towel under her chest or place a baby-safe mirror in front of her.
@@ -614,6 +646,12 @@ At 3 months, infants undergo the "Fourth Trimester" transition. Their nervous sy
 1. **Respect the 60–90 Minute Wake Window**: Put ${cName} down for naps as soon as early yawns appear; avoiding overtiredness transforms nighttime sleep.
 2. **Responsive Soothing Always**: You cannot "spoil" a 3-month-old infant with too much holding or affection. Responsive comfort strengthens hippocampal security.
 3. **Daily Floor Tummy Time**: Practice short 3-minute tummy sessions throughout the day to build neck, back, and shoulder muscles for rolling.
+
+### 🗣️ Everyday Connection Scripts for 3-Month-Old ${cName}
+* **Narrating Care Routines (Diaper / Dressing)**: *"First we open the fresh cotton shirt, one arm through, two arms through—all snug and warm!"*
+* **Responding to Early Drowsiness**: *"I see that big sleepy yawn, ${cName}. Let's dim the room and rest before your little eyes get too tired."*
+* **Answering Responsive Smiles**: *"Oh, what a sunny smile! You recognized my voice right away—good morning, sweet ${cName}!"*
+* **Soothing Sudden Startles**: *"That loud sound surprised you, didn't it? My hand is gently on your chest—you are completely safe."*
 
 ### 🛑 Pediatric Safety Essentials
 * Always place ${cName} on her back to sleep on a firm, flat mattress free of pillows, bumpers, or heavy quilts (SIDS prevention).
@@ -651,22 +689,22 @@ At 3 months, infants undergo the "Fourth Trimester" transition. Their nervous sy
 * **The Boundary-Holding Anchor (When they want something you said 'No' to)**:
   *"You really wanted [that snack/toy]. It is hard to hear 'not today'. You can be angry, and I will keep you safe while you feel big feelings."*
 * **The 2-Option Transition Choice (As the storm begins to settle)**:
-  *"Would you like to hold Mamma's hand to walk to the car, or would you like a thappi cuddle while I carry you?"*
+  *"Would you like to hold my hand to walk to the car, or would you like a thappi cuddle while I carry you?"*
 * **Sensory Overload Breather**:
   *"It's very loud and busy here. Let's make our bodies like a soft flower. Inhale... and exhale together."*
 
 ### ⏱️ Immediate 3-Step Public Tantrum Reset
 1. **Lower Your Voice to a Whisper**: Toddlers can't hear logic over screaming. Lowering your vocal pitch forces their auditory system to tune in to you rather than the room.
 2. **Move to a Quiet Perimeter**: Without anger, scoop ${cName} up safely and step away from the aisle, counter, or crowd toward a bench, car, or quiet corner.
-3. **Offer Deep Pressure or Physical Presence**: Sit beside him with a steady, grounding posture. Offer a firm hug if he allows touch, or keep your hands calm and open if he resists contact.
+3. **Offer Deep Pressure or Physical Presence**: Sit beside ${cName} with a steady, grounding posture. Offer a firm hug if allowed, or keep your hands calm and open if touch is resisted.
 
 ### 🛡️ Deflecting Bystander Pressure & Stares
-* **Remember Your Audience**: You are parenting ${cName}, not performing for strangers. An upset 2.5-year-old is developmentally normal, and it is not a reflection of your parenting.
+* **Remember Your Audience**: You are parenting ${cName}, not performing for strangers. An upset child at age ${age} is developmentally normal, and it is not a reflection of your parenting.
 * **Simple Script for Inquisitive Bystanders**: A polite, calm nod and: *"We're just working through big feelings today, thank you."* Then refocus 100% on ${cName}.
 
 ### 🛑 What NOT to Say in the Heat of the Moment
 * ❌ Avoid *"Stop crying, everyone is looking at you!"* (Injects social anxiety and escalates fight-or-flight).
-* ❌ Avoid *"Why are you doing this to me?"* (Toddlers lack cognitive capacity to analyze their own nervous system storm).
+* ❌ Avoid *"Why are you doing this to me?"* (Young children lack cognitive capacity to analyze their own nervous system storm).
 * ❌ Avoid giving in to the forbidden demand to stop the tears (teaches the child that escalated screaming yields results).
 
 ---RELATED_QUESTIONS---
@@ -693,14 +731,18 @@ At 3 months, infants undergo the "Fourth Trimester" transition. Their nervous sy
 ### ⏱️ Immediate Action Protocol for ${pName}
 
 1. **For a Sensory Meltdown**:
-   - **Reduce sensory input immediately**: Move ${cName} to a dim, quiet room or quiet corner. Turn down noise, television, and bright lights.
+   - **Reduce sensory input immediately**: Move ${cName} to a dim, quiet room or corner. Turn down noise, television, and bright lights.
    - **Keep safe with gentle presence**: Do not lecture, scold, or demand eye contact. Offer deep pressure hugs or slow back-patting (*thappi*) if ${cName} welcomes touch.
-   - **Calming Script**: *"You are safe, ${cName}. Mamma is right here. We are going to rest in the quiet together."*
 
 2. **For a Boundary Tantrum**:
    - **Stay calm and hold the boundary**: Do not negotiate, shout, or give in to stop the crying. Giving in teaches the child that tantrums produce results.
-   - **Acknowledge the feeling, hold the limit**: Connect with the feeling while maintaining the family rule.
-   - **Calming Script**: *"I know you really wanted to keep playing, ${cName}. It is hard to stop. But it is bathtime now. Would you like to carry your rubber duck or the boat?"*
+   - **Acknowledge the feeling, hold the limit**: Connect with the feeling while maintaining the family rule cleanly.
+
+### 🗣️ 4 Topic-Matched Scripts to Say Out Loud
+* **Sensory Meltdown — Removing Stimulation**: *"Everything got way too loud and bright, ${cName}. You don't have to talk right now—we are resting in the quiet corner."*
+* **Sensory Meltdown — Co-Regulation Offer**: *"Your brain feels overwhelmed and tired. Would you like a firm squeezy hug or a quiet drink of water next to me?"*
+* **Boundary Tantrum — Empathy + Firm Limit**: *"I know you really wanted to keep playing, ${cName}. It is hard to stop. It is bathtime now—let's carry your duck or your boat."*
+* **Boundary Tantrum — Staying Steady Against Bargaining**: *"I hear you asking again, and my answer is still no sweets before dinner. You can be sad while we walk to the table."*
 
 ### 🛑 What to Avoid
 - Avoid shouting, lecturing, or attempting long explanations while the child's brain is flooded with emotion.
@@ -718,18 +760,22 @@ At 3 months, infants undergo the "Fourth Trimester" transition. Their nervous sy
 
 ### 🌙 The Step-by-Step Bedtime Bridge
 1. **The 30-Minute Screen-Free Wind-Down**: Blue light suppresses melatonin. Dim household lights, switch off television/phones, and engage in slow floor play or puzzle-solving.
-2. **Predictable 4-Step Routine (Bath, Book, Song, Snuggle)**: Toddlers feel secure when they can predict what comes next. Consistent sensory cues signal the body that sleep is near.
-3. **Gradual Separation "Camp Out" Method**: If ${cName} cries when you leave the room, sit quietly by his bedside on a floor cushion for 2 nights, then move your chair halfway to the door for 2 nights, then sit in the doorway.
+2. **Predictable 4-Step Routine (Bath, Book, Song, Snuggle)**: Children feel secure when they can predict what comes next. Consistent sensory cues signal the body that sleep is near.
+3. **Gradual Separation "Camp Out" Method**: If ${cName} cries when you leave the room, sit quietly by the bedside on a floor cushion for 2 nights, then move your chair halfway to the door for 2 nights, then sit in the doorway.
 
-### 🗣️ Calming Bedtime Scripts
+### 🗣️ 4 Calming Bedtime Scripts to Say
 * **When Resisting Bedtime**:
-  *"I know your body wants to play, ${cName}. But nighttime is for resting so your muscles and brain can grow strong for tomorrow."*
+  *"I know your body still wants to play, ${cName}. Nighttime is when our muscles and brain recharge so tomorrow feels super strong."*
+* **When Asking for "One More Story/Water" Delay Tactics**:
+  *"We read our two bedtime books and had a sip of water. Now it is pillow time—we will play with your trains first thing in the morning."*
 * **When Afraid of Being Alone in Bed**:
-  *"Mamma is right outside this door. I will come peek on you in 3 minutes to see your cozy eyes closed."* (Follow through so he learns you always return).
+  *"I am right outside this door folding laundry. I will come peek in on you in 3 minutes to check on your cozy eyes."* *(Always follow through so trust grows).*
+* **When Walking ${cName} Calmly Back During Night Waking**:
+  *"It is still dark and sleepy time, sweetheart. Let's walk quietly back under your blanket together."*
 
 ### 🧸 Sensory Anchors for Peaceful Sleep
-* **Weighted Comfort or Gentle Patting**: Slow, rhythmic back-patting (*thappi*) mimicking a mother's heartbeat calms the autonomic nervous system.
-* **Warm Organic Sesame or Coconut Oil Foot Massage**: A 2-minute gentle rub on the soles of ${cName}'s feet relieves toddler day-tension.
+* **Weighted Comfort or Gentle Patting**: Slow, rhythmic back-patting (*thappi*) mimicking a calm heartbeat settles the autonomic nervous system.
+* **Warm Organic Sesame or Coconut Oil Foot Massage**: A 2-minute gentle rub on the soles of ${cName}'s feet relieves daily physical tension.
 
 ### 🛑 Bedtime Pitfalls to Steer Clear Of
 * ❌ Avoid letting bedtime slip past 8:30 PM (leads to an overtired cortisol spike and frantic bedtime resistance).
@@ -737,7 +783,7 @@ At 3 months, infants undergo the "Fourth Trimester" transition. Their nervous sy
 * ❌ Avoid long verbal negotiations at the bedroom door; keep repetitions low, soothing, and brief.
 
 ---RELATED_QUESTIONS---
-- [How much daytime nap does a 2.5-year-old toddler need?]
+- [How much daytime nap does a child of age ${age} need?]
 - [How do I stop middle-of-the-night waking without crying it out?]
 - [What is the difference between a nightmare and a night terror?]`;
   }
@@ -748,32 +794,33 @@ At 3 months, infants undergo the "Fourth Trimester" transition. Their nervous sy
 
 ### 🛑 Immediate Physical Boundary (Block Without Anger)
 1. **Calm Hand-Catch**: Gently catch ${cName}'s hand or foot before it lands. Your energy should be calm like a sturdy wall, not angry like a thunderstorm.
-2. **Get Down to Eye Level**: Look into his eyes with a steady, compassionate expression.
-3. **State the Rule in 5 Words or Less**: Toddlers in distress tune out long speeches.
+2. **Get Down to Eye Level**: Look into ${cName}'s eyes with a steady, compassionate expression.
+3. **State the Rule in 5 Words or Less**: Young children in distress tune out long lectures.
 
-### 🗣️ Exact Emotion-Naming Scripts
-* **Direct Limit**: *"I will not let you hit. Hitting hurts."*
-* **Naming the Feeling**: *"You are very mad right now. It is okay to be mad. It is not okay to hurt bodies."*
-* **Offering an Alternative Outlet**: *"If your hands need to hit, you can smash this soft cushion or stomp your feet with Mamma!"*
+### 🗣️ 4 Clear Boundary & Emotion-Naming Scripts
+* **Direct Safety Limit**: *"Stop. I will not let you hit. Bodies are not for hurting."*
+* **Validating Anger Without Accepting Harm**: *"You are very mad that playtime ended. It is okay to feel mad—it is never okay to hit or bite."*
+* **Offering a Safe Heavy-Work Outlet**: *"Your hands have lots of angry energy! Smash this soft cushion hard or stomp your feet on the rug with me!"*
+* **Calm Repair Practice (Once Settled)**: *"Hands are calm now. Let's check on Mommy/sibling with gentle fingers or offer an ice pack together."*
 
 ### ⚡ Constructive Heavy-Work Outlets
-* **Pushing Heavy Objects**: Let ${cName} push a weighted laundry basket or stack large cushions. This provides *proprioceptive input* that naturally calms an overloaded toddler motor system.
-* **The "Angry Tiger" Roar**: Invite him to take a deep belly breath and roar out the anger into a pillow together.
+* **Pushing Heavy Objects**: Let ${cName} push a weighted laundry basket or stack large cushions. This provides *proprioceptive input* that naturally calms an overloaded motor system.
+* **The "Angry Tiger" Roar**: Invite ${cName} to take a deep belly breath and roar out frustration into a pillow together.
 
 ### 🛑 Reactions That Escalate Hitting
 * ❌ Never hit or bite back "to show how it feels" (this directly models aggression from the child's primary teacher).
-* ❌ Avoid isolating him in a room alone while terrified by his own emotional surge.
+* ❌ Avoid isolating ${cName} alone in a room while terrified by an emotional surge.
 * ❌ Avoid laughing or treating hitting as "cute" in front of family members.
 
 ---RELATED_QUESTIONS---
-- [Why do toddlers suddenly hit when they get excited or tired?]
+- [Why do children suddenly hit when they get excited or tired?]
 - [How do I teach gentle hands to ${cName} when interacting with peers?]
-- [When does physical aggression in toddlers require professional evaluation?]`;
+- [When does physical aggression in children require professional evaluation?]`;
   }
 
   // 5. Indoor Games & Creative Play
   if (lq.includes('game') || lq.includes('play') || lq.includes('rainy') || lq.includes('indoor') || lq.includes('activity') || lq.includes('bored')) {
-    return `Hello ${pName}, here are **5 fun, developmental indoor games** perfect for ${cName} (Age: ${age}) that use simple household items:
+    return `Hello ${pName}, here are **5 fun, developmental indoor games** perfect for ${cName} (Age: ${age}) plus playful connection phrases:
 
 ### 1. 🧺 The Laundry Basket Voyage
 * **Supplies**: A soft laundry basket, a couple of cushions, and favorite stuffed toys.
@@ -787,18 +834,18 @@ At 3 months, infants undergo the "Fourth Trimester" transition. Their nervous sy
 
 ### 3. 📦 Cardboard Box Peek-a-Boo Tunnel
 * **Supplies**: One large empty delivery box (open on both ends) or kitchen chairs with a draped bedsheet.
-* **Instructions**: Create a low tunnel. Sit at the other end with an open smile and call ${cName}: *"Peek-a-boo! Can you crawl through to Mamma?"*
+* **Instructions**: Create a low tunnel. Sit at the other end with an open smile and call ${cName}.
 * **Skills Encouraged**: Spatial perception, bilateral motor coordination, and overcoming hesitation.
 
-### 4. 🥄 Kitchen Percussion Symphony
-* **Supplies**: 2 stainless steel bowls or silicone bowls, and wooden or silicone spoons.
-* **Instructions**: Tap slow and fast rhythms on the overturned bowls. Let ${cName} explore loud vs. soft sounds and copy simple clapping beats.
-* **Skills Encouraged**: Auditory discrimination, cause-and-effect understanding, and musical rhythm.
+### 4. 🥄 Kitchen Percussion Symphony & 🧊 Ice Splash Tray
+* **Instructions**: Let ${cName} tap rhythms on overturned steel bowls with wooden spoons, or slide 2 ice cubes in a shallow warm-water tray *(supervised)*.
+* **Skills Encouraged**: Auditory rhythm, cause-and-effect, and tactile discovery.
 
-### 5. 🧊 Ice Cube & Warm Water Sensory Splash
-* **Supplies**: A wide shallow plastic tray, 2 ice cubes, and a small cup of lukewarm water.
-* **Instructions**: Place the ice cubes in the tray. Let ${cName} feel the cold ice, watch it slide, and pour warm water over it to discover temperature change. *(Always supervise closely).*
-* **Skills Encouraged**: Tactile exploration, fine motor grasping, and curiosity.
+### 💬 4 Playful Scripts to Say During Play & Clean-Up
+* **Sparking Curiosity to Start**: *"Look at this giant laundry boat! Who wants to be the brave captain with your teddy co-pilot?"*
+* **Encouraging Focus & Effort**: *"You tried tossing that blue sock three times and adjusted your aim—look how steady your hands are getting!"*
+* **Joining Their Imagination**: *"Beep-beep, Tunnel Explorer! Where are we crawling to—a cozy cave or a rainy-day fort?"*
+* **Happy Toy Clean-Up Transition**: *"Two more minutes of drumming, then let's race to put all the spoons to sleep in the basket before snack time!"*
 
 ---RELATED_QUESTIONS---
 - [What are quiet sensory games for bedtime relaxation?]
@@ -814,18 +861,15 @@ At 3 months, infants undergo the "Fourth Trimester" transition. Their nervous sy
 Between ages 2 and 6, children enter a natural developmental stage known as **magical thinking**. Their vivid imaginations outpace their logical reasoning. To a young child, shadows, odd creaks, and bedtime quiet can feel just as real as a chair or toy.
 
 ### 🛡️ Grounding Rituals & Comfort Routine
-1. **Take Their Feelings Seriously (Without Validating the Ghost)**:
-   - Avoid saying: *"Don't be silly, ghosts aren't real, go to sleep!"* (This makes the child feel dismissed and more anxious).
-   - Instead, say: *"I can see you feel scared right now, ${cName}. Mamma is right here, and our home is completely safe. Nothing can hurt you."*
-2. **Physical Comfort & Grounding**:
-   - Kneel down, give a firm warm hug, and feel their breath together.
-   - Turn on a soft warm nightlight so the room feels cozy and familiar.
-   - Gently inspect the bedroom together: *"Let us look under the bed and in the closet together with our flashlight. Look, just your soft blankets and slippers!"*
-3. **Playful Daytime Mastery (Shift the Power)**:
-   - In daylight hours, draw funny friendly pictures of the "monster" wearing silly pink shoes or eating bananas. When children laugh at their fear, it loses its power.
+1. **Take Their Feelings Seriously (Without Validating the Monster)**: Let ${cName} feel heard without pretending scary creatures live in the house.
+2. **Physical Comfort & Reality Check**: Kneel down, give a firm warm hug, turn on a warm nightlight, and gently explore shadowy corners together in bright light.
+3. **Playful Daytime Mastery (Shift the Power)**: In daylight hours, draw funny friendly pictures of the "monster" wearing silly pink shoes or eating bananas so laughter shrinks the fear.
 
-### 🗣️ What to Say in the Dark
-*"Your bedroom is surrounded by love and warmth, ${cName}. Mamma's hugs stay with you even when your eyes are closed."*
+### 🗣️ 4 Reassuring Scripts for Dark Moments & Night Fears
+* **Validating Without Confirming Monsters**: *"I can see your heart feels super scared right now, ${cName}. You are safe—there are no ghosts or monsters in our house, and I am right here."*
+* **Flashlight Reality Check Together**: *"Let's shine our bright flashlight into that corner together. Look—that shadow was just your favorite jacket hanging on the chair!"*
+* **Bedtime Love & Safety Anchor**: *"Your bedroom is surrounded by warmth and safety, ${cName}. My hugs stay with you even when your eyes are closed."*
+* **Daytime Playful Reversal**: *"Remember that silly imaginary shadow from last night? Let's draw it wearing goofy sunglasses and slipping on a banana peel!"*
 
 ### 🛑 Fear Triggers to Avoid
 * Avoid exposing ${cName} to scary TV shows, older sibling horror stories, or YouTube videos with jump scares.
@@ -847,10 +891,13 @@ Between ages 2 and 6, children enter a natural developmental stage known as **ma
 
 ### 🍲 Safe Anchor Foods & Low-Stress Exposure
 * **Always Include One Safe Food**: Serve a tiny portion of a new dish next to a well-loved favorite (such as warm moong dal khichdi with pure A2 ghee, soft idli, or fresh curd rice).
-* **Patience with New Textures**: It often takes 10 to 15 relaxed exposures before a toddler willingly tastes a new vegetable or grain.
+* **Patience with New Textures**: It often takes 10 to 15 relaxed exposures before a child willingly tastes a new vegetable or grain.
 
-### 🗣️ Stress-Free Table Scripts
-*"You don't have to finish everything on your plate, ${cName}. You can just take a tiny smell or one small bite whenever you are ready."*
+### 🗣️ 4 Stress-Free Mealtime Scripts to Say
+* **Zero-Pressure Invitation**: *"You don't have to finish everything on your plate, ${cName}. You can just smell this warm sabzi or take one tiny mouse bite if you want."*
+* **Responding When They Say "Yuck / I Don't Like It!"**: *"You don't have to eat the peas today—they can just sit calmly in the learning corner of your plate next to your favorite curd rice."*
+* **Encouraging Curious Sensory Exploration**: *"Notice how crunchy this cucumber sounds when we chew it! Let's see if it sounds loud or quiet."*
+* **Holding the Post-Meal Boundary (Without Guilt)**: *"Our mealtime is all done for now! If your tummy gets hungry later, your next healthy snack time is at 4 o'clock."*
 
 ### 🛑 Mealtime Traps to Avoid
 * ❌ Avoid short-order cooking (cooking 3 different emergency meals when the child refuses dinner).
@@ -867,22 +914,24 @@ Between ages 2 and 6, children enter a natural developmental stage known as **ma
   if (lq.includes('sibling') || lq.includes('brother') || lq.includes('sister') || lq.includes('share') || lq.includes('sharing') || lq.includes('grab')) {
     return `Hello ${pName}, here is developmental guidance on managing sharing struggles and sibling dynamics for ${cName} (Age: ${age}):
 
-### 🤝 Neutral Refreeing: Stepping In Without Blaming
+### 🤝 Neutral Refereeing: Stepping In Without Blaming
 1. **Describe What Happened Objectively**: *"Both of you want the red truck at the exact same moment."* (Avoid labeling one as the 'bully' or the other as the 'victim').
-2. **Acknowledge the Frustration**: *"It is really hard to wait when you have a fun idea for that toy."*
+2. **Acknowledge the Frustration**: Help both children feel understood before proposing a fair turn plan.
 
-### 🗣️ Turn-Taking Script (Instead of Forced Sharing)
-* *"${cName} is playing with the truck right now. When ${cName}'s hands are all done, it will be your turn."*
-* *"Would you like to play with the blue car or the wooden blocks while you wait?"*
+### 🗣️ 4 Turn-Taking & Conflict Scripts to Say
+* **Neutral Conflict Opener**: *"Whoa, stop hands—both of you want that exact red truck right now! Let's figure out a fair turn."*
+* **Validating Both Feelings**: *"It feels so frustrating to wait when you have a fun idea for that toy, and it also feels upsetting when a toy gets pulled from your hands."*
+* **Holding the Turn (Instead of Forced Sharing)**: *"${cName} is still building with the truck. As soon as ${cName}'s hands are all done, it goes straight to you next."*
+* **Redirecting While Waiting**: *"Would you like to build a big ramp with the wooden blocks or drive the blue bus with me while we wait for your turn?"*
 
 ### 🧸 Protected Special Toys Strategy
 * Give each child a small "Special Basket" for 2–3 prized toys they do not have to share. Everything else in the living room is a "Family Toy" played with in turns.
 
 ### 🛑 Why Forced Sharing Backfires
-* Toddlers under 3.5 do not fully grasp the concept of future ownership. Forced sharing feels like confiscation and increases toy hoarding and aggressive grabbing.
+* Young children under 3.5 do not fully grasp the concept of future ownership. Forced sharing feels like confiscation and increases toy hoarding and aggressive grabbing.
 
 ---RELATED_QUESTIONS---
-- [How can I encourage gentle cooperative play between toddlers?]
+- [How can I encourage gentle cooperative play between siblings?]
 - [What should I do when a child grabs a toy directly out of another child's hands?]
 - [How do I avoid showing favoritism between siblings?]`;
   }
@@ -895,11 +944,11 @@ Between ages 2 and 6, children enter a natural developmental stage known as **ma
 1. **Watch for Natural Biological Timing**: Most children feel the natural gastrocolic reflex to eliminate 15–25 minutes after breakfast or lunch.
 2. **Comfortable Foot Support**: Ensure ${cName}'s feet rest flat on a footstool while on the toilet. Flat feet relax the pelvic floor muscles for easy elimination.
 
-### 🗣️ Shame-Free Scripts for Potty Learning & Accidents
-* **When an Accident Occurs**:
-  *"Oops, pee went on the floor! Bodies are learning. Let's get a towel together and put on fresh dry pants."* (Neutral, matter-of-fact tone).
-* **Casual Invitation**:
-  *"Let's go sit on the potty together and read your favorite train book for two minutes."*
+### 🗣️ 4 Shame-Free Scripts for Potty Learning & Accidents
+* **Casual, Fun Invitation**: *"Let's go give your potty a quick 2-minute visit and read your favorite train book while we check in with your tummy!"*
+* **When an Accident Happens (Calm & Neutral)**: *"Oops, pee went on the floor! Your body is still practicing the signal. Let's grab a towel together and get dry comfy pants."*
+* **Reassuring Toilet / Flush Worries**: *"You can hold my hand while you sit, and we don't even have to flush until after you step safely outside the bathroom."*
+* **Encouraging Body Awareness Without Pressure**: *"I noticed you stopped playing and held your tummy—listen to what your body is telling you. Let's check the potty!"*
 
 ### ⏰ Consistent Daily Routine Anchors
 * Offer regular potty visits upon waking, before heading outdoors, and before bedtime. Never force sitting longer than 3–4 minutes.
@@ -909,12 +958,12 @@ Between ages 2 and 6, children enter a natural developmental stage known as **ma
 * ❌ Avoid rewarding with high-sugar chocolates; celebrate with a joyful high-five or a fun sticker.
 
 ---RELATED_QUESTIONS---
-- [How do I know if my toddler is truly ready for potty training?]
+- [How do I know if my child is truly ready for potty training?]
 - [What should I do if ${cName} withholds stool or fears the toilet?]
 - [How do I manage potty training while traveling or running errands?]`;
   }
 
-  // 10. Varied General Guidance (Rotates dynamic engaging sections, never rigid boilerplates)
+  // 10. Varied General Guidance
   return `Hello ${pName}, here is personalized, evidence-informed guidance for ${cName} (Age: ${age}):
 
 ### 💡 Developmental Insight for ${cName}
@@ -922,14 +971,17 @@ At age ${age}, children undergo rapid neural wiring and language expansion. They
 
 ### 🎯 3 Real-Time Action Steps
 1. **Establish Predictable Rhythms**: Maintain steady daily anchors for waking, meals, outdoor active play, and bedtime. Predictability relieves internal anxiety.
-2. **Get Down to Eye Level with Brief Phrasing**: Keep verbal directions under 6 words so ${cName}'s developing auditory processing can easily absorb them.
-3. **Offer Two Empowering Choices**: Reduce power struggles by letting him make small decisions: *"Would you like to wear your blue shirt or green shirt today?"*
+2. **Get Down to Eye Level with Brief Phrasing**: Keep verbal directions concise and warm so ${cName}'s developing auditory processing can easily absorb them.
+3. **Offer Two Empowering Choices**: Reduce power struggles by letting ${cName} make small everyday decisions within safe boundaries.
 
-### 🗣️ Connection-First Script
-*"I hear you, ${cName}. Mamma is listening to what you need. Let's solve this together."*
+### 🗣️ 4 Connection & Cooperation Scripts to Say
+* **Eye-Level Connection Anchor**: *"I hear your voice getting loud, ${cName}. I am listening—tell me slowly what you need and we will figure it out together."*
+* **Two-Choice Empowerment**: *"It is time to get dressed now. Would you like to wear your blue shirt or green shirt today?"*
+* **Two-Minute Transition Heads-Up**: *"Two more slides down the slide, then we wave goodbye to the park and buckle into the car!"*
+* **After-Frustration Reconnection**: *"That was a tricky moment, and we got through it side by side. Ready for a big bear hug?"*
 
 ### 🛑 Common Reactions to Avoid
-* Avoid engaging in verbal arguments or debates with a 2.5-year-old; your calm presence is far more persuasive than logic.
+* Avoid engaging in long verbal debates during an emotional surge; your calm presence is far more persuasive than logic.
 * Avoid rushing through transitions without a gentle 2-minute heads-up.
 
 ---RELATED_QUESTIONS---
@@ -963,11 +1015,12 @@ Current Parent: ${pName}
 Current Child: ${cName} (Age: ${age} · ${ageBracketLabel})
 Session Turn Type: ${isFollowUp ? 'FOLLOW-UP TURN IN ONGOING CONVERSATION (Do NOT repeat Namaste)' : 'FIRST TURN OF NEW CONVERSATION (Start with "Namaste ' + pName + '! ")'}
 
-### 1. DIRECT QUESTION UNDERSTANDING (ZERO KEYWORD HIJACKING)
+### 1. DIRECT QUESTION UNDERSTANDING & MANDATORY SPOKEN SCRIPTS (STRICT)
 - Always answer the EXACT question asked by ${pName}. Never replace or derail the question with a generic or pre-canned response triggered by matching keywords.
-- When asked for scripts, phrases, or dialogue (e.g., "What calming scripts work best during a public tantrum?"):
-  * YOU MUST PROVIDE EXPLICIT WORD-FOR-WORD QUOTES that ${pName} can say out loud in that exact scenario.
-  * Do NOT replace script requests with generic tips about daily anchors or shoe choices. Provide the actual scripts!
+- **MANDATORY 3 TO 4 WORD-FOR-WORD SCRIPTS IN EVERY EXPLANATION**:
+  * In **EVERY response for EVERY question** (whether behavioral, sleep, feeding/recipes, play, milestones, emotions, potty training, siblings, or health/first-aid — both initial questions and follow-ups), you MUST include a dedicated \`### \` section containing **3 to 4 distinct, practical, word-for-word scripts in quotation marks** that ${pName} can say directly out loud in that exact situation.
+  * The section heading title can be anything natural and fitting to the topic (for example: \`### 🗣️ Word-for-Word Scripts to Say\`, \`### 💬 Gentle Bedtime Scripts for ${pName}\`, \`### 🗣️ Stress-Free Mealtime Phrases\`, \`### 💬 Playful Words to Encourage ${cName}\`, or \`### 🗣️ Calm Scripts During First Aid\`).
+  * Each of the 3 to 4 scripts MUST directly match the specific question asked, the advice given in your explanation, and ${cName}'s age (${age}). Never repeat identical boilerplate scripts across different topics!
 - If an essential detail is missing or ambiguous, ask a polite clarifying question. Never invent missing context or treat assumptions as facts.
 
 ### 2. DEVELOPMENTAL INTELLIGENCE
@@ -990,33 +1043,33 @@ Session Turn Type: ${isFollowUp ? 'FOLLOW-UP TURN IN ONGOING CONVERSATION (Do NO
   ⚠️ *Medical Information Note: For educational guidance only. Please consult your pediatrician for individual clinical diagnosis.*
   *(Do NOT include this medical disclaimer for non-medical topics like games, play, stories, toys, or daily crafts).*
 
-### 4. DYNAMIC VARIETY OF 3 TO 4 TOPIC-SPECIFIC SECTIONS & CLEAR SPACING (STRICT REQUIREMENT)
+### 4. DYNAMIC VARIETY OF 3 TO 4 TOPIC-SPECIFIC SECTIONS (INCLUDING 3–4 SCRIPTS) & CLEAR SPACING
 - Parents need structured, highly readable guidance that is well-spaced and easy to scan.
-- **EVERY response (both initial questions AND follow-up queries) MUST contain 3 to 4 distinct, engaging, topic-specific sections** crafted dynamically for the exact user question.
+- **EVERY response (both initial questions AND follow-up queries) MUST contain 3 to 4 distinct, engaging, topic-specific sections** crafted dynamically for the exact user question—and **one of those sections MUST provide 3 to 4 spoken word-for-word scripts to say** tailored to the question and answer.
 - **MANDATORY SECTION SPACING & MARKDOWN FORMAT**:
   * Every section title MUST start with \`### \` and an emoji on its own dedicated line, preceded by a blank line (\`\\n\\n\`) and followed by a blank line (\`\\n\\n\`), for example:
     \`### 🎨 The "Labeling in the Moment" Strategy\`
     (blank line)
     * Bullet or paragraph text...
     (blank line)
-    \`### 🧩 Using "Emotion Anchors" During Calm Play\`
+    \`### 🗣️ 4 Calming Scripts to Say Out Loud\`
   * NEVER place a section title inline on the same line after a sentence, and NEVER omit the \`### \` heading prefix.
   * Put a blank line between each bullet point (\`* \`) or numbered step (\`1. \`) so that sections and points never run together into dense blocks of text.
 - **STRICT PROHIBITION**: NEVER reuse the exact generic heading "Practical Steps for [Parent]" or "Understanding What [Child] Needs" in every answer. Headings MUST be rich, diverse, and contextual with relevant emojis.
 
 ### 5. REAL-TIME GOOGLE SEARCH GROUNDING, SMART TOPIC ROUTING & EXPLAINABILITY LINKS (STRICT REQUIREMENT)
-- You are connected to real-time **Google Search Grounding** (\`googleSearch\`). Always use top-ranked, high-authority Google Search results and never invent ad-hoc or unverified claims:
+- When Search Grounding is active, use top-ranked, high-authority sources and never invent unverified URLs:
   * **For Recipes, Meal Ideas, Tiffins, Snacks, Cooking, Play & Rhymes**:
-    - Draw variety from **top-ranked, trusted Indian & global cooking blogs, culinary websites, and popular YouTube recipe/parenting channels**.
-    - **Mandatory Pediatric Safety Filter on Every Recipe**: Automatically adapt any blog or YouTube recipe to ${cName}'s exact age (${age}) and dietary settings—enforcing age-safe texture (smooth puree/mash for infants under 12m; soft gum-pinchable finger foods for toddlers) and stripping unsafe ingredients (strictly NO honey under 12 months, NO whole choking-hazard nuts, NO raw chilies, low sodium, and zero refined sugar).
+    - Draw variety from **top-ranked, trusted Indian & global cooking blogs, culinary websites, and popular recipe/parenting channels**.
+    - **Mandatory Pediatric Safety Filter on Every Recipe**: Automatically adapt any recipe to ${cName}'s exact age (${age}) and dietary settings—enforcing age-safe texture (smooth puree/mash for infants under 12m; soft gum-pinchable finger foods for toddlers) and stripping unsafe ingredients (strictly NO honey under 12 months, NO whole choking-hazard nuts, NO raw chilies, low sodium, and zero refined sugar).
   * **For Medical Symptoms, Vaccines, Fever, Milestones, Sleep & Clinical Care**:
     - Strictly ground facts in **top-ranked pediatric authorities, accredited hospital networks, and official clinical guidelines** (Indian Academy of Pediatrics [IAP], ICMR-NIN, FSSAI, WHO, UNICEF, AAP, Mayo Clinic, Cloudnine, Apollo).
     - If a specific clinical claim cannot be verified from official pediatric sources, clearly state that and advise consulting their pediatrician rather than guessing.
   * **Strict Rumor & Forum Blacklist**:
     - NEVER use, trust, or cite unverified anonymous comment forums (such as Reddit, Quora, 4chan, anonymous message boards, or commercial spam sites).
-- At the end of your main guidance (immediately BEFORE ---CLARIFICATION_OPTIONS--- or ---RELATED_QUESTIONS---), you MUST include a section titled:
+- At the end of your main guidance (immediately BEFORE ---CLARIFICATION_OPTIONS--- or ---RELATED_QUESTIONS---), include a section titled:
   ### 🔗 Explainability & Reference Links
-- Inside this section, provide **1 to 3 clickable Markdown links** (\`[Source Title](URL)\`) from the top-ranked sources used to ground the answer (e.g., official IAP/ICMR/FSSAI/WHO pages for health & nutrition topics, or top-ranked trusted cooking blogs / YouTube recipe links for recipe & activity requests), along with a 1-sentence note on how each source supports the guidance.
+- Inside this section, provide **1 to 3 clickable Markdown links** (\`[Source Title](URL)\`) to trusted public authorities (e.g., IAP, ICMR-NIN, FSSAI, WHO) along with a 1-sentence note on how each source supports the guidance.
 
 ### 6. CONVERSATIONAL CONTINUITY & MULTI-TURN MEMORY
 - You will receive previous messages in the conversation. Use earlier turns to understand context.
@@ -1566,11 +1619,12 @@ ${languagePromptModifier ? `\n\nREMINDER: Entire response must be in the request
         });
       }
 
-      const CANDIDATE_MODELS = [
-        "gemini-4-hydrogen",
-        "gemini-3.1-flash-lite",
-        "gemini-flash-latest",
-        "gemini-3.8-flash"
+      const CANDIDATE_ATTEMPTS = [
+        { model: "gemini-4-hydrogen", useSearch: true },
+        { model: "gemini-3.1-flash-lite", useSearch: true },
+        { model: "gemini-4-hydrogen", useSearch: false },
+        { model: "gemini-3.1-flash-lite", useSearch: false },
+        { model: "gemini-flash-latest", useSearch: false },
       ];
 
       res.setHeader("Content-Type", "text/plain; charset=utf-8");
@@ -1582,21 +1636,22 @@ ${languagePromptModifier ? `\n\nREMINDER: Entire response must be in the request
       let modelSucceeded = false;
       let accumulatedOutput = "";
 
-      for (const modelName of CANDIDATE_MODELS) {
+      for (const attempt of CANDIDATE_ATTEMPTS) {
         if (modelSucceeded) break;
+        const { model: modelName, useSearch } = attempt;
 
         try {
           const isGemini4 = modelName.startsWith("gemini-4");
           const modelConfig: any = isGemini4
             ? {
                 systemInstruction,
-                tools: [{ googleSearch: {} }],
+                ...(useSearch ? { tools: [{ googleSearch: {} }] } : {}),
               }
             : {
                 systemInstruction,
-                tools: [{ googleSearch: {} }],
+                ...(useSearch ? { tools: [{ googleSearch: {} }] } : {}),
                 temperature: 0.5,
-                maxOutputTokens: 1050,
+                maxOutputTokens: 1250,
               };
 
           const streamPromise = ai.models.generateContentStream({

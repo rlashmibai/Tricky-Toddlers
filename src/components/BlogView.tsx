@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { ArrowLeft, Clock, Share2, Bookmark, Sparkles, Filter } from 'lucide-react';
 import { playSound } from '../lib/sounds';
 import { useLanguage } from '../lib/LanguageContext';
+import { triggerToast } from '../lib/ToastContext';
 
 import { Article, CATEGORIES, ARTICLES } from '../data/toddlerTalesData';
 
@@ -16,6 +17,53 @@ export const BlogView: React.FC<BlogViewProps> = ({ onBack, initialCategory = 'A
   const [selectedArticle, setSelectedArticle] = React.useState<Article | null>(null);
   const [activeCategory, setActiveCategory] = React.useState<string>(initialCategory);
   const [loadedImages, setLoadedImages] = React.useState<Set<string>>(new Set());
+  const [bookmarkedIds, setBookmarkedIds] = React.useState<string[]>(() => {
+    try {
+      const raw = localStorage.getItem('toddler_tales_bookmarks');
+      const parsed = raw ? JSON.parse(raw) : [];
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  });
+
+  const handleToggleBookmark = (article: Article) => {
+    playSound('pop');
+    setBookmarkedIds((prev) => {
+      const exists = prev.includes(article.id);
+      const next = exists ? prev.filter((id) => id !== article.id) : [...prev, article.id];
+      try {
+        localStorage.setItem('toddler_tales_bookmarks', JSON.stringify(next));
+      } catch {}
+      triggerToast(
+        exists ? `Removed "${article.title}" from bookmarks.` : `Saved "${article.title}" to bookmarks.`,
+        exists ? 'info' : 'success',
+        exists ? 'Bookmark Removed' : 'Article Bookmarked',
+        4000
+      );
+      return next;
+    });
+  };
+
+  const handleShareArticle = async (article: Article) => {
+    playSound('glass');
+    const shareUrl = `${window.location.origin}/?tab=tales`;
+    const shareText = `${article.title} — ${article.category} guide by ${article.author} on Tricky Toddlers`;
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: article.title, text: shareText, url: shareUrl });
+        return;
+      }
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(`${shareText}\n${shareUrl}`);
+        triggerToast('Article summary and link copied to clipboard.', 'success', 'Link Copied', 4000);
+        return;
+      }
+    } catch (err) {
+      if ((err as Error)?.name === 'AbortError') return;
+    }
+    triggerToast(`${shareText}`, 'info', 'Ready to Share', 4000);
+  };
 
   // Synchronize when initialCategory changes
   React.useEffect(() => {
@@ -173,9 +221,29 @@ export const BlogView: React.FC<BlogViewProps> = ({ onBack, initialCategory = 'A
                   <Clock className="w-4 h-4" />
                   <span>{selectedArticle.readTime} {t('read')}</span>
                 </div>
-                <div className="flex items-center gap-4 ml-auto">
-                    <button className="p-2 hover:text-white transition-colors"><Share2 className="w-5 h-5" /></button>
-                    <button className="p-2 hover:text-white transition-colors"><Bookmark className="w-5 h-5" /></button>
+                <div className="flex items-center gap-2 ml-auto">
+                    <button
+                      type="button"
+                      onClick={() => handleShareArticle(selectedArticle)}
+                      aria-label="Share article"
+                      title="Share article"
+                      className="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-white/70 hover:text-white transition-all cursor-pointer"
+                    >
+                      <Share2 className="w-5 h-5" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleToggleBookmark(selectedArticle)}
+                      aria-label={bookmarkedIds.includes(selectedArticle.id) ? 'Remove bookmark' : 'Bookmark article'}
+                      title={bookmarkedIds.includes(selectedArticle.id) ? 'Bookmarked' : 'Save bookmark'}
+                      className={`p-2.5 rounded-xl transition-all cursor-pointer ${
+                        bookmarkedIds.includes(selectedArticle.id)
+                          ? 'bg-cheerful-yellow/20 text-cheerful-yellow border border-cheerful-yellow/40'
+                          : 'bg-white/5 hover:bg-white/10 text-white/70 hover:text-white'
+                      }`}
+                    >
+                      <Bookmark className={`w-5 h-5 ${bookmarkedIds.includes(selectedArticle.id) ? 'fill-cheerful-yellow' : ''}`} />
+                    </button>
                 </div>
               </div>
 

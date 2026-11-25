@@ -1467,11 +1467,17 @@ export const VaccineTracker: React.FC = () => {
       ========================================================== */}
       <AnimatePresence>
         {showAddModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md">
+          <div
+            onClick={(e) => {
+              if (e.target === e.currentTarget) setShowAddModal(false);
+            }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md"
+          >
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
+              onClick={(e) => e.stopPropagation()}
               className="w-full max-w-lg rounded-3xl bg-[#0d1627] border border-white/20 p-6 sm:p-8 space-y-5 text-left shadow-2xl"
             >
               <div className="flex items-center justify-between pb-3 border-b border-white/10">
@@ -1480,8 +1486,10 @@ export const VaccineTracker: React.FC = () => {
                   <h3 className="text-lg font-black text-white">Add Custom Vaccine Record</h3>
                 </div>
                 <button
+                  type="button"
+                  aria-label="Close modal"
                   onClick={() => setShowAddModal(false)}
-                  className="p-1 rounded-lg text-slate-400 hover:text-white"
+                  className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
                 >
                   <Trash2 className="w-4 h-4 hidden" />
                   <span>✕</span>
@@ -1582,11 +1590,17 @@ export const VaccineTracker: React.FC = () => {
             OFFICIAL PRINTABLE VACCINE CARD MODAL
         ========================================================== */}
         {showPrintModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/80 backdrop-blur-md overflow-y-auto">
+          <div
+            onClick={(e) => {
+              if (e.target === e.currentTarget) setShowPrintModal(false);
+            }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/80 backdrop-blur-md overflow-y-auto"
+          >
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
+              onClick={(e) => e.stopPropagation()}
               className="bg-[#0b1322] border border-white/20 rounded-3xl p-4 sm:p-8 max-w-4xl w-full shadow-2xl space-y-6 my-auto max-h-[92vh] flex flex-col text-left"
             >
               {/* Modal Top Bar */}
@@ -1603,6 +1617,7 @@ export const VaccineTracker: React.FC = () => {
 
                 <div className="flex items-center gap-2">
                   <button
+                    type="button"
                     onClick={handleOpenPrintWindow}
                     className="px-4 py-2 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-400 hover:to-cyan-400 text-white font-bold text-xs sm:text-sm flex items-center gap-2 shadow-lg shadow-cyan-500/20 cursor-pointer"
                   >
@@ -1611,6 +1626,7 @@ export const VaccineTracker: React.FC = () => {
                   </button>
 
                   <button
+                    type="button"
                     onClick={() => {
                       const text = `CHILD IMMUNIZATION & VACCINE RECORD CARD\n` +
                         `Child: ${childName}\nDOB: ${currentChild?.birthDate || profile?.babyBirthDate || 'Not specified'}\nBlood Group: ${currentChild?.bloodGroup || profile?.bloodGroup || 'Not specified'}\n` +
@@ -1631,6 +1647,8 @@ export const VaccineTracker: React.FC = () => {
                   </button>
 
                   <button
+                    type="button"
+                    aria-label="Close modal"
                     onClick={() => setShowPrintModal(false)}
                     className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-colors cursor-pointer"
                   >
