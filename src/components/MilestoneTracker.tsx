@@ -38,6 +38,7 @@ import { db } from '../lib/firebase';
 import { collection, query, where, getDocs, doc, setDoc, deleteDoc } from 'firebase/firestore';
 import { useAuth } from '../lib/AuthContext';
 import { playSound } from '../lib/sounds';
+import { trackFeatureAction } from '../lib/analyticsTracker';
 import { useLanguage } from '../lib/LanguageContext';
 import { ChildProfileSelector } from './ChildProfileSelector';
 
@@ -1289,6 +1290,7 @@ export const MilestoneTracker: React.FC = () => {
       };
 
       await setDoc(docRef, payload);
+      void trackFeatureAction('Milestone Tracker', 'Milestone Recorded', 'milestones');
 
       setLoggedMilestones(prev => ({
         ...prev,

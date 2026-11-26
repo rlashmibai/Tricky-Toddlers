@@ -33,6 +33,7 @@ import { CheckoutPage } from './components/CheckoutPage';
 import { AdminDashboard } from './components/AdminDashboard';
 import { Loader2, ArrowUp } from 'lucide-react';
 import { playSound } from './lib/sounds';
+import { trackUrlVisit, trackSessionDurationPing } from './lib/analyticsTracker';
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user, loading } = useAuth();
@@ -68,6 +69,58 @@ const AppContent: React.FC = () => {
     window.addEventListener('gmp-quota-exceeded', handler);
     return () => window.removeEventListener('gmp-quota-exceeded', handler);
   }, []);
+
+  const currentUid = user?.uid || null;
+
+  React.useEffect(() => {
+    if (currentUid && !loading) {
+      void trackUrlVisit(location.pathname);
+    }
+  }, [currentUid, loading, location.pathname]);
+
+  // Global active session duration tracker (logs incremental active foreground seconds)
+  React.useEffect(() => {
+    if (!currentUid || loading) return;
+    if (location.pathname.toLowerCase().startsWith('/admin')) return;
+
+    let lastFlushMs = Date.now();
+    const flushDuration = () => {
+      const now = Date.now();
+      const elapsedSec = Math.round((now - lastFlushMs) / 1000);
+      if (elapsedSec >= 5) {
+        lastFlushMs = now;
+        void trackSessionDurationPing(elapsedSec, location.pathname || '/');
+      }
+    };
+
+    const interval = window.setInterval(() => {
+      if (document.visibilityState === 'visible') {
+        flushDuration();
+      } else {
+        lastFlushMs = Date.now();
+      }
+    }, 30000);
+
+    const onVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') {
+        flushDuration();
+      } else {
+        lastFlushMs = Date.now();
+      }
+    };
+
+    const onPageHide = () => flushDuration();
+
+    document.addEventListener('visibilitychange', onVisibilityChange);
+    window.addEventListener('pagehide', onPageHide);
+
+    return () => {
+      flushDuration();
+      window.clearInterval(interval);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
+      window.removeEventListener('pagehide', onPageHide);
+    };
+  }, [currentUid, loading]);
 
   // Preload and decode all core tab visuals immediately on app mount so switching tabs renders images with zero delay
   React.useEffect(() => {

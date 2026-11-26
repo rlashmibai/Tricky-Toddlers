@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { useLanguage } from '../lib/LanguageContext';
 import { useAuth } from '../lib/AuthContext';
 import { playSound } from '../lib/sounds';
+import { trackFeatureAction } from '../lib/analyticsTracker';
 import Markdown from 'react-markdown';
 import { 
   Sparkles, 
@@ -868,6 +869,7 @@ export const FoodGuide: React.FC<FoodGuideProps> = ({ onNavigateToFoodLens }) =>
     playSound('glass');
     setSelectedRecipe(recipe);
     scrollToRecipeDetailsTop();
+    void trackFeatureAction('AI NutriChef', 'NutriChef Recipe Viewed', 'food');
   };
 
   // Automatically scroll to the top of the recipe details page whenever a recipe is selected
@@ -930,6 +932,7 @@ export const FoodGuide: React.FC<FoodGuideProps> = ({ onNavigateToFoodLens }) =>
       saveRecipeBatch(newBatch);
       setCurrentBatch(newBatch);
       playSound('pop');
+      void trackFeatureAction('AI Recipe Maker', 'Recipe Generated', 'food');
     } catch (error: any) {
       console.error('Error generating AI recipes:', error);
       setAiError(error?.message || 'Unable to generate authentic recipes right now. Please try again.');

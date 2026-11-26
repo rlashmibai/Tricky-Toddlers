@@ -4,6 +4,7 @@ import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { auth, db } from '../lib/firebase';
 import { useAuth, clearDemoLocalStorageForAccount } from '../lib/AuthContext';
+import { trackSiteAnalyticsEvent } from '../lib/analyticsTracker';
 import { motion } from 'motion/react';
 import { Mail, Lock, User, UserPlus, AlertCircle, Loader2 } from 'lucide-react';
 
@@ -121,6 +122,14 @@ export const RegisterForm: React.FC = () => {
       localStorage.removeItem('user_indian_state');
       localStorage.removeItem('user_city');
       setSessionActive(true);
+      void trackSiteAnalyticsEvent({
+        accountType: 'Personal Account',
+        eventType: 'login',
+        entryPoint: 'Create Account Page (Personal Account)',
+        personaName: cleanUsername,
+        childProfile: 'Child 1',
+        activeTab: 'profile',
+      });
 
       navigate('/profile?mandatory=true', { replace: true });
     } catch (err: any) {

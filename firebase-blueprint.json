@@ -136,6 +136,11 @@
         "deviceType": { "type": "string", "description": "Desktop, Mobile, or Tablet" },
         "browser": { "type": "string", "description": "Browser name" },
         "os": { "type": "string", "description": "Operating system" },
+        "eventType": { "type": "string", "description": "Event category (login, url_visit, feature_use, feature_action, session_ping)" },
+        "trafficSource": { "type": "string", "description": "Acquisition channel (Google, WhatsApp, LinkedIn, QR Code, Direct Link, etc.)" },
+        "featureName": { "type": "string", "description": "Tracked feature name (e.g. AI Assistant, AI NutriChef, FoodLens AI)" },
+        "durationSeconds": { "type": "number", "description": "Time spent in seconds for engagement and feature duration metrics" },
+        "completedAction": { "type": "string", "description": "Completed user action name (e.g. Recipe Generated, Milestone Recorded)" },
         "createdAtIso": { "type": "string", "description": "ISO timestamp string" }
       },
       "required": [

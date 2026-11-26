@@ -59,6 +59,7 @@ export const ChildProfileSelector: React.FC<ChildProfileSelectorProps> = ({
                     onSelectChild('general');
                     trackSiteAnalyticsEvent({
                       accountType: isAccountUser ? 'Personal Account' : 'Guest Account',
+                      eventType: 'persona_switch',
                       entryPoint: `Persona Switch (${sectionContextName})`,
                       personaName: isAccountUser ? (profile?.parentName || profile?.username || 'Parent') : 'Parent',
                       childProfile: 'General (All Ages)',
@@ -129,6 +130,7 @@ export const ChildProfileSelector: React.FC<ChildProfileSelectorProps> = ({
                     onSelectChild(cp.id);
                     trackSiteAnalyticsEvent({
                       accountType: isAccountUser ? 'Personal Account' : 'Guest Account',
+                      eventType: 'persona_switch',
                       entryPoint: `Persona Switch (${sectionContextName})`,
                       personaName: isAccountUser ? (profile?.parentName || profile?.username || 'Parent') : 'Parent',
                       childProfile: `${cp.name} (${cp.age})`,

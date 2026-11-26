@@ -45,6 +45,7 @@ import {
 } from '../data/foodAutocompleteCatalog';
 import { useAuth } from '../lib/AuthContext';
 import { PremiumFeatureLock } from './PremiumFeatureLock';
+import { trackFeatureAction } from '../lib/analyticsTracker';
 
 interface StatTile {
   label: string;
@@ -353,6 +354,9 @@ export const FoodLensView: React.FC<FoodLensViewProps> = ({
       const data = await res.json();
       setScanResult(data);
       setScanStatus(data.isFood ? 'analyzed' : 'error');
+      if (data.isFood) {
+        void trackFeatureAction('FoodLens AI', 'Food Scanned', 'foodlens');
+      }
       setTimeout(() => {
         document.getElementById('scan-result-card')?.scrollIntoView({ behavior: 'smooth' });
       }, 50);
@@ -408,6 +412,9 @@ export const FoodLensView: React.FC<FoodLensViewProps> = ({
           const data = await res.json();
           setScanResult(data);
           setScanStatus(data.isFood ? 'analyzed' : 'error');
+          if (data.isFood) {
+            void trackFeatureAction('FoodLens AI', 'Food Photo Analyzed', 'foodlens');
+          }
         } catch (err) {
           console.error("Upload analysis error:", err);
           setScanStatus('error');
@@ -446,6 +453,7 @@ export const FoodLensView: React.FC<FoodLensViewProps> = ({
       foodType: food.foodType,
       brandName: food.brandName
     });
+    void trackFeatureAction('FoodLens AI', 'Food Scanned', 'foodlens');
     setTimeout(() => {
       const el = document.getElementById('scan-result-card');
       if (el) el.scrollIntoView({ behavior: 'smooth' });
@@ -480,6 +488,7 @@ export const FoodLensView: React.FC<FoodLensViewProps> = ({
       brandName: item.brandName
     });
     setScanStatus('analyzed');
+    void trackFeatureAction('FoodLens AI', 'Food Scanned', 'foodlens');
     setTimeout(() => {
       if (resultCardRef.current) {
         resultCardRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -533,6 +542,9 @@ export const FoodLensView: React.FC<FoodLensViewProps> = ({
       const data = await res.json();
       setScanResult(data);
       setScanStatus(data.isFood ? 'analyzed' : 'error');
+      if (data.isFood) {
+        void trackFeatureAction('FoodLens AI', 'Food Query Scanned', 'foodlens');
+      }
     } catch (err) {
       console.error("Query analysis error:", err);
       setScanStatus('error');

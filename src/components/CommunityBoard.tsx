@@ -10,6 +10,7 @@ import {
   ChevronDown, ChevronUp, Clock, Calendar, Filter, ShieldCheck, AlertCircle
 } from 'lucide-react';
 import { VoiceDictationButton } from './VoiceDictationButton';
+import { trackFeatureAction } from '../lib/analyticsTracker';
 
 interface ReplyData {
   id: string;
@@ -813,6 +814,7 @@ export const CommunityBoard: React.FC = () => {
         createdAt: serverTimestamp()
       });
       setNewPost('');
+      void trackFeatureAction('Community Help', 'Post Created', 'community');
       setModerationSuccessMsg('Post verified safe by AI Community Moderation and published.');
       setTimeout(() => setModerationSuccessMsg(null), 4000);
     } catch (error) {
@@ -856,6 +858,7 @@ export const CommunityBoard: React.FC = () => {
         });
       }
       // Update local state for immediate feedback
+      void trackFeatureAction('Community Help', 'Reply Posted', 'community');
       setPosts(prev => prev.map(p => {
         if (p.id === postId) {
           const newReply: ReplyData = {

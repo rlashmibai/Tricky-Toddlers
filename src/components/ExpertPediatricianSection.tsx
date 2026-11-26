@@ -8,6 +8,7 @@ import { playSound } from '../lib/sounds';
 import { INDIAN_CITIES_BY_STATE } from '../data/indianCitiesData';
 import { detectEmergencyCondition } from './SearchSection';
 import { VoiceDictationButton } from './VoiceDictationButton';
+import { trackFeatureAction } from '../lib/analyticsTracker';
 import {
   APIProvider,
   Map as GoogleMap,
@@ -1511,6 +1512,7 @@ export const ExpertPediatricianSection: React.FC = () => {
       };
 
       await addDoc(collection(db, 'consultations'), payload);
+      void trackFeatureAction('Pediatric Care', 'Consultation Booked', 'pediatric');
       
       playSound('glass');
       setSuccessMessage(gt('bookingConfirmed'));
@@ -1580,6 +1582,7 @@ export const ExpertPediatricianSection: React.FC = () => {
     setChatInput("");
     setIsChatLoading(true);
     playSound('click');
+    void trackFeatureAction('Pediatric Care', 'Doctor Chat Asked', 'pediatric');
 
     try {
       const response = await fetch('/api/pediatrician-chat-stream', {

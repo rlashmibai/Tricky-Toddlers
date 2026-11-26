@@ -14,6 +14,7 @@ import { playSound } from '../lib/sounds';
 
 import { AGE_GROUPS, RoutineItem, AgeGroupData } from '../data/routinesData';
 import { ChildProfileSelector } from './ChildProfileSelector';
+import { trackFeatureAction } from '../lib/analyticsTracker';
 
 const getAgeBracketForChild = (child?: { age?: string; birthDate?: string }): string => {
   if (!child) return '0_6m';
@@ -121,6 +122,7 @@ export const RoutineTracker: React.FC = () => {
       updated = checkedRoutines.filter(x => x !== id);
     } else {
       updated = [...checkedRoutines, id];
+      void trackFeatureAction('Routine Checker', 'Routine Completed', 'routine');
     }
     setCheckedRoutines(updated);
 
@@ -157,6 +159,7 @@ export const RoutineTracker: React.FC = () => {
     const currentIds = currentRoutinesList.map(r => r.id);
     const updated = Array.from(new Set([...checkedRoutines, ...currentIds]));
     setCheckedRoutines(updated);
+    void trackFeatureAction('Routine Checker', 'Routine Completed', 'routine');
 
     if (user) {
       try {

@@ -32,6 +32,7 @@ import { db, handleFirestoreError } from '../lib/firebase';
 import { doc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { playSound } from '../lib/sounds';
 import { ChildProfileSelector } from './ChildProfileSelector';
+import { trackFeatureAction } from '../lib/analyticsTracker';
 
 export interface ComprehensiveVaccine {
   id: string;
@@ -741,9 +742,11 @@ export const VaccineTracker: React.FC = () => {
   // Toggle completion
   const handleToggleStatus = (id: string) => {
     playSound('glass');
+    let markedCompleted = false;
     const updated = vaccines.map(v => {
       if (v.id === id) {
         const isNowCompleted = v.status !== 'Completed';
+        if (isNowCompleted) markedCompleted = true;
         return {
           ...v,
           status: (isNowCompleted ? 'Completed' : 'Upcoming') as 'Completed' | 'Upcoming',
@@ -753,6 +756,9 @@ export const VaccineTracker: React.FC = () => {
       return v;
     });
     persistVaccines(updated);
+    if (markedCompleted) {
+      void trackFeatureAction('Vaccine Tracker', 'Vaccine Updated', 'vaccine');
+    }
   };
 
   // Update vaccine details (date, clinic, notes)
@@ -769,6 +775,9 @@ export const VaccineTracker: React.FC = () => {
       return v;
     });
     persistVaccines(updated);
+    if (field === 'dateAdministered' && val.trim()) {
+      void trackFeatureAction('Vaccine Tracker', 'Vaccine Updated', 'vaccine');
+    }
   };
 
   // Reset all to upcoming (0% progress)
@@ -803,6 +812,7 @@ export const VaccineTracker: React.FC = () => {
 
     const updated = [newVac, ...vaccines];
     persistVaccines(updated);
+    void trackFeatureAction('Vaccine Tracker', 'Vaccine Updated', 'vaccine');
     setCustomName('');
     setCustomDisease('');
     setShowAddModal(false);
@@ -1425,6 +1435,11 @@ export const VaccineTracker: React.FC = () => {
                                 placeholder="e.g., City Children Hospital"
                                 value={v.clinicOrDoctor || ''}
                                 onChange={(e) => handleUpdateDetails(v.id, 'clinicOrDoctor', e.target.value)}
+                                onBlur={(e) => {
+                                  if (e.target.value.trim()) {
+                                    void trackFeatureAction('Vaccine Tracker', 'Vaccine Updated', 'vaccine');
+                                  }
+                                }}
                                 className="w-full px-2.5 py-1.5 rounded-lg bg-[#09111c] border border-white/10 text-white text-xs focus:outline-none focus:border-cyan-400"
                               />
                             </div>
@@ -1436,6 +1451,11 @@ export const VaccineTracker: React.FC = () => {
                                 placeholder="e.g., BTH-8902"
                                 value={v.batchNumber || ''}
                                 onChange={(e) => handleUpdateDetails(v.id, 'batchNumber', e.target.value)}
+                                onBlur={(e) => {
+                                  if (e.target.value.trim()) {
+                                    void trackFeatureAction('Vaccine Tracker', 'Vaccine Updated', 'vaccine');
+                                  }
+                                }}
                                 className="w-full px-2.5 py-1.5 rounded-lg bg-[#09111c] border border-white/10 text-white text-xs focus:outline-none focus:border-cyan-400"
                               />
                             </div>
@@ -1448,6 +1468,11 @@ export const VaccineTracker: React.FC = () => {
                               placeholder="e.g., Had mild fever for 12 hours, responded well to hydration."
                               value={v.notes || ''}
                               onChange={(e) => handleUpdateDetails(v.id, 'notes', e.target.value)}
+                              onBlur={(e) => {
+                                if (e.target.value.trim()) {
+                                  void trackFeatureAction('Vaccine Tracker', 'Vaccine Updated', 'vaccine');
+                                }
+                              }}
                               className="w-full px-2.5 py-1.5 rounded-lg bg-[#09111c] border border-white/10 text-white text-xs focus:outline-none focus:border-cyan-400"
                             />
                           </div>

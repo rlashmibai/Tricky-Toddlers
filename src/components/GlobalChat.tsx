@@ -13,6 +13,7 @@ import {
 import { isPersonalInfoQuery } from '../lib/aiHistory';
 import { playSound } from '../lib/sounds';
 import { VoiceDictationButton } from './VoiceDictationButton';
+import { trackFeatureAction } from '../lib/analyticsTracker';
 
 interface ChatMessage {
   id: string;
@@ -309,6 +310,7 @@ export const GlobalChat: React.FC = () => {
 
     setNewMessage('');
     playSound('click');
+    void trackFeatureAction('Parent Connect', 'Message Sent', 'chat');
 
     // Also persist to Firestore if online/authenticated
     try {

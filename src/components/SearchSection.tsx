@@ -21,6 +21,7 @@ import {
   getResponsibleAIRefusal, 
   getHowICanSupportYou 
 } from '../lib/aiHistory';
+import { trackFeatureAction } from '../lib/analyticsTracker';
 
 interface ChatMessage {
   id: string;
@@ -1044,6 +1045,7 @@ export const SearchSection: React.FC = () => {
 
       // Save valid record
       saveAISearchRecord(promptText, accumulatedText);
+      void trackFeatureAction('AI Assistant', 'AI Question Answered', 'ai');
     } catch (err: any) {
       clearTimeout(timeoutId);
       if (updateTimer) clearTimeout(updateTimer);

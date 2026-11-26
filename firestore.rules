@@ -82,10 +82,13 @@ service cloud.firestore {
         'userId', 'visitorId', 'isReturningVisitor', 'accountType', 'entryPoint',
         'personaName', 'childProfile', 'activeTab', 'loginDate', 'dayOfWeek',
         'loginTime', 'timeOfDaySlot', 'city', 'region', 'country', 'timezone',
-        'deviceType', 'browser', 'os', 'createdAtIso', 'createdAt'
+        'deviceType', 'browser', 'os',
+        'eventType', 'trafficSource', 'featureName', 'durationSeconds', 'completedAction',
+        'createdAtIso', 'createdAt'
       ];
       return data.keys().hasOnly(allowedKeys)
           && data.userId is string && data.userId.size() > 0 && data.userId.size() <= 128
+          && (isAdmin() || data.userId == request.auth.uid)
           && data.visitorId is string && data.visitorId.size() > 0 && data.visitorId.size() <= 128
           && data.isReturningVisitor is bool
           && data.accountType is string && data.accountType.size() > 0 && data.accountType.size() <= 60
@@ -104,6 +107,11 @@ service cloud.firestore {
           && data.deviceType is string && data.deviceType.size() > 0 && data.deviceType.size() <= 50
           && data.browser is string && data.browser.size() > 0 && data.browser.size() <= 80
           && (!('os' in data) || (data.os is string && data.os.size() <= 80))
+          && (!('eventType' in data) || (data.eventType is string && data.eventType.size() <= 40))
+          && (!('trafficSource' in data) || (data.trafficSource is string && data.trafficSource.size() <= 80))
+          && (!('featureName' in data) || (data.featureName is string && data.featureName.size() <= 80))
+          && (!('durationSeconds' in data) || (data.durationSeconds is number && data.durationSeconds >= 0 && data.durationSeconds <= 86400))
+          && (!('completedAction' in data) || (data.completedAction is string && data.completedAction.size() <= 80))
           && data.createdAtIso is string && data.createdAtIso.size() > 0 && data.createdAtIso.size() <= 60;
     }
 

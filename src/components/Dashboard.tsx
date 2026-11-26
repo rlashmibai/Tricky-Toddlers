@@ -26,6 +26,7 @@ import { isPremiumUser, shouldLockPremiumFeature } from '../lib/premiumUtils';
 import { PremiumFeatureLock } from './PremiumFeatureLock';
 import { seedSampleData } from '../lib/seedData';
 import { playSound } from '../lib/sounds';
+import { mapTabToFeatureName, trackFeatureVisit, trackFeatureDuration } from '../lib/analyticsTracker';
 
 export const Dashboard: React.FC = () => {
   const { user, profile, isSessionActive } = useAuth();
@@ -115,6 +116,25 @@ export const Dashboard: React.FC = () => {
     }, 50);
     return () => clearTimeout(timer);
   }, [activeTab]);
+
+  // Track Feature Adoption (Unique Users, Total Usage, Avg. Time Spent, Repeat Usage)
+  const subParam = searchParams.get('sub');
+  const trackedFeatureName = mapTabToFeatureName(activeTab, subParam);
+  const currentUserUid = user?.uid || null;
+
+  useEffect(() => {
+    if (!currentUserUid || !trackedFeatureName) return;
+
+    const enteredAt = Date.now();
+    void trackFeatureVisit(trackedFeatureName, activeTab);
+
+    return () => {
+      const elapsedSec = Math.round((Date.now() - enteredAt) / 1000);
+      if (elapsedSec >= 2) {
+        void trackFeatureDuration(trackedFeatureName, elapsedSec, activeTab);
+      }
+    };
+  }, [trackedFeatureName, activeTab, currentUserUid]);
 
   const handleNavigateToStore = (initialView: 'catalog' | 'cart' = 'catalog') => {
     setStoreInitialView(initialView);

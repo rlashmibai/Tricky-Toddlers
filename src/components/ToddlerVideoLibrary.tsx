@@ -35,6 +35,7 @@ import {
 } from 'lucide-react';
 import { playSound } from '../lib/sounds';
 import { useLanguage } from '../lib/LanguageContext';
+import { trackFeatureAction } from '../lib/analyticsTracker';
 import { 
   speakIndianEnglish, 
   stopIndianSpeech, 
@@ -657,6 +658,7 @@ export const ToddlerVideoLibrary: React.FC<ToddlerVideoLibraryProps> = ({ onGoHo
     if (!watchedVideoIds.includes(video.id)) {
       setWatchedVideoIds((prev) => [...prev, video.id]);
     }
+    void trackFeatureAction('Toddler TV', 'Video Watched', 'videos');
   };
 
   const handleToggleStreamType = (toYoutube: boolean) => {
