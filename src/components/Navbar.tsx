@@ -617,100 +617,6 @@ export const Navbar: React.FC = () => {
                       </Link>
                     </div>
                   </div>
-
-                  <div className="pt-2 border-t border-white/10">
-                    <div className="text-[10px] font-black uppercase tracking-widest text-white/40 text-center mb-2.5">
-                      {isSessionActive ? 'Account & Settings' : 'Get Started'}
-                    </div>
-                    {isSessionActive ? (
-                      <div className="grid grid-cols-2 gap-2.5">
-                        <Link
-                          to="/dietary-preferences"
-                          onClick={() => {
-                            playSound('glass');
-                            setMobileNavOpen(false);
-                          }}
-                          className="flex items-center justify-center gap-2 px-3 py-3 min-h-[44px] rounded-xl bg-emerald-500/15 border border-emerald-400/30 text-emerald-200 text-xs font-bold"
-                        >
-                          <Utensils className="w-4 h-4 text-emerald-400 shrink-0" />
-                          <span>Dietary</span>
-                        </Link>
-                        <Link
-                          to="/profile"
-                          onClick={() => {
-                            playSound('click');
-                            setMobileNavOpen(false);
-                          }}
-                          className="flex items-center justify-center gap-2 px-3 py-3 min-h-[44px] rounded-xl bg-white/10 border border-white/15 text-white text-xs font-bold"
-                        >
-                          <User className="w-4 h-4 text-indigo-300 shrink-0" />
-                          <span>Profile</span>
-                        </Link>
-                        {(user?.email === 'rlashmi086@gmail.com' || user?.email === 'admin@securepass.internal') && (
-                          <Link
-                            to="/admin"
-                            onClick={() => {
-                              playSound('glass');
-                              setMobileNavOpen(false);
-                            }}
-                            className="col-span-2 flex items-center justify-center gap-2 px-3 py-3 min-h-[44px] rounded-xl bg-cyan-500/15 border border-cyan-400/35 text-cyan-200 text-xs font-black"
-                          >
-                            <BarChart3 className="w-4 h-4 text-cyan-400 shrink-0" />
-                            <span>Admin Analytics</span>
-                          </Link>
-                        )}
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setMobileNavOpen(false);
-                            handleLogout();
-                          }}
-                          className="col-span-2 flex items-center justify-center gap-2 px-3 py-3 min-h-[44px] rounded-xl bg-red-500/10 border border-red-500/25 text-red-300 text-xs font-bold cursor-pointer"
-                        >
-                          <LogOut className="w-4 h-4 shrink-0" />
-                          <span>{t('logout') || 'Sign Out'}</span>
-                        </button>
-                      </div>
-                    ) : (
-                      <div className="space-y-2.5">
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setMobileNavOpen(false);
-                            handleQuickGuestClick();
-                          }}
-                          className="w-full flex items-center justify-center gap-2 px-4 py-3 min-h-[44px] rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 text-xs font-black shadow-md cursor-pointer"
-                        >
-                          <Sparkles className="w-4 h-4 shrink-0" />
-                          <span>Free Guest Access</span>
-                        </button>
-                        <div className="grid grid-cols-2 gap-2.5">
-                          <Link
-                            to="/register"
-                            onClick={() => {
-                              playSound('glass');
-                              setMobileNavOpen(false);
-                            }}
-                            className="flex items-center justify-center gap-1.5 px-3 py-3 min-h-[44px] rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 text-white text-xs font-black"
-                          >
-                            <UserPlus className="w-4 h-4 shrink-0" />
-                            <span>Create Account</span>
-                          </Link>
-                          <Link
-                            to="/login"
-                            onClick={() => {
-                              playSound('click');
-                              setMobileNavOpen(false);
-                            }}
-                            className="flex items-center justify-center gap-1.5 px-3 py-3 min-h-[44px] rounded-xl bg-white/10 border border-white/20 text-white text-xs font-bold"
-                          >
-                            <LogIn className="w-4 h-4 text-indigo-300 shrink-0" />
-                            <span>Sign In</span>
-                          </Link>
-                        </div>
-                      </div>
-                    )}
-                  </div>
                 </div>
               </motion.div>
             )}
@@ -1086,7 +992,8 @@ export const Navbar: React.FC = () => {
           </div>
         </div>
 
-      {/* Mobile-Only Centered Action Strip (Non-Sticky for spacious scrolling) */}
+      {/* Mobile-Only Centered Action Strip (Non-Sticky for spacious scrolling, hidden on auth pages to avoid duplicate buttons) */}
+      {(isSessionActive || !['/login', '/register', '/forgot-password'].includes(location.pathname)) && (
       <div className="md:hidden border-b border-white/10 bg-[#060a16]/90 px-4 py-3">
         {isSessionActive ? (
           <div className="flex flex-wrap items-center justify-center gap-2">
@@ -1166,6 +1073,7 @@ export const Navbar: React.FC = () => {
           </div>
         )}
       </div>
+      )}
 
         {/* Mobile Navigation Bar & Grouped Category Dropdowns (< 768px Only) */}
         <div className="md:hidden relative z-30 border-b border-white/10 bg-[#060a16]/95 backdrop-blur-2xl shadow-md">

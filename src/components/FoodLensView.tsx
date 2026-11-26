@@ -24,6 +24,7 @@ import {
   X,
   SlidersHorizontal,
   ChevronRight,
+  ChevronDown,
   BookOpen,
   ExternalLink,
   RotateCcw,
@@ -110,6 +111,7 @@ export const FoodLensView: React.FC<FoodLensViewProps> = ({
   const [loggedMealToast, setLoggedMealToast] = useState<string | null>(null);
   const [showAutocomplete, setShowAutocomplete] = useState(false);
   const [activeSuggestionIndex, setActiveSuggestionIndex] = useState<number>(0);
+  const [mobileHowItWorksOpen, setMobileHowItWorksOpen] = useState(false);
   
   const fileInputBottomRef = useRef<HTMLInputElement>(null);
   const nativeCameraInputRef = useRef<HTMLInputElement>(null);
@@ -605,9 +607,9 @@ export const FoodLensView: React.FC<FoodLensViewProps> = ({
         <div className="relative z-10 max-w-6xl mx-auto text-center space-y-4">
           
           {/* Eyebrow label */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-500/10 border border-amber-400/30 text-amber-300 text-xs font-black tracking-widest uppercase">
-            <Sparkles className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
-            AI-POWERED FOOD INTELLIGENCE
+          <div className="inline-flex items-center gap-1.5 md:gap-2 px-3 md:px-3.5 py-1 rounded-full bg-amber-500/10 border border-amber-400/30 text-amber-300 text-[10px] md:text-xs font-black tracking-wider md:tracking-widest uppercase whitespace-nowrap">
+            <Sparkles className="w-3 h-3 md:w-3.5 md:h-3.5 text-amber-400 fill-amber-400 shrink-0" />
+            <span>AI-POWERED FOOD INTELLIGENCE</span>
           </div>
 
           {/* Headline & Subheadline */}
@@ -620,8 +622,141 @@ export const FoodLensView: React.FC<FoodLensViewProps> = ({
             </p>
           </div>
 
-          {/* Navigation Buttons Row - All on a single line with adjusted margins & spacing */}
-          <div className="flex flex-wrap lg:flex-nowrap items-center justify-center gap-1.5 sm:gap-2 pt-2 w-full px-1">
+          {/* Mobile-Only (< 768px): Option 3 - 2x2 App Launcher Card Layout + Expandable How it Works */}
+          <div className="md:hidden pt-3 space-y-3 w-full max-w-sm mx-auto">
+            <div className="grid grid-cols-2 gap-3">
+              {/* Tile 1: Scan Food */}
+              <button
+                type="button"
+                onClick={scrollToScanner}
+                className="flex flex-col items-center justify-center gap-2 p-4 min-h-[96px] rounded-2xl bg-gradient-to-br from-amber-400 via-yellow-400 to-amber-300 text-slate-950 shadow-lg shadow-amber-500/20 active:scale-95 transition-all cursor-pointer"
+              >
+                <div className="w-9 h-9 rounded-xl bg-slate-950/15 flex items-center justify-center">
+                  <Camera className="w-5 h-5 text-slate-950 stroke-[2.4]" />
+                </div>
+                <div className="text-center">
+                  <div className="text-xs font-black tracking-tight leading-tight">Scan Food</div>
+                  <div className="text-[10px] font-bold text-slate-900/75 mt-0.5">Camera &amp; Upload</div>
+                </div>
+              </button>
+
+              {/* Tile 2: Meal Diary */}
+              <Link
+                to="/dish-log"
+                onClick={() => playSound('glass')}
+                className="flex flex-col items-center justify-center gap-2 p-4 min-h-[96px] rounded-2xl bg-white/[0.06] hover:bg-white/[0.1] border border-white/15 text-white shadow-md active:scale-95 transition-all"
+              >
+                <div className="w-9 h-9 rounded-xl bg-amber-500/15 border border-amber-400/30 flex items-center justify-center">
+                  <Calendar className="w-5 h-5 text-amber-300" />
+                </div>
+                <div className="text-center">
+                  <div className="text-xs font-bold tracking-tight leading-tight">Meal Diary</div>
+                  <div className="text-[10px] font-medium text-slate-400 mt-0.5">Daily food log</div>
+                </div>
+              </Link>
+
+              {/* Tile 3: Sample Foods */}
+              <button
+                id="mobile-sample-foods-btn"
+                type="button"
+                onClick={() => {
+                  playSound('pop');
+                  if (onNavigateToSampleFoods) {
+                    onNavigateToSampleFoods();
+                  } else {
+                    navigate('/sample-foods');
+                  }
+                }}
+                className="flex flex-col items-center justify-center gap-2 p-4 min-h-[96px] rounded-2xl bg-white/[0.06] hover:bg-white/[0.1] border border-white/15 text-white shadow-md active:scale-95 transition-all cursor-pointer"
+                title="Browse Indian Baby Foods in Dedicated Food Page"
+              >
+                <div className="w-9 h-9 rounded-xl bg-purple-500/15 border border-purple-400/30 flex items-center justify-center">
+                  <Sparkles className="w-5 h-5 text-purple-300" />
+                </div>
+                <div className="text-center">
+                  <div className="text-xs font-bold tracking-tight leading-tight">Sample Foods</div>
+                  <div className="text-[10px] font-medium text-slate-400 mt-0.5">Baby food guide</div>
+                </div>
+              </button>
+
+              {/* Tile 4: Scorecard */}
+              <button
+                type="button"
+                onClick={() => scrollToSection('interface-section')}
+                className="flex flex-col items-center justify-center gap-2 p-4 min-h-[96px] rounded-2xl bg-white/[0.06] hover:bg-white/[0.1] border border-white/15 text-white shadow-md active:scale-95 transition-all cursor-pointer"
+              >
+                <div className="w-9 h-9 rounded-xl bg-emerald-500/15 border border-emerald-400/30 flex items-center justify-center">
+                  <Activity className="w-5 h-5 text-emerald-400" />
+                </div>
+                <div className="text-center">
+                  <div className="text-xs font-bold tracking-tight leading-tight">Scorecard</div>
+                  <div className="text-[10px] font-medium text-slate-400 mt-0.5">12 nutrition stats</div>
+                </div>
+              </button>
+            </div>
+
+            {/* Expandable "How it works" Accordion */}
+            <div className="rounded-2xl border border-white/12 bg-white/[0.04] overflow-hidden">
+              <button
+                type="button"
+                onClick={() => {
+                  playSound('click');
+                  setMobileHowItWorksOpen(!mobileHowItWorksOpen);
+                }}
+                aria-expanded={mobileHowItWorksOpen}
+                className="w-full flex items-center justify-between px-4 py-3 min-h-[44px] text-xs font-bold text-slate-200 cursor-pointer"
+              >
+                <span className="flex items-center gap-2">
+                  <HelpCircle className="w-4 h-4 text-amber-300 shrink-0" />
+                  <span>How it works &amp; Why FoodLens</span>
+                </span>
+                <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${mobileHowItWorksOpen ? 'rotate-180 text-amber-300' : ''}`} />
+              </button>
+
+              <AnimatePresence initial={false}>
+                {mobileHowItWorksOpen && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="border-t border-white/10 bg-[#080d1a]/80 p-3 space-y-2.5 text-left"
+                  >
+                    <p className="text-[11px] text-slate-300 leading-relaxed text-center">
+                      Explore how FoodLens compares to general AI and see real-time meal scoring in action.
+                    </p>
+                    <div className="grid grid-cols-2 gap-2">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setMobileHowItWorksOpen(false);
+                          scrollToSection('comparison-section');
+                        }}
+                        className="flex items-center justify-center gap-1.5 px-3 py-2.5 min-h-[40px] rounded-xl bg-white/8 border border-white/12 text-white text-xs font-bold cursor-pointer"
+                      >
+                        <HelpCircle className="w-3.5 h-3.5 text-amber-300 shrink-0" />
+                        <span>Why FoodLens</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setMobileHowItWorksOpen(false);
+                          scrollToSection('how-it-works-section');
+                        }}
+                        className="flex items-center justify-center gap-1.5 px-3 py-2.5 min-h-[40px] rounded-xl bg-white/8 border border-white/12 text-white text-xs font-bold cursor-pointer"
+                      >
+                        <Sparkles className="w-3.5 h-3.5 text-blue-300 shrink-0" />
+                        <span>See in Action</span>
+                      </button>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </div>
+
+          {/* Tablet & Laptop Navigation Buttons Row (100% Untouched >= 768px) */}
+          <div className="hidden md:flex flex-wrap lg:flex-nowrap items-center justify-center gap-1.5 sm:gap-2 pt-2 w-full px-1">
             {/* Why FoodLens */}
             <button
               type="button"
