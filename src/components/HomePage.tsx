@@ -421,17 +421,17 @@ export const HomePage: React.FC<HomePageProps> = ({
   ];
 
   return (
-    <div className="w-full max-w-7xl mx-auto space-y-10 sm:space-y-14 py-2 sm:py-3">
+    <div className="w-full max-w-7xl mx-auto space-y-14 pt-3 pb-8 md:py-3">
       
       {/* =========================================================
           HERO BANNER: PARENTING TODDLERS JUST GOT EASIER
       ========================================================== */}
-      <section id="home-top" className="w-full relative overflow-hidden rounded-3xl sm:rounded-[2.25rem] border border-white/15 bg-gradient-to-b from-[#0f172a]/95 via-[#0d1527]/90 to-[#070b14]/95 p-5 sm:p-8 lg:p-10 shadow-2xl backdrop-blur-xl">
+      <section id="home-top" className="w-full relative overflow-hidden rounded-3xl sm:rounded-[2.25rem] border border-white/15 bg-gradient-to-b from-[#0f172a]/95 via-[#0d1527]/90 to-[#070b14]/95 p-6 sm:p-8 lg:p-10 shadow-2xl backdrop-blur-xl">
         <div className="absolute -top-24 -right-24 w-96 h-96 bg-indigo-500/15 blur-[120px] rounded-full pointer-events-none" />
         <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-cyan-500/15 blur-[120px] rounded-full pointer-events-none" />
 
-        <div className="relative z-10 w-full text-center space-y-3 sm:space-y-4">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 sm:px-4 sm:py-1.5 rounded-full bg-indigo-500/15 border border-indigo-400/30 text-indigo-300 text-xs sm:text-sm font-bold tracking-wide shadow-inner text-balance">
+        <div className="relative z-10 w-full text-center space-y-5 md:space-y-4">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-500/15 border border-indigo-400/30 text-indigo-300 text-xs sm:text-sm font-bold tracking-wide shadow-inner text-balance">
             <Sparkles className="w-3.5 h-3.5 text-amber-300 shrink-0" />
             <span>The One Stop Solution to All Your Parenting Needs</span>
           </div>
@@ -448,11 +448,11 @@ export const HomePage: React.FC<HomePageProps> = ({
           </p>
 
           {/* Customer Journey In-Page Navigation Buttons */}
-          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 pt-1 w-full">
+          <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3 pt-2 md:pt-1 w-full">
             <a
               href="#vision"
               onClick={() => playSound('glass')}
-              className="px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-purple-500/15 hover:bg-purple-500/25 border border-purple-400/35 text-purple-200 hover:text-white font-bold text-xs sm:text-sm tracking-tight transition-all transform hover:scale-[1.02] active:scale-95 flex items-center gap-1.5 shadow-md whitespace-nowrap"
+              className="px-4 py-2.5 min-h-[44px] md:min-h-0 rounded-xl bg-purple-500/15 hover:bg-purple-500/25 border border-purple-400/35 text-purple-200 hover:text-white font-bold text-xs sm:text-sm tracking-tight transition-all transform hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-1.5 shadow-md whitespace-nowrap"
             >
               <Eye className="w-3.5 h-3.5 text-purple-300 shrink-0" />
               <span className="notranslate" translate="no">{t('whyTrickyToddlers') || 'Why Tricky Toddlers'}</span>
@@ -461,7 +461,7 @@ export const HomePage: React.FC<HomePageProps> = ({
             <a
               href="#problem-and-mission"
               onClick={() => playSound('pop')}
-              className="px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-400/35 text-amber-200 hover:text-white font-bold text-xs sm:text-sm tracking-tight transition-all transform hover:scale-[1.02] active:scale-95 flex items-center gap-1.5 shadow-md whitespace-nowrap"
+              className="px-4 py-2.5 min-h-[44px] md:min-h-0 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-400/35 text-amber-200 hover:text-white font-bold text-xs sm:text-sm tracking-tight transition-all transform hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-1.5 shadow-md whitespace-nowrap"
             >
               <Compass className="w-3.5 h-3.5 text-amber-300 shrink-0" />
               <span className="notranslate" translate="no">{t('whyChooseUs') || 'Why Choose Us?'}</span>
@@ -470,7 +470,7 @@ export const HomePage: React.FC<HomePageProps> = ({
             <a
               href="#features-directory"
               onClick={() => playSound('pop')}
-              className="px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:from-indigo-400 hover:to-pink-400 text-white font-black text-xs sm:text-sm tracking-tight shadow-lg shadow-indigo-500/20 transition-all transform hover:scale-[1.02] active:scale-95 flex items-center gap-1.5 whitespace-nowrap"
+              className="px-4 py-2.5 min-h-[44px] md:min-h-0 rounded-xl bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:from-indigo-400 hover:to-pink-400 text-white font-black text-xs sm:text-sm tracking-tight shadow-lg shadow-indigo-500/20 transition-all transform hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-1.5 whitespace-nowrap"
             >
               <Layers className="w-3.5 h-3.5 shrink-0" />
               <span className="notranslate" translate="no">{t('exploreFeatures') || 'Explore Features'}</span>
@@ -479,7 +479,7 @@ export const HomePage: React.FC<HomePageProps> = ({
             <a
               href="#child-wellness-journey"
               onClick={() => playSound('glass')}
-              className="px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-cyan-500/15 hover:bg-cyan-500/25 border border-cyan-400/35 text-cyan-200 hover:text-white font-bold text-xs sm:text-sm tracking-tight transition-all transform hover:scale-[1.02] active:scale-95 flex items-center gap-1.5 shadow-md whitespace-nowrap"
+              className="px-4 py-2.5 min-h-[44px] md:min-h-0 rounded-xl bg-cyan-500/15 hover:bg-cyan-500/25 border border-cyan-400/35 text-cyan-200 hover:text-white font-bold text-xs sm:text-sm tracking-tight transition-all transform hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-1.5 shadow-md whitespace-nowrap"
             >
               <Sparkles className="w-3.5 h-3.5 text-cyan-300 shrink-0" />
               <span className="notranslate" translate="no">{t('howItWorks') || 'How It Works'}</span>
@@ -488,7 +488,7 @@ export const HomePage: React.FC<HomePageProps> = ({
             <a
               href="#responsible-ai"
               onClick={() => playSound('glass')}
-              className="px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/20 text-white font-bold text-xs sm:text-sm tracking-tight transition-all transform hover:scale-[1.02] active:scale-95 flex items-center gap-1.5 shadow-md whitespace-nowrap"
+              className="px-4 py-2.5 min-h-[44px] md:min-h-0 rounded-xl bg-white/10 hover:bg-white/15 border border-white/20 text-white font-bold text-xs sm:text-sm tracking-tight transition-all transform hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-1.5 shadow-md whitespace-nowrap"
             >
               <ShieldCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
               <span className="notranslate" translate="no">{t('responsibleAI') || 'Responsible AI'}</span>
@@ -497,7 +497,7 @@ export const HomePage: React.FC<HomePageProps> = ({
             <a
               href="#premium-plans"
               onClick={() => playSound('glass')}
-              className="px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-400/35 text-amber-300 hover:text-white font-bold text-xs sm:text-sm tracking-tight transition-all transform hover:scale-[1.02] active:scale-95 flex items-center gap-1.5 shadow-md whitespace-nowrap cursor-pointer"
+              className="px-4 py-2.5 min-h-[44px] md:min-h-0 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-400/35 text-amber-300 hover:text-white font-bold text-xs sm:text-sm tracking-tight transition-all transform hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-1.5 shadow-md whitespace-nowrap cursor-pointer"
             >
               <Crown className="w-3.5 h-3.5 text-amber-400 shrink-0" />
               <span className="notranslate" translate="no">{t('premiumFeatures') || 'Premium Features'}</span>
@@ -505,22 +505,22 @@ export const HomePage: React.FC<HomePageProps> = ({
           </div>
 
           {/* Quick 5 Stats Bar */}
-          <div className="pt-2 sm:pt-3 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-2.5 w-full text-left">
+          <div className="pt-3 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-2.5 w-full text-center md:text-left">
             <a
               href="#features-directory"
               onClick={() => playSound('pop')}
-              className="p-2 sm:p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-amber-400/40 transition-all block group cursor-pointer"
+              className="p-3.5 md:p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-amber-400/40 transition-all block group cursor-pointer"
             >
               <div className="text-base sm:text-xl font-black text-amber-300 group-hover:text-amber-200 transition-colors">16-in-1</div>
-              <div className="text-[10px] sm:text-xs text-slate-300 font-medium">Parenting tools</div>
+              <div className="text-[11px] sm:text-xs text-slate-300 font-medium">Parenting tools</div>
             </a>
             <a 
               href="#indian-languages"
               onClick={() => playSound('glass')}
-              className="p-2 sm:p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-cyan-400/40 transition-all block group cursor-pointer"
+              className="p-3.5 md:p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-cyan-400/40 transition-all block group cursor-pointer"
             >
               <div className="text-base sm:text-xl font-black text-cyan-300 group-hover:text-cyan-200 transition-colors">12</div>
-              <div className="text-[10px] sm:text-xs text-slate-300 font-medium">Major Indian Languages</div>
+              <div className="text-[11px] sm:text-xs text-slate-300 font-medium">Major Indian Languages</div>
             </a>
             <button 
               type="button"
@@ -536,26 +536,26 @@ export const HomePage: React.FC<HomePageProps> = ({
                 }
                 onNavigate('ai');
               }}
-              className="p-2 sm:p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-emerald-400/40 transition-all text-left block group cursor-pointer w-full"
+              className="p-3.5 md:p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-emerald-400/40 transition-all text-center md:text-left block group cursor-pointer w-full"
             >
               <div className="text-base sm:text-xl font-black text-emerald-300 group-hover:text-emerald-200 transition-colors">24/7 Access</div>
-              <div className="text-[10px] sm:text-xs text-slate-300 font-medium">Anytime guidance</div>
+              <div className="text-[11px] sm:text-xs text-slate-300 font-medium">Anytime guidance</div>
             </button>
             <a 
               href="#responsible-ai"
               onClick={() => playSound('glass')}
-              className="p-2 sm:p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-pink-400/40 transition-all block group cursor-pointer"
+              className="p-3.5 md:p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-pink-400/40 transition-all block group cursor-pointer"
             >
               <div className="text-base sm:text-xl font-black text-pink-300 group-hover:text-pink-200 transition-colors">AI-Assisted</div>
-              <div className="text-[10px] sm:text-xs text-slate-300 font-medium">Safety/Privacy first</div>
+              <div className="text-[11px] sm:text-xs text-slate-300 font-medium">Safety/Privacy first</div>
             </a>
             <a 
               href="#problem-and-mission"
               onClick={() => playSound('glass')}
-              className="p-2 sm:p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-purple-400/40 transition-all block group cursor-pointer col-span-2 sm:col-span-1 lg:col-span-1"
+              className="p-3.5 md:p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-purple-400/40 transition-all block group cursor-pointer col-span-2 sm:col-span-1 lg:col-span-1"
             >
               <div className="text-base sm:text-xl font-black text-purple-300 group-hover:text-purple-200 transition-colors">Personalised</div>
-              <div className="text-[10px] sm:text-xs text-slate-300 font-medium">Child profile calibrated</div>
+              <div className="text-[11px] sm:text-xs text-slate-300 font-medium">Child profile calibrated</div>
             </a>
           </div>
         </div>
@@ -564,10 +564,10 @@ export const HomePage: React.FC<HomePageProps> = ({
       {/* =========================================================
           1. GUIDING VISION / WHY TRICKY TODDLERS
       ========================================================== */}
-      <section id="vision" className="w-full space-y-4 rounded-3xl sm:rounded-[2.25rem] border border-purple-500/25 bg-gradient-to-br from-[#120d2b] via-[#0d0920] to-[#080514] p-5 sm:p-8 lg:p-10 shadow-2xl text-left scroll-mt-20 relative overflow-hidden">
+      <section id="vision" className="w-full space-y-5 md:space-y-4 rounded-3xl sm:rounded-[2.25rem] border border-purple-500/25 bg-gradient-to-br from-[#120d2b] via-[#0d0920] to-[#080514] p-6 sm:p-8 lg:p-10 shadow-2xl text-center md:text-left scroll-mt-20 relative overflow-hidden">
         <div className="absolute -top-24 -right-24 w-80 h-80 bg-purple-500/10 blur-[100px] rounded-full pointer-events-none" />
 
-        <div className="relative z-10 space-y-3.5 w-full">
+        <div className="relative z-10 space-y-4 md:space-y-3.5 w-full">
           <div className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-purple-300 px-3 py-1 rounded-full bg-purple-500/15 border border-purple-400/30">
             <Eye className="w-3.5 h-3.5 text-purple-400 shrink-0" />
             <span>Guiding Vision</span>
@@ -585,7 +585,7 @@ export const HomePage: React.FC<HomePageProps> = ({
             Technology should quietly handle the clutter in the background, so parents can spend less time managing apps, reminders and scattered information, and more time enjoying the beautiful, funny and precious moments with their children.
           </p>
 
-          <div className="p-3.5 sm:p-4 rounded-2xl bg-purple-500/10 border border-purple-500/25 w-full">
+          <div className="p-4 rounded-2xl bg-purple-500/10 border border-purple-500/25 w-full text-left">
             <p className="text-xs sm:text-sm md:text-base text-purple-200 font-semibold leading-relaxed">
               <span className="notranslate" translate="no">Tricky Toddlers</span> is not about adding more technology to parenting. It is about making technology work for parents.
             </p>
@@ -596,27 +596,27 @@ export const HomePage: React.FC<HomePageProps> = ({
       {/* =========================================================
           2. PROBLEM STATEMENT & OUR MISSION / WHY CHOOSE US
       ========================================================== */}
-      <section id="problem-and-mission" className="w-full space-y-6 rounded-3xl sm:rounded-[2.25rem] border border-amber-500/25 bg-gradient-to-br from-[#161208] via-[#0e172a] to-[#070b15] p-5 sm:p-8 lg:p-10 shadow-2xl text-left scroll-mt-20 relative overflow-hidden">
+      <section id="problem-and-mission" className="w-full space-y-6 rounded-3xl sm:rounded-[2.25rem] border border-amber-500/25 bg-gradient-to-br from-[#161208] via-[#0e172a] to-[#070b15] p-6 sm:p-8 lg:p-10 shadow-2xl text-left scroll-mt-20 relative overflow-hidden">
         <div className="absolute -top-24 -right-24 w-80 h-80 bg-amber-500/10 blur-[100px] rounded-full pointer-events-none" />
 
-        <div className="relative z-10 space-y-4 w-full">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-white tracking-tight">
+        <div className="relative z-10 space-y-5 md:space-y-4 w-full">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-white tracking-tight text-center md:text-left">
             What Makes <span className="notranslate" translate="no">Tricky Toddlers</span> Different?
           </h2>
 
-          <div className="p-4 sm:p-5 rounded-2xl bg-amber-500/10 border border-amber-500/25">
+          <div className="p-4 sm:p-5 rounded-2xl bg-amber-500/10 border border-amber-500/25 text-center md:text-left">
             <p className="text-sm sm:text-base md:text-lg font-bold text-amber-200 leading-snug">
               “The problem is not a lack of information. The problem is scattered information.”
             </p>
           </div>
 
           <div className="space-y-4 pt-1">
-            <h3 className="text-base sm:text-lg md:text-xl font-bold text-white flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-amber-400" />
+            <h3 className="text-base sm:text-lg md:text-xl font-bold text-white flex items-center justify-center md:justify-start gap-2 text-center md:text-left">
+              <Sparkles className="w-4 h-4 text-amber-400 shrink-0" />
               <span>What Makes <span className="notranslate" translate="no">Tricky Toddlers</span> Different?</span>
             </h3>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 sm:gap-4">
               <div className="p-4 sm:p-5 rounded-2xl bg-white/[0.04] border border-white/10 flex items-start gap-3 hover:border-amber-400/30 transition-colors">
                 <div className="w-8 h-8 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center shrink-0 shadow-sm">
                   <Layers className="w-4 h-4" />
@@ -691,16 +691,16 @@ export const HomePage: React.FC<HomePageProps> = ({
       {/* =========================================================
           3. ALL FEATURES DIRECTORY
       ========================================================== */}
-      <section id="features-directory" className="w-full space-y-6 rounded-3xl sm:rounded-[2.25rem] border border-white/15 bg-gradient-to-b from-[#0c1322] via-[#090e1a] to-[#050810] p-5 sm:p-8 lg:p-10 shadow-2xl text-left scroll-mt-20">
-        <div className="border-b border-white/10 pb-5">
-          <div className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-cyan-400 mb-1">
+      <section id="features-directory" className="w-full space-y-6 rounded-3xl sm:rounded-[2.25rem] border border-white/15 bg-gradient-to-b from-[#0c1322] via-[#090e1a] to-[#050810] p-6 sm:p-8 lg:p-10 shadow-2xl text-left scroll-mt-20">
+        <div className="border-b border-white/10 pb-5 text-center md:text-left">
+          <div className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-cyan-400 mb-1.5">
             <Layers className="w-3.5 h-3.5" />
             <span>16-in-1 Feature Directory</span>
           </div>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-white tracking-tight text-balance">
             All Features at a Glance
           </h2>
-          <p className="text-slate-300 text-xs sm:text-sm mt-1 leading-relaxed text-balance">
+          <p className="text-slate-300 text-xs sm:text-sm mt-1.5 leading-relaxed text-balance">
             Click anywhere on any feature card below to open and use it immediately.
           </p>
         </div>
@@ -792,8 +792,8 @@ export const HomePage: React.FC<HomePageProps> = ({
       {/* =========================================================
           4. HOW IT WORKS · CHILD WELLNESS JOURNEY
       ========================================================== */}
-      <section id="child-wellness-journey" className="w-full space-y-6 rounded-3xl sm:rounded-[2.25rem] border border-white/15 bg-gradient-to-b from-[#0c1322] via-[#090e1a] to-[#050810] p-5 sm:p-8 lg:p-10 shadow-2xl text-left scroll-mt-20">
-        <div className="w-full space-y-2 text-left">
+      <section id="child-wellness-journey" className="w-full space-y-6 rounded-3xl sm:rounded-[2.25rem] border border-white/15 bg-gradient-to-b from-[#0c1322] via-[#090e1a] to-[#050810] p-6 sm:p-8 lg:p-10 shadow-2xl text-left scroll-mt-20">
+        <div className="w-full space-y-2 text-center md:text-left">
           <div className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-cyan-400">
             <Sparkles className="w-4 h-4" />
             <span>Connected Health Ecosystem</span>
@@ -803,7 +803,7 @@ export const HomePage: React.FC<HomePageProps> = ({
           </h2>
         </div>
 
-        <div className="relative rounded-3xl overflow-hidden border border-white/10 bg-white/95 shadow-xl w-full flex items-center justify-center p-2 sm:p-4">
+        <div className="relative rounded-3xl overflow-hidden border border-white/10 bg-white/95 shadow-xl w-full flex items-center justify-center p-2.5 sm:p-4">
           <img 
             src="/child-wellness-journey.svg" 
             alt="Child Wellness Journey - A Brighter Tomorrow: 1 Register, 2 Collect, 3 Analyse, 4 Personalise, 5 Alert, 6 Monitor"
@@ -818,7 +818,7 @@ export const HomePage: React.FC<HomePageProps> = ({
       {/* =========================================================
           5. SPEAKING THE LANGUAGE OF INDIAN FAMILIES
       ========================================================== */}
-      <section id="indian-languages" className="w-full space-y-5 rounded-3xl sm:rounded-[2.25rem] border border-cyan-500/25 bg-gradient-to-br from-[#0c142b] via-[#091122] to-[#050a16] p-5 sm:p-8 lg:p-10 shadow-2xl text-left scroll-mt-20 relative overflow-hidden">
+      <section id="indian-languages" className="w-full space-y-6 md:space-y-5 rounded-3xl sm:rounded-[2.25rem] border border-cyan-500/25 bg-gradient-to-br from-[#0c142b] via-[#091122] to-[#050a16] p-6 sm:p-8 lg:p-10 shadow-2xl text-center md:text-left scroll-mt-20 relative overflow-hidden">
         <div className="absolute -top-24 -right-24 w-80 h-80 bg-cyan-500/10 blur-[100px] rounded-full pointer-events-none" />
 
         <div className="relative z-10 space-y-4 w-full">
@@ -831,7 +831,7 @@ export const HomePage: React.FC<HomePageProps> = ({
             <span className="notranslate" translate="no">Tricky Toddlers</span> speaks the language of Indian families.
           </h2>
 
-          <div className="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-amber-500/15 via-indigo-500/15 to-pink-500/15 border border-amber-400/30 shadow-md">
+          <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-500/15 via-indigo-500/15 to-pink-500/15 border border-amber-400/30 shadow-md">
             <div className="text-[10px] sm:text-xs font-black uppercase tracking-wider text-amber-300 mb-0.5 text-balance">
               Core Architectural Anchor
             </div>
@@ -841,7 +841,7 @@ export const HomePage: React.FC<HomePageProps> = ({
           </div>
 
           {/* Supported Indian Languages Badges Grid (Click any language to switch immediately) */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2.5 pt-1">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-2.5 pt-1">
             {indianLanguagesList.map((l) => (
               <button
                 type="button"
@@ -850,7 +850,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                   playSound('glass');
                   setLanguage(l.code);
                 }}
-                className={`px-3 py-2.5 rounded-xl border text-center transition-all shadow-sm cursor-pointer active:scale-95 ${
+                className={`px-3 py-3 md:py-2.5 min-h-[52px] md:min-h-0 rounded-xl border text-center transition-all shadow-sm cursor-pointer active:scale-95 ${
                   language === l.code
                     ? 'bg-cyan-500/25 border-cyan-400 text-white shadow-cyan-500/20'
                     : 'bg-white/[0.04] border-white/10 hover:bg-white/[0.08] hover:border-cyan-400/40'
@@ -867,8 +867,8 @@ export const HomePage: React.FC<HomePageProps> = ({
       {/* =========================================================
           6. HOW RESPONSIBLE AI IS BUILT INTO TRICKY TODDLERS
       ========================================================== */}
-      <section id="responsible-ai" className="w-full space-y-8 rounded-3xl sm:rounded-[2.25rem] border border-white/15 bg-gradient-to-b from-[#0c1322] via-[#090e1a] to-[#050810] p-5 sm:p-8 lg:p-10 shadow-2xl scroll-mt-20">
-        <div className="w-full space-y-2 text-left">
+      <section id="responsible-ai" className="w-full space-y-8 rounded-3xl sm:rounded-[2.25rem] border border-white/15 bg-gradient-to-b from-[#0c1322] via-[#090e1a] to-[#050810] p-6 sm:p-8 lg:p-10 shadow-2xl scroll-mt-20">
+        <div className="w-full space-y-2 text-center md:text-left">
           <div className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-emerald-400 text-balance">
             <ShieldCheck className="w-4 h-4 shrink-0" />
             <span>Safety, Trust &amp; Ethics First</span>
@@ -931,11 +931,11 @@ export const HomePage: React.FC<HomePageProps> = ({
           7. PREMIUM PLAN CONVERSION CARD
       ========================================================== */}
       <section id="premium-plans" className="w-full space-y-8 scroll-mt-20">
-        <div className="w-full relative overflow-hidden rounded-3xl sm:rounded-[2.25rem] border-2 border-amber-500/40 bg-gradient-to-br from-[#1a1405] via-[#120e06] to-[#0a0703] p-5 sm:p-8 lg:p-10 shadow-2xl shadow-amber-950/60 text-left space-y-6">
+        <div className="w-full relative overflow-hidden rounded-3xl sm:rounded-[2.25rem] border-2 border-amber-500/40 bg-gradient-to-br from-[#1a1405] via-[#120e06] to-[#0a0703] p-6 sm:p-8 lg:p-10 shadow-2xl shadow-amber-950/60 text-center md:text-left space-y-6">
           <div className="absolute top-0 right-0 w-80 h-80 bg-amber-500/10 blur-[90px] rounded-full pointer-events-none" />
 
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative z-10">
-            <div className="space-y-2 max-w-2xl">
+            <div className="space-y-2.5 max-w-2xl mx-auto md:mx-0">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/20 border border-amber-400/30 text-amber-300 text-xs font-black uppercase tracking-wider text-balance">
                 <Crown className="w-3.5 h-3.5 text-amber-300 shrink-0" />
                 <span>Premium Plan Access</span>
@@ -949,18 +949,18 @@ export const HomePage: React.FC<HomePageProps> = ({
             </div>
 
             {/* Price & Primary CTA */}
-            <div className="flex flex-col sm:flex-row lg:flex-col items-start lg:items-end gap-3 shrink-0">
-              <div className="text-left lg:text-right">
+            <div className="flex flex-col sm:flex-row lg:flex-col items-center md:items-start lg:items-end gap-4 md:gap-3 shrink-0 w-full md:w-auto">
+              <div className="text-center md:text-left lg:text-right">
                 <span className="text-3xl sm:text-4xl font-black text-amber-300">₹499 <span className="text-sm font-normal text-slate-300">/ month</span></span>
                 <p className="text-[10px] text-amber-300/80 mt-0.5">
                   NutriBand hardware is a separate one-time purchase (S, M, and L straps; not included in billing)
                 </p>
               </div>
 
-              <div className="flex items-center gap-2.5 w-full sm:w-auto">
+              <div className="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-3 sm:gap-2.5 w-full sm:w-auto">
                 <button
                   onClick={handleGoToUpgradePlans}
-                  className="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-300 hover:from-amber-300 hover:to-yellow-200 text-slate-950 font-black text-sm tracking-wide shadow-xl shadow-amber-500/25 transition-all transform hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
+                  className="w-full max-w-xs sm:max-w-none sm:w-auto px-6 py-3.5 min-h-[46px] md:min-h-0 rounded-2xl bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-300 hover:from-amber-300 hover:to-yellow-200 text-slate-950 font-black text-sm tracking-wide shadow-xl shadow-amber-500/25 transition-all transform hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <Zap className="w-4 h-4 text-slate-950" />
                   <span>{premiumActivated ? 'Manage / View Premium Plan ✨' : 'Upgrade to Premium Plan'}</span>
@@ -971,7 +971,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                     playSound('glass');
                     navigate('/plans');
                   }}
-                  className="px-4 py-3.5 rounded-2xl bg-white/10 hover:bg-white/15 border border-white/20 text-white font-bold text-xs tracking-wide transition-all cursor-pointer"
+                  className="w-full max-w-xs sm:max-w-none sm:w-auto px-5 py-3.5 min-h-[46px] md:min-h-0 rounded-2xl bg-white/10 hover:bg-white/15 border border-white/20 text-white font-bold text-xs tracking-wide transition-all cursor-pointer flex items-center justify-center"
                 >
                   View Benefits
                 </button>
@@ -980,7 +980,7 @@ export const HomePage: React.FC<HomePageProps> = ({
           </div>
 
           {/* Premium Checklist Highlights */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-4 border-t border-amber-500/20 text-xs text-slate-200">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-4 border-t border-amber-500/20 text-xs text-slate-200 text-left max-w-xs mx-auto md:max-w-none md:mx-0">
             <div className="flex items-center gap-2">
               <Check className="w-4 h-4 text-amber-400 shrink-0" />
               <span>Unlimited FoodLens plate scans</span>
@@ -1004,8 +1004,8 @@ export const HomePage: React.FC<HomePageProps> = ({
       {/* =========================================================
           8. FREQUENTLY ASKED QUESTIONS (FAQ) SECTION
       ========================================================== */}
-      <section id="faq-section" className="w-full space-y-6 rounded-3xl sm:rounded-[2.25rem] border border-indigo-500/25 bg-gradient-to-b from-[#0c1322] via-[#090e1a] to-[#050810] p-5 sm:p-8 lg:p-10 shadow-2xl text-left scroll-mt-20">
-        <div className="w-full space-y-2 text-left">
+      <section id="faq-section" className="w-full space-y-6 rounded-3xl sm:rounded-[2.25rem] border border-indigo-500/25 bg-gradient-to-b from-[#0c1322] via-[#090e1a] to-[#050810] p-6 sm:p-8 lg:p-10 shadow-2xl text-left scroll-mt-20">
+        <div className="w-full space-y-2 text-center md:text-left">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/15 border border-indigo-400/30 text-indigo-300 text-xs font-black tracking-wider uppercase">
             <HelpCircle className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
             <span>Parenting &amp; Platform FAQs</span>
@@ -1118,7 +1118,7 @@ export const HomePage: React.FC<HomePageProps> = ({
           })}
         </div>
 
-        <div className="pt-2 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-t border-white/10">
+        <div className="pt-3 md:pt-2 flex flex-col sm:flex-row items-center justify-between gap-4 md:gap-3 border-t border-white/10 text-center md:text-left">
           <p className="text-xs sm:text-sm text-slate-300">
             Want deeper answers by topic? Browse all 32 questions across 8 categories including Pediatric Care, AI NutriChef, FoodLens AI, NutriBand™, and Community Help.
           </p>
@@ -1128,7 +1128,7 @@ export const HomePage: React.FC<HomePageProps> = ({
               playSound('glass');
               navigate('/faq');
             }}
-            className="px-4 py-2.5 rounded-xl bg-indigo-500/20 hover:bg-indigo-500/30 border border-indigo-400/40 text-indigo-200 hover:text-white text-xs sm:text-sm font-bold transition-all flex items-center gap-2 shrink-0 cursor-pointer"
+            className="w-full max-w-xs sm:max-w-none sm:w-auto justify-center px-5 py-3 md:py-2.5 min-h-[44px] md:min-h-0 rounded-xl bg-indigo-500/20 hover:bg-indigo-500/30 border border-indigo-400/40 text-indigo-200 hover:text-white text-xs sm:text-sm font-bold transition-all flex items-center gap-2 shrink-0 cursor-pointer"
           >
             <HelpCircle className="w-4 h-4 text-indigo-300" />
             <span>View Full Categorized FAQs</span>

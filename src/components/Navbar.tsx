@@ -77,6 +77,8 @@ export const Navbar: React.FC = () => {
   const location = useLocation();
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const [mobileLangOpen, setMobileLangOpen] = useState(false);
   const [aboutDropdownOpen, setAboutDropdownOpen] = useState(false);
   const [expandedMobileGroup, setExpandedMobileGroup] = useState<string | null>('trackers');
   const [setupNotice, setSetupNotice] = useState(false);
@@ -96,6 +98,8 @@ export const Navbar: React.FC = () => {
     setAboutDropdownOpen(false);
     setLangDropdownOpen(false);
     setMobileMenuOpen(false);
+    setMobileNavOpen(false);
+    setMobileLangOpen(false);
   }, [location.pathname, location.search]);
 
   // Listen for Landing Page feature card clicks requesting mode selection
@@ -352,8 +356,8 @@ export const Navbar: React.FC = () => {
     document.body.scrollTop = 0;
   };
 
-  const handleBrandClick = (e: React.MouseEvent) => {
-    e.preventDefault();
+  const handleBrandClick = (e?: React.MouseEvent) => {
+    e?.preventDefault();
     playSound('glass');
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
     document.documentElement.scrollTop = 0;
@@ -439,7 +443,282 @@ export const Navbar: React.FC = () => {
   return (
     <>
       <nav className="glass-nav border-b border-white/10 bg-[#070b14]/95 backdrop-blur-xl sticky top-0 z-[100] shadow-2xl">
-        <div className="max-w-7xl mx-auto px-2.5 sm:px-6 lg:px-8 py-2 sm:py-2.5">
+        {/* Mobile-Only Spacious 1-Row Sticky Header (< 768px) */}
+        <div className="md:hidden">
+          <div className="px-4 py-2.5 flex items-center justify-between gap-2">
+            <button
+              type="button"
+              onClick={handleBrandClick}
+              className="flex items-center gap-2 group shrink-0 cursor-pointer text-left focus:outline-none min-h-[40px]"
+              title="Go to Tricky Toddlers Home"
+            >
+              <div className="w-8 h-8 bg-gradient-to-tr from-indigo-600 to-purple-500 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/30 shrink-0">
+                <Baby className="text-white w-4 h-4" />
+              </div>
+              <span className="notranslate font-sans font-black text-base tracking-tight text-white whitespace-nowrap" translate="no">
+                Tricky Toddlers
+              </span>
+            </button>
+
+            <div className="flex items-center gap-2 shrink-0">
+              {/* Mobile Language Dropdown */}
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={() => {
+                    playSound('click');
+                    setMobileNavOpen(false);
+                    setMobileLangOpen(!mobileLangOpen);
+                  }}
+                  className="flex items-center gap-1.5 px-3 py-2 min-h-[40px] rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-xs font-bold text-white/90 cursor-pointer"
+                  aria-label="Select Language"
+                >
+                  <Languages className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
+                  <span className="notranslate max-w-[64px] truncate" translate="no">
+                    {SUPPORTED_LANGUAGES.find((l) => l.code === language)?.localName || 'English'}
+                  </span>
+                  <ChevronDown className={`w-3.5 h-3.5 text-white/50 transition-transform ${mobileLangOpen ? 'rotate-180' : ''}`} />
+                </button>
+
+                <AnimatePresence>
+                  {mobileLangOpen && (
+                    <>
+                      <div className="fixed inset-0 z-40" onClick={() => setMobileLangOpen(false)} />
+                      <motion.div
+                        initial={{ opacity: 0, y: 8, scale: 0.96 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 8, scale: 0.96 }}
+                        className="absolute right-0 mt-2 w-52 rounded-2xl bg-[#090d1a] border border-white/15 p-2 shadow-2xl z-50 backdrop-blur-2xl max-h-72 overflow-y-auto"
+                      >
+                        <div className="px-2.5 py-1.5 text-[10px] font-bold text-white/40 uppercase tracking-widest mb-1 border-b border-white/10">
+                          Indian Languages
+                        </div>
+                        {SUPPORTED_LANGUAGES.map((lang) => (
+                          <button
+                            type="button"
+                            key={lang.code}
+                            onClick={() => {
+                              playSound('glass');
+                              setLanguage(lang.code);
+                              setMobileLangOpen(false);
+                              triggerToast(`Language switched to ${lang.name} (${lang.localName}).`, 'info', 'Language Updated');
+                            }}
+                            className={`w-full text-left px-3 py-2.5 rounded-xl text-xs font-semibold transition-all flex justify-between items-center ${
+                              language === lang.code
+                                ? 'bg-indigo-500 text-white shadow-md'
+                                : 'text-white/75 hover:text-white hover:bg-white/5'
+                            }`}
+                          >
+                            <span>{lang.localName}</span>
+                            <span className="text-[10px] opacity-50 font-mono">{lang.name}</span>
+                          </button>
+                        ))}
+                      </motion.div>
+                    </>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              {/* Mobile Main Navigation Drawer Toggle */}
+              <button
+                type="button"
+                onClick={() => {
+                  playSound('click');
+                  setMobileLangOpen(false);
+                  setMobileMenuOpen(false);
+                  setMobileNavOpen(!mobileNavOpen);
+                }}
+                className={`flex items-center gap-1.5 px-3.5 py-2 min-h-[40px] rounded-xl border text-xs font-bold transition-all cursor-pointer ${
+                  mobileNavOpen
+                    ? 'bg-indigo-600 text-white border-indigo-400/60 shadow-md shadow-indigo-500/20'
+                    : 'bg-white/10 hover:bg-white/15 text-white border-white/20'
+                }`}
+                aria-label="Toggle Navigation Menu"
+              >
+                {mobileNavOpen ? <X className="w-4 h-4 shrink-0" /> : <Menu className="w-4 h-4 shrink-0" />}
+                <span>{mobileNavOpen ? 'Close' : 'Menu'}</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Spacious Mobile Dropdown Navigation Drawer */}
+          <AnimatePresence>
+            {mobileNavOpen && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                className="border-t border-white/10 bg-[#080d1b] overflow-hidden"
+              >
+                <div className="p-4 space-y-4 max-h-[75vh] overflow-y-auto">
+                  <div>
+                    <div className="text-[10px] font-black uppercase tracking-widest text-white/40 text-center mb-2.5">
+                      Quick Navigation
+                    </div>
+                    <div className="grid grid-cols-2 gap-2.5">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setMobileNavOpen(false);
+                          handleBrandClick();
+                        }}
+                        className="flex items-center justify-center gap-2 px-3 py-3 min-h-[44px] rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white text-xs font-bold cursor-pointer"
+                      >
+                        <Home className="w-4 h-4 text-indigo-400 shrink-0" />
+                        <span>{t('home') || 'Home'}</span>
+                      </button>
+
+                      <Link
+                        to="/plans"
+                        onClick={() => {
+                          playSound('glass');
+                          setMobileNavOpen(false);
+                        }}
+                        className="flex items-center justify-center gap-2 px-3 py-3 min-h-[44px] rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-400/30 text-amber-200 text-xs font-bold"
+                      >
+                        <Crown className="w-4 h-4 text-amber-400 shrink-0" />
+                        <span>{t('plans') || 'Plans'}</span>
+                      </Link>
+
+                      <Link
+                        to="/about?tab=story"
+                        onClick={() => {
+                          playSound('glass');
+                          setMobileNavOpen(false);
+                        }}
+                        className="flex items-center justify-center gap-2 px-3 py-3 min-h-[44px] rounded-xl bg-pink-500/10 hover:bg-pink-500/20 border border-pink-400/25 text-pink-200 text-xs font-bold"
+                      >
+                        <Heart className="w-4 h-4 text-pink-400 shrink-0" />
+                        <span>{t('myStory') || 'My Story'}</span>
+                      </Link>
+
+                      <Link
+                        to="/faq"
+                        onClick={() => {
+                          playSound('glass');
+                          setMobileNavOpen(false);
+                        }}
+                        className="flex items-center justify-center gap-2 px-3 py-3 min-h-[44px] rounded-xl bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-400/25 text-indigo-200 text-xs font-bold"
+                      >
+                        <HelpCircle className="w-4 h-4 text-indigo-400 shrink-0" />
+                        <span>FAQs</span>
+                      </Link>
+
+                      <Link
+                        to="/contact"
+                        onClick={() => {
+                          playSound('glass');
+                          setMobileNavOpen(false);
+                        }}
+                        className="col-span-2 flex items-center justify-center gap-2 px-3 py-3 min-h-[44px] rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-400/25 text-emerald-200 text-xs font-bold"
+                      >
+                        <MessageSquareHeart className="w-4 h-4 text-emerald-400 shrink-0" />
+                        <span>{t('contactFeedback') || 'Contact & Feedback'}</span>
+                      </Link>
+                    </div>
+                  </div>
+
+                  <div className="pt-2 border-t border-white/10">
+                    <div className="text-[10px] font-black uppercase tracking-widest text-white/40 text-center mb-2.5">
+                      {isSessionActive ? 'Account & Settings' : 'Get Started'}
+                    </div>
+                    {isSessionActive ? (
+                      <div className="grid grid-cols-2 gap-2.5">
+                        <Link
+                          to="/dietary-preferences"
+                          onClick={() => {
+                            playSound('glass');
+                            setMobileNavOpen(false);
+                          }}
+                          className="flex items-center justify-center gap-2 px-3 py-3 min-h-[44px] rounded-xl bg-emerald-500/15 border border-emerald-400/30 text-emerald-200 text-xs font-bold"
+                        >
+                          <Utensils className="w-4 h-4 text-emerald-400 shrink-0" />
+                          <span>Dietary</span>
+                        </Link>
+                        <Link
+                          to="/profile"
+                          onClick={() => {
+                            playSound('click');
+                            setMobileNavOpen(false);
+                          }}
+                          className="flex items-center justify-center gap-2 px-3 py-3 min-h-[44px] rounded-xl bg-white/10 border border-white/15 text-white text-xs font-bold"
+                        >
+                          <User className="w-4 h-4 text-indigo-300 shrink-0" />
+                          <span>Profile</span>
+                        </Link>
+                        {(user?.email === 'rlashmi086@gmail.com' || user?.email === 'admin@securepass.internal') && (
+                          <Link
+                            to="/admin"
+                            onClick={() => {
+                              playSound('glass');
+                              setMobileNavOpen(false);
+                            }}
+                            className="col-span-2 flex items-center justify-center gap-2 px-3 py-3 min-h-[44px] rounded-xl bg-cyan-500/15 border border-cyan-400/35 text-cyan-200 text-xs font-black"
+                          >
+                            <BarChart3 className="w-4 h-4 text-cyan-400 shrink-0" />
+                            <span>Admin Analytics</span>
+                          </Link>
+                        )}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setMobileNavOpen(false);
+                            handleLogout();
+                          }}
+                          className="col-span-2 flex items-center justify-center gap-2 px-3 py-3 min-h-[44px] rounded-xl bg-red-500/10 border border-red-500/25 text-red-300 text-xs font-bold cursor-pointer"
+                        >
+                          <LogOut className="w-4 h-4 shrink-0" />
+                          <span>{t('logout') || 'Sign Out'}</span>
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="space-y-2.5">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setMobileNavOpen(false);
+                            handleQuickGuestClick();
+                          }}
+                          className="w-full flex items-center justify-center gap-2 px-4 py-3 min-h-[44px] rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 text-xs font-black shadow-md cursor-pointer"
+                        >
+                          <Sparkles className="w-4 h-4 shrink-0" />
+                          <span>Free Guest Access</span>
+                        </button>
+                        <div className="grid grid-cols-2 gap-2.5">
+                          <Link
+                            to="/register"
+                            onClick={() => {
+                              playSound('glass');
+                              setMobileNavOpen(false);
+                            }}
+                            className="flex items-center justify-center gap-1.5 px-3 py-3 min-h-[44px] rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 text-white text-xs font-black"
+                          >
+                            <UserPlus className="w-4 h-4 shrink-0" />
+                            <span>Create Account</span>
+                          </Link>
+                          <Link
+                            to="/login"
+                            onClick={() => {
+                              playSound('click');
+                              setMobileNavOpen(false);
+                            }}
+                            className="flex items-center justify-center gap-1.5 px-3 py-3 min-h-[44px] rounded-xl bg-white/10 border border-white/20 text-white text-xs font-bold"
+                          >
+                            <LogIn className="w-4 h-4 text-indigo-300 shrink-0" />
+                            <span>Sign In</span>
+                          </Link>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
+        {/* Tablet & Laptop Header (100% Untouched >= 768px) */}
+        <div className="hidden md:block max-w-7xl mx-auto px-2.5 sm:px-6 lg:px-8 py-2 sm:py-2.5">
           <div className="flex flex-wrap justify-between items-center gap-2">
             
             {/* Left: Brand - Takes to Home Page */}
@@ -807,31 +1086,113 @@ export const Navbar: React.FC = () => {
           </div>
         </div>
 
+      {/* Mobile-Only Centered Action Strip (Non-Sticky for spacious scrolling) */}
+      <div className="md:hidden border-b border-white/10 bg-[#060a16]/90 px-4 py-3">
+        {isSessionActive ? (
+          <div className="flex flex-wrap items-center justify-center gap-2">
+            <Link
+              to="/dietary-preferences"
+              onClick={() => playSound('glass')}
+              className={`flex items-center justify-center gap-1.5 px-3.5 py-2 min-h-[40px] rounded-xl border text-xs font-bold ${
+                location.pathname === '/dietary-preferences' || location.pathname.includes('baby-health')
+                  ? 'bg-emerald-500/20 text-emerald-200 border-emerald-400/40'
+                  : 'bg-emerald-500/10 text-emerald-300 border-emerald-400/30'
+              }`}
+            >
+              <Utensils className="w-3.5 h-3.5 shrink-0" />
+              <span>Dietary</span>
+            </Link>
+            <Link
+              to="/profile"
+              onClick={() => playSound('click')}
+              className={`flex items-center justify-center gap-1.5 px-3.5 py-2 min-h-[40px] rounded-xl border text-xs font-bold ${
+                location.pathname === '/profile'
+                  ? 'bg-indigo-500/20 text-indigo-200 border-indigo-400/40'
+                  : needsProfileSetup
+                  ? 'bg-amber-500/20 text-amber-200 border-amber-400/50 animate-pulse'
+                  : 'bg-white/5 text-white/85 border-white/15'
+              }`}
+            >
+              <User className="w-3.5 h-3.5 text-indigo-300 shrink-0" />
+              <span>Profile</span>
+            </Link>
+            {(user?.email === 'rlashmi086@gmail.com' || user?.email === 'admin@securepass.internal') && (
+              <Link
+                to="/admin"
+                onClick={() => playSound('glass')}
+                className="flex items-center justify-center gap-1.5 px-3.5 py-2 min-h-[40px] rounded-xl border border-cyan-400/35 bg-cyan-500/15 text-cyan-200 text-xs font-black"
+              >
+                <BarChart3 className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+                <span>Admin</span>
+              </Link>
+            )}
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="flex items-center justify-center gap-1.5 px-3.5 py-2 min-h-[40px] rounded-xl border border-red-500/25 bg-red-500/10 text-red-300 text-xs font-bold cursor-pointer"
+            >
+              <LogOut className="w-3.5 h-3.5 shrink-0" />
+              <span>{t('logout') || 'Sign Out'}</span>
+            </button>
+          </div>
+        ) : (
+          <div className="flex flex-col items-center gap-2.5">
+            <button
+              type="button"
+              onClick={() => handleQuickGuestClick()}
+              className="w-full max-w-xs flex items-center justify-center gap-2 px-5 py-2.5 min-h-[44px] rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 text-xs font-black shadow-md shadow-emerald-500/20 cursor-pointer"
+            >
+              <Sparkles className="w-4 h-4 text-slate-950 shrink-0" />
+              <span className="notranslate" translate="no">Free Guest Access</span>
+            </button>
+            <div className="flex items-center justify-center gap-2.5 w-full max-w-xs">
+              <Link
+                to="/register"
+                onClick={() => playSound('glass')}
+                className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2.5 min-h-[42px] rounded-xl bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-600 text-white text-xs font-black shadow-md shadow-indigo-500/20"
+              >
+                <UserPlus className="w-3.5 h-3.5 shrink-0" />
+                <span className="notranslate" translate="no">Create Account</span>
+              </Link>
+              <Link
+                to="/login"
+                onClick={() => playSound('click')}
+                className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2.5 min-h-[42px] rounded-xl bg-white/10 border border-white/20 text-white text-xs font-bold"
+              >
+                <LogIn className="w-3.5 h-3.5 text-indigo-300 shrink-0" />
+                <span className="notranslate" translate="no">Sign In</span>
+              </Link>
+            </div>
+          </div>
+        )}
+      </div>
+
         {/* Mobile Navigation Bar & Grouped Category Dropdowns (< 768px Only) */}
         <div className="md:hidden relative z-30 border-b border-white/10 bg-[#060a16]/95 backdrop-blur-2xl shadow-md">
-          <div className="flex justify-between items-center px-3.5 py-2.5 gap-2">
+          <div className="flex justify-between items-center px-4 py-3 gap-2">
              <button
                type="button"
                onClick={() => {
                  playSound('click');
+                 setMobileNavOpen(false);
                  setMobileMenuOpen(!mobileMenuOpen);
                }}
-               className="flex items-center gap-2 min-w-0 flex-1 text-left cursor-pointer"
+               className="flex items-center gap-2.5 min-w-0 flex-1 text-left cursor-pointer min-h-[42px]"
              >
-               <span className="notranslate text-white font-black text-xs sm:text-sm tracking-tight shrink-0" translate="no">{t('mainMenu') || 'Main Menu'}</span>
+               <span className="notranslate text-white font-black text-xs tracking-tight shrink-0" translate="no">{t('mainMenu') || 'Features'}</span>
                {(() => {
                  const activeItem = menuItems.find(item => isItemActive(item));
                  if (activeItem) {
                    const ActiveIcon = activeItem.icon;
                    return (
-                     <span className="inline-flex items-center gap-1.5 text-[11px] text-indigo-200 bg-indigo-500/25 border border-indigo-400/40 px-2.5 py-1 rounded-xl font-bold truncate max-w-[180px]">
+                     <span className="inline-flex items-center gap-1.5 text-[11px] text-indigo-200 bg-indigo-500/25 border border-indigo-400/40 px-2.5 py-1 rounded-xl font-bold truncate max-w-[170px]">
                        <ActiveIcon className="w-3.5 h-3.5 text-indigo-300 shrink-0" />
                        <span className="notranslate truncate" translate="no">{activeItem.label}</span>
                      </span>
                    );
                  }
                  return (
-                   <span className="notranslate text-[10px] text-indigo-300 bg-indigo-500/20 px-2 py-0.5 rounded-full font-bold shrink-0" translate="no">6 Categories</span>
+                   <span className="notranslate text-[11px] text-indigo-300 font-semibold shrink-0" translate="no">16 Tools · 6 Categories</span>
                  );
                })()}
              </button>
@@ -839,17 +1200,18 @@ export const Navbar: React.FC = () => {
                 type="button"
                 onClick={() => {
                   playSound('click');
+                  setMobileNavOpen(false);
                   setMobileMenuOpen(!mobileMenuOpen);
                 }}
-                className={`px-3 py-2 rounded-xl border transition-all cursor-pointer flex items-center gap-1.5 shrink-0 ${
+                className={`px-3.5 py-2 min-h-[42px] rounded-xl border transition-all cursor-pointer flex items-center gap-1.5 shrink-0 ${
                   mobileMenuOpen 
                     ? 'bg-indigo-600 text-white border-indigo-400/50 shadow-md shadow-indigo-500/20' 
                     : 'bg-white/10 hover:bg-white/15 border-white/20 text-white'
                 }`}
-                aria-label="Toggle menu"
+                aria-label="Toggle feature categories"
              >
-                <span className="notranslate text-xs font-bold text-white/90" translate="no">{mobileMenuOpen ? (t('close') || 'Close') : (t('menu') || 'Categories')}</span>
-                <Menu className="w-4 h-4 text-white" />
+                <span className="notranslate text-xs font-bold text-white/95" translate="no">{mobileMenuOpen ? (t('close') || 'Close') : 'Categories'}</span>
+                <ChevronDown className={`w-4 h-4 text-white transition-transform duration-200 ${mobileMenuOpen ? 'rotate-180' : ''}`} />
              </button>
           </div>
           
@@ -859,10 +1221,10 @@ export const Navbar: React.FC = () => {
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
                 exit={{ opacity: 0, height: 0 }}
-                className="p-3 border-t border-white/10 bg-[#0a0f1d] space-y-2 overflow-hidden"
+                className="p-4 border-t border-white/10 bg-[#0a0f1d] space-y-2.5 overflow-hidden"
               >
                 {/* 6 Consolidated Mobile Category Groups / Direct Links */}
-                <div className="space-y-1.5">
+                <div className="space-y-2.5">
                   {mobileMenuGroups.map((group) => {
                     const GroupIcon = group.icon;
                     if (group.directItem) {
@@ -875,7 +1237,7 @@ export const Navbar: React.FC = () => {
                             handleMenuClick(group.directItem!);
                             setMobileMenuOpen(false);
                           }}
-                          className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-extrabold transition-all border cursor-pointer ${
+                          className={`w-full flex items-center justify-between px-4 py-3 min-h-[44px] rounded-xl text-xs font-extrabold transition-all border cursor-pointer ${
                             active
                               ? 'bg-gradient-to-r from-indigo-600/35 to-purple-600/35 text-white border-indigo-400/60 shadow-md'
                               : 'bg-white/5 text-white/90 hover:bg-white/10 border-white/10'
@@ -905,7 +1267,7 @@ export const Navbar: React.FC = () => {
                             playSound('click');
                             setExpandedMobileGroup(isExpanded ? null : group.id);
                           }}
-                          className={`w-full flex items-center justify-between px-3.5 py-2.5 text-xs font-extrabold transition-all cursor-pointer ${
+                          className={`w-full flex items-center justify-between px-4 py-3 min-h-[44px] text-xs font-extrabold transition-all cursor-pointer ${
                             hasActiveChild
                               ? 'bg-indigo-500/20 text-indigo-200'
                               : 'text-white/90 hover:bg-white/5'
@@ -925,7 +1287,7 @@ export const Navbar: React.FC = () => {
                               initial={{ height: 0, opacity: 0 }}
                               animate={{ height: 'auto', opacity: 1 }}
                               exit={{ height: 0, opacity: 0 }}
-                              className="border-t border-white/10 bg-[#060a15] p-2 grid grid-cols-2 gap-1.5"
+                              className="border-t border-white/10 bg-[#060a15] p-2.5 grid grid-cols-2 gap-2"
                             >
                               {group.items?.map((item) => {
                                 const active = isItemActive(item);
@@ -938,7 +1300,7 @@ export const Navbar: React.FC = () => {
                                       handleMenuClick(item);
                                       setMobileMenuOpen(false);
                                     }}
-                                    className={`flex items-center gap-2 p-2 rounded-xl text-xs font-bold transition-all border cursor-pointer text-left ${
+                                    className={`flex items-center gap-2 px-3 py-2.5 min-h-[44px] rounded-xl text-xs font-bold transition-all border cursor-pointer text-left ${
                                       active
                                         ? 'bg-indigo-600/30 text-white border-indigo-400/60 shadow-sm'
                                         : 'bg-white/5 text-white/80 hover:text-white border-white/5 hover:bg-white/10'

@@ -336,7 +336,7 @@ export const Dashboard: React.FC = () => {
       </div>
       )}
 
-      <div className="w-full max-w-[1720px] mx-auto px-2 sm:px-4 lg:px-6 mt-4">
+      <div className="w-full max-w-[1720px] mx-auto px-3.5 sm:px-4 lg:px-6 mt-5 md:mt-4">
         <AnimatePresence mode="wait">
           {showBlog ? (
             <motion.div
