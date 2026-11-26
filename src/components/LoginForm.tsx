@@ -57,12 +57,27 @@ export const LoginForm: React.FC = () => {
     setError(null);
     const cleanInput = username.toLowerCase().trim();
     try {
-      // Check if signing into the private Admin Analytics account via standard Sign-In form
-      if (cleanInput === 'admin' || cleanInput === 'rlashmi086@gmail.com' || cleanInput === 'rlashmi086') {
+      // Check if signing into the server-configured Admin username via standard Sign-In form (never intercept real email login)
+      let matchedServerAdmin = false;
+      if (!cleanInput.includes('@')) {
+        let configuredAdminUser = 'admin';
+        try {
+          const statusResp = await fetch('/api/admin/status');
+          if (statusResp.ok) {
+            const statusData = await statusResp.json();
+            if (statusData?.adminUsername) {
+              configuredAdminUser = String(statusData.adminUsername).toLowerCase();
+            }
+          }
+        } catch {}
+        matchedServerAdmin = cleanInput === configuredAdminUser;
+      }
+
+      if (matchedServerAdmin) {
         const adminResp = await fetch('/api/admin/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ username: 'admin', password }),
+          body: JSON.stringify({ username: cleanInput, password }),
         });
         const adminData = await adminResp.json();
         if (!adminResp.ok) {
@@ -75,7 +90,16 @@ export const LoginForm: React.FC = () => {
           await signInWithEmailAndPassword(auth, adminEmail, password);
         } catch (fbErr: any) {
           if (fbErr.code === 'auth/user-not-found' || fbErr.code === 'auth/invalid-credential') {
-            await createUserWithEmailAndPassword(auth, adminEmail, password);
+            try {
+              await createUserWithEmailAndPassword(auth, adminEmail, password);
+            } catch (createErr: any) {
+              if (createErr.code === 'auth/email-already-in-use') {
+                setError('Please open /admin and click "Continue with Google (Admin Email)" or "Forgot password?" to sign in and update your password.');
+                setLoading(false);
+                return;
+              }
+              throw createErr;
+            }
           } else {
             throw fbErr;
           }

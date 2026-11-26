@@ -15,6 +15,12 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signOut,
+  GoogleAuthProvider,
+  signInWithPopup,
+  sendPasswordResetEmail,
+  updatePassword,
+  linkWithCredential,
+  EmailAuthProvider,
 } from 'firebase/auth';
 import { auth, db, handleFirestoreError } from '../lib/firebase';
 import { useAuth } from '../lib/AuthContext';
@@ -50,6 +56,10 @@ import {
   PlusCircle,
   Eye,
   EyeOff,
+  KeyRound,
+  Mail,
+  Send,
+  X,
 } from 'lucide-react';
 
 export const AdminDashboard: React.FC = () => {
@@ -75,6 +85,23 @@ export const AdminDashboard: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [authLoading, setAuthLoading] = useState(false);
   const [authError, setAuthError] = useState<string | null>(null);
+  const [googleLoading, setGoogleLoading] = useState(false);
+
+  // Forgot Admin Password Recovery Panel State
+  const [showForgotAdminPanel, setShowForgotAdminPanel] = useState(false);
+  const [adminResetEmail, setAdminResetEmail] = useState('');
+  const [adminResetLoading, setAdminResetLoading] = useState(false);
+  const [adminResetSuccess, setAdminResetSuccess] = useState<string | null>(null);
+  const [adminResetError, setAdminResetError] = useState<string | null>(null);
+
+  // Update Admin Password Modal State (when signed in)
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [newAdminPass, setNewAdminPass] = useState('');
+  const [confirmAdminPass, setConfirmAdminPass] = useState('');
+  const [showNewAdminPass, setShowNewAdminPass] = useState(false);
+  const [updatePassLoading, setUpdatePassLoading] = useState(false);
+  const [updatePassError, setUpdatePassError] = useState<string | null>(null);
+  const [updatePassSuccess, setUpdatePassSuccess] = useState<string | null>(null);
 
   // Analytics Records State
   const [records, setRecords] = useState<SiteAnalyticsRecord[]>([]);
@@ -200,7 +227,7 @@ export const AdminDashboard: React.FC = () => {
     const cleanPass = passwordInput;
 
     if (!cleanUser || !cleanPass) {
-      setAuthError('Please enter your admin username and password.');
+      setAuthError('Please enter your admin username or email, and password.');
       return;
     }
     if (cleanPass.length < 6) {
@@ -210,6 +237,32 @@ export const AdminDashboard: React.FC = () => {
 
     setAuthLoading(true);
     try {
+      // Direct Firebase Email Auth sign-in when signing in with the authorized Admin Email ID
+      if (cleanUser.includes('@')) {
+        if (cleanUser !== 'rlashmi086@gmail.com') {
+          setAuthError('Access denied: this email address is not authorized for Admin Analytics.');
+          setAuthLoading(false);
+          return;
+        }
+        try {
+          await signInWithEmailAndPassword(auth, cleanUser, cleanPass);
+          setAdminUsername('Admin');
+          setPasswordInput('');
+          setSessionActive(true);
+          playSound('glass');
+          triggerToast('Welcome to the Private Admin Analytics Dashboard.', 'success', 'Admin Authenticated');
+        } catch (emailErr: any) {
+          if (emailErr.code === 'auth/invalid-credential' || emailErr.code === 'auth/wrong-password' || emailErr.code === 'auth/user-not-found') {
+            setAuthError('Incorrect email password or no password set yet. Use "Forgot Admin Password" or "Continue with Google" below.');
+          } else {
+            setAuthError(emailErr?.message || 'Admin email sign-in failed.');
+          }
+        } finally {
+          setAuthLoading(false);
+        }
+        return;
+      }
+
       // 1. Verify or claim admin credentials on the server
       const endpoint = serverStatus && !serverStatus.isConfigured ? '/api/admin/claim' : '/api/admin/login';
       const resp = await fetch(endpoint, {
@@ -238,7 +291,7 @@ export const AdminDashboard: React.FC = () => {
           } catch (createErr: any) {
             if (createErr.code === 'auth/email-already-in-use') {
               setAuthError(
-                'Incorrect admin password for existing admin account. Please enter the password you registered for admin.'
+                'Incorrect admin password, or server password was updated separately. Use "Continue with Google (Admin)" or "Forgot Admin Password" below to recover access and set a new password.'
               );
               setAuthLoading(false);
               return;
@@ -269,6 +322,122 @@ export const AdminDashboard: React.FC = () => {
       setAuthError(err?.message || 'Admin sign-in failed. Please try again.');
     } finally {
       setAuthLoading(false);
+    }
+  };
+
+  const handleGoogleAdminSignIn = async () => {
+    setAuthError(null);
+    setGoogleLoading(true);
+    playSound('click');
+    try {
+      const provider = new GoogleAuthProvider();
+      provider.setCustomParameters({ prompt: 'select_account' });
+      const cred = await signInWithPopup(auth, provider);
+      const email = (cred.user.email || '').toLowerCase();
+      if (email !== 'rlashmi086@gmail.com') {
+        await signOut(auth);
+        setAuthError('Access denied: this Google account is not authorized for Admin Analytics.');
+        setGoogleLoading(false);
+        return;
+      }
+      setAdminUsername(cred.user.displayName || 'Admin');
+      setSessionActive(true);
+      playSound('glass');
+      triggerToast('Signed in via Google Admin Account. You can now update your password in the header.', 'success', 'Admin Verified');
+    } catch (err: any) {
+      if (err?.code === 'auth/popup-closed-by-user') {
+        setAuthError(null);
+      } else {
+        setAuthError(err?.message || 'Google sign-in failed. Please try resetting via your admin email below.');
+      }
+    } finally {
+      setGoogleLoading(false);
+    }
+  };
+
+  const handleSendAdminResetEmail = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setAdminResetError(null);
+    setAdminResetSuccess(null);
+    const cleanEmail = adminResetEmail.trim().toLowerCase();
+    if (!cleanEmail || !cleanEmail.includes('@')) {
+      setAdminResetError('Please enter your authorized Admin Email ID.');
+      return;
+    }
+    if (cleanEmail !== 'rlashmi086@gmail.com') {
+      setAdminResetError('This email is not registered as an Admin account. Please enter the owner Admin Email ID.');
+      return;
+    }
+    setAdminResetLoading(true);
+    try {
+      await sendPasswordResetEmail(auth, cleanEmail);
+      setAdminResetSuccess(
+        `Password reset email requested for ${cleanEmail}. Check your inbox & spam folder. Note: if you previously signed in only with Google or an admin username, click "Continue with Google (Admin)" above and then use "Update Password" inside the dashboard to set a fresh password.`
+      );
+      playSound('glass');
+    } catch (err: any) {
+      if (err?.code === 'auth/user-not-found') {
+        setAdminResetError(
+          'No email/password account exists for that email yet. Click "Continue with Google (Admin)" above to sign in immediately and set your new password.'
+        );
+      } else {
+        setAdminResetError(err?.message || 'Could not send reset email.');
+      }
+    } finally {
+      setAdminResetLoading(false);
+    }
+  };
+
+  const handleUpdateAdminPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setUpdatePassError(null);
+    setUpdatePassSuccess(null);
+
+    if (newAdminPass.length < 6) {
+      setUpdatePassError('New password must be at least 6 characters.');
+      return;
+    }
+    if (newAdminPass !== confirmAdminPass) {
+      setUpdatePassError('Passwords do not match.');
+      return;
+    }
+    if (!auth?.currentUser || !auth.currentUser.email) {
+      setUpdatePassError('Active admin session not found. Please sign in again.');
+      return;
+    }
+
+    setUpdatePassLoading(true);
+    try {
+      const hasPasswordProvider = auth.currentUser.providerData.some(
+        (p: any) => p.providerId === 'password'
+      );
+
+      if (hasPasswordProvider) {
+        await updatePassword(auth.currentUser, newAdminPass);
+      } else {
+        const credential = EmailAuthProvider.credential(auth.currentUser.email, newAdminPass);
+        await linkWithCredential(auth.currentUser, credential);
+      }
+
+      setNewAdminPass('');
+      setConfirmAdminPass('');
+      setUpdatePassSuccess(
+        auth.currentUser.email === 'rlashmi086@gmail.com'
+          ? `Password updated! You can now sign in with ${auth.currentUser.email} and your new password anytime. (If you also log in with username "${serverStatus?.adminUsername || 'admin'}", update ADMIN_PASSWORD in Settings -> Secrets / Vercel Env Vars to match.)`
+          : 'Password updated in Firebase Auth! Remember to also update ADMIN_PASSWORD in Settings -> Secrets / Vercel Env Vars so both match.'
+      );
+      playSound('glass');
+      triggerToast('Admin password updated successfully.', 'success', 'Password Saved');
+    } catch (err: any) {
+      if (err?.code === 'auth/requires-recent-login') {
+        setUpdatePassError(
+          'For security, Firebase requires a fresh sign-in before changing passwords. Please click "Admin Sign Out", sign back in (e.g. via Google), and try updating again—or send yourself a reset email.'
+        );
+      } else {
+        setUpdatePassError(err?.message || 'Could not update password. Try signing in again.');
+      }
+    } finally {
+      setUpdatePassLoading(false);
     }
   };
 
@@ -728,7 +897,7 @@ export const AdminDashboard: React.FC = () => {
           <form onSubmit={handleAdminSignIn} className="space-y-4">
             <div className="space-y-1.5">
               <label className="text-xs font-bold text-slate-300 uppercase tracking-wider block">
-                Admin Username
+                Admin Username or Email
               </label>
               <div className="relative">
                 <User className="w-4 h-4 text-cyan-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -737,16 +906,30 @@ export const AdminDashboard: React.FC = () => {
                   required
                   value={usernameInput}
                   onChange={(e) => setUsernameInput(e.target.value)}
-                  placeholder="admin"
+                  placeholder="Admin username or email"
                   className="w-full pl-10 pr-4 py-3 rounded-xl bg-white/5 border border-white/15 text-white text-sm font-semibold focus:outline-none focus:border-cyan-400 transition-colors"
                 />
               </div>
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-300 uppercase tracking-wider block">
-                Admin Password
-              </label>
+              <div className="flex items-center justify-between gap-2">
+                <label className="text-xs font-bold text-slate-300 uppercase tracking-wider block">
+                  Admin Password
+                </label>
+                <button
+                  type="button"
+                  onClick={() => {
+                    playSound('click');
+                    setShowForgotAdminPanel(!showForgotAdminPanel);
+                    setAdminResetError(null);
+                    setAdminResetSuccess(null);
+                  }}
+                  className="text-xs font-bold text-cyan-300 hover:text-cyan-200 underline underline-offset-2 cursor-pointer"
+                >
+                  {showForgotAdminPanel ? 'Hide recovery' : 'Forgot password?'}
+                </button>
+              </div>
               <div className="relative">
                 <Lock className="w-4 h-4 text-cyan-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                 <input
@@ -795,6 +978,82 @@ export const AdminDashboard: React.FC = () => {
               </span>
             </button>
           </form>
+
+          {/* Direct Google Recovery / Owner Sign-In */}
+          <div className="space-y-2.5 pt-1">
+            <div className="relative flex items-center justify-center">
+              <span className="border-t border-white/10 w-full" />
+              <span className="bg-[#080e1d] px-2.5 text-[10px] font-bold uppercase tracking-widest text-slate-400 whitespace-nowrap">
+                Or Owner Verification
+              </span>
+              <span className="border-t border-white/10 w-full" />
+            </div>
+
+            <button
+              type="button"
+              onClick={handleGoogleAdminSignIn}
+              disabled={googleLoading}
+              className="w-full py-3 px-4 rounded-xl bg-white/8 hover:bg-white/15 border border-white/20 text-white text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer disabled:opacity-50"
+            >
+              {googleLoading ? (
+                <Loader2 className="w-4 h-4 animate-spin text-cyan-300" />
+              ) : (
+                <ShieldCheck className="w-4 h-4 text-emerald-400" />
+              )}
+              <span>Continue with Google (Admin Email)</span>
+            </button>
+          </div>
+
+          {/* Inline Forgot Password Panel */}
+          {showForgotAdminPanel && (
+            <div className="rounded-2xl border border-cyan-400/25 bg-cyan-950/20 p-4 space-y-3">
+              <div className="flex items-start justify-between gap-2">
+                <div>
+                  <h2 className="text-sm font-black text-cyan-200">Forgot Admin Password?</h2>
+                  <p className="text-[11px] text-slate-300 mt-0.5 leading-relaxed">
+                    Enter your authorized Admin Email ID to receive a Firebase password reset link, or click <strong className="text-white">Continue with Google</strong> above to sign in immediately and set a new password.
+                  </p>
+                </div>
+              </div>
+
+              <form onSubmit={handleSendAdminResetEmail} className="space-y-2.5">
+                <div className="relative">
+                  <Mail className="w-4 h-4 text-cyan-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="email"
+                    required
+                    value={adminResetEmail}
+                    onChange={(e) => setAdminResetEmail(e.target.value)}
+                    placeholder="Enter authorized Admin Email ID"
+                    className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-black/30 border border-white/15 text-white text-xs sm:text-sm focus:outline-none focus:border-cyan-400"
+                  />
+                </div>
+
+                {adminResetError && (
+                  <div className="p-2.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs flex items-start gap-2">
+                    <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+                    <span>{adminResetError}</span>
+                  </div>
+                )}
+
+                {adminResetSuccess && (
+                  <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-200 text-xs flex items-start gap-2 leading-relaxed">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                    <span>{adminResetSuccess}</span>
+                  </div>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={adminResetLoading}
+                  className="w-full py-2.5 px-4 rounded-xl bg-cyan-500/25 hover:bg-cyan-500/35 border border-cyan-400/40 text-cyan-100 font-bold text-xs flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                >
+                  {adminResetLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Send className="w-3.5 h-3.5" />}
+                  <span>Send Reset Link to Admin Email</span>
+                </button>
+              </form>
+            </div>
+          )}
 
           <div className="pt-3 border-t border-white/10 flex items-center justify-between text-[11px] text-slate-400">
             <span>Visibility: Strictly Private (Admin Only)</span>
@@ -883,6 +1142,20 @@ export const AdminDashboard: React.FC = () => {
 
           <button
             type="button"
+            onClick={() => {
+              playSound('click');
+              setUpdatePassError(null);
+              setUpdatePassSuccess(null);
+              setShowPasswordModal(true);
+            }}
+            className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-400/35 text-amber-200 text-xs font-bold transition-all cursor-pointer"
+          >
+            <KeyRound className="w-3.5 h-3.5 text-amber-300" />
+            <span>Update Password</span>
+          </button>
+
+          <button
+            type="button"
             onClick={handleAdminSignOut}
             className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 border border-rose-400/30 text-rose-300 text-xs font-bold transition-all cursor-pointer"
           >
@@ -891,6 +1164,107 @@ export const AdminDashboard: React.FC = () => {
           </button>
         </div>
       </div>
+
+      {showPasswordModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md"
+          onClick={() => setShowPasswordModal(false)}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="w-full max-w-md rounded-3xl border border-cyan-400/35 bg-[#0b1326] p-6 shadow-2xl space-y-4"
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="w-9 h-9 rounded-xl bg-amber-500/15 border border-amber-400/30 flex items-center justify-center">
+                  <KeyRound className="w-4 h-4 text-amber-300" />
+                </div>
+                <div>
+                  <h2 className="text-base font-black text-white">Update Admin Password</h2>
+                  <p className="text-[11px] text-slate-400">{user?.email}</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowPasswordModal(false)}
+                className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white cursor-pointer"
+                aria-label="Close update password dialog"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <form onSubmit={handleUpdateAdminPassword} className="space-y-3">
+              <div className="space-y-1">
+                <label className="text-[11px] font-bold uppercase tracking-wider text-slate-300 block">
+                  New Password
+                </label>
+                <div className="relative">
+                  <Lock className="w-4 h-4 text-cyan-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                  <input
+                    type={showNewAdminPass ? 'text' : 'password'}
+                    required
+                    minLength={6}
+                    value={newAdminPass}
+                    onChange={(e) => setNewAdminPass(e.target.value)}
+                    placeholder="At least 6 characters"
+                    className="w-full pl-10 pr-11 py-2.5 rounded-xl bg-white/5 border border-white/15 text-white text-sm focus:outline-none focus:border-cyan-400"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowNewAdminPass(!showNewAdminPass)}
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white cursor-pointer"
+                    aria-label="Toggle new password visibility"
+                  >
+                    {showNewAdminPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-[11px] font-bold uppercase tracking-wider text-slate-300 block">
+                  Confirm New Password
+                </label>
+                <div className="relative">
+                  <Lock className="w-4 h-4 text-cyan-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                  <input
+                    type={showNewAdminPass ? 'text' : 'password'}
+                    required
+                    minLength={6}
+                    value={confirmAdminPass}
+                    onChange={(e) => setConfirmAdminPass(e.target.value)}
+                    placeholder="Re-enter new password"
+                    className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/5 border border-white/15 text-white text-sm focus:outline-none focus:border-cyan-400"
+                  />
+                </div>
+              </div>
+
+              {updatePassError && (
+                <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs flex items-start gap-2">
+                  <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+                  <span>{updatePassError}</span>
+                </div>
+              )}
+
+              {updatePassSuccess && (
+                <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-200 text-xs flex items-start gap-2 leading-relaxed">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                  <span>{updatePassSuccess}</span>
+                </div>
+              )}
+
+              <button
+                type="submit"
+                disabled={updatePassLoading}
+                className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white font-black text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+              >
+                {updatePassLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <KeyRound className="w-4 h-4" />}
+                <span>Save New Password</span>
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
 
       {firestoreError && (
         <div className="p-4 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-200 text-xs sm:text-sm flex items-center gap-3">
