@@ -426,7 +426,45 @@ const MapCameraController: React.FC<MapCameraControllerProps> = ({
   const prevTargetKeyRef = useRef<string>('');
   const prevCityKeyRef = useRef<string>('');
 
-  // Smoothly pan to selected hospital only when selection changes, leaving user free to drag & zoom
+  // Fit bounds across all searched/fetched hospitals whenever the search query, city, or GPS result set changes
+  useEffect(() => {
+    if (!map) return;
+    const currentCityKey = `${cityKey}_${gpsLocation ? `${gpsLocation.lat},${gpsLocation.lng}` : 'city'}`;
+    if (prevCityKeyRef.current !== currentCityKey && hospitals.length > 0) {
+      prevCityKeyRef.current = currentCityKey;
+      if (selectedHospital?.location?.lat && selectedHospital?.location?.lng) {
+        prevTargetKeyRef.current = `${selectedHospital.placeId}_${selectedHospital.location.lat}_${selectedHospital.location.lng}`;
+      }
+      const g = (window as any).google;
+      if (hospitals.length > 1 && g?.maps?.LatLngBounds) {
+        const bounds = new g.maps.LatLngBounds();
+        let count = 0;
+        hospitals.forEach((h) => {
+          if (h.location?.lat && h.location?.lng) {
+            bounds.extend(h.location);
+            count++;
+          }
+        });
+        if (gpsLocation?.lat && gpsLocation?.lng) {
+          bounds.extend(gpsLocation);
+          count++;
+        }
+        if (count > 0) {
+          map.fitBounds(bounds, 48);
+          return;
+        }
+      }
+      if (gpsLocation?.lat && gpsLocation?.lng) {
+        map.panTo(gpsLocation);
+        map.setZoom(13);
+      } else if (hospitals[0]?.location?.lat) {
+        map.panTo(hospitals[0].location);
+        map.setZoom(13);
+      }
+    }
+  }, [map, cityKey, gpsLocation, hospitals, selectedHospital]);
+
+  // Smoothly pan to selected hospital only when user selects a different card/pin after results load
   useEffect(() => {
     if (!map) return;
     if (selectedHospital?.location?.lat && selectedHospital?.location?.lng) {
@@ -437,22 +475,6 @@ const MapCameraController: React.FC<MapCameraControllerProps> = ({
       }
     }
   }, [map, selectedHospital]);
-
-  // Recenter when city or GPS mode changes
-  useEffect(() => {
-    if (!map) return;
-    const currentCityKey = `${cityKey}_${gpsLocation ? `${gpsLocation.lat},${gpsLocation.lng}` : 'city'}`;
-    if (prevCityKeyRef.current !== currentCityKey && hospitals.length > 0) {
-      prevCityKeyRef.current = currentCityKey;
-      if (gpsLocation?.lat && gpsLocation?.lng) {
-        map.panTo(gpsLocation);
-        map.setZoom(13);
-      } else if (hospitals[0]?.location?.lat) {
-        map.panTo(hospitals[0].location);
-        map.setZoom(12);
-      }
-    }
-  }, [map, cityKey, gpsLocation, hospitals]);
 
   const handleZoomIn = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -1045,6 +1067,10 @@ export const ExpertPediatricianSection: React.FC = () => {
   const [selectedMapHospital, setSelectedMapHospital] = useState<GoogleListedHospital | null>(null);
   const [mapAnchorHospital, setMapAnchorHospital] = useState<GoogleListedHospital | null>(null);
   const [expandedReviewsPlaceId, setExpandedReviewsPlaceId] = useState<string | null>(null);
+  const [executedSearchQuery, setExecutedSearchQuery] = useState<string>('');
+  const [searchLabel, setSearchLabel] = useState<string>('');
+  const [searchRevision, setSearchRevision] = useState<number>(0);
+  const suppressNextCityEffectRef = useRef<boolean>(false);
 
   // Build unique clinic label for any Google-listed hospital (appends locality when multiple branches share a name)
   const getHospitalClinicLabel = React.useCallback((hosp: GoogleListedHospital, allList: GoogleListedHospital[]) => {
@@ -1105,12 +1131,23 @@ export const ExpertPediatricianSection: React.FC = () => {
     }
   }, [mapsApiKey]);
 
-  // Fetch real Google-listed pediatric hospitals for the selected Indian city & state
+  // Fetch real Google-listed pediatric hospitals for the selected Indian city, state, PIN/ZIP code, or hospital name
   const fetchCityGoogleHospitals = async (city: string, state: string, customQuery?: string) => {
+    const trimmedQuery = (customQuery || '').trim();
     setLoadingGoogleHospitals(true);
     setHospitalsError(null);
     setMapAnchorHospital(null);
-    setShowAllHospitals(false);
+    setExecutedSearchQuery(trimmedQuery);
+    setSearchLabel('');
+    // Show ALL hospitals on search so PIN/ZIP/hospital queries list every match cleanly
+    setShowAllHospitals(Boolean(trimmedQuery));
+    if (trimmedQuery) {
+      setGpsLocation(null);
+      if (lookupMode !== 'city') {
+        suppressNextCityEffectRef.current = true;
+        setLookupMode('city');
+      }
+    }
     try {
       const res = await fetch('/api/hospitals/search', {
         method: 'POST',
@@ -1118,7 +1155,7 @@ export const ExpertPediatricianSection: React.FC = () => {
         body: JSON.stringify({
           city: cleanCityName(city),
           state,
-          query: customQuery || '',
+          query: trimmedQuery,
         }),
       });
 
@@ -1139,6 +1176,8 @@ export const ExpertPediatricianSection: React.FC = () => {
 
       if (Array.isArray(data?.hospitals)) {
         setGoogleHospitals(data.hospitals);
+        setSearchLabel(typeof data?.searchLabel === 'string' ? data.searchLabel : trimmedQuery);
+        setSearchRevision((prev) => prev + 1);
         if (data.hospitals.length > 0) {
           const first = data.hospitals[0];
           const firstLabel = getHospitalClinicLabel(first, data.hospitals);
@@ -1147,9 +1186,12 @@ export const ExpertPediatricianSection: React.FC = () => {
           setSelectedHospitalAddress(first.address || '');
           const docs = getDoctorsForClinic(firstLabel, city, state, first.address || '');
           if (docs.length > 0) setSelectedDoc(docs[0]);
+        } else {
+          setSelectedMapHospital(null);
         }
       } else {
         setGoogleHospitals([]);
+        setSelectedMapHospital(null);
       }
     } catch (err) {
       console.error('Error fetching Google Places hospitals:', err);
@@ -1164,6 +1206,8 @@ export const ExpertPediatricianSection: React.FC = () => {
     setLoadingGoogleHospitals(true);
     setHospitalsError(null);
     setMapAnchorHospital(null);
+    setExecutedSearchQuery('');
+    setSearchLabel('');
     setShowAllHospitals(false);
     try {
       const res = await fetch('/api/hospitals/nearby', {
@@ -1193,6 +1237,7 @@ export const ExpertPediatricianSection: React.FC = () => {
 
       if (Array.isArray(data?.hospitals)) {
         setGoogleHospitals(data.hospitals);
+        setSearchRevision((prev) => prev + 1);
         if (data.hospitals.length > 0) {
           const first = data.hospitals[0];
           const firstLabel = getHospitalClinicLabel(first, data.hospitals);
@@ -1215,6 +1260,10 @@ export const ExpertPediatricianSection: React.FC = () => {
 
   // Trigger live city lookup whenever selectedCity or selectedState changes (when in city mode)
   useEffect(() => {
+    if (suppressNextCityEffectRef.current) {
+      suppressNextCityEffectRef.current = false;
+      return;
+    }
     if (lookupMode === 'city') {
       fetchCityGoogleHospitals(selectedCity, selectedState);
     }
@@ -1251,17 +1300,24 @@ export const ExpertPediatricianSection: React.FC = () => {
     );
   };
 
-  // Filter real Google-listed hospitals by search box
+  // Display all Google-returned hospitals on executed searches (like PIN 560100 or hospital names),
+  // while keeping local keyword filtering available when typing city-mode keywords prior to API search.
   const filteredGoogleHospitals = React.useMemo(() => {
-    if (!hospitalSearch.trim()) return googleHospitals;
-    const q = hospitalSearch.toLowerCase();
+    const q = hospitalSearch.trim().toLowerCase();
+    if (!q) return googleHospitals;
+    if (executedSearchQuery && q === executedSearchQuery.toLowerCase()) {
+      return googleHospitals;
+    }
+    if (/^\d{2,6}$/.test(q)) {
+      return googleHospitals;
+    }
     return googleHospitals.filter(
       (h) =>
         h.name.toLowerCase().includes(q) ||
         h.address.toLowerCase().includes(q) ||
         (h.reviewSummary && h.reviewSummary.toLowerCase().includes(q))
     );
-  }, [googleHospitals, hospitalSearch]);
+  }, [googleHospitals, hospitalSearch, executedSearchQuery]);
 
   // Reorder hospitals when user clicks any hospital pin on the Google Map (putting clicked hospital #1 + nearest neighbors)
   const orderedGoogleHospitals = React.useMemo(() => {
@@ -1905,7 +1961,9 @@ export const ExpertPediatricianSection: React.FC = () => {
                       Step 01 · Location &amp; Hospital Discovery
                     </div>
                     <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-                      {lookupMode === 'gps' && gpsLocation
+                      {executedSearchQuery
+                        ? `Google-Listed Hospitals near "${searchLabel || executedSearchQuery}"`
+                        : lookupMode === 'gps' && gpsLocation
                         ? `Google-Listed Pediatric Hospitals Near Your GPS (${gpsRadiusKm} km)`
                         : `Google-Listed Pediatric Hospitals in ${cleanCityName(selectedCity)}`}
                     </h2>
@@ -1948,6 +2006,9 @@ export const ExpertPediatricianSection: React.FC = () => {
                         value={selectedState}
                         onChange={(e) => { 
                           const newState = e.target.value;
+                          setHospitalSearch('');
+                          setExecutedSearchQuery('');
+                          setSearchLabel('');
                           setSelectedState(newState); 
                           localStorage.setItem('user_indian_state', newState);
                           const citiesForNewState = [...(INDIAN_CITIES_BY_STATE[newState] || [])].sort((a, b) => a.localeCompare(b));
@@ -1987,6 +2048,9 @@ export const ExpertPediatricianSection: React.FC = () => {
                         value={selectedCity}
                         onChange={(e) => { 
                           const newCity = e.target.value;
+                          setHospitalSearch('');
+                          setExecutedSearchQuery('');
+                          setSearchLabel('');
                           setSelectedCity(newCity); 
                           setChatCity(newCity);
                           localStorage.setItem('user_city', newCity);
@@ -2017,7 +2081,7 @@ export const ExpertPediatricianSection: React.FC = () => {
                       <Search className="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
                       <input
                         type="text"
-                        placeholder="Filter or search Google Places for a specific hospital or locality..."
+                        placeholder="Search hospital name, locality, or PIN/ZIP code (e.g. 560100)..."
                         value={hospitalSearch}
                         onChange={(e) => setHospitalSearch(e.target.value)}
                         onKeyDown={(e) => {
@@ -2032,8 +2096,12 @@ export const ExpertPediatricianSection: React.FC = () => {
                         <button
                           onClick={() => {
                             setHospitalSearch('');
+                            setExecutedSearchQuery('');
+                            setSearchLabel('');
                             if (lookupMode === 'city') {
                               fetchCityGoogleHospitals(selectedCity, selectedState);
+                            } else if (gpsLocation) {
+                              fetchNearbyGpsHospitals(gpsLocation.lat, gpsLocation.lng, gpsRadiusKm);
                             }
                           }}
                           className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-xs cursor-pointer"
@@ -2046,9 +2114,9 @@ export const ExpertPediatricianSection: React.FC = () => {
                       type="button"
                       onClick={() => fetchCityGoogleHospitals(selectedCity, selectedState, hospitalSearch.trim())}
                       disabled={loadingGoogleHospitals}
-                      className="px-5 py-3 rounded-xl bg-[#16223a] hover:bg-[#1c2b49] border border-white/15 text-xs sm:text-sm font-bold text-white flex items-center justify-center gap-2 cursor-pointer shrink-0"
+                      className="px-5 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 border border-indigo-400/40 text-xs sm:text-sm font-bold text-white flex items-center justify-center gap-2 cursor-pointer shrink-0 shadow-lg shadow-indigo-600/20"
                     >
-                      {loadingGoogleHospitals ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4 text-indigo-400" />}
+                      {loadingGoogleHospitals ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4 text-white" />}
                       <span>Search Google Maps</span>
                     </button>
                   </div>
@@ -2138,9 +2206,9 @@ export const ExpertPediatricianSection: React.FC = () => {
                       >
                         <MapCameraController
                           selectedHospital={selectedMapHospital}
-                          gpsLocation={gpsLocation}
+                          gpsLocation={lookupMode === 'gps' ? gpsLocation : null}
                           hospitals={filteredGoogleHospitals}
-                          cityKey={`${selectedState}_${selectedCity}_${lookupMode}`}
+                          cityKey={`${selectedState}_${selectedCity}_${lookupMode}_${executedSearchQuery}_${searchRevision}`}
                         />
                         {gpsLocation && (
                           <AdvancedMarker position={gpsLocation} title="Your Live GPS Location">
@@ -2240,12 +2308,22 @@ export const ExpertPediatricianSection: React.FC = () => {
                     </div>
                   </div>
                 ) : displayedGoogleHospitals.length === 0 ? (
-                  <div className="p-12 rounded-3xl bg-white/[0.02] border border-white/10 text-center space-y-2">
+                  <div className="p-12 rounded-3xl bg-white/[0.02] border border-white/10 text-center space-y-3">
                     <Building2 className="w-10 h-10 text-slate-500 mx-auto" />
-                    <div className="text-base font-bold text-white">No Google-listed hospitals matched your filter</div>
+                    <div className="text-base font-bold text-white">No local list match for &ldquo;{hospitalSearch}&rdquo;</div>
                     <p className="text-sm text-slate-400">
-                      Try clearing the search box or clicking "Use My Live GPS Location" above.
+                      Click &ldquo;Search Google Maps&rdquo; to query Google Places directly for any hospital, locality, or PIN/ZIP code.
                     </p>
+                    {hospitalSearch.trim() && (
+                      <button
+                        type="button"
+                        onClick={() => fetchCityGoogleHospitals(selectedCity, selectedState, hospitalSearch.trim())}
+                        className="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs sm:text-sm font-bold cursor-pointer inline-flex items-center gap-2"
+                      >
+                        <Search className="w-4 h-4" />
+                        <span>Search Google Maps for &ldquo;{hospitalSearch.trim()}&rdquo;</span>
+                      </button>
+                    )}
                   </div>
                 ) : (
                   <div className="space-y-6">
@@ -2600,6 +2678,14 @@ export const ExpertPediatricianSection: React.FC = () => {
                   </div>
                 </div>
 
+                {/* Pilot Version Notice for Consultation Booking */}
+                <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-400/30 text-amber-200 text-xs sm:text-sm font-semibold flex items-start gap-3">
+                  <AlertCircle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+                  <span>
+                    <strong>Pilot Version Notice:</strong> This site is a pilot version and is not yet completely deployed to the market. Live clinic scheduling and hospital payment settlement are currently operating in preview mode.
+                  </span>
+                </div>
+
                 {successMessage && (
                   <div className="p-5 bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 rounded-2xl flex items-center gap-3">
                     <Check className="w-6 h-6 shrink-0 text-emerald-400" />
@@ -2748,6 +2834,13 @@ export const ExpertPediatricianSection: React.FC = () => {
                       </div>
                       <span className="text-xs sm:text-sm text-slate-300 font-semibold">
                         Showing {filteredLiveSessions.length} upcoming interactive sessions
+                      </span>
+                    </div>
+
+                    <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-400/30 text-amber-200 text-xs sm:text-sm font-semibold flex items-start gap-3">
+                      <AlertCircle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+                      <span>
+                        <strong>Pilot Version Notice:</strong> This site is a pilot version and is not yet completely deployed to the market. Live pediatric webinars and Q&amp;A streams shown here run in pilot preview mode.
                       </span>
                     </div>
 

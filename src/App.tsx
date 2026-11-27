@@ -34,6 +34,8 @@ import { AdminDashboard } from './components/AdminDashboard';
 import { Loader2, ArrowUp } from 'lucide-react';
 import { playSound } from './lib/sounds';
 import { trackUrlVisit, trackSessionDurationPing } from './lib/analyticsTracker';
+import { ensureFreshAIHistory } from './lib/aiHistory';
+import { ensureFreshRecipeHistory } from './lib/aiRecipeHistory';
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user, loading } = useAuth();
@@ -65,6 +67,8 @@ const AppContent: React.FC = () => {
   const [quotaExceeded, setQuotaExceeded] = React.useState(false);
 
   React.useEffect(() => {
+    ensureFreshAIHistory();
+    ensureFreshRecipeHistory();
     const handler = () => setQuotaExceeded(true);
     window.addEventListener('gmp-quota-exceeded', handler);
     return () => window.removeEventListener('gmp-quota-exceeded', handler);

@@ -111,6 +111,13 @@ export const CheckoutPage: React.FC = () => {
         </div>
       </div>
 
+      <div className="mb-6 p-4 rounded-2xl bg-amber-500/10 border border-amber-400/30 text-amber-200 text-xs sm:text-sm font-semibold flex items-start gap-3">
+        <AlertCircle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+        <span>
+          <strong>Pilot Version Notice:</strong> This site is a pilot version and is not yet completely deployed to the market. Plan checkout and payment selection currently run in preview mode with no real monetary charge.
+        </span>
+      </div>
+
       <AnimatePresence mode="wait">
         {!isSuccess ? (
           <motion.div

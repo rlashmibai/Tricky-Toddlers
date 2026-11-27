@@ -458,63 +458,14 @@ export const ProfilePage: React.FC = () => {
     printWindow.document.close();
   };
 
-  // 3. Delete My Data (Erases child records)
+  // 3. Delete My Data (Visibility-only: no action, no deletion, no message)
   const handleDeleteChildData = async () => {
-    playSound('glass');
-    if (!user || !db) return;
-    try {
-      const userRef = doc(db, 'users', user.uid);
-      await updateDoc(userRef, {
-        child1: null,
-        child2: null,
-        childName: '',
-        babyName: '',
-        babyBirthDate: '',
-        dietaryNotes: '',
-        updatedAt: serverTimestamp()
-      });
-      localStorage.removeItem('child_1_name');
-      localStorage.removeItem('child_1_dob');
-      localStorage.removeItem('child_1_blood');
-      localStorage.removeItem('child_1_dietary_notes');
-      localStorage.removeItem('child_2_name');
-      localStorage.removeItem('child_2_dob');
-      localStorage.removeItem('baby_name');
-      localStorage.removeItem('baby_birth_date');
-
-      setChild1Name('');
-      setChild1DOB('');
-      setChild2Name('');
-      setChild2DOB('');
-      setShowDeleteDataModal(false);
-      setSuccess("Child health and profile records permanently deleted from this device.");
-      setTimeout(() => setSuccess(null), 3500);
-    } catch (err: any) {
-      setError("Failed to delete child records: " + err.message);
-    }
+    return;
   };
 
-  // 4. Delete Meal Photos
+  // 4. Delete Meal Photos (Visibility-only: no action, no deletion, no message)
   const handleDeleteMealPhotos = () => {
-    playSound('pop');
-    let count = 0;
-    const keysToRemove: string[] = [];
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      if (key && (key.includes('photo') || key.includes('food_lens') || key.includes('meal_image') || key.includes('scan_cache'))) {
-        keysToRemove.push(key);
-      }
-    }
-    keysToRemove.forEach(k => {
-      localStorage.removeItem(k);
-      count++;
-    });
-    setDeletedPhotosMsg(`Cleaned up ${Math.max(count, 1)} stored meal scan photo(s) from local cache.`);
-    setSuccess(`Meal photos successfully deleted from your device storage.`);
-    setTimeout(() => {
-      setDeletedPhotosMsg(null);
-      setSuccess(null);
-    }, 4000);
+    return;
   };
 
   // 5. Data Retention Settings
@@ -538,30 +489,9 @@ export const ProfilePage: React.FC = () => {
     setTimeout(() => setSuccess(null), 3000);
   };
 
-  // 6. Complete Account Deletion
+  // 6. Complete Account Deletion (Visibility-only: no action, no deletion, no message)
   const handleDeleteAccount = async () => {
-    if (deleteAccountInput.trim().toUpperCase() !== 'DELETE') {
-      setError("Please type 'DELETE' exactly to confirm permanent account deletion.");
-      return;
-    }
-    playSound('glass');
-    setLoading(true);
-    try {
-      if (user && db) {
-        const userRef = doc(db, 'users', user.uid);
-        await updateDoc(userRef, {
-          accountStatus: 'DELETED',
-          isDeleted: true,
-          deletedAt: serverTimestamp()
-        });
-      }
-      localStorage.clear();
-      setShowDeleteAccountModal(false);
-      window.location.href = '/';
-    } catch (err: any) {
-      setError("Account deletion error: " + err.message);
-      setLoading(false);
-    }
+    return;
   };
 
   // 7. DPDP Act 2023 (India) Verifiable Parental Consent, Erasure Certificate & Grievance Officer Portal
@@ -1917,14 +1847,14 @@ export const ProfilePage: React.FC = () => {
                 <div className="flex items-center gap-2">
                   <button
                     type="button"
-                    onClick={() => setShowDeleteDataModal(true)}
+                    onClick={() => {}}
                     className="flex-1 py-2 px-3 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 border border-rose-500/40 text-rose-300 hover:text-white font-bold text-xs transition-all active:scale-95 cursor-pointer"
                   >
                     Clear Child Data
                   </button>
                   <button
                     type="button"
-                    onClick={() => setShowDeleteAccountModal(true)}
+                    onClick={() => {}}
                     className="flex-1 py-2 px-3 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-black text-xs transition-all active:scale-95 cursor-pointer shadow-md"
                   >
                     Delete Account

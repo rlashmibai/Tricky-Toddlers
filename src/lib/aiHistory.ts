@@ -44,222 +44,21 @@ export const CATEGORY_COLORS: Record<AISearchRecord['category'], { bg: string; t
   },
 };
 
-export const INITIAL_AI_SEARCH_HISTORY: AISearchRecord[] = [
-  {
-    id: 'ai-hist-1',
-    question: 'How to handle bedtime tantrums and screaming when lights go out?',
-    answer: `Parent, Bedtime guidance for Child 1:
+export const AI_HISTORY_RESET_FLAG = 'tt_ai_history_fresh_start_2026_11_27';
 
-Here is simple, caring guidance to help Child 1 fall asleep peacefully:
+export const INITIAL_AI_SEARCH_HISTORY: AISearchRecord[] = [];
 
-### 📋 Step-by-Step Action Plan (for Parent & Child 1)
-1. **Start Relaxing 30 Minutes Early**: Give Child 1 a warm wash or foot wash. Dim the bedroom lights and turn off all TVs and mobile phones.
-2. **Offer Gentle Comfort (Thappi)**: Sit right beside Child 1. Give gentle, slow back-patting (thappi) or sing a soft lullaby (lori) to help them settle down.
-3. **Offer Two Simple Bedtime Choices**: Let Child 1 pick their pajamas or story: *"Would you like your blue pajamas or your animal pajamas tonight?"*
-4. **Give One Bedtime Pass**: Give Child 1 one small token for one last sip of water or one extra hug. Once used, it is quiet resting time.
-
-### 🗣️ Calming Parent Scripts (What to Say to Child 1)
-- *"It is quiet resting time now, Child 1. Mamma is right here beside you."*
-- *"All your toys are fast asleep, Child 1. Let us close our eyes and have sweet dreams."*
-- *"You are completely safe in your cozy bed, Child 1. Mamma loves you very much."*
-- *"Would you like the elephant story or the moon story tonight, Child 1?"*
-
-### ⚠️ Common Mistakes to Avoid
-- Avoid turning on cartoon videos or phone screens near bedtime.
-- Avoid arguing or raising your voice; speak in a soft, sleepy whisper.
-
-### 🌐 Trusted Health Guidelines
-- [Indian Academy of Pediatrics (IAP) - Child Sleep Guidelines](https://iapindia.org)
-- [ICMR - National Institute of Nutrition (NIN)](https://www.nin.res.in)`,
-    date: '18 Sep 2026',
-    time: '08:45 PM',
-    month: 'September 2026',
-    category: 'Bedtime & Sleep',
-    tags: ['Bedtime', 'Sleep Routine', 'Tantrums', 'Lullaby']
-  },
-  {
-    id: 'ai-hist-2',
-    question: 'My 18-month-old refuses to eat vegetables and spits out lentils. What should I do?',
-    answer: `Parent, here is practical, stress-free mealtime guidance for Child 1:
-
-### 📋 Step-by-Step Action Plan (for Parent & Child 1)
-1. **Never Force Bites**: Your job is to serve healthy food at regular meal times; Child 1 decides how much to eat. Forcing food makes toddlers resist more.
-2. **Always Keep One Liked Food on the Plate**: Along with dal or vegetables, always serve something Child 1 already loves (like curd rice, soft khichdi with ghee, or banana).
-3. **Eat Together as a Family**: Sit together without phones or TV. Seeing you enjoy dal and vegetables makes Child 1 curious to try.
-4. **Start with Tiny Portions**: Put just one spoonful of vegetable on the plate. A large bowl can feel overwhelming.
-
-### 🗣️ Calming Parent Scripts (What to Say to Child 1)
-- *"You do not have to finish everything, Child 1. You can just smell it or take one small taste."*
-- *"Look at this warm khichdi with ghee, Child 1. It tastes so yum!"*
-- *"Is your tummy happy and full, Child 1, or would you like one more bite?"*
-- *"Food stays on the table, Child 1. When we leave the table, eating is done until snack time."*
-
-### ⚠️ Common Mistakes to Avoid
-- Avoid playing YouTube videos or cartoons to trick Child 1 into opening their mouth.
-- Avoid bribing with biscuits or sweets (*"Eat your dal if you want sweet"*).
-
-### 🌐 Trusted Health Guidelines
-- [Indian Academy of Pediatrics (IAP) - Infant & Young Child Feeding](https://iapindia.org)
-- [ICMR - National Institute of Nutrition (NIN)](https://www.nin.res.in)`,
-    date: '15 Sep 2026',
-    time: '12:30 PM',
-    month: 'September 2026',
-    category: 'Nutrition & Feeding',
-    tags: ['Picky Eating', 'Vegetables', 'Appetite', 'Khichdi']
-  },
-  {
-    id: 'ai-hist-3',
-    question: 'Why does my toddler hit and bite when angry or frustrated?',
-    answer: `Parent, here is loving, gentle guidance to stop hitting and handle big feelings with Child 1:
-
-### 📋 Step-by-Step Action Plan (for Parent & Child 1)
-1. **Stay Calm and Gentle**: Take a slow breath before speaking. When you stay calm, Child 1 feels secure and settles down much faster.
-2. **Hold Hands Firmly and Lovingly**: If Child 1 tries to hit or bite, gently hold their hands and say in a soft, firm voice: *"I will keep us safe, Child 1. Hands are not for hitting."*
-3. **Give a Safe Way to Let Feelings Out**: Tell Child 1: *"If your body feels mad, you can stomp your feet on the floor, squeeze a soft pillow, or blow big breaths like a lion."*
-4. **Stay Close (No Lonely Time-Outs)**: Sit near Child 1 and offer an open hug or gentle back patting (thappi) as soon as they are ready.
-
-### 🗣️ Calming Parent Scripts (What to Say to Child 1)
-- *"You are feeling very upset right now, Child 1. Mamma is right here with you."*
-- *"My hands are gentle, and your hands are gentle, Child 1. We use hands for hugging."*
-- *"It is okay to feel angry, Child 1, but it is not okay to hit or bite."*
-- *"Whenever you are ready for a warm cuddle, Child 1, my arms are wide open."*
-
-### ⚠️ Common Mistakes to Avoid
-- Avoid shouting, lecturing, or slapping back to teach a lesson.
-- Avoid locking Child 1 alone in a room when they are crying or upset.
-
-### 🌐 Trusted Health Guidelines
-- [Indian Academy of Pediatrics (IAP) - Positive Parenting](https://iapindia.org)
-- [FSSAI - Eat Right India Child Care Standards](https://fssai.gov.in)`,
-    date: '03 Sep 2026',
-    time: '04:15 PM',
-    month: 'September 2026',
-    category: 'Tantrums & Behavior',
-    tags: ['Hitting', 'Biting', 'Gentle Hands', 'Big Feelings']
-  },
-  {
-    id: 'ai-hist-4',
-    question: 'How do I know if my 2-year-old is ready for potty training?',
-    answer: `Parent, here is simple, gentle guidance to start potty training with Child 1:
-
-### 📋 Step-by-Step Action Plan (for Parent & Child 1)
-1. **Look for Ready Signs**: Notice if Child 1 stays dry for 2 hours, tells you when their diaper is wet, or hides behind a chair to poop.
-2. **Keep a Child Potty in the Bathroom**: Keep a small potty chair on the floor where Child 1's feet rest flat and comfortable.
-3. **Invite to Sit for 3 Minutes After Meals**: Ask Child 1 to sit for just a few minutes after breakfast or dinner, when the tummy naturally wants to empty.
-4. **Switch to Soft Cotton Underpants at Home**: Letting Child 1 wear cotton pants helps them feel when they are wet. Keep stools soft with plenty of water and papaya.
-
-### 🗣️ Calming Parent Scripts (What to Say to Child 1)
-- *"Accidents are totally okay while learning, Child 1. Pee goes in the potty. Let us put on clean dry pants."*
-- *"It is potty time before we play with your blocks, Child 1. Would you like to sit on your potty?"*
-- *"You did a great job trying, Child 1! Even if no pee came, you sat so nicely."*
-- *"Your potty is right here whenever you need it, Child 1. Mamma is here to help."*
-
-### ⚠️ Common Mistakes to Avoid
-- Avoid scolding, shaming, or getting upset when accidents happen.
-- Avoid forcing Child 1 to sit on the potty for more than 5 minutes.
-
-### 🌐 Trusted Health Guidelines
-- [Indian Academy of Pediatrics (IAP) - Child Health](https://iapindia.org)
-- [ICMR - National Institute of Nutrition (NIN)](https://www.nin.res.in)`,
-    date: '24 Aug 2026',
-    time: '10:00 AM',
-    month: 'August 2026',
-    category: 'Potty Training',
-    tags: ['Potty Training', 'Readiness', 'Cotton Pants', 'Gentle Routine']
-  },
-  {
-    id: 'ai-hist-5',
-    question: 'My child says "NO" to every single question and instruction. Is this normal?',
-    answer: `Parent, here is practical, loving guidance for when Child 1 says "NO" to everything:
-
-### 📋 Step-by-Step Action Plan (for Parent & Child 1)
-1. **Understand It Is Healthy**: Saying "No" means Child 1 is learning to be an independent little person. It is not defiance or bad behavior.
-2. **Stop Asking Yes/No Questions**: Instead of asking *"Do you want to wear shoes?"*, offer two easy choices: *"It is time to go out. Would you like the red shoes or the blue shoes?"*
-3. **Use "First... Then..."**: Keep requests simple: *"First we put the blocks in the basket, then we have our sweet papaya snack."*
-4. **Make It a Fun Game**: Toddlers love games: *"Can you tiptoe like a little mouse to wash your hands?"*
-
-### 🗣️ Calming Parent Scripts (What to Say to Child 1)
-- *"I hear your big 'NO', Child 1! You really want to choose, and that is okay."*
-- *"It is time to wash hands, Child 1. Would you like to jump like a frog or walk like a bear to the sink?"*
-- *"Mamma will put one shoe on, and you put the other shoe on, Child 1."*
-- *"You are growing into such a capable big helper, Child 1."*
-
-### ⚠️ Common Mistakes to Avoid
-- Avoid getting drawn into endless arguments with a toddler.
-- Avoid giving in to unsafe demands just to stop a protest; stay calm, firm, and loving.
-
-### 🌐 Trusted Health Guidelines
-- [Indian Academy of Pediatrics (IAP) - Positive Parenting](https://iapindia.org)
-- [FSSAI - Eat Right India Nurturing Care](https://fssai.gov.in)`,
-    date: '12 Aug 2026',
-    time: '03:20 PM',
-    month: 'August 2026',
-    category: 'Tantrums & Behavior',
-    tags: ['Toddler No', 'Choices', 'Cooperation', 'Loving Boundaries']
-  },
-  {
-    id: 'ai-hist-6',
-    question: 'Speech milestones at 18 months: how many words should my toddler say?',
-    answer: `Parent, here is simple, encouraging guidance to help Child 1 learn new words:
-
-### 📋 Step-by-Step Action Plan (for Parent & Child 1)
-1. **Talk About Daily Activities Out Loud**: Describe what you are doing in your mother tongue and English: *"Mamma is cutting the ripe yellow banana. Slice, slice, slice!"*
-2. **Use the Plus-One Rule**: When Child 1 says one word, repeat it and add one simple word:
-   - If Child 1 says: *"Car!"* -> You say: *"Yes, big red car!"*
-   - If Child 1 says: *"Ball!"* -> You say: *"Bounce the round ball!"*
-3. **Look Face-to-Face and Wait 5 Seconds**: Get down to Child 1's eye level so they can see your mouth moving. Give them plenty of time to reply before speaking.
-4. **Sing Simple Rhymes and Loris**: Sing nursery rhymes and traditional songs together with hand clapping and actions, keeping TVs and phones turned off.
-
-### 🗣️ Calming Parent Scripts (What to Say to Child 1)
-- *"You are pointing at the cup, Child 1. Are you asking for warm milk or water? Tell Mamma."*
-- *"I hear you, Child 1! You are telling Mamma all about the doggy outside."*
-- *"Look at the birds flying in the sky, Child 1! Up, up, up they go!"*
-- *"I love hearing your sweet voice, Child 1. You are learning so many new words."*
-
-### ⚠️ Common Mistakes to Avoid
-- Avoid letting TV screens or phone apps teach words; real human conversation works 10 times better.
-- Avoid interrupting or finishing Child 1's words too quickly.
-
-### 🌐 Trusted Health Guidelines
-- [Indian Academy of Pediatrics (IAP) - Child Speech & Development](https://iapindia.org)
-- [ICMR - National Institute of Nutrition (NIN)](https://www.nin.res.in)`,
-    date: '28 Jul 2026',
-    time: '11:10 AM',
-    month: 'July 2026',
-    category: 'Growth & Milestones',
-    tags: ['Speech', 'Talking Words', 'Loris & Rhymes', '18 Months']
-  },
-  {
-    id: 'ai-hist-7',
-    question: 'How to transition toddler from crib to toddler bed without constant escapes?',
-    answer: `Parent, here is simple, gentle guidance to help Child 1 sleep comfortably in a toddler bed:
-
-### 📋 Step-by-Step Action Plan (for Parent & Child 1)
-1. **Do Not Rush the Transition**: Keep Child 1 in a crib until age 2.5 or 3 unless they are climbing out, as younger toddlers naturally want to explore.
-2. **Child-Proof the Whole Bedroom**: Anchor heavy cupboards and bookshelves to the wall, cover electric sockets, and put a safety gate at the bedroom door if needed.
-3. **Use the Calm Silent Return**: When Child 1 gets out of bed, gently take their hand and lead them straight back to bed without scolding or turning on bright lights.
-4. **Keep the Familiar Cozy Bedding**: Use the same soft blanket, familiar pillow, and gentle back-patting (thappi) so Child 1 feels secure.
-
-### 🗣️ Calming Parent Scripts (What to Say to Child 1)
-- *"It is night-night time, Child 1. Back into your cozy bed."*
-- *"Your bed is warm and safe, Child 1. Mamma is right in the next room."*
-- *"Let us tuck your blanket in tight, Child 1. Close your eyes and rest."*
-- *"Tomorrow morning we will wake up and play blocks together, Child 1."*
-
-### ⚠️ Common Mistakes to Avoid
-- Avoid getting into long conversations or games when Child 1 gets out of bed.
-- Avoid scolding or locking the door; keep the atmosphere quiet, safe, and sleepy.
-
-### 🌐 Trusted Health Guidelines
-- [Indian Academy of Pediatrics (IAP) - Child Sleep](https://iapindia.org)
-- [ICMR - National Institute of Nutrition (NIN)](https://www.nin.res.in)`,
-    date: '16 Jul 2026',
-    time: '09:40 PM',
-    month: 'July 2026',
-    category: 'Bedtime & Sleep',
-    tags: ['Toddler Bed', 'Bedtime Routine', 'Cozy Sleep', 'Safety']
+export function ensureFreshAIHistory(): void {
+  if (typeof window === 'undefined') return;
+  try {
+    if (localStorage.getItem(AI_HISTORY_RESET_FLAG) !== '1') {
+      localStorage.setItem(AI_HISTORY_STORAGE_KEY, JSON.stringify([]));
+      localStorage.setItem(AI_HISTORY_RESET_FLAG, '1');
+    }
+  } catch {
+    // ignore storage errors
   }
-];
+}
 
 export function isPersonalInfoQuery(query: string): boolean {
   const q = (query || '').toLowerCase().trim();
@@ -466,6 +265,7 @@ export function detectCategory(question: string): AISearchRecord['category'] {
 
 export function getAISearchRecords(): AISearchRecord[] {
   try {
+    ensureFreshAIHistory();
     const isGuest = typeof window !== 'undefined' && localStorage.getItem('tt_auth_mode') !== 'account';
     const normalizeRecord = (r: AISearchRecord): AISearchRecord => {
       if (!isGuest || !r?.answer) return r;
@@ -476,16 +276,16 @@ export function getAISearchRecords(): AISearchRecord[] {
     };
     const raw = localStorage.getItem(AI_HISTORY_STORAGE_KEY);
     if (!raw) {
-      localStorage.setItem(AI_HISTORY_STORAGE_KEY, JSON.stringify(INITIAL_AI_SEARCH_HISTORY));
-      return INITIAL_AI_SEARCH_HISTORY;
+      localStorage.setItem(AI_HISTORY_STORAGE_KEY, JSON.stringify([]));
+      return [];
     }
     const parsed = JSON.parse(raw);
-    if (Array.isArray(parsed) && parsed.length > 0) {
+    if (Array.isArray(parsed)) {
       return parsed.map(normalizeRecord);
     }
-    return INITIAL_AI_SEARCH_HISTORY;
+    return [];
   } catch {
-    return INITIAL_AI_SEARCH_HISTORY;
+    return [];
   }
 }
 

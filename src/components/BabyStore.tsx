@@ -283,6 +283,14 @@ export const BabyStore: React.FC<BabyStoreProps> = ({ onGoHome, initialView = 'c
           </div>
         </div>
 
+        {/* Pilot Version Notice */}
+        <div className="mb-6 p-4 rounded-2xl bg-amber-500/10 border border-amber-400/30 text-amber-200 text-xs sm:text-sm font-semibold flex items-start gap-3">
+          <Info className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+          <span>
+            <strong>Pilot Version Notice:</strong> This site is a pilot version and is not yet completely deployed to the market. Baby Store orders and checkout flows run in preview mode with no real payment charged or physical delivery dispatched.
+          </span>
+        </div>
+
         {/* Order Confirmed Banner (if placed) */}
         {isCheckoutSuccess ? (
           <div className="bg-gradient-to-br from-emerald-950/80 to-slate-900/90 border border-emerald-400/40 rounded-3xl p-8 text-center max-w-2xl mx-auto shadow-2xl space-y-5 my-8">
@@ -949,6 +957,14 @@ export const BabyStore: React.FC<BabyStoreProps> = ({ onGoHome, initialView = 'c
             </button>
           </div>
         </div>
+      </div>
+
+      {/* Pilot Version Notice */}
+      <div className="mb-5 p-3.5 sm:p-4 rounded-2xl bg-amber-500/10 border border-amber-400/30 text-amber-200 text-xs sm:text-sm font-semibold flex items-start gap-3 text-left">
+        <Info className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+        <span>
+          <strong>Pilot Version Notice:</strong> This site is a pilot version and is not yet completely deployed to the market. Baby Store ordering and checkout currently run in preview mode.
+        </span>
       </div>
 
       {/* Age Group Selector Tabs: Dropdown on Mobile (< 768px), Grid Buttons on Laptop/Desktop (>= 768px) */}

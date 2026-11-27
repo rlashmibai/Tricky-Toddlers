@@ -30,7 +30,8 @@ import {
   Printer,
   QrCode,
   MapPin,
-  Edit3
+  Edit3,
+  Info
 } from 'lucide-react';
 import { playSound } from '../lib/sounds';
 import { triggerToast } from '../lib/ToastContext';
@@ -342,6 +343,14 @@ export const NutriBandCartPage: React.FC<NutriBandCartPageProps> = ({ onBack }) 
         <p className="text-sm sm:text-base text-white/60 max-w-3xl leading-relaxed text-balance">
           The all-stage sleep, rollover, and temperature tracking suite for ages 0-8. Complete all-in-one kit delivered directly to your doorstep with free express courier.
         </p>
+      </div>
+
+      {/* Pilot Version Notice */}
+      <div className="mb-6 p-4 rounded-2xl bg-amber-500/10 border border-amber-400/30 text-amber-200 text-xs sm:text-sm font-semibold flex items-start gap-3">
+        <Info className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+        <span>
+          <strong>Pilot Version Notice:</strong> This site is a pilot version and is not yet completely deployed to the market. NutriBand™ Starter Kit reservations and checkout steps run in preview mode with no real monetary charge or physical shipping.
+        </span>
       </div>
 
       {/* Main Order Placed Success View */}

@@ -72,7 +72,7 @@ export const FAQ_CATEGORIES: FaqCategoryMeta[] = [
     id: 'pediatric-care',
     label: 'Pediatric Care',
     shortLabel: 'Pediatric Care',
-    description: '1:1 Pediatric Consultations, Weekly Live Sessions, 24/7 Doctor Chat & Monthly Growth Reports.',
+    description: 'Consultations & Hospital Map Finder, Live Sessions Schedule, 24/7 AI Doctor Chat & Monthly Growth Reports.',
     icon: Stethoscope,
     badgeColor: 'bg-sky-500/20 text-sky-300 border-sky-400/35',
     borderColor: 'border-sky-500/30',
@@ -82,7 +82,7 @@ export const FAQ_CATEGORIES: FaqCategoryMeta[] = [
     id: 'ai-nutrichef',
     label: 'AI NutriChef & Meal Planning',
     shortLabel: 'AI NutriChef',
-    description: 'Custom kitchen ingredient cooker, 300+ age-matched Indian & global kids recipes, Sample Foods & Daily Dish Log.',
+    description: 'AI Recipe Maker, 300+ Nutritious Recipes (0–18 Years), Stage Guidelines & AI Recipe History.',
     icon: Utensils,
     badgeColor: 'bg-green-500/20 text-green-300 border-green-400/35',
     borderColor: 'border-green-500/30',
@@ -90,9 +90,9 @@ export const FAQ_CATEGORIES: FaqCategoryMeta[] = [
   },
   {
     id: 'foodlens-nutrition',
-    label: 'FoodLens AI Vision Scanner',
+    label: 'FoodLens AI, Sample Foods & Dish Log',
     shortLabel: 'FoodLens AI',
-    description: 'Instant camera plate scans, packaged label checks, macro/micronutrients, allergens & texture safety.',
+    description: 'Camera/upload food & label scans, Sample Foods catalog, HFSS & allergen checks, and Daily Dish Log.',
     icon: Camera,
     badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-400/35',
     borderColor: 'border-emerald-500/30',
@@ -102,7 +102,7 @@ export const FAQ_CATEGORIES: FaqCategoryMeta[] = [
     id: 'nutriband',
     label: 'NutriBand™ Smart Monitor',
     shortLabel: 'NutriBand™',
-    description: '3-in-1 wearable sensor pod, diaper clip, cotton & silicone straps, fever alerts & live telemetry.',
+    description: '3-in-1 wearable sensor pod, diaper clip, cotton & silicone straps, 6 live wellness signals & starter kit.',
     icon: Activity,
     badgeColor: 'bg-cyan-500/20 text-cyan-300 border-cyan-400/35',
     borderColor: 'border-cyan-500/30',
@@ -112,7 +112,7 @@ export const FAQ_CATEGORIES: FaqCategoryMeta[] = [
     id: 'community-connect',
     label: 'Community Help & Parent Connect',
     shortLabel: 'Community & Connect',
-    description: 'Moderated parenting discussion forums, topic-based advice, real-time parent chat rooms & safety rules.',
+    description: 'Topic-tagged parenting forum, AI Community Safety Moderation, Parent 1:1 Connect & Community Guidelines.',
     icon: Users,
     badgeColor: 'bg-teal-500/20 text-teal-300 border-teal-400/35',
     borderColor: 'border-teal-500/30',
@@ -122,7 +122,7 @@ export const FAQ_CATEGORIES: FaqCategoryMeta[] = [
     id: 'learning-community',
     label: 'Toddler Learning & Baby Store',
     shortLabel: 'Learning & Store',
-    description: 'Toddler Academy (9 interactive modules), Toddler Tales, Toddler TV & curated Baby Store.',
+    description: 'Toddler Academy (10 interactive modules), Toddler Tales articles, Toddler TV & curated Baby Store.',
     icon: Palette,
     badgeColor: 'bg-pink-500/20 text-pink-300 border-pink-400/35',
     borderColor: 'border-pink-500/30',
@@ -132,7 +132,7 @@ export const FAQ_CATEGORIES: FaqCategoryMeta[] = [
     id: 'plans-settings',
     label: 'Plans, Privacy & Profile Settings',
     shortLabel: 'Plans & Settings',
-    description: 'Free vs. Premium membership, Free Guest Access, dual-child profiles, regional languages & data privacy.',
+    description: 'Free vs. Premium plan, Free Guest Access, dual-child profiles, 12 languages, data export & DPDP privacy.',
     icon: Crown,
     badgeColor: 'bg-purple-500/20 text-purple-300 border-purple-400/35',
     borderColor: 'border-purple-500/30',
@@ -147,28 +147,28 @@ export const ALL_FAQ_ITEMS: FaqQuestionItem[] = [
     category: 'ai-trackers',
     question: 'How does the AI Parenting Assistant personalize advice for my child?',
     answer:
-      'The AI Parenting Assistant automatically reads your active child profile, including exact age in months, dietary restrictions, allergies, Indian state/city, and custom parent instructions, so every suggestion on sleep regressions, tantrums, teething, or weaning is tailored specifically to your child.'
+      'The AI Parenting Assistant automatically reads your active child profile (Child 1 or Child 2), including age/date of birth, saved Dietary Preferences, allergies, Indian state/city, selected language, and custom AI instructions. It also supports voice dictation, read-aloud audio playback, and automatically saves your questions in AI Chat History.'
   },
   {
     id: 'ai-2',
     category: 'ai-trackers',
     question: 'Is the AI Parenting Assistant a replacement for my pediatrician?',
     answer:
-      'No. The AI Parenting Assistant provides 24/7 educational guidance for everyday parenting questions and automatically flags urgent symptoms (such as choking, persistent high fever, breathing difficulty, or dehydration) with immediate step-by-step first-aid tips and emergency helpline numbers while directing you to consult your pediatrician immediately.'
+      'No. The AI Parenting Assistant provides 24/7 educational guidance for everyday parenting questions and automatically flags urgent red-flag symptoms (such as choking, severe fever, breathing difficulty, or seizures) with immediate first-aid steps and emergency helpline numbers while advising you to consult your pediatrician or visit an emergency hospital immediately.'
   },
   {
     id: 'ai-3',
     category: 'ai-trackers',
-    question: 'Are the Milestone Tracker and Vaccine Tracker aligned with Indian pediatric standards?',
+    question: 'How do the Milestone Tracker and Vaccine Tracker work?',
     answer:
-      'Yes. Our Milestone Tracker (motor, speech, cognitive, and social milestones) and Vaccine Tracker follow recognized Indian Academy of Pediatrics (IAP), ICMR-NIN, and FSSAI immunization and developmental schedules, with due-date reminders and downloadable PDF reports you can share with your doctor.'
+      'Both trackers are aligned with Indian Academy of Pediatrics (IAP), ICMR-NIN, and FSSAI guidelines. Milestone Tracker lets you filter by age stage and log motor, speech, cognitive, and social milestones along with an AI-generated Developmental Blueprint. Vaccine Tracker tracks scheduled, upcoming, completed, and custom vaccines with a printable / Save-as-PDF official Vaccine Card.'
   },
   {
     id: 'ai-4',
     category: 'ai-trackers',
-    question: 'How does the Routine Checker help with toddler sleep and mealtime schedules?',
+    question: 'How does the Routine Checker help with daily toddler schedules?',
     answer:
-      'Routine Checker provides age-calibrated daily schedules covering wake windows, nap durations, meal timings, sensory play, and bedtime wind-down rituals. Your checked items are saved automatically so you can track daily consistency.'
+      'Routine Checker provides age-calibrated Morning, Evening, and Bedtime checklists across infant-to-5-year brackets (0–6m, 6–12m, 1–2y, 2–3y, 3–4y, and 4–5y), automatically matched to your active child profile with your completed items saved for daily consistency.'
   },
 
   // ================= 2. PEDIATRIC CARE (ALL 4 FEATURES) =================
@@ -177,148 +177,155 @@ export const ALL_FAQ_ITEMS: FaqQuestionItem[] = [
     category: 'pediatric-care',
     question: 'What are the 4 features included inside the Pediatric Care section?',
     answer:
-      'The Pediatric Care hub brings together 4 dedicated clinical and developmental tools in one place: (1) 1:1 Pediatric Consultations for booking telehealth or in-clinic doctor visits, (2) Live Sessions for interactive weekly specialist webinars and Q&A, (3) Doctor Chat for 24/7 on-demand clinical chat guidance, and (4) Growth Reports for monthly Indian IAP, ICMR-NIN, and FSSAI developmental progress summaries and exportable PDFs.'
+      'The Pediatric Care hub brings together 4 tools in one place: (1) Consultations for locating nearby hospitals via Google Maps and scheduling Video or In-Clinic appointments (saved in Consultation History), (2) Live Sessions for browsing and registering for scheduled pediatric Q&A webinars, (3) 24/7 Doctor Chat for on-demand AI-assisted pediatric guidance (saved in Doctor Chat History), and (4) Growth Reports for printable / Save-as-PDF monthly summaries.'
   },
   {
     id: 'ped-2',
     category: 'pediatric-care',
-    question: 'How do 1:1 Pediatric Consultations and Consultation History work?',
+    question: 'How do Consultations and Google Maps hospital lookup work?',
     answer:
-      'In the Consultations tab, you can browse qualified pediatricians, child nutritionists, and lactation/sleep specialists by specialty, experience, and language, then book a 1:1 video tele-consultation or clinic appointment. All your scheduled bookings and doctor notes are saved in Consultation History for easy reference.'
+      'In Consultations, you can choose your Indian State and City, search by hospital name or PIN/ZIP code (e.g., 560100), or click "Use My Live GPS Location" to view real hospitals on Google Maps, browse listed clinic specialists, and review saved Consultation History. Note: This site is currently a Pilot Version (not yet completely deployed to the market), so appointment booking confirmation runs in preview mode.'
   },
   {
     id: 'ped-3',
     category: 'pediatric-care',
-    question: 'What happens in Live Sessions and weekly pediatric webinars?',
+    question: 'What happens in Live Sessions inside Pediatric Care?',
     answer:
-      'Live Sessions hosts interactive weekly webinars led by pediatricians and child development experts on high-priority topics like weaning, toddler speech delays, immunity building, and positive discipline. You can register for upcoming live sessions, submit questions for the live Q&A, or watch recorded replays anytime.'
+      'Live Sessions showcases upcoming interactive pediatric webinar topics covering Nutrition, Sleep Science, Acute Care & Immunity, and Development, with date/slot filters and Q&A submission. Since this site is a Pilot Version not yet completely deployed to the market, live broadcasts run in pilot preview mode.'
   },
   {
     id: 'ped-4',
     category: 'pediatric-care',
     question: 'How does 24/7 Doctor Chat work for everyday child health questions?',
     answer:
-      'Doctor Chat provides on-demand clinical chat support where you can describe non-emergency symptoms (such as mild rashes, teething discomfort, picky eating, or stool changes), get structured pediatric care advice and first-aid guidance, and revisit all past conversations inside Doctor Chat History.'
+      'Doctor Chat provides 24/7 AI-assisted pediatric guidance where you can describe non-emergency symptoms or everyday child health questions, receive structured care guidance in your preferred language, and revisit past threads anytime in Doctor Chat History.'
   },
   {
     id: 'ped-5',
     category: 'pediatric-care',
-    question: 'What is included in the Monthly Growth Reports feature?',
+    question: 'What is included in Monthly Growth Reports?',
     answer:
-      'Growth Reports compiles your child’s logged milestones, immunization records, sleep/routine adherence, and nutritional progress into a structured monthly developmental summary benchmarked against Indian IAP, ICMR-NIN, and FSSAI standards, complete with one-click PDF export to share with your pediatrician.'
+      'Growth Reports compiles your active child’s profile details, developmental progress, and nutrition summary aligned with Indian IAP, ICMR-NIN, and FSSAI guidelines, with one-click Print / Save-as-PDF generation so you can easily carry it to your pediatrician.'
   },
 
   // ================= 3. AI NUTRICHEF & MEAL PLANNING =================
   {
     id: 'chef-1',
     category: 'ai-nutrichef',
-    question: 'How does AI NutriChef create toddler recipes from ingredients I have at home?',
+    question: 'How does AI Recipe Maker create custom meals from ingredients at home?',
     answer:
-      'In AI NutriChef, simply enter the ingredients available in your kitchen and select your child’s age stage (from 6-month smooth purees to 9-month mash, finger foods, and toddler family meals). AI NutriChef generates step-by-step, low-salt, zero-refined-sugar recipes with exact prep time, texture tips, and key nutrients.'
+      'Inside AI NutriChef, open AI Recipe Maker to select Child 1, Child 2, or General mode, type or dictate pantry items with Speak Ingredients, pick meal type, cooking time, servings, dietary preferences, and kitchen equipment, and generate 3 tailored recipes complete with prep steps, texture tips, and safety notes.'
   },
   {
     id: 'chef-2',
     category: 'ai-nutrichef',
-    question: 'Does AI NutriChef respect regional Indian diets, Jain/Sattvic rules, and food allergies?',
+    question: 'What recipes and Dietary Preferences does AI NutriChef support?',
     answer:
-      'Yes! AI NutriChef offers 300+ age-matched Indian and global recipes and automatically filters every recipe against your saved Dietary Preferences, including Vegetarian, Non-Vegetarian, Eggitarian, Vegan, Jain (no root vegetables), Sattvic, and Halal, while strictly excluding any allergens saved in your child’s profile.'
+      'Nutritious Recipes inside AI NutriChef includes 300+ Indian & global dishes for ages 0 to 18 years (Veg, Eggitarian, and Non-Veg), filterable across 10 age stages, meal categories, keyword search, and Indian state/regional matching—with per-serving Calories, Protein, Iron, Calcium, Fiber, Carbs, Sodium, Salt, Sugar, and Fat. AI Recipe Maker also syncs with your saved Dietary Preferences, including Vegetarian, Vegan, Vegetarian + Eggs, Non-Vegetarian, Jain, Halal, Sattvic, foods to avoid, and allergies.'
   },
   {
     id: 'chef-3',
     category: 'ai-nutrichef',
-    question: 'How do Sample Foods and the Daily Dish Log work inside AI NutriChef?',
+    question: 'What is Stage Guidelines inside AI NutriChef?',
     answer:
-      'Sample Foods provides a visual, age-graded catalog of pediatrician-approved first foods, khichdis, ragi porridges, and finger foods with safe cutting and serving guides. Daily Dish Log lets you record what your baby ate for breakfast, lunch, snacks, and dinner along with their reaction (loved it, picky, or sensitivity) so you can track food acceptance over time.'
+      'Stage Guidelines breaks down recommended feeding consistencies, safe ingredient introductions, and age-appropriate meal progression across infant purees, soft mashes, toddler finger foods, and older children.'
   },
   {
     id: 'chef-4',
     category: 'ai-nutrichef',
-    question: 'Are my custom-generated AI NutriChef recipes saved automatically?',
+    question: 'Are my custom AI Recipe Maker meals saved automatically?',
     answer:
-      'Yes. Every custom recipe generated by AI NutriChef is saved in your AI Recipe History so you can revisit ingredients, cooking steps, and nutritional highlights without having to regenerate them.'
+      'Yes. Every 3-recipe batch generated by AI Recipe Maker is automatically saved to AI Recipe History, where you can reopen, search, filter, copy, print, or clear saved batches anytime.'
   },
 
-  // ================= 4. FOODLENS AI VISION SCANNER =================
+  // ================= 4. FOODLENS AI, SAMPLE FOODS & DISH LOG =================
   {
     id: 'food-1',
     category: 'foodlens-nutrition',
-    question: 'What is FoodLens AI and how does the camera plate scan work?',
+    question: 'What is FoodLens AI and how does plate and food label scanning work?',
     answer:
-      'FoodLens AI lets you snap or upload a photo of your child’s meal plate or packaged food label. Within seconds, it identifies the food items, estimates macro and micronutrients (iron, calcium, protein, vitamins), checks texture safety for choking hazards, and flags any ingredients that conflict with your child’s saved allergies or dietary rules.'
+      'FoodLens AI lets you capture a photo with your camera, upload a meal/package photo, or search foods via autocomplete. It analyzes the item for an overall Nutrition Score (out of 10), NOVA processing level, Calories, Protein, Fat, Sugar, Sodium, Fiber, baby-led weaning (BLW) & gum-pinch texture safety, and Indian ICMR-NIN / FSSAI alignment.'
   },
   {
     id: 'food-2',
     category: 'foodlens-nutrition',
-    question: 'Does FoodLens AI detect hidden chemicals, artificial colors, and allergens?',
+    question: 'Does FoodLens AI check allergens, additives, and HFSS levels?',
     answer:
-      'Yes! FoodLens AI cross-checks meals and packaged food labels against your saved Dietary Preferences, including Milk/Dairy, Lactose, Peanut, Tree Nuts, Egg, Wheat/Gluten, Soy, and parent rules like zero refined sugar, no artificial sweeteners, and no synthetic food coloring.'
+      'Yes. FoodLens AI flags High Fat, High Sugar, High Salt/Sodium (HFSS) warnings, hidden additives, and conflicts against your saved Dietary Preferences—including Milk/Dairy, Lactose, Egg, Peanut, Nuts, Wheat/Gluten, Soy, Sesame, Seafood, and rules like no chemicals, no artificial sweeteners, and no food coloring.'
   },
   {
     id: 'food-3',
     category: 'foodlens-nutrition',
-    question: 'How does FoodLens AI help prevent choking hazards for babies and toddlers?',
+    question: 'How do Sample Foods and Daily Dish Log work?',
     answer:
-      'When you scan a meal plate, FoodLens AI checks the visual cut and texture of foods (such as whole grapes, nuts, raw carrot coins, or large chunks) against your child’s exact age in months and provides immediate modification tips like quartering lengthwise, steaming until mashable, or grating.'
+      'Sample Foods provides a searchable catalog of Indian baby foods and popular Indian packaged brands with interactive Nutrition Score details, camera/photo inspection, and 1x/2x serving comparison. Daily Dish Log lets you record what your child ate across meals, track reactions, and monitor daily nutrition totals.'
+  },
+  {
+    id: 'food-4',
+    category: 'foodlens-nutrition',
+    question: 'Who has access to FoodLens AI and Sample Foods?',
+    answer:
+      'FoodLens AI and Sample Foods are open to preview in Free Guest Access and from the Home Landing Page. When you sign in with a personal account, FoodLens AI Pro and Sample Foods unlock with the Premium Plan.'
   },
 
   // ================= 5. NUTRIBAND SMART MONITOR =================
   {
     id: 'nb-1',
     category: 'nutriband',
-    question: 'What is the NutriBand™ 3-in-1 Pediatric Smart Monitor?',
+    question: 'What is the NutriBand™ 3-in-1 Smart Monitor and what ages does it fit?',
     answer:
-      'NutriBand™ is a lightweight, baby-safe wearable sensor pod that works in 3 interchangeable ways: clipped gently onto the diaper waist (0–12 months), worn on a breathable organic cotton velcro strap (6–24 months), or worn as a soft medical-grade silicone wristband (2–5 years).'
+      'NutriBand™ is a modular 12g wearable telemetry sensor pod with 3 included wearing styles that grow with your child: a snap-on Diaper Clip for 0–12 months, Breathable Organic Cotton Cloth Straps in 3 sizes (Small 1–3y, Medium 4–7y, Large 8–10y) for 1–10 years, and a Soft Silicone Smart Band for kids 10+ years.'
   },
   {
     id: 'nb-2',
     category: 'nutriband',
-    question: 'What health metrics does NutriBand™ track in real time?',
+    question: 'What 6 health and safety signals does NutriBand™ track?',
     answer:
-      'NutriBand™ continuously monitors skin temperature (with instant pediatric fever elevation alerts above 37.3°C), sleep duration and restlessness, active play hours, hydration/nutrition sync, and safe-zone movement telemetry.'
+      'The NutriBand™ dashboard previews 6 wellness signals: (1) Body Temperature (36.5°C–37.3°C normal baseline with >37.3°C fever elevation simulation), (2) Activity & Exertion, (3) Circadian Sleep & night wakings, (4) Movement & Impact (3-axis tumble, fall & stillness tracking), (5) Nutrient Absorption synced with FoodLens logs, and (6) GPS Safe Perimeter alerts. Because this site is a Pilot Version not yet completely deployed to the market, telemetry readings operate in preview simulation until physical hardware pairing is released.'
   },
   {
     id: 'nb-3',
     category: 'nutriband',
-    question: 'Is NutriBand™ included in the monthly Premium subscription?',
+    question: 'What comes in the Starter Kit, and is hardware included in the Premium subscription?',
     answer:
-      'The NutriBand™ live dashboard and fever alert telemetry are unlocked with the Premium Plan, while the physical NutriBand™ 3-in-1 Starter Kit (sensor pod, diaper clip, S/M/L breathable cotton straps, silicone strap, magnetic USB charger, and travel case) is a separate one-time hardware purchase of ₹1,499.'
+      'No—the physical hardware kit is listed separately at ₹1,499 (incl. taxes), while NutriBand™ dashboard features unlock with the Premium Plan (and are open to preview in Free Guest Access). Note: This site is currently a Pilot Version and not yet completely deployed to the market—hardware kit checkout runs in preview mode without real payment or physical dispatch. The planned kit includes the sensor pod, diaper clip, 3 cotton straps (Small, Medium, Large), silicone band, USB magnetic charger, and storage box.'
   },
   {
     id: 'nb-4',
     category: 'nutriband',
-    question: 'Is the NutriBand™ sensor safe for sensitive newborn and toddler skin?',
+    question: 'Is the NutriBand™ sensor designed for sensitive baby and toddler skin?',
     answer:
-      'Yes. The sensor pod is completely cordless, hypoallergenic, BPA/latex-free, water-resistant (IP67), and uses ultra-low-energy Bluetooth telemetry designed specifically for infants and toddlers.'
+      'Yes. The sensor pod uses a smooth rounded hypoallergenic medical polymer backplate, is IP67 splash- and drool-resistant, uses ultra-low-energy BLE 5.3 connectivity, and is completely BPA-, phthalate-, lead-, and latex-free.'
   },
 
   // ================= 6. COMMUNITY HELP & PARENT CONNECT =================
   {
     id: 'cc-1',
     category: 'community-connect',
-    question: 'How do Community Help and Parent Connect work together for parents?',
+    question: 'How do Community Help and Parent Connect work together?',
     answer:
-      'Community Help and Parent Connect give you two complementary ways to connect with fellow families: Community Help is a structured, topic-based parenting forum for posting detailed questions, sharing milestone stories, and reading threaded replies, while Parent Connect offers real-time live chat rooms for instant peer-to-peer conversations.'
+      'Community Help is a structured, topic-tagged parenting forum where you can ask questions, read replies, and share experiences, while Parent 1:1 Connect lets you search for fellow parents and message peer-to-peer directly.'
   },
   {
     id: 'cc-2',
     category: 'community-connect',
-    question: 'What topics can I discuss or filter in Community Help?',
+    question: 'What topics can I browse or filter in Community Help?',
     answer:
-      'In Community Help, you can browse, search, and post across topics such as Sleep & Bedtime, Picky Eating & Weaning, Tantrums & Behavior, Milestones & Speech, Postpartum & Self-Care, and Pediatric Tips, as well as like and reply to other parents’ posts.'
+      'Community Help supports filtering and AI Auto-Tagging across #Education, #Health, #Milestones, #Nutrition, #Playtime, #PottyTraining, #Routine, #Safety, #Sleep, and #Tantrums, along with keyword search.'
   },
   {
     id: 'cc-3',
     category: 'community-connect',
-    question: 'How are Community Help and Parent Connect kept safe, respectful, and private?',
+    question: 'How are Community Help and Parent Connect kept safe and private?',
     answer:
-      'Both modules enforce our Community Guidelines: no medical misinformation, no shaming or bullying, and strict protection of children’s private health records. Only your chosen parent display name is shown when you post or chat, and your private child trackers remain completely hidden from other users.'
+      'Posts and replies run through AI Community Safety Moderation to block personal contact details, unsafe medical advice, and inappropriate content in line with our Community Guidelines. Your children’s private trackers and dietary/health logs stay completely separate from public posts.'
   },
   {
     id: 'cc-4',
     category: 'community-connect',
-    question: 'Can I browse Community Help and Parent Connect using Free Guest Access?',
+    question: 'Can guests browse Community Help and Parent Connect?',
     answer:
-      'Yes! In Free Guest Access mode, you get free access to read existing parent discussions in Community Help and view live conversations in Parent Connect right away, and you can sign in or create a free account whenever you want to publish posts or send chat messages under your own profile.'
+      'Yes. You can read discussions in Community Help and explore Parent Connect right away, and creating a personal account via Create Account lets you publish posts, reply, and message under your own parent identity.'
   },
 
   // ================= 7. TODDLER LEARNING & BABY STORE =================
@@ -327,21 +334,21 @@ export const ALL_FAQ_ITEMS: FaqQuestionItem[] = [
     category: 'learning-community',
     question: 'What learning modules are included in Toddler Academy?',
     answer:
-      'Toddler Academy features 9 interactive, voice-guided learning modules: Numbers, Counting, First Words, Sentence Builder, Colors, Emotions, Body Parts, Shapes, and Animal Sounds, designed with calm visuals and gentle audio feedback so toddlers learn without overstimulation.'
+      'Toddler Academy includes 10 interactive, voice-guided modules (with a quick Voice On/Off toggle): Habit Timers (Potty, Brush, Wash & Bath), Numbers (Talking Math & Calculator), Counting, First Words (100 Essential Words), Sentence Builder (A–Z Phonics & Words), Colors, Emotions, Body Parts, Shapes, and Animal Sounds.'
   },
   {
     id: 'lc-2',
     category: 'learning-community',
-    question: 'How are Toddler Tales and Toddler TV different from regular video apps?',
+    question: 'What content is available in Toddler Tales and Toddler TV?',
     answer:
-      'Toddler Tales and Toddler TV are 100% ad-free, algorithm-free libraries of moral stories, bedtime tales, and educational rhymes curated by age stage so your child is never exposed to random or overstimulating videos.'
+      'Toddler Tales offers in-depth expert parenting articles across Mealtime, Development, Sleep Tips, Tantrums, Potty Training, and Learning with bookmarking and sharing. Toddler TV features a curated, ad-free library of parenting and toddler development videos organized by Sleep & Naps, Tantrums & Discipline, Speech & Language, Potty Training, Play & Activities, and Nutrition & Food with key takeaways.'
   },
   {
     id: 'lc-3',
     category: 'learning-community',
-    question: 'What can I find in the Baby Store?',
+    question: 'What products and delivery options are in the Baby Store?',
     answer:
-      'The Baby Store offers curated, pediatrician-recommended essentials across Clothing & Bedding, Diapering & Bathing, Feeding & Gear, and Toys & Play, filterable by your baby’s exact age stage with free delivery on orders above ₹499.'
+      'The Baby Store features essentials across Under ₹200, Clothing & Bedding, Diapering & Bathing, Feeding & Gear, and Toys & Play, filterable by age from 0–6 months up to 3+ years, with Cart management, Saved for Later, gift tagging, pincode check, and checkout selection. Because this site is currently a Pilot Version and not yet completely deployed to the market, Baby Store orders and checkout flows run in preview mode with no real payment or shipping fulfillment yet.'
   },
 
   // ================= 8. PLANS, PRIVACY & SETTINGS =================
@@ -350,35 +357,42 @@ export const ALL_FAQ_ITEMS: FaqQuestionItem[] = [
     category: 'plans-settings',
     question: 'What is included in the Free Plan vs. the Premium Plan?',
     answer:
-      'The Free Plan gives you permanent access to the AI Parenting Assistant, Milestone Tracker, Routine Checker, Vaccine Tracker, AI NutriChef, Toddler Academy, Toddler Tales, Toddler TV, Community Help, Parent Connect, and Baby Store. Upgrading to the Premium Plan (₹499/month or ₹5,090/year with 15% savings) unlocks unlimited FoodLens AI camera scans, allergen & chemical detection, and full NutriBand™ live vitals telemetry.'
+      'The Free Plan (₹0 forever) includes AI Parenting Assistant, Milestone Tracker, Routine Checker, Vaccine Tracker, AI NutriChef & AI Recipe Maker, Pediatric Care, Toddler Academy, Toddler Tales, Toddler TV, Community Help, Parent Connect, Baby Store, and 12 Indian languages. Upgrading to the Premium Plan (₹499/month or ₹4,999/year in pilot preview checkout) unlocks FoodLens AI Pro, Sample Foods, and NutriBand™ dashboard views for signed-in accounts.'
   },
   {
     id: 'ps-2',
     category: 'plans-settings',
-    question: 'Can I manage two children under one parent account?',
+    question: 'How does Free Guest Access differ from creating a personal account?',
     answer:
-      'Yes! Both Profile Settings and Dietary Preferences support up to two separate child profiles (Child 1 and Child 2). You can switch between Child 1 and Child 2 with a single click, or mark Child 2 as Not Applicable if you have one child.'
+      'Clicking Free Guest Access lets you explore all features immediately—including previews of FoodLens AI and NutriBand™—with a pre-configured sample family profile (Parent, Child 1 & Child 2) and no email required. Creating a personal account via Create Account saves your own private family profiles, tracks your personal Free or Premium plan, and enables email password recovery.'
   },
   {
     id: 'ps-3',
     category: 'plans-settings',
-    question: 'How does Free Guest Access work?',
+    question: 'Can I manage two children and customized Dietary Preferences under one account?',
     answer:
-      'Clicking "Free Guest Access" in the top navigation bar gives you free access to explore all the features immediately with a pre-configured sample profile (Parent, Child 1 & Child 2) without entering an email or password. You can create your own personal account whenever you are ready.'
+      'Yes. Both Profile Settings and Dietary Preferences support Child 1 and Child 2 with one-click switching (or marking Child 2 as Not Applicable). You can configure Diet Type, Religious/Cultural rules (Jain, Halal, Sattvic), Foods to Avoid, Allergies/Intolerances, Feeding Styles, and Custom AI Instructions per setup.'
   },
   {
     id: 'ps-4',
     category: 'plans-settings',
     question: 'Which Indian regional languages are supported?',
     answer:
-      'Tricky Toddlers supports English, Hindi (हिन्दी), Tamil (தமிழ்), Telugu (తెలుగు), Kannada (ಕನ್ನಡ), Malayalam (മലയാളം), Marathi (मराठी), Gujarati (ગુજરાતી), Bengali (বাংলা), Punjabi (ਪੰਜਾਬੀ), Assamese (অসমীয়া), and Odia (ଓଡ଼ିଆ), allowing families to read guidance and interact in the language they are most comfortable with.'
+      'Tricky Toddlers supports 12 languages: English, Hindi (हिन्दी), Tamil (தமிழ்), Telugu (తెలుగు), Kannada (ಕನ್ನಡ), Malayalam (മലയാളം), Marathi (मराठी), Gujarati (ગુજરાતી), Bengali (বাংলা), Punjabi (ਪੰਜਾਬੀ), Assamese (অসমীয়া), and Odia (ଓଡ଼ିଆ).'
   },
   {
     id: 'ps-5',
     category: 'plans-settings',
-    question: 'Who owns my child’s data, and can I export or delete it?',
+    question: 'Who owns my child’s data, and how can I export or manage privacy settings?',
     answer:
-      'You own 100% of your family’s data. Your child’s profile, health logs, and photos are protected by strict user-level security rules. From Profile Settings, you can export a complete JSON/PDF archive of your data or permanently delete your meal photos, health logs, or entire account at any time.'
+      'You retain full control of your family’s data. Inside Profile Settings, you can export your records as a JSON file, print/save a Pediatrician Health Summary PDF, set data retention preferences, and manage DPDP Act 2023 Verifiable Parental Consent & Grievance tickets. Note: This site is currently a Pilot Version (not yet completely deployed to the market), and self-service Delete controls are displayed in UI preview only without erasing account records.'
+  },
+  {
+    id: 'ps-6',
+    category: 'plans-settings',
+    question: 'How do I create an account, reset a forgotten password, or contact support?',
+    answer:
+      'Click Create Account and enter a valid Email ID, unique Username (3–25 characters), and Password. If you forget your password, click "Forgot Password?" on the Sign In screen to send a password reset link to your registered email address, or reach our team via Contact & Feedback or support@trickytoddlers.com.'
   }
 ];
 
@@ -463,6 +477,9 @@ export const FaqPage: React.FC = () => {
             <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight">
               Frequently Asked Questions
             </h1>
+            <div className="mt-3 p-3.5 rounded-2xl bg-amber-500/10 border border-amber-400/30 text-amber-200 text-xs sm:text-sm font-semibold">
+              Pilot Version Notice: This site is currently a pilot version and is not yet completely deployed to the market. Live commerce checkouts, hardware reservations, and simulated clinical previews operate in pilot mode.
+            </div>
           </div>
 
           {/* Quick Category Filter Bar */}
@@ -537,7 +554,7 @@ export const FaqPage: React.FC = () => {
           <HelpCircle className="w-10 h-10 text-indigo-400 mx-auto" />
           <h3 className="text-lg sm:text-xl font-bold text-white">No matching questions found</h3>
           <p className="text-xs sm:text-sm text-slate-400 max-w-md mx-auto">
-            Try clearing your search query or switching to &ldquo;All Categories&rdquo; to browse all 22 questions.
+            Switch to &ldquo;All Categories&rdquo; to browse all {ALL_FAQ_ITEMS.length} questions.
           </p>
           <button
             type="button"
