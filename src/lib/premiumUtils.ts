@@ -36,6 +36,8 @@ export const isSignedInAccount = (
     !uid ||
     uid === 'guest_instant_user' ||
     user?.isAnonymous === true ||
+    email === 'ash****@gmail.com' ||
+    email === 'guest_demo_session@securepass.internal' ||
     email === 'lashmi@gmail.com' ||
     email === 'lashm@gmail.com' ||
     email.startsWith('guest_') ||

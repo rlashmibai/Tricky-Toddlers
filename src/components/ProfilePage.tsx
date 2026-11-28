@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useAuth, normalizeGuestParentName, normalizeGuestChild1Name, normalizeGuestChild2Name } from '../lib/AuthContext';
+import { useAuth, normalizeGuestParentName, normalizeGuestChild1Name, normalizeGuestChild2Name, GUEST_DISPLAY_EMAIL, isLegacyGuestEmail } from '../lib/AuthContext';
 import { useLanguage, SUPPORTED_LANGUAGES } from '../lib/LanguageContext';
 import { db, auth, handleFirestoreError } from '../lib/firebase';
 import { doc, updateDoc, setDoc, serverTimestamp } from 'firebase/firestore';
@@ -132,11 +132,15 @@ export const ProfilePage: React.FC = () => {
   });
   const [contactEmail, setContactEmail] = useState<string>(() => {
     const saved = localStorage.getItem('user_contact_email');
-    if (saved && (!isAccountUser || saved !== 'lashm@gmail.com')) return saved;
-    if (profile?.contactEmail) return profile.contactEmail;
-    if (profile?.email && !profile.email.includes('securepass.internal')) return profile.email;
-    if (user?.email && !user.email.includes('securepass.internal')) return user.email;
-    return isAccountUser ? '' : 'lashm@gmail.com';
+    if (saved && !saved.includes('securepass.internal') && !isLegacyGuestEmail(saved)) return saved;
+    if (profile?.contactEmail && !isLegacyGuestEmail(profile.contactEmail) && !profile.contactEmail.includes('securepass.internal')) return profile.contactEmail;
+    if (profile?.email && !profile.email.includes('securepass.internal') && !isLegacyGuestEmail(profile.email)) return profile.email;
+    if (user?.email && !user.email.includes('securepass.internal') && !isLegacyGuestEmail(user.email)) return user.email;
+    if (!isAccountUser) {
+      localStorage.setItem('user_contact_email', GUEST_DISPLAY_EMAIL);
+      return GUEST_DISPLAY_EMAIL;
+    }
+    return '';
   });
 
   const [indianState, setIndianState] = useState<string>(() => {
@@ -654,7 +658,7 @@ export const ProfilePage: React.FC = () => {
         body: JSON.stringify({
           userId: user?.uid || 'guest_parent',
           parentName: `${firstName} ${lastName}`.trim() || 'Parent',
-          email: contactEmail || user?.email || 'lashm@gmail.com',
+          email: contactEmail || (user?.email && !user.email.includes('securepass.internal') && !isLegacyGuestEmail(user.email) ? user.email : '') || GUEST_DISPLAY_EMAIL,
           subject: grievanceSubject,
           description: grievanceDetails.trim()
         })
@@ -695,15 +699,15 @@ export const ProfilePage: React.FC = () => {
         setLastName('');
       }
 
-      if (profile.contactEmail) {
+      if (profile.contactEmail && (isAccountUser || (!isLegacyGuestEmail(profile.contactEmail) && !profile.contactEmail.includes('securepass.internal')))) {
         setContactEmail(profile.contactEmail);
         localStorage.setItem('user_contact_email', profile.contactEmail);
-      } else if (profile.email && !profile.email.includes('securepass.internal')) {
+      } else if (profile.email && !profile.email.includes('securepass.internal') && (isAccountUser || !isLegacyGuestEmail(profile.email))) {
         setContactEmail(profile.email);
         localStorage.setItem('user_contact_email', profile.email);
       } else if (!isAccountUser) {
-        setContactEmail('lashm@gmail.com');
-        localStorage.setItem('user_contact_email', 'lashm@gmail.com');
+        setContactEmail(GUEST_DISPLAY_EMAIL);
+        localStorage.setItem('user_contact_email', GUEST_DISPLAY_EMAIL);
       }
 
       if (profile.child1) {
@@ -1136,7 +1140,7 @@ export const ProfilePage: React.FC = () => {
                       setContactEmail(e.target.value);
                       localStorage.setItem('user_contact_email', e.target.value);
                     }}
-                    placeholder={isAccountUser ? "parent@example.com" : "lashm@gmail.com"}
+                    placeholder={isAccountUser ? "parent@example.com" : GUEST_DISPLAY_EMAIL}
                     className="w-full bg-[#16223a] border border-white/15 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-400 transition-all placeholder:text-white/20"
                   />
                   <p className="text-[11px] text-white/40 ml-1">

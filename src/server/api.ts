@@ -2605,13 +2605,166 @@ Include a brief reminder that for acute illnesses or persistent high fevers, an 
     }
   });
 
+  const calcDistanceKm = (a?: { lat: number; lng: number } | null, b?: { lat: number; lng: number } | null): number | null => {
+    if (!a || !b || !a.lat || !a.lng || !b.lat || !b.lng) return null;
+    const toRad = (deg: number) => (deg * Math.PI) / 180;
+    const R = 6371;
+    const dLat = toRad(b.lat - a.lat);
+    const dLng = toRad(b.lng - a.lng);
+    const sinLat = Math.sin(dLat / 2);
+    const sinLng = Math.sin(dLng / 2);
+    const h = sinLat * sinLat + Math.cos(toRad(a.lat)) * Math.cos(toRad(b.lat)) * sinLng * sinLng;
+    const km = 2 * R * Math.atan2(Math.sqrt(h), Math.sqrt(1 - h));
+    return Math.round(km * 10) / 10;
+  };
+
+  const computeSearchBounds = (
+    locations: Array<{ lat?: number; lng?: number } | null | undefined>,
+    fallbackViewport?: { low?: { latitude?: number; longitude?: number }; high?: { latitude?: number; longitude?: number } } | null
+  ) => {
+    const valid = locations.filter((l): l is { lat: number; lng: number } => Boolean(l && typeof l.lat === "number" && typeof l.lng === "number" && (l.lat !== 0 || l.lng !== 0)));
+    if (valid.length > 0) {
+      let north = -90;
+      let south = 90;
+      let east = -180;
+      let west = 180;
+      for (const p of valid) {
+        if (p.lat > north) north = p.lat;
+        if (p.lat < south) south = p.lat;
+        if (p.lng > east) east = p.lng;
+        if (p.lng < west) west = p.lng;
+      }
+      return { north, south, east, west };
+    }
+    if (
+      fallbackViewport?.low?.latitude != null &&
+      fallbackViewport?.low?.longitude != null &&
+      fallbackViewport?.high?.latitude != null &&
+      fallbackViewport?.high?.longitude != null
+    ) {
+      return {
+        south: fallbackViewport.low.latitude,
+        west: fallbackViewport.low.longitude,
+        north: fallbackViewport.high.latitude,
+        east: fallbackViewport.high.longitude,
+      };
+    }
+    return null;
+  };
+
+  // Resolve a geographic anchor via Geocoding REST API first, with automatic fallback to Places Text Search (New)
+  const resolveGeoLocation = async (
+    queryText: string,
+    apiKey: string,
+    options?: { postalCode?: string; regionCode?: string }
+  ): Promise<{
+    center: { lat: number; lng: number } | null;
+    formattedAddress: string;
+    viewport: any;
+    quotaExceeded?: boolean;
+  }> => {
+    try {
+      const geoUrl = new URL("https://maps.googleapis.com/maps/api/geocode/json");
+      if (options?.postalCode) {
+        const comp = options.regionCode
+          ? `postal_code:${options.postalCode}|country:${options.regionCode}`
+          : `postal_code:${options.postalCode}`;
+        geoUrl.searchParams.set("components", comp);
+        if (queryText && queryText !== options.postalCode) {
+          geoUrl.searchParams.set("address", queryText);
+        }
+      } else {
+        geoUrl.searchParams.set("address", queryText);
+      }
+      if (options?.regionCode) {
+        geoUrl.searchParams.set("region", options.regionCode.toLowerCase());
+      }
+      geoUrl.searchParams.set("key", apiKey);
+
+      const geoResp = await fetch(geoUrl.toString());
+      if (geoResp.status === 429) {
+        return { center: null, formattedAddress: "", viewport: null, quotaExceeded: true };
+      }
+      const geoData: any = await geoResp.json();
+      if (geoData?.status === "OVER_QUERY_LIMIT") {
+        return { center: null, formattedAddress: "", viewport: null, quotaExceeded: true };
+      }
+      const firstGeo = geoData?.results?.[0];
+      if (geoData?.status === "OK" && firstGeo?.geometry?.location) {
+        const vp = firstGeo.geometry.viewport;
+        return {
+          center: {
+            lat: Number(firstGeo.geometry.location.lat),
+            lng: Number(firstGeo.geometry.location.lng),
+          },
+          formattedAddress: firstGeo.formatted_address || queryText,
+          viewport: vp
+            ? {
+                low: { latitude: vp.southwest?.lat, longitude: vp.southwest?.lng },
+                high: { latitude: vp.northeast?.lat, longitude: vp.northeast?.lng },
+              }
+            : null,
+        };
+      }
+    } catch {
+      // Fall through cleanly to Places API location lookup
+    }
+
+    try {
+      const fallbackBody: any = {
+        textQuery: queryText,
+        pageSize: 1,
+      };
+      if (options?.regionCode) {
+        fallbackBody.regionCode = options.regionCode.toLowerCase();
+      }
+      const placeGeoResp = await fetch("https://places.googleapis.com/v1/places:searchText", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Goog-Api-Key": apiKey,
+          "X-Goog-Maps-Solution-ID": "gmp_mcp_codeassist_v1_aistudio",
+          "X-Goog-FieldMask": "places.id,places.displayName,places.formattedAddress,places.location,places.viewport",
+        },
+        body: JSON.stringify(fallbackBody),
+      });
+      if (placeGeoResp.status === 429) {
+        return { center: null, formattedAddress: "", viewport: null, quotaExceeded: true };
+      }
+      const placeGeoData: any = await placeGeoResp.json();
+      if (placeGeoData?.error?.status === "RESOURCE_EXHAUSTED") {
+        return { center: null, formattedAddress: "", viewport: null, quotaExceeded: true };
+      }
+      const geoPlace = placeGeoData?.places?.[0];
+      if (geoPlace?.location?.latitude != null && geoPlace?.location?.longitude != null) {
+        return {
+          center: {
+            lat: Number(geoPlace.location.latitude),
+            lng: Number(geoPlace.location.longitude),
+          },
+          formattedAddress: geoPlace.formattedAddress || geoPlace.displayName?.text || queryText,
+          viewport: geoPlace.viewport || null,
+        };
+      }
+    } catch {
+      // Ignore location resolution errors and let main query execute
+    }
+
+    return { center: null, formattedAddress: "", viewport: null };
+  };
+
   // Helper to format Google Places API (New) place item into real hospital record
-  const mapGooglePlaceToHospital = (p: any) => {
+  const mapGooglePlaceToHospital = (p: any, originCenter?: { lat: number; lng: number } | null) => {
     const displayName = p.displayName?.text || p.name || "";
     const formattedAddress = p.formattedAddress || "";
-    const googleMapsUri = p.googleMapsUri || p.googleMapsLinks?.placeUri || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(displayName + " " + formattedAddress)}&query_place_id=${p.id}`;
+    const googleMapsUri =
+      p.googleMapsUri ||
+      p.googleMapsLinks?.placeUri ||
+      `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(displayName + " " + formattedAddress)}&query_place_id=${p.id}`;
     const reviewsUri = p.googleMapsLinks?.reviewsUri || googleMapsUri;
-    const directionsUri = p.googleMapsLinks?.directionsUri || googleMapsUri;
+    const directionsUri =
+      p.googleMapsLinks?.directionsUri ||
+      `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(displayName + " " + formattedAddress)}&destination_place_id=${p.id}`;
     const reviews = Array.isArray(p.reviews)
       ? p.reviews.slice(0, 5).map((r: any) => ({
           authorName: r.authorAttribution?.displayName || "Google Maps Reviewer",
@@ -2623,23 +2776,34 @@ Include a brief reminder that for acute illnesses or persistent high fevers, an 
         }))
       : [];
 
+    const location = {
+      lat: Number(p.location?.latitude ?? 0),
+      lng: Number(p.location?.longitude ?? 0),
+    };
+
     return {
       placeId: p.id,
       name: displayName,
       address: formattedAddress,
-      location: {
-        lat: p.location?.latitude ?? 0,
-        lng: p.location?.longitude ?? 0,
-      },
+      location,
       rating: typeof p.rating === "number" ? p.rating : null,
       userRatingCount: typeof p.userRatingCount === "number" ? p.userRatingCount : 0,
       phone: p.nationalPhoneNumber || p.internationalPhoneNumber || "",
+      websiteUri: p.websiteUri || "",
+      primaryType: p.primaryType || "",
+      categoryLabel: p.primaryTypeDisplayName?.text || "",
+      businessStatus: p.businessStatus || "",
+      editorialSummary: p.editorialSummary?.text || "",
       googleMapsUri,
       reviewsUri,
       directionsUri,
       reviews,
       reviewSummary: p.reviewSummary?.text?.text || "",
-      openNow: p.regularOpeningHours?.openNow ?? null,
+      openNow: typeof p.regularOpeningHours?.openNow === "boolean" ? p.regularOpeningHours.openNow : null,
+      weekdayHours: Array.isArray(p.regularOpeningHours?.weekdayDescriptions)
+        ? p.regularOpeningHours.weekdayDescriptions
+        : [],
+      distanceKm: calcDistanceKm(originCenter, location),
     };
   };
 
@@ -2652,11 +2816,16 @@ Include a brief reminder that for acute illnesses or persistent high fevers, an 
     "places.userRatingCount",
     "places.nationalPhoneNumber",
     "places.internationalPhoneNumber",
+    "places.websiteUri",
+    "places.primaryType",
+    "places.primaryTypeDisplayName",
+    "places.businessStatus",
+    "places.editorialSummary",
     "places.googleMapsUri",
     "places.googleMapsLinks",
     "places.reviews",
     "places.reviewSummary",
-    "places.regularOpeningHours"
+    "places.regularOpeningHours",
   ].join(",");
 
   // Real Google Maps Places API (New): GPS Nearby Hospital Lookup (Zero Cooked-Up Data)
@@ -2674,87 +2843,101 @@ Include a brief reminder that for acute illnesses or persistent high fevers, an 
       return res.status(503).json({ error: "Google Maps API key not configured." });
     }
 
+    const clampedRadius = Math.min(Math.max(Number(radiusMeters) || 10000, 1000), 50000);
+    const originCenter = { lat: latitude, lng: longitude };
+    const placesHeaders = {
+      "Content-Type": "application/json",
+      "X-Goog-Api-Key": apiKey,
+      "X-Goog-Maps-Solution-ID": "gmp_mcp_codeassist_v1_aistudio",
+      "X-Goog-FieldMask": PLACES_FIELD_MASK,
+    };
+
     try {
-      // Use Text Search biased around the user's exact GPS coordinates so pediatric & children's hospitals rank highest,
-      // falling back to Nearby Search with includedTypes: ['hospital'] if needed.
-      const textResp = await fetch("https://places.googleapis.com/v1/places:searchText", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Goog-Api-Key": apiKey,
-          "X-Goog-Maps-Solution-ID": "gmp_mcp_codeassist_v1_aistudio",
-          "X-Goog-FieldMask": PLACES_FIELD_MASK,
-        },
-        body: JSON.stringify({
-          textQuery: "Pediatric Hospital Children Hospital Maternity Hospital",
-          maxResultCount: 15,
-          locationBias: {
-            circle: {
-              center: { latitude, longitude },
-              radius: Math.min(Math.max(Number(radiusMeters) || 10000, 1000), 50000),
+      const [textResp, nearbyResp] = await Promise.all([
+        fetch("https://places.googleapis.com/v1/places:searchText", {
+          method: "POST",
+          headers: placesHeaders,
+          body: JSON.stringify({
+            textQuery: "Pediatric Hospital Children Hospital Maternity Hospital",
+            pageSize: 15,
+            locationBias: {
+              circle: {
+                center: { latitude, longitude },
+                radius: clampedRadius,
+              },
             },
-          },
+          }),
         }),
-      });
-
-      if (textResp.status === 429) {
-        return res.status(429).json({ error: "RESOURCE_EXHAUSTED", status: "RESOURCE_EXHAUSTED" });
-      }
-
-      const textData: any = await textResp.json();
-      if (textData?.error?.status === "RESOURCE_EXHAUSTED") {
-        return res.status(429).json({ error: "RESOURCE_EXHAUSTED", status: "RESOURCE_EXHAUSTED" });
-      }
-
-      if (Array.isArray(textData?.places) && textData.places.length > 0) {
-        const hospitals = textData.places.map(mapGooglePlaceToHospital);
-        return res.json({ hospitals, source: "google_places_api_live" });
-      }
-
-      // Secondary call: strict searchNearby with includedTypes: ['hospital']
-      const nearbyResp = await fetch("https://places.googleapis.com/v1/places:searchNearby", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Goog-Api-Key": apiKey,
-          "X-Goog-Maps-Solution-ID": "gmp_mcp_codeassist_v1_aistudio",
-          "X-Goog-FieldMask": PLACES_FIELD_MASK,
-        },
-        body: JSON.stringify({
-          includedTypes: ["hospital"],
-          maxResultCount: 15,
-          locationRestriction: {
-            circle: {
-              center: { latitude, longitude },
-              radius: Math.min(Math.max(Number(radiusMeters) || 10000, 1000), 50000),
+        fetch("https://places.googleapis.com/v1/places:searchNearby", {
+          method: "POST",
+          headers: placesHeaders,
+          body: JSON.stringify({
+            includedTypes: ["hospital"],
+            maxResultCount: 20,
+            rankPreference: "DISTANCE",
+            locationRestriction: {
+              circle: {
+                center: { latitude, longitude },
+                radius: clampedRadius,
+              },
             },
-          },
+          }),
         }),
+      ]);
+
+      if (textResp.status === 429 || nearbyResp.status === 429) {
+        return res.status(429).json({ error: "RESOURCE_EXHAUSTED", status: "RESOURCE_EXHAUSTED" });
+      }
+
+      const [textData, nearbyData]: any[] = await Promise.all([textResp.json(), nearbyResp.json()]);
+      if (textData?.error?.status === "RESOURCE_EXHAUSTED" || nearbyData?.error?.status === "RESOURCE_EXHAUSTED") {
+        return res.status(429).json({ error: "RESOURCE_EXHAUSTED", status: "RESOURCE_EXHAUSTED" });
+      }
+
+      const seenIds = new Set<string>();
+      const mergedPlaces: any[] = [];
+      for (const list of [textData?.places, nearbyData?.places]) {
+        if (Array.isArray(list)) {
+          for (const p of list) {
+            if (p?.id && !seenIds.has(p.id)) {
+              seenIds.add(p.id);
+              mergedPlaces.push(p);
+            }
+          }
+        }
+      }
+
+      let hospitals = mergedPlaces.map((p) => mapGooglePlaceToHospital(p, originCenter));
+      const maxKm = clampedRadius / 1000 + 3;
+      const inRadius = hospitals.filter((h) => h.distanceKm === null || h.distanceKm <= maxKm);
+      if (inRadius.length > 0) {
+        hospitals = inRadius;
+      }
+      hospitals.sort((a, b) => (a.distanceKm ?? 9999) - (b.distanceKm ?? 9999));
+
+      const searchBounds = computeSearchBounds([
+        originCenter,
+        ...hospitals.slice(0, 12).map((h) => h.location),
+      ]);
+
+      return res.json({
+        hospitals,
+        totalCount: hospitals.length,
+        source: "google_places_api_live",
+        searchCenter: originCenter,
+        searchBounds,
+        searchLabel: `GPS (${Math.round(clampedRadius / 1000)} km radius)`,
+        searchType: "gps_nearby",
       });
-
-      if (nearbyResp.status === 429) {
-        return res.status(429).json({ error: "RESOURCE_EXHAUSTED", status: "RESOURCE_EXHAUSTED" });
-      }
-
-      const nearbyData: any = await nearbyResp.json();
-      if (nearbyData?.error?.status === "RESOURCE_EXHAUSTED") {
-        return res.status(429).json({ error: "RESOURCE_EXHAUSTED", status: "RESOURCE_EXHAUSTED" });
-      }
-
-      const hospitals = Array.isArray(nearbyData?.places)
-        ? nearbyData.places.map(mapGooglePlaceToHospital)
-        : [];
-
-      return res.json({ hospitals, source: "google_places_api_live" });
     } catch (err: any) {
       console.error("Google Places nearby lookup error:", err);
       return res.status(500).json({ error: "Failed to query Google Places API for nearby hospitals." });
     }
   });
 
-  // Real Google Maps Places API (New): City / State / PIN / Query Hospital Search (Zero Cooked-Up Data)
+  // Real Google Maps Places API (New) + Geocoding API: City / State / PIN / ZIP / Facility-Type Hospital Search
   router.post("/hospitals/search", async (req, res) => {
-    const { city, state, query } = req.body;
+    const { city, state, query, centerLat, centerLng } = req.body;
     const apiKey = process.env.GOOGLE_MAPS_API_KEY || process.env.VITE_GOOGLE_MAPS_API_KEY;
     if (!apiKey) {
       return res.status(503).json({ error: "Google Maps API key not configured." });
@@ -2764,6 +2947,14 @@ Include a brief reminder that for acute illnesses or persistent high fevers, an 
     const cleanCity = String(city || "").trim();
     const cleanState = String(state || "").trim();
     const pinMatch = rawQuery.match(/\b(\d{5,6})\b/);
+    const providedCenter =
+      typeof centerLat === "number" &&
+      typeof centerLng === "number" &&
+      isFinite(centerLat) &&
+      isFinite(centerLng) &&
+      (centerLat !== 0 || centerLng !== 0)
+        ? { lat: centerLat, lng: centerLng }
+        : null;
 
     const placesHeaders = {
       "Content-Type": "application/json",
@@ -2773,60 +2964,57 @@ Include a brief reminder that for acute illnesses or persistent high fevers, an 
     };
 
     try {
-      // Case 1: User searched by PIN / ZIP code (e.g., 560100 or 10001)
+      // Case 1: User searched by PIN / ZIP code (e.g., 560100, 10001, "pediatric hospital 560100")
       if (pinMatch) {
         const pinCode = pinMatch[1];
         const isSixDigitIndianPin = pinCode.length === 6;
-        let pinCenter: { lat: number; lng: number } | null = null;
-        let searchLabel = pinCode;
+        const facilityRemainder = rawQuery.replace(pinCode, "").replace(/[,|-]/g, " ").replace(/\s+/g, " ").trim();
 
-        // First resolve the geographic center of the PIN / ZIP code
-        const pinGeoResp = await fetch("https://places.googleapis.com/v1/places:searchText", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "X-Goog-Api-Key": apiKey,
-            "X-Goog-Maps-Solution-ID": "gmp_mcp_codeassist_v1_aistudio",
-            "X-Goog-FieldMask": "places.id,places.displayName,places.formattedAddress,places.location",
-          },
-          body: JSON.stringify({
-            textQuery: isSixDigitIndianPin ? `${pinCode}, India` : `postal code ${pinCode}`,
-            maxResultCount: 1,
-          }),
-        });
+        const geoResolved = await resolveGeoLocation(
+          isSixDigitIndianPin ? `${pinCode}, India` : pinCode,
+          apiKey,
+          {
+            postalCode: pinCode,
+            regionCode: isSixDigitIndianPin ? "IN" : undefined,
+          }
+        );
 
-        if (pinGeoResp.status === 429) {
+        if (geoResolved.quotaExceeded) {
           return res.status(429).json({ error: "RESOURCE_EXHAUSTED", status: "RESOURCE_EXHAUSTED" });
         }
 
-        const pinGeoData: any = await pinGeoResp.json();
-        if (pinGeoData?.error?.status === "RESOURCE_EXHAUSTED") {
-          return res.status(429).json({ error: "RESOURCE_EXHAUSTED", status: "RESOURCE_EXHAUSTED" });
-        }
-
-        const geoPlace = pinGeoData?.places?.[0];
-        if (geoPlace?.location?.latitude != null && geoPlace?.location?.longitude != null) {
-          pinCenter = {
-            lat: geoPlace.location.latitude,
-            lng: geoPlace.location.longitude,
-          };
-          searchLabel = geoPlace.formattedAddress || geoPlace.displayName?.text || pinCode;
-        }
-
+        const pinCenter = geoResolved.center;
+        const searchLabel = geoResolved.formattedAddress || pinCode;
         const regionSuffix = isSixDigitIndianPin ? " India" : "";
+        const wantsClinicFocus = /\b(clinic|doctor|pediatric|paediatric|children|child)\b/i.test(facilityRemainder);
+
+        const primaryTextQuery = facilityRemainder
+          ? `${facilityRemainder} near ${searchLabel}`
+          : `hospitals in ${pinCode}${regionSuffix}`;
+        const pediatricTextQuery = `pediatric children maternity hospital clinic in ${pinCode}${regionSuffix}`;
+
         const generalTextBody: any = {
-          textQuery: `hospitals in ${rawQuery}${regionSuffix}`,
-          maxResultCount: 20,
+          textQuery: primaryTextQuery,
+          pageSize: 20,
         };
+        if (!facilityRemainder || /\bhospital\b/i.test(facilityRemainder)) {
+          generalTextBody.includedType = "hospital";
+        }
         const pediatricTextBody: any = {
-          textQuery: `pediatric children maternity hospital clinic in ${rawQuery}${regionSuffix}`,
-          maxResultCount: 20,
+          textQuery: pediatricTextQuery,
+          pageSize: 20,
         };
+
+        if (isSixDigitIndianPin) {
+          generalTextBody.regionCode = "in";
+          pediatricTextBody.regionCode = "in";
+        }
+
         if (pinCenter) {
           const biasCircle = {
             circle: {
               center: { latitude: pinCenter.lat, longitude: pinCenter.lng },
-              radius: 10000,
+              radius: 10000.0,
             },
           };
           generalTextBody.locationBias = biasCircle;
@@ -2852,12 +3040,13 @@ Include a brief reminder that for acute illnesses or persistent high fevers, an 
               method: "POST",
               headers: placesHeaders,
               body: JSON.stringify({
-                includedTypes: ["hospital"],
+                includedTypes: wantsClinicFocus ? ["hospital", "doctor"] : ["hospital"],
                 maxResultCount: 20,
+                rankPreference: "DISTANCE",
                 locationRestriction: {
                   circle: {
                     center: { latitude: pinCenter.lat, longitude: pinCenter.lng },
-                    radius: 10000,
+                    radius: 12000.0,
                   },
                 },
               }),
@@ -2892,53 +3081,266 @@ Include a brief reminder that for acute illnesses or persistent high fevers, an 
           }
         }
 
-        let hospitals = mergedPlaces.map(mapGooglePlaceToHospital);
-        // Sort by distance from PIN center and keep results in the local ~20km area when available
+        let hospitals = mergedPlaces
+          .map((p) => mapGooglePlaceToHospital(p, pinCenter))
+          .filter((h) => h.businessStatus !== "CLOSED_PERMANENTLY");
         if (pinCenter && hospitals.length > 0) {
-          const calcDistKm = (loc: { lat: number; lng: number }) => {
-            const dLat = (loc.lat - pinCenter!.lat) * 111;
-            const dLng = (loc.lng - pinCenter!.lng) * 111 * Math.cos((pinCenter!.lat * Math.PI) / 180);
-            return Math.sqrt(dLat * dLat + dLng * dLng);
-          };
-          hospitals.sort((a: any, b: any) => calcDistKm(a.location) - calcDistKm(b.location));
-          const nearbyOnly = hospitals.filter((h: any) => h.location?.lat && calcDistKm(h.location) <= 22);
+          const hasRichDetails = (h: any) =>
+            h.userRatingCount > 0 || Boolean(h.phone) || Boolean(h.websiteUri) || (h.weekdayHours?.length ?? 0) > 0;
+          hospitals.sort((a, b) => {
+            const richDiff = (hasRichDetails(b) ? 1 : 0) - (hasRichDetails(a) ? 1 : 0);
+            if (richDiff !== 0) return richDiff;
+            return (a.distanceKm ?? 9999) - (b.distanceKm ?? 9999);
+          });
+          const nearbyOnly = hospitals.filter((h) => h.distanceKm === null || h.distanceKm <= 25);
           if (nearbyOnly.length > 0) {
             hospitals = nearbyOnly;
           }
         }
 
+        const finalCenter = pinCenter || hospitals[0]?.location || null;
+        const searchBounds = computeSearchBounds(
+          [pinCenter, ...hospitals.slice(0, 12).map((h) => h.location)],
+          geoResolved.viewport
+        );
+
         return res.json({
           hospitals,
+          totalCount: hospitals.length,
           source: "google_places_api_live",
           queryUsed: generalTextBody.textQuery,
-          searchCenter: pinCenter || hospitals[0]?.location || null,
+          searchCenter: finalCenter,
+          searchBounds,
           searchLabel,
+          searchType: "postal_code",
+          postalCode: pinCode,
         });
       }
 
-      // Case 2: Specific hospital name or locality query
+      // Case 2: Facility type query (e.g. "hospital", "pediatric clinic", "maternity") OR specific name / locality
       if (rawQuery) {
+        const GENERIC_FACILITY_TERMS = new Set([
+          "hospital",
+          "hospitals",
+          "clinic",
+          "clinics",
+          "medical",
+          "center",
+          "centre",
+          "pediatric",
+          "pediatrics",
+          "paediatric",
+          "paediatrics",
+          "pediatrician",
+          "pediatricians",
+          "children",
+          "child",
+          "kids",
+          "kid",
+          "baby",
+          "infant",
+          "neonatal",
+          "nicu",
+          "maternity",
+          "emergency",
+          "urgent",
+          "care",
+          "doctor",
+          "doctors",
+          "multispecialty",
+          "multi",
+          "specialty",
+          "speciality",
+          "health",
+          "healthcare",
+          "nursing",
+          "home",
+          "24x7",
+          "24/7",
+          "near",
+          "me",
+          "best",
+          "top",
+          "in",
+          "for",
+          "and",
+          "the",
+        ]);
+
+        const tokens = rawQuery
+          .toLowerCase()
+          .replace(/[^a-z0-9/\s]/g, " ")
+          .split(/\s+/)
+          .filter(Boolean);
+
+        const isFacilityTypeQuery =
+          tokens.length > 0 && tokens.every((tok) => GENERIC_FACILITY_TERMS.has(tok));
+
+        // Resolve geographic anchor for the selected city / GPS area
+        const cityLabel = [cleanCity, cleanState].filter(Boolean).join(", ");
+        let anchorCenter = providedCenter;
+        let anchorViewport: any = null;
+
+        if (!anchorCenter && cityLabel) {
+          const cityGeo = await resolveGeoLocation(`${cityLabel}, India`, apiKey, { regionCode: "IN" });
+          if (cityGeo.quotaExceeded) {
+            return res.status(429).json({ error: "RESOURCE_EXHAUSTED", status: "RESOURCE_EXHAUSTED" });
+          }
+          anchorCenter = cityGeo.center;
+          anchorViewport = cityGeo.viewport;
+        }
+
+        if (isFacilityTypeQuery) {
+          const wantsHospitalType =
+            /\b(hospital|hospitals|maternity|emergency|nicu|medical\s+cent(?:er|re)|nursing\s+home)\b/i.test(rawQuery);
+          const wantsClinicType = /\b(clinic|clinics|doctor|doctors|pediatrician)\b/i.test(rawQuery);
+
+          const areaPhrase = cityLabel ? ` in ${cityLabel}` : "";
+          const textBody: any = {
+            textQuery: `${rawQuery}${areaPhrase}`.trim(),
+            pageSize: 20,
+          };
+          if (wantsHospitalType && !wantsClinicType) {
+            textBody.includedType = "hospital";
+          } else if (wantsClinicType && !wantsHospitalType) {
+            textBody.includedType = "doctor";
+          }
+          if (anchorCenter) {
+            textBody.locationBias = {
+              circle: {
+                center: { latitude: anchorCenter.lat, longitude: anchorCenter.lng },
+                radius: 15000.0,
+              },
+            };
+          }
+
+          const requests: Promise<Response>[] = [
+            fetch("https://places.googleapis.com/v1/places:searchText", {
+              method: "POST",
+              headers: placesHeaders,
+              body: JSON.stringify(textBody),
+            }),
+          ];
+
+          if (anchorCenter) {
+            const nearbyTypes =
+              wantsClinicType && !wantsHospitalType
+                ? ["doctor", "hospital"]
+                : wantsClinicType
+                ? ["hospital", "doctor"]
+                : ["hospital"];
+            requests.push(
+              fetch("https://places.googleapis.com/v1/places:searchNearby", {
+                method: "POST",
+                headers: placesHeaders,
+                body: JSON.stringify({
+                  includedTypes: nearbyTypes,
+                  maxResultCount: 20,
+                  rankPreference: "POPULARITY",
+                  locationRestriction: {
+                    circle: {
+                      center: { latitude: anchorCenter.lat, longitude: anchorCenter.lng },
+                      radius: 15000.0,
+                    },
+                  },
+                }),
+              })
+            );
+          }
+
+          const responses = await Promise.all(requests);
+          for (const r of responses) {
+            if (r.status === 429) {
+              return res.status(429).json({ error: "RESOURCE_EXHAUSTED", status: "RESOURCE_EXHAUSTED" });
+            }
+          }
+          const payloads: any[] = await Promise.all(responses.map((r) => r.json()));
+          for (const p of payloads) {
+            if (p?.error?.status === "RESOURCE_EXHAUSTED") {
+              return res.status(429).json({ error: "RESOURCE_EXHAUSTED", status: "RESOURCE_EXHAUSTED" });
+            }
+          }
+
+          const seen = new Set<string>();
+          const mergedPlaces: any[] = [];
+          for (const payload of payloads) {
+            if (Array.isArray(payload?.places)) {
+              for (const p of payload.places) {
+                if (p?.id && !seen.has(p.id)) {
+                  seen.add(p.id);
+                  mergedPlaces.push(p);
+                }
+              }
+            }
+          }
+
+          let hospitals = mergedPlaces
+            .map((p) => mapGooglePlaceToHospital(p, anchorCenter))
+            .filter((h) => h.businessStatus !== "CLOSED_PERMANENTLY");
+          if (anchorCenter && hospitals.length > 0) {
+            const withinArea = hospitals.filter((h) => h.distanceKm === null || h.distanceKm <= 35);
+            if (withinArea.length > 0) {
+              hospitals = withinArea;
+            }
+          }
+          const hasRichDetails = (h: any) =>
+            h.userRatingCount > 0 || Boolean(h.phone) || Boolean(h.websiteUri) || (h.weekdayHours?.length ?? 0) > 0;
+          hospitals.sort((a, b) => (hasRichDetails(b) ? 1 : 0) - (hasRichDetails(a) ? 1 : 0));
+
+          const resolvedCenter = anchorCenter || hospitals[0]?.location || null;
+          const searchBounds = computeSearchBounds(
+            [anchorCenter, ...hospitals.slice(0, 12).map((h) => h.location)],
+            anchorViewport
+          );
+
+          return res.json({
+            hospitals,
+            totalCount: hospitals.length,
+            source: "google_places_api_live",
+            queryUsed: textBody.textQuery,
+            searchCenter: resolvedCenter,
+            searchBounds,
+            searchLabel: cleanCity ? `${rawQuery} in ${cleanCity}` : rawQuery,
+            searchType: "facility_type",
+          });
+        }
+
+        // Named hospital or locality query (supports both local city match & wider/explicit place names)
         const hasHospitalWord = /\b(hospital|clinic|medical|institute|centre|center|nursing)\b/i.test(rawQuery);
         const queryStem = hasHospitalWord ? rawQuery : `${rawQuery} hospital`;
-        const scopedQuery = `${queryStem}${cleanCity ? ` ${cleanCity}` : ""}${cleanState ? ` ${cleanState}` : ""} India`.replace(/\s+/g, " ").trim();
-        const broadQuery = `${queryStem} India`.replace(/\s+/g, " ").trim();
+        const scopedQuery = `${queryStem}${cleanCity ? ` ${cleanCity}` : ""}${cleanState ? ` ${cleanState}` : ""}`
+          .replace(/\s+/g, " ")
+          .trim();
+        const broadQuery = queryStem.replace(/\s+/g, " ").trim();
+
+        const scopedBody: any = {
+          textQuery: scopedQuery,
+          pageSize: 20,
+        };
+        if (anchorCenter) {
+          scopedBody.locationBias = {
+            circle: {
+              center: { latitude: anchorCenter.lat, longitude: anchorCenter.lng },
+              radius: 25000.0,
+            },
+          };
+        }
+
+        const broadBody: any = {
+          textQuery: broadQuery,
+          pageSize: 20,
+        };
 
         const [resp, broadResp] = await Promise.all([
           fetch("https://places.googleapis.com/v1/places:searchText", {
             method: "POST",
             headers: placesHeaders,
-            body: JSON.stringify({
-              textQuery: scopedQuery,
-              maxResultCount: 20,
-            }),
+            body: JSON.stringify(scopedBody),
           }),
           fetch("https://places.googleapis.com/v1/places:searchText", {
             method: "POST",
             headers: placesHeaders,
-            body: JSON.stringify({
-              textQuery: broadQuery,
-              maxResultCount: 20,
-            }),
+            body: JSON.stringify(broadBody),
           }),
         ]);
 
@@ -2956,7 +3358,6 @@ Include a brief reminder that for acute illnesses or persistent high fevers, an 
         const primaryList = Array.isArray(data?.places) ? data.places : [];
         const secondaryList = Array.isArray(broadData?.places) ? broadData.places : [];
 
-        // Check whether broad India-wide results match the searched query better than the dropdown city list
         const queryTokens = rawQuery
           .toLowerCase()
           .split(/\s+/)
@@ -2967,7 +3368,7 @@ Include a brief reminder that for acute illnesses or persistent high fevers, an 
         };
         const topPrimaryScore = primaryList[0] ? scorePlaceMatch(primaryList[0]) : 0;
         const topSecondaryScore = secondaryList[0] ? scorePlaceMatch(secondaryList[0]) : 0;
-        const preferBroad = primaryList.length < 3 || topSecondaryScore > topPrimaryScore;
+        const preferBroad = primaryList.length === 0 || (topSecondaryScore > topPrimaryScore && primaryList.length < 3);
 
         const orderedLists = preferBroad ? [secondaryList, primaryList] : [primaryList, secondaryList];
         for (const list of orderedLists) {
@@ -2979,45 +3380,117 @@ Include a brief reminder that for acute illnesses or persistent high fevers, an 
           }
         }
 
-        const hospitals = places.map(mapGooglePlaceToHospital);
+        const hospitals = places.map((p) => mapGooglePlaceToHospital(p, anchorCenter));
+        const resolvedCenter = hospitals[0]?.location || anchorCenter || null;
+        const searchBounds = computeSearchBounds(hospitals.slice(0, 12).map((h) => h.location));
+
         return res.json({
           hospitals,
+          totalCount: hospitals.length,
           source: "google_places_api_live",
           queryUsed: preferBroad ? broadQuery : scopedQuery,
-          searchCenter: hospitals[0]?.location || null,
+          searchCenter: resolvedCenter,
+          searchBounds,
           searchLabel: rawQuery,
+          searchType: "text_search",
         });
       }
 
       // Case 3: Default City & State browse
-      const searchQuery = `Best Pediatric and Children Hospitals in ${cleanCity || "Bengaluru"}, ${cleanState || "Karnataka"}, India`;
-      const resp = await fetch("https://places.googleapis.com/v1/places:searchText", {
-        method: "POST",
-        headers: placesHeaders,
-        body: JSON.stringify({
-          textQuery: searchQuery,
-          maxResultCount: 20,
-        }),
+      const targetCity = cleanCity || "Bengaluru";
+      const targetState = cleanState || "Karnataka";
+      const cityGeo = await resolveGeoLocation(`${targetCity}, ${targetState}, India`, apiKey, {
+        regionCode: "IN",
       });
-
-      if (resp.status === 429) {
+      if (cityGeo.quotaExceeded) {
         return res.status(429).json({ error: "RESOURCE_EXHAUSTED", status: "RESOURCE_EXHAUSTED" });
       }
 
-      const data: any = await resp.json();
-      if (data?.error?.status === "RESOURCE_EXHAUSTED") {
-        return res.status(429).json({ error: "RESOURCE_EXHAUSTED", status: "RESOURCE_EXHAUSTED" });
+      const searchQuery = `Best Pediatric and Children Hospitals in ${targetCity}, ${targetState}, India`;
+      const textBody: any = {
+        textQuery: searchQuery,
+        pageSize: 20,
+      };
+      if (cityGeo.center) {
+        textBody.locationBias = {
+          circle: {
+            center: { latitude: cityGeo.center.lat, longitude: cityGeo.center.lng },
+            radius: 20000.0,
+          },
+        };
       }
 
-      const hospitals = Array.isArray(data?.places)
-        ? data.places.map(mapGooglePlaceToHospital)
-        : [];
+      const cityRequests: Promise<Response>[] = [
+        fetch("https://places.googleapis.com/v1/places:searchText", {
+          method: "POST",
+          headers: placesHeaders,
+          body: JSON.stringify(textBody),
+        }),
+      ];
+
+      if (cityGeo.center) {
+        cityRequests.push(
+          fetch("https://places.googleapis.com/v1/places:searchNearby", {
+            method: "POST",
+            headers: placesHeaders,
+            body: JSON.stringify({
+              includedTypes: ["hospital"],
+              maxResultCount: 15,
+              rankPreference: "POPULARITY",
+              locationRestriction: {
+                circle: {
+                  center: { latitude: cityGeo.center.lat, longitude: cityGeo.center.lng },
+                  radius: 15000.0,
+                },
+              },
+            }),
+          })
+        );
+      }
+
+      const cityResps = await Promise.all(cityRequests);
+      for (const r of cityResps) {
+        if (r.status === 429) {
+          return res.status(429).json({ error: "RESOURCE_EXHAUSTED", status: "RESOURCE_EXHAUSTED" });
+        }
+      }
+
+      const cityPayloads: any[] = await Promise.all(cityResps.map((r) => r.json()));
+      for (const p of cityPayloads) {
+        if (p?.error?.status === "RESOURCE_EXHAUSTED") {
+          return res.status(429).json({ error: "RESOURCE_EXHAUSTED", status: "RESOURCE_EXHAUSTED" });
+        }
+      }
+
+      const seenCity = new Set<string>();
+      const cityPlaces: any[] = [];
+      for (const payload of cityPayloads) {
+        if (Array.isArray(payload?.places)) {
+          for (const p of payload.places) {
+            if (p?.id && !seenCity.has(p.id)) {
+              seenCity.add(p.id);
+              cityPlaces.push(p);
+            }
+          }
+        }
+      }
+
+      const originRef = cityGeo.center || (cityPlaces[0]?.location ? { lat: cityPlaces[0].location.latitude, lng: cityPlaces[0].location.longitude } : null);
+      const hospitals = cityPlaces.map((p) => mapGooglePlaceToHospital(p, originRef));
+      const searchBounds = computeSearchBounds(
+        [cityGeo.center, ...hospitals.slice(0, 12).map((h) => h.location)],
+        cityGeo.viewport
+      );
 
       return res.json({
         hospitals,
+        totalCount: hospitals.length,
         source: "google_places_api_live",
         queryUsed: searchQuery,
-        searchCenter: hospitals[0]?.location || null,
+        searchCenter: originRef,
+        searchBounds,
+        searchLabel: targetCity,
+        searchType: "city_browse",
       });
     } catch (err: any) {
       console.error("Google Places text search error:", err);

@@ -61,7 +61,9 @@ import {
   Sun,
   Sunrise,
   Moon,
-  UserPlus
+  UserPlus,
+  Globe,
+  Star
 } from 'lucide-react';
 import { collection, addDoc, getDocs, query, where, orderBy, deleteDoc, doc, onSnapshot, serverTimestamp } from 'firebase/firestore';
 import {
@@ -409,11 +411,20 @@ const growthChartData = [
   { age: 36, p5: 88.7, p50: 96.1, p95: 103.5, wP5: 11.5, wP50: 14.3, wP95: 18.1 }
 ];
 
+interface MapSearchBounds {
+  north: number;
+  south: number;
+  east: number;
+  west: number;
+}
+
 interface MapCameraControllerProps {
   selectedHospital: { placeId: string; location: { lat: number; lng: number } } | null;
   gpsLocation: { lat: number; lng: number } | null;
   searchCenter: { lat: number; lng: number } | null;
+  searchBounds: MapSearchBounds | null;
   hospitals: Array<{ placeId: string; location: { lat: number; lng: number } }>;
+  searchRevision: number;
   cityKey: string;
 }
 
@@ -421,39 +432,45 @@ const MapCameraController: React.FC<MapCameraControllerProps> = ({
   selectedHospital,
   gpsLocation,
   searchCenter,
+  searchBounds,
   hospitals,
+  searchRevision,
   cityKey,
 }) => {
   const map = useMap();
   const prevTargetKeyRef = useRef<string>('');
-  const prevCityKeyRef = useRef<string>('');
+  const prevSyncKeyRef = useRef<string>('');
 
-  // Fit bounds across all searched/fetched hospitals whenever the search query, city, or GPS result set changes
+  // Re-fit map bounds whenever an API search response arrives (searchRevision updates) or city/mode changes
   useEffect(() => {
     if (!map) return;
-    const currentCityKey = `${cityKey}_${gpsLocation ? `${gpsLocation.lat},${gpsLocation.lng}` : 'city'}`;
-    if (prevCityKeyRef.current !== currentCityKey && (hospitals.length > 0 || searchCenter)) {
-      prevCityKeyRef.current = currentCityKey;
-      if (selectedHospital?.location?.lat && selectedHospital?.location?.lng) {
-        prevTargetKeyRef.current = `${selectedHospital.placeId}_${selectedHospital.location.lat}_${selectedHospital.location.lng}`;
-      }
-      const g = (window as any).google;
+    const syncKey = `${searchRevision}_${cityKey}_${gpsLocation ? `${gpsLocation.lat},${gpsLocation.lng}` : 'city'}`;
+    if (prevSyncKeyRef.current === syncKey) return;
+    prevSyncKeyRef.current = syncKey;
 
-      // Focus bounds around searchCenter if provided so distant outliers don't zoom the map out too far
-      const validHospitals = hospitals.filter((h) => h.location?.lat && h.location?.lng);
-      const boundedHospitals =
-        searchCenter && validHospitals.length > 1
-          ? validHospitals.filter((h) => {
-              const dLat = Math.abs(h.location.lat - searchCenter.lat);
-              const dLng = Math.abs(h.location.lng - searchCenter.lng);
-              return dLat <= 0.22 && dLng <= 0.22;
-            })
-          : validHospitals;
-      const pinList = boundedHospitals.length > 0 ? boundedHospitals : validHospitals;
+    if (selectedHospital?.location?.lat && selectedHospital?.location?.lng) {
+      prevTargetKeyRef.current = `${selectedHospital.placeId}_${selectedHospital.location.lat}_${selectedHospital.location.lng}`;
+    } else {
+      prevTargetKeyRef.current = '';
+    }
 
-      if (pinList.length > 1 && g?.maps?.LatLngBounds) {
-        const bounds = new g.maps.LatLngBounds();
-        let count = 0;
+    const g = (window as any).google;
+    const validHospitals = hospitals.filter((h) => h.location?.lat && h.location?.lng);
+    const boundedHospitals =
+      searchCenter && validHospitals.length > 1
+        ? validHospitals.filter((h) => {
+            const dLat = Math.abs(h.location.lat - searchCenter.lat);
+            const dLng = Math.abs(h.location.lng - searchCenter.lng);
+            return dLat <= 0.28 && dLng <= 0.28;
+          })
+        : validHospitals;
+    const pinList = boundedHospitals.length > 0 ? boundedHospitals : validHospitals;
+
+    if (g?.maps?.LatLngBounds && (pinList.length > 1 || searchBounds)) {
+      const bounds = new g.maps.LatLngBounds();
+      let count = 0;
+
+      if (pinList.length > 0) {
         pinList.forEach((h) => {
           bounds.extend(h.location);
           count++;
@@ -466,25 +483,39 @@ const MapCameraController: React.FC<MapCameraControllerProps> = ({
           bounds.extend(gpsLocation);
           count++;
         }
-        if (count > 0) {
-          map.fitBounds(bounds, 48);
-          return;
-        }
+      } else if (searchBounds) {
+        bounds.extend({ lat: searchBounds.south, lng: searchBounds.west });
+        bounds.extend({ lat: searchBounds.north, lng: searchBounds.east });
+        count = 2;
       }
-      if (gpsLocation?.lat && gpsLocation?.lng) {
-        map.panTo(gpsLocation);
-        map.setZoom(13);
-      } else if (searchCenter?.lat && searchCenter?.lng) {
-        map.panTo(searchCenter);
-        map.setZoom(13);
-      } else if (pinList[0]?.location?.lat) {
-        map.panTo(pinList[0].location);
-        map.setZoom(13);
+
+      if (count > 0) {
+        map.fitBounds(bounds, { top: 68, right: 36, bottom: 36, left: 36 });
+        if (g?.maps?.event?.addListenerOnce) {
+          g.maps.event.addListenerOnce(map, 'idle', () => {
+            const currentZoom = map.getZoom();
+            if (typeof currentZoom === 'number' && currentZoom > 15) {
+              map.setZoom(15);
+            }
+          });
+        }
+        return;
       }
     }
-  }, [map, cityKey, gpsLocation, searchCenter, hospitals, selectedHospital]);
 
-  // Smoothly pan to selected hospital only when user selects a different card/pin after results load
+    if (pinList[0]?.location?.lat && pinList[0]?.location?.lng) {
+      map.panTo(pinList[0].location);
+      map.setZoom(14);
+    } else if (searchCenter?.lat && searchCenter?.lng) {
+      map.panTo(searchCenter);
+      map.setZoom(13);
+    } else if (gpsLocation?.lat && gpsLocation?.lng) {
+      map.panTo(gpsLocation);
+      map.setZoom(13);
+    }
+  }, [map, searchRevision, cityKey, gpsLocation, searchCenter, searchBounds, hospitals, selectedHospital]);
+
+  // Smoothly pan to selected hospital whenever user clicks a different pin, card, or clinic dropdown option
   useEffect(() => {
     if (!map) return;
     if (selectedHospital?.location?.lat && selectedHospital?.location?.lng) {
@@ -492,6 +523,10 @@ const MapCameraController: React.FC<MapCameraControllerProps> = ({
       if (prevTargetKeyRef.current !== targetKey) {
         prevTargetKeyRef.current = targetKey;
         map.panTo(selectedHospital.location);
+        const currentZoom = map.getZoom();
+        if (typeof currentZoom === 'number' && currentZoom < 13) {
+          map.setZoom(13);
+        }
       }
     }
   }, [map, selectedHospital]);
@@ -510,7 +545,7 @@ const MapCameraController: React.FC<MapCameraControllerProps> = ({
 
   const handleFitAllPins = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!map || hospitals.length === 0) return;
+    if (!map || (hospitals.length === 0 && !searchCenter)) return;
     const g = (window as any).google;
     if (!g?.maps?.LatLngBounds) return;
     const bounds = new g.maps.LatLngBounds();
@@ -521,19 +556,23 @@ const MapCameraController: React.FC<MapCameraControllerProps> = ({
         count++;
       }
     });
+    if (searchCenter?.lat && searchCenter?.lng) {
+      bounds.extend(searchCenter);
+      count++;
+    }
     if (gpsLocation?.lat && gpsLocation?.lng) {
       bounds.extend(gpsLocation);
       count++;
     }
     if (count > 0) {
-      map.fitBounds(bounds, 48);
+      map.fitBounds(bounds, { top: 68, right: 36, bottom: 36, left: 36 });
     }
   };
 
   const handleRecenterSelected = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (!map) return;
-    const target = selectedHospital?.location || gpsLocation || hospitals[0]?.location;
+    const target = selectedHospital?.location || searchCenter || gpsLocation || hospitals[0]?.location;
     if (target?.lat && target?.lng) {
       map.panTo(target);
       map.setZoom(14);
@@ -945,13 +984,20 @@ export const ExpertPediatricianSection: React.FC = () => {
   });
 
   const getProfileEmail = () => {
-    return (
-      profile?.contactEmail?.trim() ||
-      profile?.email?.trim() ||
-      user?.email?.trim() ||
-      localStorage.getItem('user_contact_email')?.trim() ||
-      'lashm@gmail.com'
+    const candidates = [
+      profile?.contactEmail?.trim(),
+      profile?.email?.trim(),
+      user?.email?.trim(),
+      localStorage.getItem('user_contact_email')?.trim(),
+    ];
+    const valid = candidates.find(
+      (c) =>
+        c &&
+        !c.includes('securepass.internal') &&
+        c.toLowerCase() !== 'lashm@gmail.com' &&
+        c.toLowerCase() !== 'lashmi@gmail.com'
     );
+    return valid || 'ash****@gmail.com';
   };
 
   const [registeringSession, setRegisteringSession] = useState<DemoLiveSession | null>(null);
@@ -1060,6 +1106,11 @@ export const ExpertPediatricianSection: React.FC = () => {
     rating: number | null;
     userRatingCount: number;
     phone: string;
+    websiteUri?: string;
+    primaryType?: string;
+    categoryLabel?: string;
+    businessStatus?: string;
+    editorialSummary?: string;
     googleMapsUri: string;
     reviewsUri: string;
     directionsUri: string;
@@ -1073,6 +1124,8 @@ export const ExpertPediatricianSection: React.FC = () => {
     }[];
     reviewSummary?: string;
     openNow?: boolean | null;
+    weekdayHours?: string[];
+    distanceKm?: number | null;
   }
 
   const [mapsApiKey, setMapsApiKey] = useState<string>(() => {
@@ -1088,11 +1141,26 @@ export const ExpertPediatricianSection: React.FC = () => {
   const [selectedMapHospital, setSelectedMapHospital] = useState<GoogleListedHospital | null>(null);
   const [mapAnchorHospital, setMapAnchorHospital] = useState<GoogleListedHospital | null>(null);
   const [expandedReviewsPlaceId, setExpandedReviewsPlaceId] = useState<string | null>(null);
+  const [detailsHoursExpanded, setDetailsHoursExpanded] = useState<boolean>(false);
   const [executedSearchQuery, setExecutedSearchQuery] = useState<string>('');
   const [searchLabel, setSearchLabel] = useState<string>('');
+  const [searchType, setSearchType] = useState<string>('city_browse');
   const [searchCenter, setSearchCenter] = useState<{ lat: number; lng: number } | null>(null);
+  const [searchBounds, setSearchBounds] = useState<MapSearchBounds | null>(null);
   const [searchRevision, setSearchRevision] = useState<number>(0);
+  const [activeFacilityChip, setActiveFacilityChip] = useState<string>('all');
   const suppressNextCityEffectRef = useRef<boolean>(false);
+  const searchAbortRef = useRef<AbortController | null>(null);
+  const requestSeqRef = useRef<number>(0);
+  const debounceTimerRef = useRef<number | null>(null);
+
+  const FACILITY_TYPE_CHIPS = [
+    { id: 'all', label: 'Pediatric & Children (Default)', query: '' },
+    { id: 'hospital', label: 'All Hospitals', query: 'hospital' },
+    { id: 'pediatric_clinic', label: 'Pediatric Clinics', query: 'pediatric clinic' },
+    { id: 'maternity', label: 'Maternity & NICU', query: 'maternity hospital' },
+    { id: 'emergency', label: '24x7 Emergency', query: 'emergency hospital' },
+  ];
 
   const extractCityFromAddress = React.useCallback((address?: string, fallbackCity?: string) => {
     const cleanFallback = cleanCityName(fallbackCity || '');
@@ -1139,13 +1207,14 @@ export const ExpertPediatricianSection: React.FC = () => {
     return hosp.name;
   }, []);
 
-  // Select a Google-listed hospital from Step 1 card or Map pin and synchronize Step 2 clinic & doctors
+  // Select a Google-listed hospital from Step 1 card, Details panel, or Map pin and synchronize Step 2 clinic & doctors
   const handleSelectGoogleHospital = React.useCallback(
     (hosp: GoogleListedHospital, scrollToStep2: boolean = false, allList?: GoogleListedHospital[]) => {
       const listToUse = allList || googleHospitals;
       const clinicLabel = getHospitalClinicLabel(hosp, listToUse);
       const resolvedCity = extractCityFromAddress(hosp.address, selectedCity);
       setSelectedMapHospital(hosp);
+      setDetailsHoursExpanded(false);
       setSelectedClinic(clinicLabel);
       setSelectedHospitalAddress(hosp.address || '');
       const docs = getDoctorsForClinic(clinicLabel, resolvedCity, selectedState, hosp.address || '');
@@ -1163,7 +1232,7 @@ export const ExpertPediatricianSection: React.FC = () => {
     [googleHospitals, getHospitalClinicLabel, extractCityFromAddress, selectedCity, selectedState]
   );
 
-  // Clicking a pin on the Google Map reorders the hospital list around that hospital and updates Step 2
+  // Clicking a pin on the Google Map updates the Details Panel, reorders hospital cards around that hospital, and updates Step 2
   const handleMapMarkerClick = React.useCallback(
     (hosp: GoogleListedHospital) => {
       setMapAnchorHospital(hosp);
@@ -1184,140 +1253,229 @@ export const ExpertPediatricianSection: React.FC = () => {
     }
   }, [mapsApiKey]);
 
-  // Fetch real Google-listed pediatric hospitals for the selected Indian city, state, PIN/ZIP code, or hospital name
-  const fetchCityGoogleHospitals = async (city: string, state: string, customQuery?: string) => {
-    const trimmedQuery = (customQuery || '').trim();
-    setLoadingGoogleHospitals(true);
-    setHospitalsError(null);
-    setMapAnchorHospital(null);
-    if (trimmedQuery) {
-      void trackFeatureAction('Pediatric Care', `Hospital Map Searched: ${trimmedQuery}`, 'pediatric');
-      setGpsLocation(null);
-      if (lookupMode !== 'city') {
-        suppressNextCityEffectRef.current = true;
-        setLookupMode('city');
+  // Fetch real Google-listed hospitals for the selected city, state, PIN/ZIP code, facility type, or hospital name
+  const fetchCityGoogleHospitals = React.useCallback(
+    async (
+      city: string,
+      state: string,
+      customQuery?: string,
+      options?: { biasCenter?: { lat: number; lng: number } | null; preserveGps?: boolean }
+    ) => {
+      if (debounceTimerRef.current) {
+        window.clearTimeout(debounceTimerRef.current);
+        debounceTimerRef.current = null;
       }
-    }
-    try {
-      const res = await fetch('/api/hospitals/search', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          city: cleanCityName(city),
-          state,
-          query: trimmedQuery,
-        }),
-      });
-
-      if (res.status === 429) {
-        window.dispatchEvent(new CustomEvent('gmp-quota-exceeded'));
-        setHospitalsError('Google Maps Platform demo quota reached. Please connect your API key using the key icon at the top.');
-        setGoogleHospitals([]);
-        return;
+      if (searchAbortRef.current) {
+        searchAbortRef.current.abort();
       }
+      const controller = new AbortController();
+      searchAbortRef.current = controller;
+      const reqId = ++requestSeqRef.current;
 
-      const data = await res.json();
-      if (data?.status === 'RESOURCE_EXHAUSTED') {
-        window.dispatchEvent(new CustomEvent('gmp-quota-exceeded'));
-        setHospitalsError('Google Maps Platform demo quota reached.');
-        setGoogleHospitals([]);
-        return;
+      const trimmedQuery = (customQuery || '').trim();
+      setLoadingGoogleHospitals(true);
+      setHospitalsError(null);
+      setMapAnchorHospital(null);
+      setDetailsHoursExpanded(false);
+
+      if (trimmedQuery) {
+        void trackFeatureAction('Pediatric Care', `Hospital Map Searched: ${trimmedQuery}`, 'pediatric');
+        if (!options?.preserveGps) {
+          setGpsLocation(null);
+          if (lookupMode !== 'city') {
+            suppressNextCityEffectRef.current = true;
+            setLookupMode('city');
+          }
+        }
       }
 
-      if (Array.isArray(data?.hospitals)) {
-        setExecutedSearchQuery(trimmedQuery);
-        setShowAllHospitals(Boolean(trimmedQuery));
-        setGoogleHospitals(data.hospitals);
-        setSearchLabel(typeof data?.searchLabel === 'string' ? data.searchLabel : trimmedQuery);
-        setSearchCenter(
-          data?.searchCenter?.lat && data?.searchCenter?.lng
-            ? { lat: Number(data.searchCenter.lat), lng: Number(data.searchCenter.lng) }
-            : data.hospitals[0]?.location || null
-        );
-        setSearchRevision((prev) => prev + 1);
-        if (data.hospitals.length > 0) {
-          const first = data.hospitals[0];
-          const firstLabel = getHospitalClinicLabel(first, data.hospitals);
-          const resolvedCity = extractCityFromAddress(first.address, city);
-          setSelectedMapHospital(first);
-          setSelectedClinic(firstLabel);
-          setSelectedHospitalAddress(first.address || '');
-          const docs = getDoctorsForClinic(firstLabel, resolvedCity, state, first.address || '');
-          if (docs.length > 0) setSelectedDoc(docs[0]);
+      try {
+        const res = await fetch('/api/hospitals/search', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          signal: controller.signal,
+          body: JSON.stringify({
+            city: cleanCityName(city),
+            state,
+            query: trimmedQuery,
+            centerLat: options?.biasCenter?.lat,
+            centerLng: options?.biasCenter?.lng,
+          }),
+        });
+
+        if (reqId !== requestSeqRef.current) return;
+
+        if (res.status === 429) {
+          window.dispatchEvent(new CustomEvent('gmp-quota-exceeded'));
+          setHospitalsError('Google Maps Platform demo quota reached. Please connect your API key using the key icon at the top.');
+          setGoogleHospitals([]);
+          setSelectedMapHospital(null);
+          return;
+        }
+
+        const data = await res.json();
+        if (reqId !== requestSeqRef.current) return;
+
+        if (data?.status === 'RESOURCE_EXHAUSTED') {
+          window.dispatchEvent(new CustomEvent('gmp-quota-exceeded'));
+          setHospitalsError('Google Maps Platform demo quota reached.');
+          setGoogleHospitals([]);
+          setSelectedMapHospital(null);
+          return;
+        }
+
+        if (Array.isArray(data?.hospitals)) {
+          const hospitalsList: GoogleListedHospital[] = data.hospitals;
+          setExecutedSearchQuery(trimmedQuery);
+          setShowAllHospitals(Boolean(trimmedQuery));
+          setGoogleHospitals(hospitalsList);
+          setSearchLabel(typeof data?.searchLabel === 'string' ? data.searchLabel : trimmedQuery);
+          setSearchType(typeof data?.searchType === 'string' ? data.searchType : 'text_search');
+          setSearchCenter(
+            data?.searchCenter?.lat && data?.searchCenter?.lng
+              ? { lat: Number(data.searchCenter.lat), lng: Number(data.searchCenter.lng) }
+              : hospitalsList[0]?.location || null
+          );
+          setSearchBounds(
+            data?.searchBounds &&
+              typeof data.searchBounds.north === 'number' &&
+              typeof data.searchBounds.south === 'number' &&
+              typeof data.searchBounds.east === 'number' &&
+              typeof data.searchBounds.west === 'number'
+              ? data.searchBounds
+              : null
+          );
+          setSearchRevision((prev) => prev + 1);
+
+          if (hospitalsList.length > 0) {
+            const first = hospitalsList[0];
+            const firstLabel = getHospitalClinicLabel(first, hospitalsList);
+            const resolvedCity = extractCityFromAddress(first.address, city);
+            setSelectedMapHospital(first);
+            setSelectedClinic(firstLabel);
+            setSelectedHospitalAddress(first.address || '');
+            const docs = getDoctorsForClinic(firstLabel, resolvedCity, state, first.address || '');
+            if (docs.length > 0) setSelectedDoc(docs[0]);
+          } else {
+            setSelectedMapHospital(null);
+          }
         } else {
+          setGoogleHospitals([]);
+          setSelectedMapHospital(null);
+          setSearchBounds(null);
+          setSearchRevision((prev) => prev + 1);
+        }
+      } catch (err: any) {
+        if (err?.name === 'AbortError' || reqId !== requestSeqRef.current) return;
+        console.error('Error fetching Google Places hospitals:', err);
+        setHospitalsError('Unable to reach Google Places service right now.');
+      } finally {
+        if (reqId === requestSeqRef.current) {
+          setLoadingGoogleHospitals(false);
+        }
+      }
+    },
+    [extractCityFromAddress, getHospitalClinicLabel, lookupMode]
+  );
+
+  // Fetch real Google-listed pediatric & general hospitals near live GPS coordinates
+  const fetchNearbyGpsHospitals = React.useCallback(
+    async (lat: number, lng: number, radiusKm: number) => {
+      if (debounceTimerRef.current) {
+        window.clearTimeout(debounceTimerRef.current);
+        debounceTimerRef.current = null;
+      }
+      if (searchAbortRef.current) {
+        searchAbortRef.current.abort();
+      }
+      const controller = new AbortController();
+      searchAbortRef.current = controller;
+      const reqId = ++requestSeqRef.current;
+
+      setLoadingGoogleHospitals(true);
+      setHospitalsError(null);
+      setMapAnchorHospital(null);
+      setDetailsHoursExpanded(false);
+      setExecutedSearchQuery('');
+      setActiveFacilityChip('all');
+      setSearchLabel(`GPS (${radiusKm} km radius)`);
+      setSearchType('gps_nearby');
+      setSearchCenter({ lat, lng });
+      setShowAllHospitals(false);
+      void trackFeatureAction('Pediatric Care', 'GPS Hospital Lookup', 'pediatric');
+
+      try {
+        const res = await fetch('/api/hospitals/nearby', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          signal: controller.signal,
+          body: JSON.stringify({
+            lat,
+            lng,
+            radiusMeters: radiusKm * 1000,
+          }),
+        });
+
+        if (reqId !== requestSeqRef.current) return;
+
+        if (res.status === 429) {
+          window.dispatchEvent(new CustomEvent('gmp-quota-exceeded'));
+          setHospitalsError('Google Maps Platform demo quota reached. Please connect your API key using the key icon at the top.');
+          setGoogleHospitals([]);
+          setSelectedMapHospital(null);
+          return;
+        }
+
+        const data = await res.json();
+        if (reqId !== requestSeqRef.current) return;
+
+        if (data?.status === 'RESOURCE_EXHAUSTED') {
+          window.dispatchEvent(new CustomEvent('gmp-quota-exceeded'));
+          setHospitalsError('Google Maps Platform demo quota reached.');
+          setGoogleHospitals([]);
+          setSelectedMapHospital(null);
+          return;
+        }
+
+        if (Array.isArray(data?.hospitals)) {
+          const hospitalsList: GoogleListedHospital[] = data.hospitals;
+          setGoogleHospitals(hospitalsList);
+          setSearchBounds(
+            data?.searchBounds &&
+              typeof data.searchBounds.north === 'number' &&
+              typeof data.searchBounds.south === 'number'
+              ? data.searchBounds
+              : null
+          );
+          setSearchRevision((prev) => prev + 1);
+          if (hospitalsList.length > 0) {
+            const first = hospitalsList[0];
+            const firstLabel = getHospitalClinicLabel(first, hospitalsList);
+            const resolvedCity = extractCityFromAddress(first.address, selectedCity);
+            setSelectedMapHospital(first);
+            setSelectedClinic(firstLabel);
+            setSelectedHospitalAddress(first.address || '');
+            const docs = getDoctorsForClinic(firstLabel, resolvedCity, selectedState, first.address || '');
+            if (docs.length > 0) setSelectedDoc(docs[0]);
+          } else {
+            setSelectedMapHospital(null);
+          }
+        } else {
+          setGoogleHospitals([]);
           setSelectedMapHospital(null);
         }
-      } else {
-        setGoogleHospitals([]);
-        setSelectedMapHospital(null);
-      }
-    } catch (err) {
-      console.error('Error fetching Google Places hospitals:', err);
-      setHospitalsError('Unable to reach Google Places service right now.');
-    } finally {
-      setLoadingGoogleHospitals(false);
-    }
-  };
-
-  // Fetch real Google-listed pediatric hospitals near live GPS coordinates
-  const fetchNearbyGpsHospitals = async (lat: number, lng: number, radiusKm: number) => {
-    setLoadingGoogleHospitals(true);
-    setHospitalsError(null);
-    setMapAnchorHospital(null);
-    setExecutedSearchQuery('');
-    setSearchLabel('');
-    setSearchCenter({ lat, lng });
-    setShowAllHospitals(false);
-    void trackFeatureAction('Pediatric Care', 'GPS Hospital Lookup', 'pediatric');
-    try {
-      const res = await fetch('/api/hospitals/nearby', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          lat,
-          lng,
-          radiusMeters: radiusKm * 1000,
-        }),
-      });
-
-      if (res.status === 429) {
-        window.dispatchEvent(new CustomEvent('gmp-quota-exceeded'));
-        setHospitalsError('Google Maps Platform demo quota reached. Please connect your API key using the key icon at the top.');
-        setGoogleHospitals([]);
-        return;
-      }
-
-      const data = await res.json();
-      if (data?.status === 'RESOURCE_EXHAUSTED') {
-        window.dispatchEvent(new CustomEvent('gmp-quota-exceeded'));
-        setHospitalsError('Google Maps Platform demo quota reached.');
-        setGoogleHospitals([]);
-        return;
-      }
-
-      if (Array.isArray(data?.hospitals)) {
-        setGoogleHospitals(data.hospitals);
-        setSearchRevision((prev) => prev + 1);
-        if (data.hospitals.length > 0) {
-          const first = data.hospitals[0];
-          const firstLabel = getHospitalClinicLabel(first, data.hospitals);
-          const resolvedCity = extractCityFromAddress(first.address, selectedCity);
-          setSelectedMapHospital(first);
-          setSelectedClinic(firstLabel);
-          setSelectedHospitalAddress(first.address || '');
-          const docs = getDoctorsForClinic(firstLabel, resolvedCity, selectedState, first.address || '');
-          if (docs.length > 0) setSelectedDoc(docs[0]);
+      } catch (err: any) {
+        if (err?.name === 'AbortError' || reqId !== requestSeqRef.current) return;
+        console.error('Error fetching GPS nearby hospitals:', err);
+        setHospitalsError('Unable to fetch nearby hospitals from Google Places.');
+      } finally {
+        if (reqId === requestSeqRef.current) {
+          setLoadingGoogleHospitals(false);
         }
-      } else {
-        setGoogleHospitals([]);
       }
-    } catch (err) {
-      console.error('Error fetching GPS nearby hospitals:', err);
-      setHospitalsError('Unable to fetch nearby hospitals from Google Places.');
-    } finally {
-      setLoadingGoogleHospitals(false);
-    }
-  };
+    },
+    [extractCityFromAddress, getHospitalClinicLabel, selectedCity, selectedState]
+  );
 
   // Trigger live city lookup whenever selectedCity or selectedState changes (when in city mode)
   useEffect(() => {
@@ -1326,9 +1484,72 @@ export const ExpertPediatricianSection: React.FC = () => {
       return;
     }
     if (lookupMode === 'city') {
-      fetchCityGoogleHospitals(selectedCity, selectedState);
+      void fetchCityGoogleHospitals(selectedCity, selectedState);
     }
   }, [selectedCity, selectedState, lookupMode]);
+
+  // Debounced live search when typing ZIP/PIN codes (5-6 digits) or facility/hospital queries (>= 3 chars)
+  useEffect(() => {
+    const trimmed = hospitalSearch.trim();
+    if (!trimmed) {
+      if (executedSearchQuery) {
+        if (debounceTimerRef.current) {
+          window.clearTimeout(debounceTimerRef.current);
+        }
+        debounceTimerRef.current = window.setTimeout(() => {
+          setActiveFacilityChip('all');
+          if (lookupMode === 'gps' && gpsLocation) {
+            void fetchNearbyGpsHospitals(gpsLocation.lat, gpsLocation.lng, gpsRadiusKm);
+          } else {
+            void fetchCityGoogleHospitals(selectedCity, selectedState);
+          }
+        }, 350);
+      }
+      return;
+    }
+
+    if (trimmed === executedSearchQuery) return;
+
+    const isPostalLike = /^\d{5,6}$/.test(trimmed);
+    const shouldAutoSearch = isPostalLike || trimmed.length >= 3;
+    if (!shouldAutoSearch) return;
+
+    if (debounceTimerRef.current) {
+      window.clearTimeout(debounceTimerRef.current);
+    }
+
+    const delayMs = isPostalLike ? 400 : 600;
+    debounceTimerRef.current = window.setTimeout(() => {
+      void fetchCityGoogleHospitals(selectedCity, selectedState, trimmed, {
+        biasCenter: lookupMode === 'gps' && gpsLocation ? gpsLocation : undefined,
+        preserveGps: Boolean(lookupMode === 'gps' && gpsLocation && !/\b\d{5,6}\b/.test(trimmed)),
+      });
+    }, delayMs);
+
+    return () => {
+      if (debounceTimerRef.current) {
+        window.clearTimeout(debounceTimerRef.current);
+        debounceTimerRef.current = null;
+      }
+    };
+  }, [
+    hospitalSearch,
+    executedSearchQuery,
+    selectedCity,
+    selectedState,
+    lookupMode,
+    gpsLocation,
+    gpsRadiusKm,
+    fetchCityGoogleHospitals,
+    fetchNearbyGpsHospitals,
+  ]);
+
+  useEffect(() => {
+    return () => {
+      if (debounceTimerRef.current) window.clearTimeout(debounceTimerRef.current);
+      if (searchAbortRef.current) searchAbortRef.current.abort();
+    };
+  }, []);
 
   const handleUseLiveGps = () => {
     playSound('pop');
@@ -1347,7 +1568,7 @@ export const ExpertPediatricianSection: React.FC = () => {
         setGpsLocation(coords);
         setLookupMode('gps');
         setGpsLoading(false);
-        fetchNearbyGpsHospitals(coords.lat, coords.lng, gpsRadiusKm);
+        void fetchNearbyGpsHospitals(coords.lat, coords.lng, gpsRadiusKm);
       },
       (err) => {
         setGpsLoading(false);
@@ -1361,21 +1582,45 @@ export const ExpertPediatricianSection: React.FC = () => {
     );
   };
 
-  // Display all Google-returned hospitals on executed searches (like PIN 560100 or hospital names),
-  // while keeping local keyword filtering available when typing city-mode keywords prior to API search.
+  const handleFacilityChipClick = (chip: { id: string; query: string }) => {
+    playSound('click');
+    setActiveFacilityChip(chip.id);
+    if (!chip.query) {
+      setHospitalSearch('');
+      setExecutedSearchQuery('');
+      if (lookupMode === 'gps' && gpsLocation) {
+        void fetchNearbyGpsHospitals(gpsLocation.lat, gpsLocation.lng, gpsRadiusKm);
+      } else {
+        void fetchCityGoogleHospitals(selectedCity, selectedState);
+      }
+      return;
+    }
+
+    const activePinMatch = hospitalSearch.trim().match(/\b(\d{5,6})\b/);
+    const nextQuery = activePinMatch ? `${chip.query} ${activePinMatch[1]}` : chip.query;
+    setHospitalSearch(nextQuery);
+    void fetchCityGoogleHospitals(selectedCity, selectedState, nextQuery, {
+      biasCenter: !activePinMatch && lookupMode === 'gps' && gpsLocation ? gpsLocation : undefined,
+      preserveGps: Boolean(!activePinMatch && lookupMode === 'gps' && gpsLocation),
+    });
+  };
+
+  // Return Google-returned hospitals directly when API search executed or while typing facility keywords/PINs;
+  // only narrow locally for ultra-short prefixes (< 3 chars) before API search runs.
   const filteredGoogleHospitals = React.useMemo(() => {
     const q = hospitalSearch.trim().toLowerCase();
     if (!q) return googleHospitals;
     if (executedSearchQuery && q === executedSearchQuery.toLowerCase()) {
       return googleHospitals;
     }
-    if (/^\d{2,6}$/.test(q)) {
+    if (/^\d{2,6}$/.test(q) || q.length >= 3) {
       return googleHospitals;
     }
     return googleHospitals.filter(
       (h) =>
         h.name.toLowerCase().includes(q) ||
         h.address.toLowerCase().includes(q) ||
+        (h.categoryLabel && h.categoryLabel.toLowerCase().includes(q)) ||
         (h.reviewSummary && h.reviewSummary.toLowerCase().includes(q))
     );
   }, [googleHospitals, hospitalSearch, executedSearchQuery]);
@@ -2069,8 +2314,10 @@ export const ExpertPediatricianSection: React.FC = () => {
                           const newState = e.target.value;
                           setHospitalSearch('');
                           setExecutedSearchQuery('');
+                          setActiveFacilityChip('all');
                           setSearchLabel('');
                           setSearchCenter(null);
+                          setSearchBounds(null);
                           setSelectedState(newState); 
                           localStorage.setItem('user_indian_state', newState);
                           const citiesForNewState = [...(INDIAN_CITIES_BY_STATE[newState] || [])].sort((a, b) => a.localeCompare(b));
@@ -2112,8 +2359,10 @@ export const ExpertPediatricianSection: React.FC = () => {
                           const newCity = e.target.value;
                           setHospitalSearch('');
                           setExecutedSearchQuery('');
+                          setActiveFacilityChip('all');
                           setSearchLabel('');
                           setSearchCenter(null);
+                          setSearchBounds(null);
                           setSelectedCity(newCity); 
                           setChatCity(newCity);
                           localStorage.setItem('user_city', newCity);
@@ -2138,103 +2387,142 @@ export const ExpertPediatricianSection: React.FC = () => {
                 </div>
 
                 {/* Search & Live GPS Controls Row */}
-                <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4 pt-2">
-                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 flex-1">
-                    <div className="relative flex-1">
-                      <Search className="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
-                      <input
-                        type="text"
-                        placeholder="Search hospital name, locality, or PIN/ZIP code (e.g. 560100)..."
-                        value={hospitalSearch}
-                        onChange={(e) => setHospitalSearch(e.target.value)}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter' && hospitalSearch.trim()) {
-                            e.preventDefault();
-                            fetchCityGoogleHospitals(selectedCity, selectedState, hospitalSearch.trim());
-                          }
-                        }}
-                        className="w-full bg-[#141f38] border border-white/15 rounded-xl pl-11 pr-10 py-3 text-sm text-white placeholder-slate-400 focus:outline-none focus:border-indigo-400 font-medium"
-                      />
-                      {hospitalSearch && (
-                        <button
-                          onClick={() => {
-                            setHospitalSearch('');
-                            setExecutedSearchQuery('');
-                            setSearchLabel('');
-                            setSearchCenter(null);
-                            if (lookupMode === 'city') {
-                              fetchCityGoogleHospitals(selectedCity, selectedState);
-                            } else if (gpsLocation) {
-                              fetchNearbyGpsHospitals(gpsLocation.lat, gpsLocation.lng, gpsRadiusKm);
-                            }
+                <div className="space-y-3 pt-2">
+                  <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4">
+                    <form
+                      onSubmit={(e) => {
+                        e.preventDefault();
+                        const q = hospitalSearch.trim();
+                        void fetchCityGoogleHospitals(selectedCity, selectedState, q, {
+                          biasCenter: lookupMode === 'gps' && gpsLocation && !/\b\d{5,6}\b/.test(q) ? gpsLocation : undefined,
+                          preserveGps: Boolean(lookupMode === 'gps' && gpsLocation && !/\b\d{5,6}\b/.test(q)),
+                        });
+                      }}
+                      className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 flex-1"
+                    >
+                      <div className="relative flex-1">
+                        <Search className="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
+                        <input
+                          type="text"
+                          aria-label="Search hospital name, facility type, locality, or PIN/ZIP code"
+                          placeholder="Search ZIP/PIN (e.g. 560100, 10001), facility (hospital, clinic), or hospital name..."
+                          value={hospitalSearch}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            setHospitalSearch(val);
+                            if (!val.trim()) setActiveFacilityChip('all');
                           }}
-                          className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-xs cursor-pointer"
-                        >
-                          <X className="w-4 h-4" />
-                        </button>
+                          className="w-full bg-[#141f38] border border-white/15 rounded-xl pl-11 pr-10 py-3 text-sm text-white placeholder-slate-400 focus:outline-none focus:border-indigo-400 font-medium"
+                        />
+                        {hospitalSearch && (
+                          <button
+                            type="button"
+                            aria-label="Clear hospital search"
+                            onClick={() => {
+                              setHospitalSearch('');
+                              setExecutedSearchQuery('');
+                              setActiveFacilityChip('all');
+                              setSearchLabel('');
+                              setSearchCenter(null);
+                              setSearchBounds(null);
+                              if (lookupMode === 'city') {
+                                void fetchCityGoogleHospitals(selectedCity, selectedState);
+                              } else if (gpsLocation) {
+                                void fetchNearbyGpsHospitals(gpsLocation.lat, gpsLocation.lng, gpsRadiusKm);
+                              }
+                            }}
+                            className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-xs cursor-pointer"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        )}
+                      </div>
+                      <button
+                        type="submit"
+                        disabled={loadingGoogleHospitals}
+                        className="px-5 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 border border-indigo-400/40 text-xs sm:text-sm font-bold text-white flex items-center justify-center gap-2 cursor-pointer shrink-0 shadow-lg shadow-indigo-600/20 disabled:opacity-60"
+                      >
+                        {loadingGoogleHospitals ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4 text-white" />}
+                        <span>Search Google Maps</span>
+                      </button>
+                    </form>
+
+                    {/* GPS Lookup Controls */}
+                    <div className="flex flex-wrap items-center gap-3">
+                      <button
+                        type="button"
+                        onClick={handleUseLiveGps}
+                        disabled={gpsLoading || loadingGoogleHospitals}
+                        className={`px-5 py-3 rounded-xl font-bold text-xs sm:text-sm flex items-center gap-2 transition-all cursor-pointer shadow-lg ${
+                          lookupMode === 'gps'
+                            ? 'bg-emerald-500 text-slate-950 shadow-emerald-500/20'
+                            : 'bg-indigo-600 hover:bg-indigo-500 text-white shadow-indigo-600/20'
+                        }`}
+                      >
+                        {gpsLoading ? (
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : (
+                          <Navigation className="w-4 h-4" />
+                        )}
+                        <span>{lookupMode === 'gps' ? 'Refresh My GPS Location' : 'Use My Live GPS Location'}</span>
+                      </button>
+
+                      {lookupMode === 'gps' && gpsLocation && (
+                        <>
+                          <select
+                            aria-label="GPS Search Radius"
+                            value={gpsRadiusKm}
+                            onChange={(e) => {
+                              const r = Number(e.target.value) || 10;
+                              setGpsRadiusKm(r);
+                              void fetchNearbyGpsHospitals(gpsLocation.lat, gpsLocation.lng, r);
+                            }}
+                            className="bg-[#141f38] border border-white/15 rounded-xl px-3.5 py-3 text-xs sm:text-sm font-bold text-white focus:outline-none focus:border-emerald-400 cursor-pointer"
+                          >
+                            <option value={5}>Within 5 km</option>
+                            <option value={10}>Within 10 km</option>
+                            <option value={25}>Within 25 km</option>
+                            <option value={50}>Within 50 km</option>
+                          </select>
+
+                          <button
+                            type="button"
+                            onClick={() => {
+                              playSound('click');
+                              setLookupMode('city');
+                            }}
+                            className="px-4 py-3 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 text-xs sm:text-sm font-bold text-white cursor-pointer"
+                          >
+                            Switch to {cleanCityName(selectedCity)} City View
+                          </button>
+                        </>
                       )}
                     </div>
-                    <button
-                      type="button"
-                      onClick={() => fetchCityGoogleHospitals(selectedCity, selectedState, hospitalSearch.trim())}
-                      disabled={loadingGoogleHospitals}
-                      className="px-5 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 border border-indigo-400/40 text-xs sm:text-sm font-bold text-white flex items-center justify-center gap-2 cursor-pointer shrink-0 shadow-lg shadow-indigo-600/20"
-                    >
-                      {loadingGoogleHospitals ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4 text-white" />}
-                      <span>Search Google Maps</span>
-                    </button>
                   </div>
 
-                  {/* GPS Lookup Controls */}
-                  <div className="flex flex-wrap items-center gap-3">
-                    <button
-                      type="button"
-                      onClick={handleUseLiveGps}
-                      disabled={gpsLoading || loadingGoogleHospitals}
-                      className={`px-5 py-3 rounded-xl font-bold text-xs sm:text-sm flex items-center gap-2 transition-all cursor-pointer shadow-lg ${
-                        lookupMode === 'gps'
-                          ? 'bg-emerald-500 text-slate-950 shadow-emerald-500/20'
-                          : 'bg-indigo-600 hover:bg-indigo-500 text-white shadow-indigo-600/20'
-                      }`}
-                    >
-                      {gpsLoading ? (
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                      ) : (
-                        <Navigation className="w-4 h-4" />
-                      )}
-                      <span>{lookupMode === 'gps' ? 'Refresh My GPS Location' : 'Use My Live GPS Location'}</span>
-                    </button>
-
-                    {lookupMode === 'gps' && gpsLocation && (
-                      <>
-                        <select
-                          aria-label="GPS Search Radius"
-                          value={gpsRadiusKm}
-                          onChange={(e) => {
-                            const r = Number(e.target.value) || 10;
-                            setGpsRadiusKm(r);
-                            fetchNearbyGpsHospitals(gpsLocation.lat, gpsLocation.lng, r);
-                          }}
-                          className="bg-[#141f38] border border-white/15 rounded-xl px-3.5 py-3 text-xs sm:text-sm font-bold text-white focus:outline-none focus:border-emerald-400 cursor-pointer"
-                        >
-                          <option value={5}>Within 5 km</option>
-                          <option value={10}>Within 10 km</option>
-                          <option value={25}>Within 25 km</option>
-                          <option value={50}>Within 50 km</option>
-                        </select>
-
+                  {/* Quick Facility Type Filter Bar */}
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="text-xs font-bold uppercase tracking-wider text-slate-400 mr-1">
+                      Facility Type:
+                    </span>
+                    {FACILITY_TYPE_CHIPS.map((chip) => {
+                      const isActive = activeFacilityChip === chip.id;
+                      return (
                         <button
+                          key={chip.id}
                           type="button"
-                          onClick={() => {
-                            playSound('click');
-                            setLookupMode('city');
-                          }}
-                          className="px-4 py-3 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 text-xs sm:text-sm font-bold text-white cursor-pointer"
+                          onClick={() => handleFacilityChipClick(chip)}
+                          disabled={loadingGoogleHospitals}
+                          className={`px-3.5 py-1.5 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
+                            isActive
+                              ? 'bg-indigo-600 text-white border-indigo-400 shadow-md shadow-indigo-600/20'
+                              : 'bg-[#141f38] hover:bg-white/10 text-slate-300 border-white/10'
+                          }`}
                         >
-                          Switch to {cleanCityName(selectedCity)} City View
+                          {chip.label}
                         </button>
-                      </>
-                    )}
+                      );
+                    })}
                   </div>
                 </div>
 
@@ -2245,112 +2533,349 @@ export const ExpertPediatricianSection: React.FC = () => {
                   </div>
                 )}
 
-                {/* Interactive Google Map View (@vis.gl/react-google-maps) */}
-                {mapsApiKey && (googleHospitals.length > 0 || searchCenter || loadingGoogleHospitals) && (
-                  <div className="rounded-3xl overflow-hidden border border-white/15 shadow-2xl h-[420px] sm:h-[480px] w-full relative bg-slate-900">
-                    <APIProvider apiKey={mapsApiKey}>
-                      <GoogleMap
-                        mapId="DEMO_MAP_ID"
-                        internalUsageAttributionIds={['gmp_mcp_codeassist_v1_aistudio']}
-                        defaultZoom={12}
-                        defaultCenter={
-                          searchCenter ||
-                          selectedMapHospital?.location?.lat
-                            ? (searchCenter || selectedMapHospital!.location)
-                            : gpsLocation || filteredGoogleHospitals[0]?.location || { lat: 12.9716, lng: 77.5946 }
-                        }
-                        gestureHandling="greedy"
-                        zoomControl={true}
-                        scrollwheel={true}
-                        draggable={true}
-                        disableDoubleClickZoom={false}
-                        keyboardShortcuts={true}
-                        fullscreenControl={true}
-                        disableDefaultUI={false}
-                        className="w-full h-full"
-                      >
-                        <MapCameraController
-                          selectedHospital={selectedMapHospital}
-                          gpsLocation={lookupMode === 'gps' ? gpsLocation : null}
-                          searchCenter={searchCenter}
-                          hospitals={filteredGoogleHospitals}
-                          cityKey={`${selectedState}_${selectedCity}_${lookupMode}_${executedSearchQuery}_${searchRevision}`}
-                        />
-                        {gpsLocation && (
-                          <AdvancedMarker position={gpsLocation} title="Your Live GPS Location">
-                            <Pin background="#10b981" borderColor="#064e3b" glyphColor="#ffffff" />
-                          </AdvancedMarker>
-                        )}
+                {/* Interactive Google Map + Dynamic Live Facility Details Panel */}
+                {mapsApiKey && (
+                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+                    {/* Left Column (7 cols): Persistent Interactive Google Map */}
+                    <div className="lg:col-span-7 rounded-3xl overflow-hidden border border-white/15 shadow-2xl h-[440px] sm:h-[520px] lg:h-[560px] w-full relative bg-slate-900">
+                      <APIProvider apiKey={mapsApiKey} libraries={['marker']}>
+                        <GoogleMap
+                          mapId="DEMO_MAP_ID"
+                          internalUsageAttributionIds={['gmp_mcp_codeassist_v1_aistudio']}
+                          defaultZoom={12}
+                          defaultCenter={
+                            searchCenter ||
+                            selectedMapHospital?.location ||
+                            gpsLocation ||
+                            filteredGoogleHospitals[0]?.location ||
+                            { lat: 12.9716, lng: 77.5946 }
+                          }
+                          gestureHandling="greedy"
+                          zoomControl={true}
+                          scrollwheel={true}
+                          draggable={true}
+                          disableDoubleClickZoom={false}
+                          keyboardShortcuts={true}
+                          fullscreenControl={true}
+                          disableDefaultUI={false}
+                          className="w-full h-full"
+                        >
+                          <MapCameraController
+                            selectedHospital={selectedMapHospital}
+                            gpsLocation={lookupMode === 'gps' ? gpsLocation : null}
+                            searchCenter={searchCenter}
+                            searchBounds={searchBounds}
+                            hospitals={filteredGoogleHospitals}
+                            searchRevision={searchRevision}
+                            cityKey={`${selectedState}_${selectedCity}_${lookupMode}_${executedSearchQuery}_${searchRevision}`}
+                          />
 
-                        {filteredGoogleHospitals.map((hosp) =>
-                          hosp.location?.lat && hosp.location?.lng ? (
-                            <AdvancedMarker
-                              key={hosp.placeId}
-                              position={hosp.location}
-                              title={hosp.name}
-                              onClick={() => handleMapMarkerClick(hosp)}
+                          <React.Fragment key={`markers-layer-${searchRevision}`}>
+                            {gpsLocation && (
+                              <AdvancedMarker position={gpsLocation} title="Your Live GPS Location">
+                                <Pin background="#10b981" borderColor="#064e3b" glyphColor="#ffffff" />
+                              </AdvancedMarker>
+                            )}
+
+                            {searchType === 'postal_code' && searchCenter?.lat && searchCenter?.lng && (
+                              <AdvancedMarker
+                                position={searchCenter}
+                                title={`Searched Area Center: ${searchLabel || executedSearchQuery}`}
+                              >
+                                <Pin background="#0ea5e9" borderColor="#ffffff" glyphColor="#ffffff" scale={0.95} />
+                              </AdvancedMarker>
+                            )}
+
+                            {filteredGoogleHospitals.map((hosp) =>
+                              hosp.location?.lat && hosp.location?.lng ? (
+                                <AdvancedMarker
+                                  key={`${searchRevision}-${hosp.placeId}`}
+                                  position={hosp.location}
+                                  title={hosp.name}
+                                  zIndex={selectedMapHospital?.placeId === hosp.placeId ? 50 : 10}
+                                  onClick={() => handleMapMarkerClick(hosp)}
+                                >
+                                  <Pin
+                                    background={selectedMapHospital?.placeId === hosp.placeId ? '#4f46e5' : '#ef4444'}
+                                    borderColor="#ffffff"
+                                    glyphColor="#ffffff"
+                                    scale={selectedMapHospital?.placeId === hosp.placeId ? 1.25 : 1.0}
+                                  />
+                                </AdvancedMarker>
+                              ) : null
+                            )}
+                          </React.Fragment>
+
+                          {selectedMapHospital && selectedMapHospital.location?.lat && (
+                            <InfoWindow
+                              key={`iw-${searchRevision}-${selectedMapHospital.placeId}`}
+                              position={selectedMapHospital.location}
+                              disableAutoPan={true}
+                              onCloseClick={() => setSelectedMapHospital(null)}
                             >
-                              <Pin
-                                background={selectedMapHospital?.placeId === hosp.placeId ? '#6366f1' : '#ef4444'}
-                                borderColor="#ffffff"
-                                glyphColor="#ffffff"
-                              />
-                            </AdvancedMarker>
-                          ) : null
-                        )}
+                              <div className="text-slate-900 p-1.5 max-w-[250px] space-y-1.5">
+                                <div className="font-bold text-xs sm:text-sm leading-snug">{selectedMapHospital.name}</div>
+                                <div className="text-xs text-slate-600 leading-relaxed">{selectedMapHospital.address}</div>
+                                {selectedMapHospital.rating && (
+                                  <div className="text-xs font-bold text-amber-600">
+                                    ★ {selectedMapHospital.rating} ({selectedMapHospital.userRatingCount.toLocaleString()} reviews)
+                                  </div>
+                                )}
+                                <button
+                                  type="button"
+                                  onClick={() => handleSelectGoogleHospital(selectedMapHospital, true)}
+                                  className="w-full mt-1 px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold cursor-pointer"
+                                >
+                                  Select &amp; Book Consult →
+                                </button>
+                              </div>
+                            </InfoWindow>
+                          )}
+                        </GoogleMap>
+                      </APIProvider>
 
-                        {selectedMapHospital && selectedMapHospital.location?.lat && (
-                          <InfoWindow
-                            position={selectedMapHospital.location}
-                            disableAutoPan={true}
-                            onCloseClick={() => setSelectedMapHospital(null)}
-                          >
-                            <div className="text-slate-900 p-1.5 max-w-[260px] space-y-2">
-                              <div className="font-bold text-xs sm:text-sm leading-snug">{selectedMapHospital.name}</div>
-                              <div className="text-xs text-slate-600 leading-relaxed">{selectedMapHospital.address}</div>
-                              {selectedMapHospital.rating && (
-                                <div className="text-xs font-bold text-amber-600">
-                                  ★ {selectedMapHospital.rating} ({selectedMapHospital.userRatingCount} Google reviews)
+                      {loadingGoogleHospitals && (
+                        <div className="absolute inset-0 z-30 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center">
+                          <div className="px-5 py-3 rounded-2xl bg-[#0d1424]/95 border border-indigo-400/40 text-white text-xs sm:text-sm font-bold flex items-center gap-2.5 shadow-2xl">
+                            <Loader2 className="w-4 h-4 animate-spin text-indigo-400" />
+                            <span>Updating Google Map &amp; hospitals...</span>
+                          </div>
+                        </div>
+                      )}
+
+                      {!loadingGoogleHospitals && filteredGoogleHospitals.length === 0 && (
+                        <div className="pointer-events-none absolute bottom-4 left-4 right-4 z-20 p-3.5 rounded-2xl bg-[#0b1222]/90 border border-amber-400/30 text-xs sm:text-sm text-amber-200 font-semibold shadow-xl">
+                          No hospitals matched &ldquo;{executedSearchQuery || hospitalSearch || searchLabel}&rdquo; in this view. Try clearing or switching facility filters.
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Right Column (5 cols): Dynamically Populated Selected Facility Details Panel */}
+                    <aside
+                      aria-label="Selected Hospital Details Panel"
+                      className="lg:col-span-5 rounded-3xl bg-[#111b32] border border-indigo-400/25 p-5 sm:p-6 shadow-2xl flex flex-col justify-between min-h-[440px] lg:h-[560px]"
+                    >
+                      {loadingGoogleHospitals ? (
+                        <div className="flex-1 flex flex-col items-center justify-center text-center gap-3 py-10">
+                          <Loader2 className="w-8 h-8 animate-spin text-indigo-400" />
+                          <div className="text-sm font-bold text-white">Loading Facility Details...</div>
+                          <p className="text-xs text-slate-400 max-w-xs">
+                            Fetching verified Google Maps address, hours, phone, and reviews.
+                          </p>
+                        </div>
+                      ) : selectedMapHospital ? (
+                        <div key={`details-${searchRevision}-${selectedMapHospital.placeId}`} className="flex flex-col h-full justify-between gap-4 overflow-hidden">
+                          <div className="space-y-4 overflow-y-auto pr-1 flex-1">
+                            {/* Panel Header */}
+                            <div className="flex items-start justify-between gap-3 pb-3 border-b border-white/10">
+                              <div className="space-y-1">
+                                <div className="text-[11px] font-bold uppercase tracking-wider text-indigo-300 flex items-center gap-1.5 flex-wrap">
+                                  <span>{selectedMapHospital.categoryLabel || 'Verified Medical Facility'}</span>
+                                  {typeof selectedMapHospital.distanceKm === 'number' && (
+                                    <>
+                                      <span aria-hidden="true">·</span>
+                                      <span className="text-sky-300">{selectedMapHospital.distanceKm} km away</span>
+                                    </>
+                                  )}
+                                  {selectedMapHospital.openNow !== null && selectedMapHospital.openNow !== undefined && (
+                                    <>
+                                      <span aria-hidden="true">·</span>
+                                      <span className={selectedMapHospital.openNow ? 'text-emerald-300' : 'text-rose-300'}>
+                                        {selectedMapHospital.openNow ? 'Open Now' : 'Closed'}
+                                      </span>
+                                    </>
+                                  )}
+                                </div>
+                                <h3 className="text-lg sm:text-xl font-black text-white leading-snug">
+                                  {selectedMapHospital.name}
+                                </h3>
+                              </div>
+                            </div>
+
+                            {/* Rating & Address */}
+                            <div className="space-y-2.5 text-xs sm:text-sm">
+                              {selectedMapHospital.rating !== null && (
+                                <div className="flex items-center gap-2 text-amber-300 font-bold">
+                                  <Star className="w-4 h-4 fill-amber-400 text-amber-400 shrink-0" />
+                                  <span>{selectedMapHospital.rating.toFixed(1)}</span>
+                                  <span className="text-slate-400 font-medium">
+                                    ({selectedMapHospital.userRatingCount.toLocaleString()} Google reviews)
+                                  </span>
                                 </div>
                               )}
-                              <div className="pt-1 flex flex-wrap items-center gap-3">
-                                <a
-                                  href={selectedMapHospital.googleMapsUri}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="text-xs font-bold text-indigo-600 underline"
-                                >
-                                  Open Maps
-                                </a>
-                                <a
-                                  href={selectedMapHospital.reviewsUri}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="text-xs font-bold text-amber-700 underline"
-                                >
-                                  Google Reviews
-                                </a>
+
+                              <div className="flex items-start gap-2.5 text-slate-200">
+                                <MapPin className="w-4 h-4 text-indigo-400 shrink-0 mt-0.5" />
+                                <span className="leading-relaxed">{selectedMapHospital.address}</span>
                               </div>
-                              <button
-                                type="button"
-                                onClick={() => handleSelectGoogleHospital(selectedMapHospital, true)}
-                                className="w-full mt-1 px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold cursor-pointer"
-                              >
-                                Select &amp; Book Consult →
-                              </button>
+
+                              {selectedMapHospital.editorialSummary && (
+                                <p className="text-xs text-slate-300 italic leading-relaxed">
+                                  {selectedMapHospital.editorialSummary}
+                                </p>
+                              )}
                             </div>
-                          </InfoWindow>
-                        )}
-                      </GoogleMap>
-                    </APIProvider>
-                    {loadingGoogleHospitals && (
-                      <div className="absolute inset-0 z-30 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center">
-                        <div className="px-5 py-3 rounded-2xl bg-[#0d1424]/95 border border-indigo-400/40 text-white text-xs sm:text-sm font-bold flex items-center gap-2.5 shadow-2xl">
-                          <Loader2 className="w-4 h-4 animate-spin text-indigo-400" />
-                          <span>Updating Google Map &amp; hospitals...</span>
+
+                            {/* Quick Contact & Links */}
+                            <div className="flex flex-wrap items-center gap-2 text-xs font-bold">
+                              {selectedMapHospital.phone && (
+                                <a
+                                  href={`tel:${selectedMapHospital.phone.replace(/[^0-9+]/g, '')}`}
+                                  className="px-3 py-2 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-400/30 text-emerald-200 flex items-center gap-1.5 transition-colors"
+                                >
+                                  <Phone className="w-3.5 h-3.5 text-emerald-400" />
+                                  <span>{selectedMapHospital.phone}</span>
+                                </a>
+                              )}
+                              {selectedMapHospital.websiteUri && (
+                                <a
+                                  href={selectedMapHospital.websiteUri}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="px-3 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-slate-200 flex items-center gap-1.5 transition-colors"
+                                >
+                                  <Globe className="w-3.5 h-3.5 text-sky-400" />
+                                  <span>Website</span>
+                                  <ExternalLink className="w-3 h-3" />
+                                </a>
+                              )}
+                              <a
+                                href={selectedMapHospital.directionsUri}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="px-3 py-2 rounded-xl bg-indigo-500/20 hover:bg-indigo-500/30 border border-indigo-400/30 text-indigo-200 flex items-center gap-1.5 transition-colors"
+                              >
+                                <Navigation className="w-3.5 h-3.5 text-indigo-300" />
+                                <span>Directions</span>
+                                <ExternalLink className="w-3 h-3" />
+                              </a>
+                              <a
+                                href={selectedMapHospital.googleMapsUri}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="px-3 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-slate-200 flex items-center gap-1.5 transition-colors"
+                              >
+                                <MapPin className="w-3.5 h-3.5 text-rose-400" />
+                                <span>Maps</span>
+                                <ExternalLink className="w-3 h-3" />
+                              </a>
+                            </div>
+
+                            {/* Opening Hours */}
+                            {selectedMapHospital.weekdayHours && selectedMapHospital.weekdayHours.length > 0 && (
+                              <div className="p-3.5 rounded-2xl bg-[#0d1424]/80 border border-white/10 space-y-2">
+                                <button
+                                  type="button"
+                                  onClick={() => setDetailsHoursExpanded((prev) => !prev)}
+                                  className="w-full flex items-center justify-between text-xs font-bold text-slate-200 cursor-pointer"
+                                >
+                                  <span className="flex items-center gap-2">
+                                    <Clock className="w-3.5 h-3.5 text-indigo-400" />
+                                    <span>Weekly Opening Hours</span>
+                                  </span>
+                                  <ChevronDown
+                                    className={`w-4 h-4 text-slate-400 transition-transform ${
+                                      detailsHoursExpanded ? 'rotate-180' : ''
+                                    }`}
+                                  />
+                                </button>
+                                {detailsHoursExpanded && (
+                                  <ul className="space-y-1 text-[11px] text-slate-300 pt-1 border-t border-white/10">
+                                    {selectedMapHospital.weekdayHours.map((line, i) => (
+                                      <li key={i} className="leading-relaxed">
+                                        {line}
+                                      </li>
+                                    ))}
+                                  </ul>
+                                )}
+                              </div>
+                            )}
+
+                            {/* Google Review Summary & Top Reviews */}
+                            {selectedMapHospital.reviewSummary && (
+                              <div className="p-3.5 rounded-2xl bg-indigo-500/10 border border-indigo-400/20 text-xs text-indigo-100 leading-relaxed">
+                                <div className="font-bold text-indigo-300 uppercase tracking-wider text-[10px] mb-1">
+                                  Google Reviews Summary
+                                </div>
+                                {selectedMapHospital.reviewSummary}
+                              </div>
+                            )}
+
+                            {selectedMapHospital.reviews && selectedMapHospital.reviews.length > 0 && (
+                              <div className="space-y-2">
+                                <div className="flex items-center justify-between text-xs">
+                                  <span className="font-bold uppercase tracking-wider text-amber-300">
+                                    Latest Google Reviews
+                                  </span>
+                                  <a
+                                    href={selectedMapHospital.reviewsUri}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-amber-200 hover:text-white underline font-semibold flex items-center gap-1"
+                                  >
+                                    <span>All Reviews</span>
+                                    <ExternalLink className="w-3 h-3" />
+                                  </a>
+                                </div>
+                                {selectedMapHospital.reviews.slice(0, 2).map((rev, idx) => (
+                                  <div key={idx} className="p-3 rounded-2xl bg-[#0d1424]/70 border border-white/10 space-y-1 text-xs">
+                                    <div className="flex items-center justify-between gap-2">
+                                      <span className="font-bold text-white truncate">{rev.authorName}</span>
+                                      <span className="text-amber-300 font-bold shrink-0">
+                                        ★ {rev.rating} {rev.relativeTime && `· ${rev.relativeTime}`}
+                                      </span>
+                                    </div>
+                                    {rev.text && (
+                                      <p className="text-slate-300 leading-relaxed line-clamp-3">{rev.text}</p>
+                                    )}
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Panel Footer CTA Synced with Step 02 */}
+                          <div className="pt-3 border-t border-white/10 space-y-2.5 shrink-0">
+                            <div className="text-xs text-slate-300 flex items-center justify-between gap-2">
+                              <span className="truncate">
+                                Synced Specialist: <strong className="text-white">{selectedDoc.name}</strong>
+                              </span>
+                              <span className="text-emerald-300 font-bold shrink-0">Step 02 Ready</span>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => handleSelectGoogleHospital(selectedMapHospital, true)}
+                              className="w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs sm:text-sm flex items-center justify-center gap-2 transition-all cursor-pointer shadow-lg shadow-emerald-500/20"
+                            >
+                              <span>Select &amp; Book Consultation</span>
+                              <ArrowRight className="w-4 h-4" />
+                            </button>
+                          </div>
                         </div>
-                      </div>
-                    )}
+                      ) : (
+                        <div className="flex-1 flex flex-col items-center justify-center text-center gap-3 py-10 px-4">
+                          <Building2 className="w-10 h-10 text-slate-500" />
+                          <div className="text-base font-bold text-white">No Facility Selected</div>
+                          <p className="text-xs sm:text-sm text-slate-400 max-w-xs leading-relaxed">
+                            Search by ZIP/PIN code (e.g., 560100), facility type (e.g., hospital), or click any map pin to inspect verified hospital details here.
+                          </p>
+                          {(hospitalSearch || activeFacilityChip !== 'all') && (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setHospitalSearch('');
+                                setExecutedSearchQuery('');
+                                setActiveFacilityChip('all');
+                                void fetchCityGoogleHospitals(selectedCity, selectedState);
+                              }}
+                              className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold cursor-pointer"
+                            >
+                              Reset Search Filter
+                            </button>
+                          )}
+                        </div>
+                      )}
+                    </aside>
                   </div>
                 )}
 

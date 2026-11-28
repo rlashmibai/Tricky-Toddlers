@@ -64,7 +64,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const clearDemoLocalStorageForAccount = () => {
   if (typeof window === 'undefined') return;
-  const demoValues = ['lashmi', 'parent', 'ashwath', 'child 1', 'ananya', 'child 2', 'lashm@gmail.com', 'lashmi@gmail.com'];
+  const demoValues = ['lashmi', 'parent', 'ashwath', 'child 1', 'ananya', 'child 2', 'lashm@gmail.com', 'lashmi@gmail.com', 'ash****@gmail.com'];
   const checkAndClear = (key: string) => {
     const val = (localStorage.getItem(key) || '').trim().toLowerCase();
     if (demoValues.includes(val)) {
@@ -80,6 +80,24 @@ export const clearDemoLocalStorageForAccount = () => {
   localStorage.removeItem('toddler_age');
   localStorage.removeItem('child_1_dietary_config');
   localStorage.removeItem('child_2_dietary_config');
+};
+
+export const GUEST_DISPLAY_EMAIL = 'ash****@gmail.com';
+const GUEST_AUTH_EMAIL = 'guest_demo_session@securepass.internal';
+const LEGACY_GUEST_EMAILS = ['lashm@gmail.com', 'lashmi@gmail.com'];
+
+export const isLegacyGuestEmail = (val?: string | null): boolean => {
+  const lower = (val || '').trim().toLowerCase();
+  return LEGACY_GUEST_EMAILS.includes(lower);
+};
+
+export const normalizeGuestEmail = (val?: string | null): string => {
+  const trimmed = (val || '').trim();
+  const lower = trimmed.toLowerCase();
+  if (!trimmed || LEGACY_GUEST_EMAILS.includes(lower) || lower.includes('securepass.internal') || lower === 'guest@instant.internal') {
+    return GUEST_DISPLAY_EMAIL;
+  }
+  return trimmed;
 };
 
 export const normalizeGuestParentName = (val?: string | null): string => {
@@ -146,9 +164,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const cachedUid = typeof window !== 'undefined' ? localStorage.getItem('cached_user_uid') : null;
     const isAccountMode = typeof window !== 'undefined' && localStorage.getItem('tt_auth_mode') === 'account';
     let cachedEmail = typeof window !== 'undefined' ? localStorage.getItem('cached_user_email') : null;
-    if (!isAccountMode && (!cachedEmail || cachedEmail === 'guest_instant@securepass.internal' || cachedEmail.includes('securepass.internal') || cachedEmail === 'guest@instant.internal')) {
-      cachedEmail = 'lashmi@gmail.com';
-      if (typeof window !== 'undefined') localStorage.setItem('cached_user_email', 'lashmi@gmail.com');
+    if (!isAccountMode) {
+      cachedEmail = normalizeGuestEmail(cachedEmail);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('cached_user_email', cachedEmail);
+        const savedContactEmail = localStorage.getItem('user_contact_email');
+        if (!savedContactEmail || isLegacyGuestEmail(savedContactEmail) || savedContactEmail.includes('securepass.internal')) {
+          localStorage.setItem('user_contact_email', GUEST_DISPLAY_EMAIL);
+        }
+      }
     }
     return {
       uid: cachedUid || 'guest_instant_user',
@@ -237,9 +261,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
         const data = docSnap.data();
-        const isDemo = !isAccountMode && (uid === 'guest_instant_user' || data.email === 'lashmi@gmail.com' || data.email === 'lashm@gmail.com' || data.username === 'Lashmi' || data.username === 'Parent');
+        const isDemo = !isAccountMode && (
+          uid === 'guest_instant_user' ||
+          data.email === GUEST_DISPLAY_EMAIL ||
+          data.contactEmail === GUEST_DISPLAY_EMAIL ||
+          isLegacyGuestEmail(data.email) ||
+          isLegacyGuestEmail(data.contactEmail) ||
+          (typeof data.email === 'string' && data.email.includes('securepass.internal')) ||
+          data.username === 'Lashmi' ||
+          data.username === 'Parent'
+        );
 
-        // Normalize Guest Demo profile names from legacy Lashmi/Ashwath/Ananya to Parent/Child 1/Child 2
+        // Normalize Guest Demo profile names & email from legacy defaults
         if (isDemo && !data.needsProfileSetup) {
           const normParent = normalizeGuestParentName(data.parentName || data.firstName || data.name || data.username);
           data.parentName = normParent;
@@ -248,6 +281,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           data.username = normParent;
           if (!data.lastName || data.lastName.toLowerCase() === 'ashwath') {
             data.lastName = '';
+          }
+          const hadLegacyEmail =
+            !data.contactEmail ||
+            !data.email ||
+            isLegacyGuestEmail(data.contactEmail) ||
+            isLegacyGuestEmail(data.email) ||
+            (typeof data.contactEmail === 'string' && data.contactEmail.includes('securepass.internal')) ||
+            (typeof data.email === 'string' && data.email.includes('securepass.internal'));
+          const normEmail = normalizeGuestEmail(data.contactEmail || data.email);
+          data.contactEmail = normEmail;
+          data.email = normEmail;
+          if (hadLegacyEmail && db) {
+            setDoc(docRef, { contactEmail: normEmail, email: normEmail }, { merge: true }).catch(() => {});
           }
           const normC1 = normalizeGuestChild1Name(data.child1?.name || data.babyName || data.childName);
           const normC2 = normalizeGuestChild2Name(data.child2?.name);
@@ -281,6 +327,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             localStorage.setItem('baby_name', activeName);
             localStorage.setItem('child_name', activeName);
             localStorage.setItem('toddler_name', activeName);
+            const savedContact = localStorage.getItem('user_contact_email');
+            if (!savedContact || isLegacyGuestEmail(savedContact) || savedContact.includes('securepass.internal')) {
+              localStorage.setItem('user_contact_email', normEmail);
+            }
+            localStorage.setItem('cached_user_email', normEmail);
           }
         } else if (isAccountMode) {
           // Sync localStorage with the signed-in user's actual Firestore settings
@@ -338,8 +389,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           firstName: 'Parent',
           lastName: '',
           parentName: 'Parent',
-          contactEmail: 'lashm@gmail.com',
-          email: 'lashm@gmail.com',
+          contactEmail: GUEST_DISPLAY_EMAIL,
+          email: GUEST_DISPLAY_EMAIL,
           babyName: 'Child 1',
           childName: 'Child 1',
           babyBirthDate: '2024-04-12',
@@ -387,8 +438,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           firstName: 'Parent',
           lastName: '',
           parentName: 'Parent',
-          contactEmail: 'lashm@gmail.com',
-          email: 'lashm@gmail.com',
+          contactEmail: GUEST_DISPLAY_EMAIL,
+          email: GUEST_DISPLAY_EMAIL,
           babyName: 'Child 1',
           childName: 'Child 1',
           babyBirthDate: '2024-04-12',
@@ -438,7 +489,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       localStorage.setItem('child_1_dob', '2024-04-12');
       localStorage.setItem('child_2_name', 'Child 2');
       localStorage.setItem('child_2_dob', '2026-01-15');
-      const defaultGuestEmail = 'lashmi@gmail.com';
+      const defaultGuestEmail = GUEST_AUTH_EMAIL;
       const defaultGuestPass = 'Guest@Pass987!';
 
       // If already signed in as the background guest account, reuse immediately without network round-trip
@@ -482,8 +533,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           firstName: 'Parent',
           lastName: '',
           parentName: 'Parent',
-          contactEmail: 'lashm@gmail.com',
-          email: 'lashm@gmail.com',
+          contactEmail: GUEST_DISPLAY_EMAIL,
+          email: GUEST_DISPLAY_EMAIL,
           babyName: 'Child 1',
           childName: 'Child 1',
           babyBirthDate: '2024-04-12',
@@ -521,6 +572,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           localStorage.setItem('child_1_dob', '2024-04-12');
           localStorage.setItem('child_2_name', 'Child 2');
           localStorage.setItem('child_2_dob', '2026-01-15');
+          localStorage.setItem('user_contact_email', GUEST_DISPLAY_EMAIL);
+          localStorage.setItem('cached_user_email', GUEST_DISPLAY_EMAIL);
         }
         if (db) {
           try {
@@ -537,10 +590,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // Emergency session user so app never hangs
       const fallbackUser = {
         uid: 'guest_instant_user',
-        email: 'lashmi@gmail.com',
+        email: GUEST_DISPLAY_EMAIL,
         isAnonymous: true,
       } as unknown as User;
-      localStorage.setItem('cached_user_email', 'lashmi@gmail.com');
+      localStorage.setItem('cached_user_email', GUEST_DISPLAY_EMAIL);
+      localStorage.setItem('user_contact_email', GUEST_DISPLAY_EMAIL);
       setUser(fallbackUser);
       localStorage.setItem('parent_name', 'Parent');
       localStorage.setItem('baby_name', 'Child 1');
@@ -554,8 +608,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         firstName: 'Parent',
         lastName: '',
         parentName: 'Parent',
-        contactEmail: 'lashm@gmail.com',
-        email: 'lashm@gmail.com',
+        contactEmail: GUEST_DISPLAY_EMAIL,
+        email: GUEST_DISPLAY_EMAIL,
         babyName: 'Child 1',
         childName: 'Child 1',
         babyBirthDate: '2024-04-12',
@@ -610,6 +664,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
       localStorage.setItem('child_1_name', normalizeGuestChild1Name(localStorage.getItem('child_1_name')));
       localStorage.setItem('child_2_name', normalizeGuestChild2Name(localStorage.getItem('child_2_name')));
+      const storedContactEmail = localStorage.getItem('user_contact_email');
+      if (!storedContactEmail || isLegacyGuestEmail(storedContactEmail) || storedContactEmail.includes('securepass.internal')) {
+        localStorage.setItem('user_contact_email', GUEST_DISPLAY_EMAIL);
+      }
+      localStorage.setItem('cached_user_email', normalizeGuestEmail(localStorage.getItem('cached_user_email')));
     }
     if (!auth) {
       setLoading(false);
@@ -617,9 +676,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
+        const accountModeNow = typeof window !== 'undefined' && localStorage.getItem('tt_auth_mode') === 'account';
+        if (!accountModeNow && isLegacyGuestEmail(currentUser.email)) {
+          await loginAsGuest(false);
+          return;
+        }
         setUser(currentUser);
         localStorage.setItem('cached_user_uid', currentUser.uid);
-        if (currentUser.email) {
+        if (!accountModeNow) {
+          localStorage.setItem('cached_user_email', normalizeGuestEmail(currentUser.email));
+        } else if (currentUser.email) {
           localStorage.setItem('cached_user_email', currentUser.email);
         }
         await fetchProfile(currentUser.uid);
@@ -644,8 +710,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const isDemoSession = storedAuthMode !== 'account' && (
     storedAuthMode === 'guest' ||
     user?.uid === 'guest_instant_user' ||
-    user?.email === 'lashmi@gmail.com' ||
-    user?.email === 'lashm@gmail.com' ||
+    user?.email === GUEST_AUTH_EMAIL ||
+    user?.email === GUEST_DISPLAY_EMAIL ||
+    isLegacyGuestEmail(user?.email) ||
+    profile?.contactEmail === GUEST_DISPLAY_EMAIL ||
     profile?.username === 'Lashmi' ||
     profile?.username === 'Parent'
   );
