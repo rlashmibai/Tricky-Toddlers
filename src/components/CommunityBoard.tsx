@@ -883,15 +883,9 @@ export const CommunityBoard: React.FC = () => {
     }
   };
 
-  const handleDelete = async (postId: string) => {
-    try {
-      if (!postId.startsWith('seed-')) {
-        await deleteDoc(doc(db, 'posts', postId));
-      }
-      setPosts(prev => prev.filter(p => p.id !== postId));
-    } catch (error) {
-      console.error("Error deleting post:", error);
-    }
+  const handleDelete = async (_postId: string) => {
+    // Visibility-only delete: no deletion, no message displayed — silently tracked
+    void trackFeatureAction('Community Help', 'Delete Post Clicked (Visibility Only)', 'community');
   };
 
   const insertFormat = (format: string) => {

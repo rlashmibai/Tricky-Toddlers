@@ -25,6 +25,7 @@ import { playSound } from '../lib/sounds';
 import { useAuth } from '../lib/AuthContext';
 import { collection, query, where, orderBy, onSnapshot, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
+import { trackFeatureAction } from '../lib/analyticsTracker';
 import { 
   PastConsultation, 
   UpcomingConsultation,
@@ -128,14 +129,9 @@ export const ConsultationHistoryPage: React.FC = () => {
     }
   };
 
-  // Delete past consultation record
-  const handleDeletePastConsultation = (id: string) => {
-    playSound('pop');
-    const updated = pastConsultations.filter(c => c.id !== id);
-    setPastConsultations(updated);
-    savePastConsultations(updated);
-    setToastMessage("Record deleted from consultation history.");
-    setTimeout(() => setToastMessage(null), 3000);
+  // Delete past consultation record (Visibility-only: no deletion, no message displayed — silently tracked)
+  const handleDeletePastConsultation = (_id: string) => {
+    void trackFeatureAction('Pediatric Care', 'Delete Consultation Record Clicked (Visibility Only)', 'pediatric');
   };
 
   // Cities extracted from both lists for filter

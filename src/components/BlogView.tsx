@@ -4,6 +4,7 @@ import { ArrowLeft, Clock, Share2, Bookmark, Sparkles, Filter } from 'lucide-rea
 import { playSound } from '../lib/sounds';
 import { useLanguage } from '../lib/LanguageContext';
 import { triggerToast } from '../lib/ToastContext';
+import { trackFeatureAction } from '../lib/analyticsTracker';
 
 import { Article, CATEGORIES, ARTICLES } from '../data/toddlerTalesData';
 
@@ -41,6 +42,7 @@ export const BlogView: React.FC<BlogViewProps> = ({ onBack, initialCategory = 'A
         exists ? 'Bookmark Removed' : 'Article Bookmarked',
         4000
       );
+      void trackFeatureAction('Toddler Tales', exists ? `Bookmark Removed: ${article.title}` : `Article Bookmarked: ${article.title}`, 'tales');
       return next;
     });
   };
@@ -49,6 +51,7 @@ export const BlogView: React.FC<BlogViewProps> = ({ onBack, initialCategory = 'A
     playSound('glass');
     const shareUrl = `${window.location.origin}/?tab=tales`;
     const shareText = `${article.title} — ${article.category} guide by ${article.author} on Tricky Toddlers`;
+    void trackFeatureAction('Toddler Tales', `Article Shared: ${article.title}`, 'tales');
     try {
       if (navigator.share) {
         await navigator.share({ title: article.title, text: shareText, url: shareUrl });
@@ -96,6 +99,7 @@ export const BlogView: React.FC<BlogViewProps> = ({ onBack, initialCategory = 'A
     playSound('glass');
     setSelectedArticle(article);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    void trackFeatureAction('Toddler Tales', `Article Read: ${article.title}`, 'tales');
   };
 
   const filteredArticles = React.useMemo(() => {

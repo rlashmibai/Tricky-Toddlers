@@ -17,6 +17,7 @@ import {
   Utensils
 } from 'lucide-react';
 import { playSound } from '../lib/sounds';
+import { trackFeatureAction } from '../lib/analyticsTracker';
 
 export interface LoggedDishItem {
   id: string;
@@ -161,15 +162,9 @@ export const DailyDishLogPage: React.FC = () => {
     }
   };
 
-  const handleDeleteMeal = (id: string) => {
-    playSound('click');
-    const updated = meals.filter(m => m.id !== id);
-    setMeals(updated);
-    if (typeof window !== 'undefined') {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
-    }
-    setToastMessage('Dish removed from log');
-    setTimeout(() => setToastMessage(null), 2500);
+  const handleDeleteMeal = (_id: string) => {
+    // Visibility-only delete: no deletion, no message displayed — silently tracked
+    void trackFeatureAction('FoodLens AI', 'Delete Dish Log Clicked (Visibility Only)', 'foodlens');
   };
 
   const handleAddCustomDish = (e: React.FormEvent) => {

@@ -1311,29 +1311,9 @@ export const MilestoneTracker: React.FC = () => {
     }
   };
 
-  const handleDelete = async (milestoneId: string) => {
-    if (!user) return;
-    playSound('click');
-    if (!window.confirm(lt('sureDelete'))) return;
-
-    setSavingId(milestoneId);
-    try {
-      const docRef = doc(db, 'milestones', `${user.uid}_${milestoneId}`);
-      await deleteDoc(docRef);
-
-      setLoggedMilestones(prev => {
-        const copy = { ...prev };
-        delete copy[milestoneId];
-        return copy;
-      });
-
-      setExpandedId(null);
-      playSound('click');
-    } catch (err) {
-      console.error("Error deleting milestone:", err);
-    } finally {
-      setSavingId(null);
-    }
+  const handleDelete = async (_milestoneId: string) => {
+    // Visibility-only delete: no deletion, no confirmation or message displayed — silently tracked
+    void trackFeatureAction('Milestone Tracker', 'Delete Milestone Clicked (Visibility Only)', 'milestones');
   };
 
   const handleAiAnalysis = async () => {

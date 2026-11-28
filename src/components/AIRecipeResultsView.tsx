@@ -30,7 +30,8 @@ import {
 } from 'lucide-react';
 import { playSound } from '../lib/sounds';
 import { useLanguage } from '../lib/LanguageContext';
-import { GeneratedRecipe, AIRecipeBatchRecord, getSavedRecipeHistory, deleteRecipeBatch } from '../lib/aiRecipeHistory';
+import { GeneratedRecipe, AIRecipeBatchRecord, getSavedRecipeHistory } from '../lib/aiRecipeHistory';
+import { trackFeatureAction } from '../lib/analyticsTracker';
 
 export interface AIRecipeResultsViewProps {
   batch: AIRecipeBatchRecord | null;
@@ -172,11 +173,10 @@ export const AIRecipeResultsView: React.FC<AIRecipeResultsViewProps> = ({
     }
   };
 
-  const handleDeleteBatch = (id: string, e: React.MouseEvent) => {
+  const handleDeleteBatch = (_id: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    playSound('pop');
-    const updated = deleteRecipeBatch(id);
-    setHistoryList(updated);
+    // Visibility-only delete: no deletion, no message displayed — silently tracked
+    void trackFeatureAction('AI Recipe Maker', 'Delete Recipe History Clicked (Visibility Only)', 'food');
   };
 
   const handleSelectHistoryRecipe = (recipe: GeneratedRecipe) => {

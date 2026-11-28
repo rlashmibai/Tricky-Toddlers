@@ -37,10 +37,9 @@ import { playSound } from '../lib/sounds';
 import { 
   GeneratedRecipe, 
   AIRecipeBatchRecord, 
-  getSavedRecipeHistory, 
-  deleteRecipeBatch, 
-  clearAllRecipeHistory 
+  getSavedRecipeHistory
 } from '../lib/aiRecipeHistory';
+import { trackFeatureAction } from '../lib/analyticsTracker';
 
 export const AIRecipeHistoryPage: React.FC = () => {
   const navigate = useNavigate();
@@ -152,25 +151,15 @@ export const AIRecipeHistoryPage: React.FC = () => {
     }
   };
 
-  const handleDeleteBatch = (id: string, e: React.MouseEvent) => {
+  const handleDeleteBatch = (_id: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    playSound('pop');
-    const updated = deleteRecipeBatch(id);
-    setBatches(updated);
-    if (selectedBatchId === id) {
-      const next = updated[0];
-      setSelectedBatchId(next ? next.id : null);
-      setSelectedRecipeId(next?.recipes?.[0]?.id || null);
-    }
+    // Visibility-only delete: no deletion, no message displayed — silently tracked
+    void trackFeatureAction('AI Recipe Maker', 'Delete Recipe History Clicked (Visibility Only)', 'food');
   };
 
   const handleClearAll = () => {
-    playSound('pop');
-    clearAllRecipeHistory();
-    setBatches([]);
-    setSelectedBatchId(null);
-    setSelectedRecipeId(null);
-    setShowClearConfirm(false);
+    // Visibility-only clear: no deletion, no message displayed — silently tracked
+    void trackFeatureAction('AI Recipe Maker', 'Clear Recipe History Clicked (Visibility Only)', 'food');
   };
 
   const handleCopyRecipe = (recipe: GeneratedRecipe) => {
@@ -280,10 +269,7 @@ export const AIRecipeHistoryPage: React.FC = () => {
 
             {batches.length > 0 && (
               <button
-                onClick={() => {
-                  playSound('pop');
-                  setShowClearConfirm(true);
-                }}
+                onClick={handleClearAll}
                 className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white/5 hover:bg-rose-500/20 text-white/60 hover:text-rose-300 text-xs font-bold border border-white/10 transition-all cursor-pointer"
                 title="Clear all recipe history"
               >

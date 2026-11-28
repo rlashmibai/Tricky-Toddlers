@@ -50,6 +50,7 @@ import nutribandSiliconeWatchImg from '../assets/images/nutriband_silicone_smart
 import { NutriBandIntegratedEcosystem } from './NutriBandIntegratedEcosystem';
 import { useAuth } from '../lib/AuthContext';
 import { PremiumFeatureLock } from './PremiumFeatureLock';
+import { trackFeatureAction } from '../lib/analyticsTracker';
 
 const formatChildAge = (birthDateStr?: string | null, fallbackAge?: string | null): string => {
   if (birthDateStr) {
@@ -224,6 +225,7 @@ export const NutriBandView: React.FC<NutriBandViewProps> = ({
 
   const handleOpenReserveCart = () => {
     playSound('pop');
+    void trackFeatureAction('NutriBand', 'Kit Reservation Cart Opened', 'nutriband');
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
     if (onNavigateToReserveCart) {
       onNavigateToReserveCart();
@@ -234,7 +236,13 @@ export const NutriBandView: React.FC<NutriBandViewProps> = ({
 
   const toggleAccordion = (section: 'temp' | 'sleep' | 'activity' | 'nutrients' | 'gps') => {
     playSound('click');
-    setExpandedSection(prev => prev === section ? null : section);
+    setExpandedSection(prev => {
+      const next = prev === section ? null : section;
+      if (next) {
+        void trackFeatureAction('NutriBand', `Biometric Tile Inspected: ${section}`, 'nutriband');
+      }
+      return next;
+    });
   };
 
   if (isPremiumLocked) {

@@ -27,6 +27,7 @@ import {
 } from 'lucide-react';
 import { playSound } from '../lib/sounds';
 import { useAuth } from '../lib/AuthContext';
+import { trackSiteAnalyticsEvent } from '../lib/analyticsTracker';
 
 export const PlansPremiumPage: React.FC = () => {
   const navigate = useNavigate();
@@ -43,10 +44,26 @@ export const PlansPremiumPage: React.FC = () => {
   const handleChooseFreePlan = () => {
     // "no action when someon choose free plan"
     playSound('click');
+    void trackSiteAnalyticsEvent({
+      accountType: localStorage.getItem('tt_auth_mode') === 'account' ? 'Personal Account' : 'Guest Account',
+      eventType: 'feature_action',
+      featureName: 'Membership Plans',
+      completedAction: 'Free Plan Selected',
+      entryPoint: 'Plans Page',
+      activeTab: 'plans',
+    });
   };
 
   const handleChoosePremiumPlan = () => {
     playSound('pop');
+    void trackSiteAnalyticsEvent({
+      accountType: localStorage.getItem('tt_auth_mode') === 'account' ? 'Personal Account' : 'Guest Account',
+      eventType: 'feature_action',
+      featureName: 'Membership Plans',
+      completedAction: `Premium Plan Previewed (${billingPeriod})`,
+      entryPoint: 'Plans Page',
+      activeTab: 'plans',
+    });
     navigate(`/checkout?period=${billingPeriod}`);
   };
 
@@ -71,6 +88,14 @@ export const PlansPremiumPage: React.FC = () => {
             {activePlan === 'comprehensive' ? 'Premium Plan ✨' : 'Free Plan'}
           </span>
         </div>
+      </div>
+
+      {/* Pilot Version Notice */}
+      <div className="max-w-5xl mx-auto p-4 rounded-2xl bg-amber-500/10 border border-amber-400/30 text-amber-200 text-xs sm:text-sm font-semibold flex items-start gap-3 text-left">
+        <Info className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+        <span>
+          <strong>Pilot Version Notice:</strong> This site is a pilot version and is not yet completely deployed to the market. Subscription plans, billing tiers, and membership checkout currently operate in preview mode.
+        </span>
       </div>
 
       {/* Header & Billing Period Switcher */}

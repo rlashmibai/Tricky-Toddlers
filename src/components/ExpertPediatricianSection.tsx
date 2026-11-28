@@ -412,6 +412,7 @@ const growthChartData = [
 interface MapCameraControllerProps {
   selectedHospital: { placeId: string; location: { lat: number; lng: number } } | null;
   gpsLocation: { lat: number; lng: number } | null;
+  searchCenter: { lat: number; lng: number } | null;
   hospitals: Array<{ placeId: string; location: { lat: number; lng: number } }>;
   cityKey: string;
 }
@@ -419,6 +420,7 @@ interface MapCameraControllerProps {
 const MapCameraController: React.FC<MapCameraControllerProps> = ({
   selectedHospital,
   gpsLocation,
+  searchCenter,
   hospitals,
   cityKey,
 }) => {
@@ -430,21 +432,36 @@ const MapCameraController: React.FC<MapCameraControllerProps> = ({
   useEffect(() => {
     if (!map) return;
     const currentCityKey = `${cityKey}_${gpsLocation ? `${gpsLocation.lat},${gpsLocation.lng}` : 'city'}`;
-    if (prevCityKeyRef.current !== currentCityKey && hospitals.length > 0) {
+    if (prevCityKeyRef.current !== currentCityKey && (hospitals.length > 0 || searchCenter)) {
       prevCityKeyRef.current = currentCityKey;
       if (selectedHospital?.location?.lat && selectedHospital?.location?.lng) {
         prevTargetKeyRef.current = `${selectedHospital.placeId}_${selectedHospital.location.lat}_${selectedHospital.location.lng}`;
       }
       const g = (window as any).google;
-      if (hospitals.length > 1 && g?.maps?.LatLngBounds) {
+
+      // Focus bounds around searchCenter if provided so distant outliers don't zoom the map out too far
+      const validHospitals = hospitals.filter((h) => h.location?.lat && h.location?.lng);
+      const boundedHospitals =
+        searchCenter && validHospitals.length > 1
+          ? validHospitals.filter((h) => {
+              const dLat = Math.abs(h.location.lat - searchCenter.lat);
+              const dLng = Math.abs(h.location.lng - searchCenter.lng);
+              return dLat <= 0.22 && dLng <= 0.22;
+            })
+          : validHospitals;
+      const pinList = boundedHospitals.length > 0 ? boundedHospitals : validHospitals;
+
+      if (pinList.length > 1 && g?.maps?.LatLngBounds) {
         const bounds = new g.maps.LatLngBounds();
         let count = 0;
-        hospitals.forEach((h) => {
-          if (h.location?.lat && h.location?.lng) {
-            bounds.extend(h.location);
-            count++;
-          }
+        pinList.forEach((h) => {
+          bounds.extend(h.location);
+          count++;
         });
+        if (searchCenter?.lat && searchCenter?.lng) {
+          bounds.extend(searchCenter);
+          count++;
+        }
         if (gpsLocation?.lat && gpsLocation?.lng) {
           bounds.extend(gpsLocation);
           count++;
@@ -457,12 +474,15 @@ const MapCameraController: React.FC<MapCameraControllerProps> = ({
       if (gpsLocation?.lat && gpsLocation?.lng) {
         map.panTo(gpsLocation);
         map.setZoom(13);
-      } else if (hospitals[0]?.location?.lat) {
-        map.panTo(hospitals[0].location);
+      } else if (searchCenter?.lat && searchCenter?.lng) {
+        map.panTo(searchCenter);
+        map.setZoom(13);
+      } else if (pinList[0]?.location?.lat) {
+        map.panTo(pinList[0].location);
         map.setZoom(13);
       }
     }
-  }, [map, cityKey, gpsLocation, hospitals, selectedHospital]);
+  }, [map, cityKey, gpsLocation, searchCenter, hospitals, selectedHospital]);
 
   // Smoothly pan to selected hospital only when user selects a different card/pin after results load
   useEffect(() => {
@@ -965,6 +985,7 @@ export const ExpertPediatricianSection: React.FC = () => {
       console.error(e);
     }
     setRegisteringSession(null);
+    void trackFeatureAction('Pediatric Care', 'Live Webinar Registered', 'pediatric');
     setRegisterToast(`Registration confirmed! We have registered ${registerEmail.trim() || 'your email'} for "${session.title}".`);
     setTimeout(() => {
       setRegisterToast(null);
@@ -1069,8 +1090,39 @@ export const ExpertPediatricianSection: React.FC = () => {
   const [expandedReviewsPlaceId, setExpandedReviewsPlaceId] = useState<string | null>(null);
   const [executedSearchQuery, setExecutedSearchQuery] = useState<string>('');
   const [searchLabel, setSearchLabel] = useState<string>('');
+  const [searchCenter, setSearchCenter] = useState<{ lat: number; lng: number } | null>(null);
   const [searchRevision, setSearchRevision] = useState<number>(0);
   const suppressNextCityEffectRef = useRef<boolean>(false);
+
+  const extractCityFromAddress = React.useCallback((address?: string, fallbackCity?: string) => {
+    const cleanFallback = cleanCityName(fallbackCity || '');
+    if (!address) return cleanFallback;
+    const parts = address.split(',').map((s) => s.trim()).filter(Boolean);
+    // Typical Indian address: "..., Bengaluru, Karnataka 560100, India"
+    if (parts.length >= 3) {
+      const candidate = parts[parts.length - 3];
+      if (candidate && !/^\d{5,6}$/.test(candidate)) {
+        return candidate;
+      }
+    }
+    if (parts.length >= 2) {
+      const candidate = parts[parts.length - 2].replace(/\b\d{5,6}\b/g, '').trim();
+      if (candidate) return candidate;
+    }
+    return cleanFallback;
+  }, []);
+
+  const activeLocationDisplay = React.useMemo(() => {
+    if (executedSearchQuery) {
+      return (
+        extractCityFromAddress(
+          selectedMapHospital?.address || googleHospitals[0]?.address || searchLabel,
+          selectedCity
+        ) || searchLabel || executedSearchQuery
+      );
+    }
+    return cleanCityName(selectedCity);
+  }, [executedSearchQuery, selectedMapHospital?.address, googleHospitals, searchLabel, selectedCity, extractCityFromAddress]);
 
   // Build unique clinic label for any Google-listed hospital (appends locality when multiple branches share a name)
   const getHospitalClinicLabel = React.useCallback((hosp: GoogleListedHospital, allList: GoogleListedHospital[]) => {
@@ -1092,10 +1144,11 @@ export const ExpertPediatricianSection: React.FC = () => {
     (hosp: GoogleListedHospital, scrollToStep2: boolean = false, allList?: GoogleListedHospital[]) => {
       const listToUse = allList || googleHospitals;
       const clinicLabel = getHospitalClinicLabel(hosp, listToUse);
+      const resolvedCity = extractCityFromAddress(hosp.address, selectedCity);
       setSelectedMapHospital(hosp);
       setSelectedClinic(clinicLabel);
       setSelectedHospitalAddress(hosp.address || '');
-      const docs = getDoctorsForClinic(clinicLabel, selectedCity, selectedState, hosp.address || '');
+      const docs = getDoctorsForClinic(clinicLabel, resolvedCity, selectedState, hosp.address || '');
       if (docs.length > 0) {
         setSelectedDoc(docs[0]);
       }
@@ -1107,10 +1160,10 @@ export const ExpertPediatricianSection: React.FC = () => {
         });
       }
     },
-    [googleHospitals, getHospitalClinicLabel, selectedCity, selectedState]
+    [googleHospitals, getHospitalClinicLabel, extractCityFromAddress, selectedCity, selectedState]
   );
 
-  // Clicking a pin on the Google Map reorders the 6-hospital list around that hospital and updates Step 2
+  // Clicking a pin on the Google Map reorders the hospital list around that hospital and updates Step 2
   const handleMapMarkerClick = React.useCallback(
     (hosp: GoogleListedHospital) => {
       setMapAnchorHospital(hosp);
@@ -1137,11 +1190,8 @@ export const ExpertPediatricianSection: React.FC = () => {
     setLoadingGoogleHospitals(true);
     setHospitalsError(null);
     setMapAnchorHospital(null);
-    setExecutedSearchQuery(trimmedQuery);
-    setSearchLabel('');
-    // Show ALL hospitals on search so PIN/ZIP/hospital queries list every match cleanly
-    setShowAllHospitals(Boolean(trimmedQuery));
     if (trimmedQuery) {
+      void trackFeatureAction('Pediatric Care', `Hospital Map Searched: ${trimmedQuery}`, 'pediatric');
       setGpsLocation(null);
       if (lookupMode !== 'city') {
         suppressNextCityEffectRef.current = true;
@@ -1175,16 +1225,24 @@ export const ExpertPediatricianSection: React.FC = () => {
       }
 
       if (Array.isArray(data?.hospitals)) {
+        setExecutedSearchQuery(trimmedQuery);
+        setShowAllHospitals(Boolean(trimmedQuery));
         setGoogleHospitals(data.hospitals);
         setSearchLabel(typeof data?.searchLabel === 'string' ? data.searchLabel : trimmedQuery);
+        setSearchCenter(
+          data?.searchCenter?.lat && data?.searchCenter?.lng
+            ? { lat: Number(data.searchCenter.lat), lng: Number(data.searchCenter.lng) }
+            : data.hospitals[0]?.location || null
+        );
         setSearchRevision((prev) => prev + 1);
         if (data.hospitals.length > 0) {
           const first = data.hospitals[0];
           const firstLabel = getHospitalClinicLabel(first, data.hospitals);
+          const resolvedCity = extractCityFromAddress(first.address, city);
           setSelectedMapHospital(first);
           setSelectedClinic(firstLabel);
           setSelectedHospitalAddress(first.address || '');
-          const docs = getDoctorsForClinic(firstLabel, city, state, first.address || '');
+          const docs = getDoctorsForClinic(firstLabel, resolvedCity, state, first.address || '');
           if (docs.length > 0) setSelectedDoc(docs[0]);
         } else {
           setSelectedMapHospital(null);
@@ -1208,7 +1266,9 @@ export const ExpertPediatricianSection: React.FC = () => {
     setMapAnchorHospital(null);
     setExecutedSearchQuery('');
     setSearchLabel('');
+    setSearchCenter({ lat, lng });
     setShowAllHospitals(false);
+    void trackFeatureAction('Pediatric Care', 'GPS Hospital Lookup', 'pediatric');
     try {
       const res = await fetch('/api/hospitals/nearby', {
         method: 'POST',
@@ -1241,10 +1301,11 @@ export const ExpertPediatricianSection: React.FC = () => {
         if (data.hospitals.length > 0) {
           const first = data.hospitals[0];
           const firstLabel = getHospitalClinicLabel(first, data.hospitals);
+          const resolvedCity = extractCityFromAddress(first.address, selectedCity);
           setSelectedMapHospital(first);
           setSelectedClinic(firstLabel);
           setSelectedHospitalAddress(first.address || '');
-          const docs = getDoctorsForClinic(firstLabel, selectedCity, selectedState, first.address || '');
+          const docs = getDoctorsForClinic(firstLabel, resolvedCity, selectedState, first.address || '');
           if (docs.length > 0) setSelectedDoc(docs[0]);
         }
       } else {
@@ -1559,7 +1620,7 @@ export const ExpertPediatricianSection: React.FC = () => {
         userId: user.uid,
         doctorName: selectedDoc.name,
         specialty: selectedDoc.specialty,
-        city: selectedCity,
+        city: activeLocationDisplay || selectedCity,
         clinic: selectedClinic,
         date: bookingDate,
         time: bookingTime,
@@ -2009,6 +2070,7 @@ export const ExpertPediatricianSection: React.FC = () => {
                           setHospitalSearch('');
                           setExecutedSearchQuery('');
                           setSearchLabel('');
+                          setSearchCenter(null);
                           setSelectedState(newState); 
                           localStorage.setItem('user_indian_state', newState);
                           const citiesForNewState = [...(INDIAN_CITIES_BY_STATE[newState] || [])].sort((a, b) => a.localeCompare(b));
@@ -2051,6 +2113,7 @@ export const ExpertPediatricianSection: React.FC = () => {
                           setHospitalSearch('');
                           setExecutedSearchQuery('');
                           setSearchLabel('');
+                          setSearchCenter(null);
                           setSelectedCity(newCity); 
                           setChatCity(newCity);
                           localStorage.setItem('user_city', newCity);
@@ -2098,6 +2161,7 @@ export const ExpertPediatricianSection: React.FC = () => {
                             setHospitalSearch('');
                             setExecutedSearchQuery('');
                             setSearchLabel('');
+                            setSearchCenter(null);
                             if (lookupMode === 'city') {
                               fetchCityGoogleHospitals(selectedCity, selectedState);
                             } else if (gpsLocation) {
@@ -2182,7 +2246,7 @@ export const ExpertPediatricianSection: React.FC = () => {
                 )}
 
                 {/* Interactive Google Map View (@vis.gl/react-google-maps) */}
-                {mapsApiKey && filteredGoogleHospitals.length > 0 && (
+                {mapsApiKey && (googleHospitals.length > 0 || searchCenter || loadingGoogleHospitals) && (
                   <div className="rounded-3xl overflow-hidden border border-white/15 shadow-2xl h-[420px] sm:h-[480px] w-full relative bg-slate-900">
                     <APIProvider apiKey={mapsApiKey}>
                       <GoogleMap
@@ -2190,8 +2254,9 @@ export const ExpertPediatricianSection: React.FC = () => {
                         internalUsageAttributionIds={['gmp_mcp_codeassist_v1_aistudio']}
                         defaultZoom={12}
                         defaultCenter={
+                          searchCenter ||
                           selectedMapHospital?.location?.lat
-                            ? selectedMapHospital.location
+                            ? (searchCenter || selectedMapHospital!.location)
                             : gpsLocation || filteredGoogleHospitals[0]?.location || { lat: 12.9716, lng: 77.5946 }
                         }
                         gestureHandling="greedy"
@@ -2207,6 +2272,7 @@ export const ExpertPediatricianSection: React.FC = () => {
                         <MapCameraController
                           selectedHospital={selectedMapHospital}
                           gpsLocation={lookupMode === 'gps' ? gpsLocation : null}
+                          searchCenter={searchCenter}
                           hospitals={filteredGoogleHospitals}
                           cityKey={`${selectedState}_${selectedCity}_${lookupMode}_${executedSearchQuery}_${searchRevision}`}
                         />
@@ -2236,6 +2302,7 @@ export const ExpertPediatricianSection: React.FC = () => {
                         {selectedMapHospital && selectedMapHospital.location?.lat && (
                           <InfoWindow
                             position={selectedMapHospital.location}
+                            disableAutoPan={true}
                             onCloseClick={() => setSelectedMapHospital(null)}
                           >
                             <div className="text-slate-900 p-1.5 max-w-[260px] space-y-2">
@@ -2276,6 +2343,14 @@ export const ExpertPediatricianSection: React.FC = () => {
                         )}
                       </GoogleMap>
                     </APIProvider>
+                    {loadingGoogleHospitals && (
+                      <div className="absolute inset-0 z-30 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center">
+                        <div className="px-5 py-3 rounded-2xl bg-[#0d1424]/95 border border-indigo-400/40 text-white text-xs sm:text-sm font-bold flex items-center gap-2.5 shadow-2xl">
+                          <Loader2 className="w-4 h-4 animate-spin text-indigo-400" />
+                          <span>Updating Google Map &amp; hospitals...</span>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
 
@@ -2492,7 +2567,7 @@ export const ExpertPediatricianSection: React.FC = () => {
                         <div className="text-xs sm:text-sm text-slate-300">
                           {showAllHospitals ? (
                             <span>
-                              Showing all <strong className="text-white">{orderedGoogleHospitals.length}</strong> Google-listed pediatric hospitals in {cleanCityName(selectedCity)}.
+                              Showing all <strong className="text-white">{orderedGoogleHospitals.length}</strong> Google-listed hospitals in {activeLocationDisplay}.
                             </span>
                           ) : (
                             <span>
@@ -2579,7 +2654,7 @@ export const ExpertPediatricianSection: React.FC = () => {
                           setSelectedMapHospital(matchedGoogleHosp);
                         }
                         setSelectedHospitalAddress(addr);
-                        const docs = getDoctorsForClinic(newClinic, selectedCity, selectedState, addr);
+                        const docs = getDoctorsForClinic(newClinic, activeLocationDisplay, selectedState, addr);
                         if (docs.length > 0) setSelectedDoc(docs[0]);
                         playSound('click'); 
                       }}
@@ -2598,7 +2673,7 @@ export const ExpertPediatricianSection: React.FC = () => {
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                     <label className="block text-base font-black text-white">{gt('doctorLabel')}</label>
                     <span className="text-xs sm:text-sm text-indigo-300 font-semibold">
-                      {clinicDoctors.length} Verified at {selectedClinic || cleanCityName(selectedCity)}
+                      {clinicDoctors.length} Verified at {selectedClinic || activeLocationDisplay}
                     </span>
                   </div>
 
@@ -2785,7 +2860,7 @@ export const ExpertPediatricianSection: React.FC = () => {
                       </span>
                     </div>
                     <p className="text-xs sm:text-sm text-slate-300">
-                      {selectedDoc.name} ({selectedDoc.degrees}) · {selectedClinic}, {cleanCityName(selectedCity)}
+                      {selectedDoc.name} ({selectedDoc.degrees}) · {selectedClinic}, {activeLocationDisplay}
                     </p>
                   </div>
                   <div className="text-lg sm:text-xl font-black text-emerald-400 shrink-0">
@@ -3078,7 +3153,11 @@ export const ExpertPediatricianSection: React.FC = () => {
                             <div className="pt-4 border-t border-white/10">
                               {session.isLiveNow ? (
                                 <button
-                                  onClick={() => { setIsLiveActive(true); playSound('glass'); }}
+                                  onClick={() => {
+                                    setIsLiveActive(true);
+                                    playSound('glass');
+                                    void trackFeatureAction('Pediatric Care', 'Live Webinar Joined', 'pediatric');
+                                  }}
                                   className="w-full py-4 bg-rose-600 hover:bg-rose-500 text-white font-black text-sm sm:text-base rounded-2xl transition-all shadow-lg shadow-rose-600/25 flex items-center justify-center gap-2 cursor-pointer"
                                 >
                                   <Video className="w-5 h-5" />

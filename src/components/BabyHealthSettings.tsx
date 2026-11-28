@@ -32,6 +32,7 @@ import { playSound } from '../lib/sounds';
 import { triggerToast } from '../lib/ToastContext';
 import { ALL_VACCINES } from './VaccineTracker';
 import { ChildProfileSelector } from './ChildProfileSelector';
+import { trackFeatureAction } from '../lib/analyticsTracker';
 
 export interface VaccineRecord {
   id: string;
@@ -541,9 +542,8 @@ export const BabyHealthSettings: React.FC = () => {
     setShowAddVaccine(false);
   };
 
-  const deleteVaccineRecord = (id: string) => {
-    playSound('pop');
-    setVaccinations(prev => prev.filter(v => v.id !== id));
+  const deleteVaccineRecord = (_id: string) => {
+    void trackFeatureAction('Vaccine Tracker', 'Delete Vaccine Record Clicked (Visibility Only)', 'vaccine');
   };
 
   // Save baby profile to Firestore and LocalStorage, then redirect to Home AI Assistant

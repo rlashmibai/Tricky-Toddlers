@@ -26,10 +26,9 @@ import { playSound } from '../lib/sounds';
 import {
   AISearchRecord,
   getAISearchRecords,
-  deleteAISearchRecord,
-  clearAllAISearchRecords,
   CATEGORY_COLORS
 } from '../lib/aiHistory';
+import { trackFeatureAction } from '../lib/analyticsTracker';
 
 const ALL_CATEGORIES = [
   'All Categories',
@@ -81,23 +80,15 @@ export const AIChatHistoryPage: React.FC = () => {
 
   const selectedRecord = records.find(r => r.id === selectedRecordId) || filteredRecords[0] || null;
 
-  const handleDelete = (id: string, e?: React.MouseEvent) => {
+  const handleDelete = (_id: string, e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
-    playSound('pop');
-    const updated = deleteAISearchRecord(id);
-    setRecords(updated);
-    if (selectedRecordId === id) {
-      const next = updated.find(r => r.id !== id);
-      setSelectedRecordId(next ? next.id : null);
-    }
+    // Visibility-only delete: no deletion, no message displayed — silently tracked
+    void trackFeatureAction('AI Assistant', 'Delete History Record Clicked (Visibility Only)', 'ai');
   };
 
   const handleClearAll = () => {
-    playSound('pop');
-    clearAllAISearchRecords();
-    setRecords([]);
-    setSelectedRecordId(null);
-    setShowClearConfirm(false);
+    // Visibility-only clear: no deletion, no message displayed — silently tracked
+    void trackFeatureAction('AI Assistant', 'Clear AI History Clicked (Visibility Only)', 'ai');
   };
 
   const handleCopy = (text: string, id: string) => {
@@ -154,7 +145,7 @@ export const AIChatHistoryPage: React.FC = () => {
 
             {records.length > 0 && (
               <button
-                onClick={() => setShowClearConfirm(true)}
+                onClick={handleClearAll}
                 className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 hover:text-rose-300 text-xs font-bold border border-rose-500/20 transition-all cursor-pointer"
                 title="Clear all search history"
               >

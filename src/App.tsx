@@ -33,7 +33,7 @@ import { CheckoutPage } from './components/CheckoutPage';
 import { AdminDashboard } from './components/AdminDashboard';
 import { Loader2, ArrowUp } from 'lucide-react';
 import { playSound } from './lib/sounds';
-import { trackUrlVisit, trackSessionDurationPing } from './lib/analyticsTracker';
+import { trackUrlVisit, trackSessionDurationPing, trackSiteAnalyticsEvent } from './lib/analyticsTracker';
 import { ensureFreshAIHistory } from './lib/aiHistory';
 import { ensureFreshRecipeHistory } from './lib/aiRecipeHistory';
 
@@ -79,6 +79,48 @@ const AppContent: React.FC = () => {
   React.useEffect(() => {
     if (currentUid && !loading) {
       void trackUrlVisit(location.pathname);
+
+      const p = (location.pathname || '/').toLowerCase();
+      if (!p.startsWith('/admin') && p !== '/' && p !== '/tricky-toddlers') {
+        const routeFeatureMap: Array<[string, string]> = [
+          ['/faq', 'FAQ & Help'],
+          ['/faqs', 'FAQ & Help'],
+          ['/about', 'About Us'],
+          ['/plans', 'Membership Plans'],
+          ['/premium', 'Membership Plans'],
+          ['/checkout', 'Membership Checkout'],
+          ['/contact', 'Contact & Feedback'],
+          ['/feedback', 'Contact & Feedback'],
+          ['/profile', 'Profile & Settings'],
+          ['/dietary-preferences', 'Dietary Preferences'],
+          ['/ai-chat-history', 'AI Assistant'],
+          ['/ai-recipe-history', 'AI Recipe Maker'],
+          ['/recipe-history', 'AI Recipe Maker'],
+          ['/consultation-history', 'Pediatric Care'],
+          ['/consultations', 'Pediatric Care'],
+          ['/doctor-chat-history', 'Pediatric Care'],
+          ['/sample-foods', 'FoodLens AI'],
+          ['/dish-log', 'FoodLens AI'],
+          ['/daily-dish-log', 'FoodLens AI'],
+          ['/cart', 'NutriBand'],
+          ['/nutriband-cart', 'NutriBand'],
+          ['/community-guidelines', 'Community Help'],
+          ['/disclaimer', 'Legal & Policies'],
+          ['/privacy', 'Legal & Policies'],
+          ['/cookie', 'Legal & Policies'],
+        ];
+        const match = routeFeatureMap.find(([prefix]) => p === prefix || p.endsWith(prefix));
+        if (match) {
+          const accountMode = localStorage.getItem('tt_auth_mode') === 'account' ? 'Personal Account' : 'Guest Account';
+          void trackSiteAnalyticsEvent({
+            accountType: accountMode,
+            eventType: 'feature_use',
+            featureName: match[1],
+            entryPoint: `Page View: ${p}`,
+            activeTab: p.replace(/^\/+/, '').slice(0, 60) || 'page',
+          });
+        }
+      }
     }
   }, [currentUid, loading, location.pathname]);
 

@@ -818,11 +818,9 @@ export const VaccineTracker: React.FC = () => {
     setShowAddModal(false);
   };
 
-  // Delete custom vaccine
-  const handleDeleteVaccine = (id: string) => {
-    playSound('pop');
-    const updated = vaccines.filter(v => v.id !== id);
-    persistVaccines(updated);
+  // Delete custom vaccine (Visibility-only: no deletion, no message displayed — silently tracked)
+  const handleDeleteVaccine = (_id: string) => {
+    void trackFeatureAction('Vaccine Tracker', 'Delete Vaccine Clicked (Visibility Only)', 'vaccine');
   };
 
   // 1-Tap Calendar Sync (.ics download for Apple Calendar, Google Calendar, Outlook)

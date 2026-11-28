@@ -43,6 +43,7 @@ import nutribandBatteryCoinImg from '../assets/images/small_phone_usb_cable.svg'
 import nutribandCaseImg from '../assets/images/storage_box_half_open.svg';
 import { useAuth } from '../lib/AuthContext';
 import { PremiumFeatureLock } from './PremiumFeatureLock';
+import { trackFeatureAction } from '../lib/analyticsTracker';
 
 export interface CottonStrapOption {
   id: string;
@@ -183,6 +184,7 @@ export const NutriBandCartPage: React.FC<NutriBandCartPageProps> = ({ onBack }) 
   const handlePlaceOrder = () => {
     playSound('pop');
     setIsProcessing(true);
+    void trackFeatureAction('NutriBand', `Kit Checkout Previewed (${currentStrap.name})`, 'nutriband');
     setTimeout(() => {
       syncToStoreCart();
       setIsProcessing(false);

@@ -2773,13 +2773,14 @@ Include a brief reminder that for acute illnesses or persistent high fevers, an 
     };
 
     try {
-      // Case 1: User searched by PIN / ZIP code (e.g., 560100)
+      // Case 1: User searched by PIN / ZIP code (e.g., 560100 or 10001)
       if (pinMatch) {
         const pinCode = pinMatch[1];
+        const isSixDigitIndianPin = pinCode.length === 6;
         let pinCenter: { lat: number; lng: number } | null = null;
         let searchLabel = pinCode;
 
-        // First resolve the geographic center of the PIN code
+        // First resolve the geographic center of the PIN / ZIP code
         const pinGeoResp = await fetch("https://places.googleapis.com/v1/places:searchText", {
           method: "POST",
           headers: {
@@ -2789,7 +2790,7 @@ Include a brief reminder that for acute illnesses or persistent high fevers, an 
             "X-Goog-FieldMask": "places.id,places.displayName,places.formattedAddress,places.location",
           },
           body: JSON.stringify({
-            textQuery: `${pinCode}, India`,
+            textQuery: isSixDigitIndianPin ? `${pinCode}, India` : `postal code ${pinCode}`,
             maxResultCount: 1,
           }),
         });
@@ -2812,24 +2813,36 @@ Include a brief reminder that for acute illnesses or persistent high fevers, an 
           searchLabel = geoPlace.formattedAddress || geoPlace.displayName?.text || pinCode;
         }
 
-        const textSearchBody: any = {
-          textQuery: `hospitals pediatric children clinic in ${rawQuery} India`,
+        const regionSuffix = isSixDigitIndianPin ? " India" : "";
+        const generalTextBody: any = {
+          textQuery: `hospitals in ${rawQuery}${regionSuffix}`,
+          maxResultCount: 20,
+        };
+        const pediatricTextBody: any = {
+          textQuery: `pediatric children maternity hospital clinic in ${rawQuery}${regionSuffix}`,
           maxResultCount: 20,
         };
         if (pinCenter) {
-          textSearchBody.locationBias = {
+          const biasCircle = {
             circle: {
               center: { latitude: pinCenter.lat, longitude: pinCenter.lng },
-              radius: 8000,
+              radius: 10000,
             },
           };
+          generalTextBody.locationBias = biasCircle;
+          pediatricTextBody.locationBias = biasCircle;
         }
 
         const requests: Promise<Response>[] = [
           fetch("https://places.googleapis.com/v1/places:searchText", {
             method: "POST",
             headers: placesHeaders,
-            body: JSON.stringify(textSearchBody),
+            body: JSON.stringify(generalTextBody),
+          }),
+          fetch("https://places.googleapis.com/v1/places:searchText", {
+            method: "POST",
+            headers: placesHeaders,
+            body: JSON.stringify(pediatricTextBody),
           }),
         ];
 
@@ -2844,7 +2857,7 @@ Include a brief reminder that for acute illnesses or persistent high fevers, an 
                 locationRestriction: {
                   circle: {
                     center: { latitude: pinCenter.lat, longitude: pinCenter.lng },
-                    radius: 8000,
+                    radius: 10000,
                   },
                 },
               }),
@@ -2879,24 +2892,25 @@ Include a brief reminder that for acute illnesses or persistent high fevers, an 
           }
         }
 
-        const hospitals = mergedPlaces.map(mapGooglePlaceToHospital);
-        // Sort by distance from PIN center so exact PIN-area hospitals appear first
-        if (pinCenter && hospitals.length > 1) {
-          hospitals.sort((a: any, b: any) => {
-            const dA =
-              Math.pow((a.location?.lat || 0) - pinCenter!.lat, 2) +
-              Math.pow((a.location?.lng || 0) - pinCenter!.lng, 2);
-            const dB =
-              Math.pow((b.location?.lat || 0) - pinCenter!.lat, 2) +
-              Math.pow((b.location?.lng || 0) - pinCenter!.lng, 2);
-            return dA - dB;
-          });
+        let hospitals = mergedPlaces.map(mapGooglePlaceToHospital);
+        // Sort by distance from PIN center and keep results in the local ~20km area when available
+        if (pinCenter && hospitals.length > 0) {
+          const calcDistKm = (loc: { lat: number; lng: number }) => {
+            const dLat = (loc.lat - pinCenter!.lat) * 111;
+            const dLng = (loc.lng - pinCenter!.lng) * 111 * Math.cos((pinCenter!.lat * Math.PI) / 180);
+            return Math.sqrt(dLat * dLat + dLng * dLng);
+          };
+          hospitals.sort((a: any, b: any) => calcDistKm(a.location) - calcDistKm(b.location));
+          const nearbyOnly = hospitals.filter((h: any) => h.location?.lat && calcDistKm(h.location) <= 22);
+          if (nearbyOnly.length > 0) {
+            hospitals = nearbyOnly;
+          }
         }
 
         return res.json({
           hospitals,
           source: "google_places_api_live",
-          queryUsed: textSearchBody.textQuery,
+          queryUsed: generalTextBody.textQuery,
           searchCenter: pinCenter || hospitals[0]?.location || null,
           searchLabel,
         });
@@ -2904,55 +2918,64 @@ Include a brief reminder that for acute illnesses or persistent high fevers, an 
 
       // Case 2: Specific hospital name or locality query
       if (rawQuery) {
-        const scopedQuery = `${rawQuery} hospital pediatric clinic in ${cleanCity} ${cleanState} India`.replace(/\s+/g, " ").trim();
-        const resp = await fetch("https://places.googleapis.com/v1/places:searchText", {
-          method: "POST",
-          headers: placesHeaders,
-          body: JSON.stringify({
-            textQuery: scopedQuery,
-            maxResultCount: 20,
+        const hasHospitalWord = /\b(hospital|clinic|medical|institute|centre|center|nursing)\b/i.test(rawQuery);
+        const queryStem = hasHospitalWord ? rawQuery : `${rawQuery} hospital`;
+        const scopedQuery = `${queryStem}${cleanCity ? ` ${cleanCity}` : ""}${cleanState ? ` ${cleanState}` : ""} India`.replace(/\s+/g, " ").trim();
+        const broadQuery = `${queryStem} India`.replace(/\s+/g, " ").trim();
+
+        const [resp, broadResp] = await Promise.all([
+          fetch("https://places.googleapis.com/v1/places:searchText", {
+            method: "POST",
+            headers: placesHeaders,
+            body: JSON.stringify({
+              textQuery: scopedQuery,
+              maxResultCount: 20,
+            }),
           }),
-        });
-
-        if (resp.status === 429) {
-          return res.status(429).json({ error: "RESOURCE_EXHAUSTED", status: "RESOURCE_EXHAUSTED" });
-        }
-
-        const data: any = await resp.json();
-        if (data?.error?.status === "RESOURCE_EXHAUSTED") {
-          return res.status(429).json({ error: "RESOURCE_EXHAUSTED", status: "RESOURCE_EXHAUSTED" });
-        }
-
-        let places = Array.isArray(data?.places) ? data.places : [];
-        let queryUsed = scopedQuery;
-
-        // If few results found within dropdown city/state, broaden search across India (e.g. searching a hospital or area in another city)
-        if (places.length < 3) {
-          const broadQuery = `${rawQuery} hospital India`;
-          const broadResp = await fetch("https://places.googleapis.com/v1/places:searchText", {
+          fetch("https://places.googleapis.com/v1/places:searchText", {
             method: "POST",
             headers: placesHeaders,
             body: JSON.stringify({
               textQuery: broadQuery,
               maxResultCount: 20,
             }),
-          });
-          if (broadResp.status === 429) {
-            return res.status(429).json({ error: "RESOURCE_EXHAUSTED", status: "RESOURCE_EXHAUSTED" });
-          }
-          const broadData: any = await broadResp.json();
-          if (broadData?.error?.status === "RESOURCE_EXHAUSTED") {
-            return res.status(429).json({ error: "RESOURCE_EXHAUSTED", status: "RESOURCE_EXHAUSTED" });
-          }
-          if (Array.isArray(broadData?.places) && broadData.places.length > places.length) {
-            const seen = new Set(places.map((p: any) => p.id));
-            for (const p of broadData.places) {
-              if (p?.id && !seen.has(p.id)) {
-                seen.add(p.id);
-                places.push(p);
-              }
+          }),
+        ]);
+
+        if (resp.status === 429 || broadResp.status === 429) {
+          return res.status(429).json({ error: "RESOURCE_EXHAUSTED", status: "RESOURCE_EXHAUSTED" });
+        }
+
+        const [data, broadData]: any[] = await Promise.all([resp.json(), broadResp.json()]);
+        if (data?.error?.status === "RESOURCE_EXHAUSTED" || broadData?.error?.status === "RESOURCE_EXHAUSTED") {
+          return res.status(429).json({ error: "RESOURCE_EXHAUSTED", status: "RESOURCE_EXHAUSTED" });
+        }
+
+        const seen = new Set<string>();
+        const places: any[] = [];
+        const primaryList = Array.isArray(data?.places) ? data.places : [];
+        const secondaryList = Array.isArray(broadData?.places) ? broadData.places : [];
+
+        // Check whether broad India-wide results match the searched query better than the dropdown city list
+        const queryTokens = rawQuery
+          .toLowerCase()
+          .split(/\s+/)
+          .filter((t) => t.length > 2 && !["hospital", "clinic", "medical", "india", "the", "and"].includes(t));
+        const scorePlaceMatch = (p: any) => {
+          const hay = `${p?.displayName?.text || ""} ${p?.formattedAddress || ""}`.toLowerCase();
+          return queryTokens.reduce((acc, tok) => acc + (hay.includes(tok) ? 1 : 0), 0);
+        };
+        const topPrimaryScore = primaryList[0] ? scorePlaceMatch(primaryList[0]) : 0;
+        const topSecondaryScore = secondaryList[0] ? scorePlaceMatch(secondaryList[0]) : 0;
+        const preferBroad = primaryList.length < 3 || topSecondaryScore > topPrimaryScore;
+
+        const orderedLists = preferBroad ? [secondaryList, primaryList] : [primaryList, secondaryList];
+        for (const list of orderedLists) {
+          for (const p of list) {
+            if (p?.id && !seen.has(p.id)) {
+              seen.add(p.id);
+              places.push(p);
             }
-            queryUsed = broadQuery;
           }
         }
 
@@ -2960,7 +2983,7 @@ Include a brief reminder that for acute illnesses or persistent high fevers, an 
         return res.json({
           hospitals,
           source: "google_places_api_live",
-          queryUsed,
+          queryUsed: preferBroad ? broadQuery : scopedQuery,
           searchCenter: hospitals[0]?.location || null,
           searchLabel: rawQuery,
         });

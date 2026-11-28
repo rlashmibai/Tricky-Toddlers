@@ -35,6 +35,7 @@ import {
 import { playSound } from '../lib/sounds';
 import { triggerToast } from '../lib/ToastContext';
 import { INDIAN_CITIES_BY_STATE } from '../data/indianCitiesData';
+import { trackSiteAnalyticsEvent } from '../lib/analyticsTracker';
 
 export const INDIAN_STATES_AND_UTS = [
   "Andaman and Nicobar Islands",
@@ -304,11 +305,27 @@ export const ProfilePage: React.FC = () => {
 
     setSuccess("Child records exported successfully as JSON!");
     setTimeout(() => setSuccess(null), 3500);
+    void trackSiteAnalyticsEvent({
+      accountType: isAccountUser ? 'Personal Account' : 'Guest Account',
+      eventType: 'feature_action',
+      featureName: 'Profile & Settings',
+      completedAction: 'JSON Child Records Exported',
+      entryPoint: 'Profile Page',
+      activeTab: 'profile',
+    });
   };
 
   // 2. Pediatrician Health PDF / Printable Report Export
   const handleExportPediatricianPDF = () => {
     playSound('glass');
+    void trackSiteAnalyticsEvent({
+      accountType: isAccountUser ? 'Personal Account' : 'Guest Account',
+      eventType: 'feature_action',
+      featureName: 'Profile & Settings',
+      completedAction: 'Pediatrician PDF Exported',
+      entryPoint: 'Profile Page',
+      activeTab: 'profile',
+    });
     const childNameDisplay = child1Name || 'Child 1';
     const childAgeDisplay = calculateAge(child1DOB) || '2 Years';
     const childBloodDisplay = child1BloodGroup || 'O+';
@@ -458,13 +475,29 @@ export const ProfilePage: React.FC = () => {
     printWindow.document.close();
   };
 
-  // 3. Delete My Data (Visibility-only: no action, no deletion, no message)
+  // 3. Delete My Data (Visibility-only: no action, no deletion, no message — silently tracked)
   const handleDeleteChildData = async () => {
+    void trackSiteAnalyticsEvent({
+      accountType: isAccountUser ? 'Personal Account' : 'Guest Account',
+      eventType: 'feature_action',
+      featureName: 'Profile & Settings',
+      completedAction: 'Clear Child Data Clicked (Visibility Only)',
+      entryPoint: 'Profile Delete Control (Visibility Only)',
+      activeTab: 'profile',
+    });
     return;
   };
 
-  // 4. Delete Meal Photos (Visibility-only: no action, no deletion, no message)
+  // 4. Delete Meal Photos (Visibility-only: no action, no deletion, no message — silently tracked)
   const handleDeleteMealPhotos = () => {
+    void trackSiteAnalyticsEvent({
+      accountType: isAccountUser ? 'Personal Account' : 'Guest Account',
+      eventType: 'feature_action',
+      featureName: 'Profile & Settings',
+      completedAction: 'Delete Meal Photos Clicked (Visibility Only)',
+      entryPoint: 'Profile Delete Control (Visibility Only)',
+      activeTab: 'profile',
+    });
     return;
   };
 
@@ -487,10 +520,26 @@ export const ProfilePage: React.FC = () => {
     const label = period === 'forever' ? 'Keep Indefinitely' : period === '1year' ? '1 Year' : period === '6months' ? '6 Months' : '90 Days';
     setSuccess(`Data retention policy updated to: ${label}`);
     setTimeout(() => setSuccess(null), 3000);
+    void trackSiteAnalyticsEvent({
+      accountType: isAccountUser ? 'Personal Account' : 'Guest Account',
+      eventType: 'feature_action',
+      featureName: 'Profile & Settings',
+      completedAction: `Data Retention Updated (${label})`,
+      entryPoint: 'Profile Page',
+      activeTab: 'profile',
+    });
   };
 
-  // 6. Complete Account Deletion (Visibility-only: no action, no deletion, no message)
+  // 6. Complete Account Deletion (Visibility-only: no action, no deletion, no message — silently tracked)
   const handleDeleteAccount = async () => {
+    void trackSiteAnalyticsEvent({
+      accountType: isAccountUser ? 'Personal Account' : 'Guest Account',
+      eventType: 'feature_action',
+      featureName: 'Profile & Settings',
+      completedAction: 'Delete Account Clicked (Visibility Only)',
+      entryPoint: 'Profile Delete Control (Visibility Only)',
+      activeTab: 'profile',
+    });
     return;
   };
 
@@ -569,10 +618,6 @@ export const ProfilePage: React.FC = () => {
       const data = await res.json();
       setErasureCertData(data);
 
-      // Clear local AI & scan histories immediately as proof of erasure
-      localStorage.removeItem('meal_scan_photos');
-      localStorage.removeItem('food_lens_history');
-
       const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -585,6 +630,14 @@ export const ProfilePage: React.FC = () => {
 
       setSuccess(`DPDP Section 12(3) Erasure Certificate (${data.certificateId}) generated and downloaded.`);
       setTimeout(() => setSuccess(null), 4000);
+      void trackSiteAnalyticsEvent({
+        accountType: isAccountUser ? 'Personal Account' : 'Guest Account',
+        eventType: 'feature_action',
+        featureName: 'Profile & Settings',
+        completedAction: 'DPDP Erasure Certificate Downloaded',
+        entryPoint: 'Profile Page',
+        activeTab: 'profile',
+      });
     } catch (err) {
       setError('Could not generate DPDP Erasure Certificate.');
     }
@@ -846,6 +899,14 @@ export const ProfilePage: React.FC = () => {
       playSound('pop');
       setSuccess("Profile settings saved successfully! All features and tabs are now personalized to your settings.");
       triggerToast(`Profile settings saved for ${effectiveParentName} & ${activeName}!`, 'success', 'Profile Saved');
+      void trackSiteAnalyticsEvent({
+        accountType: isAccountUser ? 'Personal Account' : 'Guest Account',
+        eventType: 'feature_action',
+        featureName: 'Profile & Settings',
+        completedAction: 'Profile Settings Saved',
+        entryPoint: 'Profile Page',
+        activeTab: 'profile',
+      });
       
       // Auto-navigate to AI Assistant tab so user can immediately use personalized tools
       setTimeout(() => {
@@ -1847,14 +1908,14 @@ export const ProfilePage: React.FC = () => {
                 <div className="flex items-center gap-2">
                   <button
                     type="button"
-                    onClick={() => {}}
+                    onClick={handleDeleteChildData}
                     className="flex-1 py-2 px-3 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 border border-rose-500/40 text-rose-300 hover:text-white font-bold text-xs transition-all active:scale-95 cursor-pointer"
                   >
                     Clear Child Data
                   </button>
                   <button
                     type="button"
-                    onClick={() => {}}
+                    onClick={handleDeleteAccount}
                     className="flex-1 py-2 px-3 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-black text-xs transition-all active:scale-95 cursor-pointer shadow-md"
                   >
                     Delete Account

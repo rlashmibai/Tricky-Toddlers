@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { playSound } from '../lib/sounds';
 import { isVoiceMuted, setVoiceMuted, toggleVoiceMute, speakIndianEnglish } from '../lib/indianSpeech';
+import { trackFeatureAction } from '../lib/analyticsTracker';
 import { ToddlerEmotionsSection } from './ToddlerEmotionsSection';
 import { ToddlerBodyPartsSection } from './ToddlerBodyPartsSection';
 import { ToddlerShapesSection } from './ToddlerShapesSection';
@@ -786,6 +787,7 @@ export const LearningCenter: React.FC = () => {
     };
     if (modeLabels[mode]) {
       speakIndianEnglish(modeLabels[mode]);
+      void trackFeatureAction('Toddler Academy', `Module Opened: ${modeLabels[mode]}`, 'learning');
     }
   };
 
@@ -805,6 +807,7 @@ export const LearningCenter: React.FC = () => {
       const currentQuest = COLOR_QUESTS[questIndex];
       if (currentQuest && result === currentQuest.target) {
         setShowQuestSuccess(true);
+        void trackFeatureAction('Toddler Academy', `Color Quest Completed: ${result}`, 'learning');
         if (!completedQuests.includes(currentQuest.id)) {
           setCompletedQuests(prev => [...prev, currentQuest.id]);
         }

@@ -36,6 +36,7 @@ import {
 import { playSound } from '../lib/sounds';
 import { useLanguage } from '../lib/LanguageContext';
 import { triggerToast } from '../lib/ToastContext';
+import { trackFeatureAction } from '../lib/analyticsTracker';
 
 import { Product, PRODUCTS } from "../data/storeProducts";
 export type { Product };
@@ -140,6 +141,7 @@ export const BabyStore: React.FC<BabyStoreProps> = ({ onGoHome, initialView = 'c
       return [...prev, { product, quantity: quantityToAdd, isGift: false }];
     });
     triggerToast(`${product.name} (${quantityToAdd}x) added to your cart.`, 'cart', 'Added to Cart');
+    void trackFeatureAction('Baby Store', `Added to Cart: ${product.name}`, 'store');
   };
 
   const updateQuantity = (productId: string, delta: number) => {
@@ -213,6 +215,7 @@ export const BabyStore: React.FC<BabyStoreProps> = ({ onGoHome, initialView = 'c
     setIsCheckoutModalOpen(false);
     setCart([]);
     triggerToast(`Order ${newOrderId} placed! Thank you for shopping at Baby Store.`, 'success', 'Order Confirmed');
+    void trackFeatureAction('Baby Store', 'Store Checkout Previewed', 'store');
   };
 
   // Remove all NutriBand-related products from Baby Store page only
@@ -787,6 +790,14 @@ export const BabyStore: React.FC<BabyStoreProps> = ({ onGoHome, initialView = 'c
                   >
                     <X className="w-5 h-5" />
                   </button>
+                </div>
+
+                {/* Pilot Version Notice */}
+                <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-400/30 text-amber-200 text-xs font-semibold flex items-start gap-2.5 text-left">
+                  <Info className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                  <span>
+                    <strong>Pilot Version Notice:</strong> This site is a pilot version and is not yet completely deployed to the market. Express Checkout runs in preview mode with no real charge or dispatch.
+                  </span>
                 </div>
 
                 {/* Address Form */}
