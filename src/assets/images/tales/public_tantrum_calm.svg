@@ -1,100 +1,116 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 480" width="800" height="480">
   <defs>
-    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#31102b" />
-      <stop offset="100%" stop-color="#120510" />
-    </linearGradient>
-    <radialGradient id="calmAura" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.7" />
-      <stop offset="50%" stop-color="#2dd4bf" stop-opacity="0.3" />
-      <stop offset="100%" stop-color="#0f172a" stop-opacity="0" />
-    </radialGradient>
-    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
-      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.5" />
+    <filter id="softShadow_t4" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#1e293b" flood-opacity="0.12" />
     </filter>
+    
   </defs>
-
-  <rect width="800" height="480" fill="url(#bgGrad)" />
-
-  <!-- Category Pill Badge -->
-  <g transform="translate(48, 36)">
-    <rect width="160" height="32" rx="16" fill="#000000" opacity="0.4" />
-    <rect width="160" height="32" rx="16" fill="none" stroke="#fb7185" stroke-width="1.5" opacity="0.7" />
-    <circle cx="20" cy="16" r="5" fill="#fb7185" />
-    <text x="32" y="21" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="11" fill="#fb7185" letter-spacing="2">TANTRUMS</text>
-  </g>
-
-  <!-- Central Thematic Illustration: Kneeling Parent at Eye-Level in Supermarket, Co-regulation Shield -->
-  <g filter="url(#shadow)" transform="translate(400, 180)">
-    <!-- Store Floor Line -->
-    <line x1="-240" y1="70" x2="240" y2="70" stroke="#475569" stroke-width="3" stroke-linecap="round" />
-
-    <!-- Grocery Shopping Cart in background on far right -->
-    <g transform="translate(170, 10)">
-      <!-- Cart Wire Mesh Basket -->
-      <polygon points="-35,-25 35,-25 25,25 -25,25" fill="none" stroke="#64748b" stroke-width="2" />
-      <line x1="-30" y1="-10" x2="30" y2="-10" stroke="#64748b" stroke-width="1.5" />
-      <line x1="-27" y1="5" x2="27" y2="5" stroke="#64748b" stroke-width="1.5" />
-      <!-- Cart Handle -->
-      <rect x="-42" y="-30" width="8" height="20" rx="3" fill="#ef4444" />
-      <!-- Cart Wheels -->
-      <circle cx="-15" cy="35" r="7" fill="#334155" stroke="#94a3b8" stroke-width="1.5" />
-      <circle cx="20" cy="35" r="7" fill="#334155" stroke="#94a3b8" stroke-width="1.5" />
+  
+    <!-- Supermarket aisle warm soft backdrop -->
+    <rect width="800" height="480" fill="#F8FAFC"/>
+    <rect y="330" width="800" height="150" fill="#E2E8F0"/>
+    <!-- Grocery shelves in soft pastel -->
+    <rect x="45" y="45" width="220" height="250" rx="14" fill="#FEF3C7"/>
+    <rect x="65" y="85" width="180" height="10" fill="#D97706" opacity="0.4"/>
+    <rect x="65" y="165" width="180" height="10" fill="#D97706" opacity="0.4"/>
+    <circle cx="95" cy="70" r="14" fill="#EF4444"/><circle cx="135" cy="70" r="14" fill="#22C55E"/><circle cx="175" cy="70" r="14" fill="#F97316"/>
+    <!-- Shopping cart right side -->
+    <polygon points="560,210 715,210 695,310 580,310" fill="none" stroke="#64748B" stroke-width="6" stroke-linejoin="round"/>
+    <circle cx="595" cy="340" r="12" fill="#334155"/><circle cx="685" cy="340" r="12" fill="#334155"/>
+    <!-- Calm parent kneeling down to floor level beside upset toddler -->
+    
+    <g transform="translate(300, 276) scale(0.94)">
+      <path d="M-42,56 Q-36,92 18,92 L38,92" fill="none" stroke="#334155" stroke-width="26" stroke-linecap="round"/>
+      <!-- Hair back -->
+      <path d="M-40,-62 C-46,-142 54,-142 48,-62 Z" fill="#7C4728"/>
+      <!-- Torso -->
+      <path d="M-40,-34 C-46,-4 -40,48 -32,62 L32,62 C40,48 46,-4 40,-34 C24,-42 -24,-42 -40,-34 Z" fill="#3B82F6"/>
+      <!-- Neck -->
+      <rect x="-10" y="-48" width="20" height="18" rx="8" fill="#E8B393"/>
+      
+      <path d="M-38,-22 Q-64,-6 -52,18" fill="none" stroke="#3B82F6" stroke-width="18" stroke-linecap="round"/>
+      <circle cx="-50" cy="20" r="10" fill="#FBD5BD"/>
+      <path d="M38,-22 Q64,-6 52,18" fill="none" stroke="#3B82F6" stroke-width="18" stroke-linecap="round"/>
+      <circle cx="50" cy="20" r="10" fill="#FBD5BD"/>
+    
+      <!-- Head -->
+      <circle cx="-34" cy="-86" r="8" fill="#E8B393"/>
+      <circle cx="42" cy="-86" r="8" fill="#E8B393"/>
+      <circle cx="4" cy="-88" r="38" fill="#FBD5BD"/>
+      <ellipse cx="-16" cy="-82" rx="7" ry="4.5" fill="#F48FB1" opacity="0.38"/>
+      <ellipse cx="24" cy="-82" rx="7" ry="4.5" fill="#F48FB1" opacity="0.38"/>
+      <circle cx="-9" cy="-90" r="4" fill="#1E1B18"/>
+      <circle cx="17" cy="-90" r="4" fill="#1E1B18"/>
+      <circle cx="-10" cy="-91.2" r="1.3" fill="#FFFFFF"/>
+      <circle cx="16" cy="-91.2" r="1.3" fill="#FFFFFF"/>
+      <path d="M-15,-99 Q-9,-102 -3,-99" fill="none" stroke="#7C4728" stroke-width="2.3" stroke-linecap="round"/>
+      <path d="M11,-99 Q17,-102 23,-99" fill="none" stroke="#7C4728" stroke-width="2.3" stroke-linecap="round"/>
+      <path d="M-4,-76 Q4,-68 12,-76" fill="none" stroke="#C96F63" stroke-width="2.8" stroke-linecap="round"/>
+      <!-- Front bangs -->
+      <path d="M-33,-100 Q-4,-118 41,-100 C36,-134 -28,-134 -33,-100 Z" fill="#7C4728"/>
     </g>
-
-    <!-- Glowing Calming Co-regulation Bubble in Center -->
-    <circle cx="-15" cy="0" r="105" fill="url(#calmAura)" />
-
-    <!-- Kneeling Parent (Left side, down at child's exact eye height) -->
-    <g transform="translate(-75, 10)">
-      <!-- Kneeling legs and body -->
-      <path d="M -40 60 L -15 20 L -15 -10 L -45 -10 L -55 30 Z" fill="#4338ca" stroke="#6366f1" stroke-width="2" />
-      <!-- Parent Torso -->
-      <rect x="-45" y="-35" width="35" height="45" rx="10" fill="#6366f1" />
-      <!-- Parent Head (Eye to eye) -->
-      <circle cx="-25" cy="-55" r="20" fill="#fed7aa" stroke="#fb923c" stroke-width="2" />
-      <!-- Parent Hair -->
-      <path d="M -45 -65 C -45 -80 -10 -80 -5 -60 Z" fill="#312e81" />
-      <!-- Calm Eye / Gentle Expression -->
-      <path d="M -16 -54 Q -12 -58 -8 -54" fill="none" stroke="#451a03" stroke-width="2" stroke-linecap="round" />
-      <!-- Reassuring open hands at child shoulder height -->
-      <rect x="-10" y="-15" width="25" height="10" rx="5" fill="#fed7aa" stroke="#fb923c" stroke-width="1.5" />
+  
+    
+    <g transform="translate(475, 276) scale(1.04)">
+      
+      <path d="M-16,44 Q-52,58 -48,74 Q-42,86 -16,74" fill="#0F172A" stroke="#0F172A" stroke-width="16" stroke-linecap="round"/>
+      <path d="M16,44 Q52,58 48,74 Q42,86 16,74" fill="#0F172A" stroke="#0F172A" stroke-width="16" stroke-linecap="round"/>
+      <ellipse cx="-48" cy="74" rx="10" ry="7" fill="#F59E0B"/>
+      <ellipse cx="48" cy="74" rx="10" ry="7" fill="#F59E0B"/>
+    
+      
+      <path d="M-29,-20 Q-56,-24 -72,-32" fill="none" stroke="#FB7185" stroke-width="15" stroke-linecap="round"/>
+      <circle cx="-74" cy="-32" r="8.5" fill="#FBD5BD"/>
+    
+      
+      <path d="M29,-20 Q52,-46 46,-76" fill="none" stroke="#FB7185" stroke-width="15" stroke-linecap="round"/>
+      <circle cx="46" cy="-78" r="8.5" fill="#FBD5BD"/>
+    
+      
+    <path d="M-32,-26 C-36,-10 -34,36 -28,48 C-14,54 14,54 28,48 C34,36 36,-10 32,-26 C20,-34 -20,-34 -32,-26 Z" fill="#FB7185" />
+    
+      <path d="M-31,-4 L31,-4 L32,6 L-32,6 Z" fill="#FDA4AF" opacity="0.55"/>
+      <path d="M-32,16 L32,16 L31,26 L-31,26 Z" fill="#FDA4AF" opacity="0.55"/>
+    
+    
+    
+  
+      <!-- Neck -->
+      <rect x="-8" y="-38" width="16" height="14" rx="6" fill="#E8B393"/>
+      <!-- Hair Back -->
+      
+      <circle cx="-42" cy="-78" r="18" fill="#7C4728"/>
+      <circle cx="42" cy="-78" r="18" fill="#7C4728"/>
+      <circle cx="-34" cy="-84" r="5" fill="#FB7185"/>
+      <circle cx="34" cy="-84" r="5" fill="#FB7185"/>
+    
+      <!-- Ears -->
+      <circle cx="-41" cy="-66" r="8.5" fill="#E8B393"/>
+      <circle cx="41" cy="-66" r="8.5" fill="#E8B393"/>
+      <!-- Head -->
+      <circle cx="0" cy="-68" r="42" fill="#FBD5BD"/>
+      <!-- Chin subtle warm highlight -->
+      <ellipse cx="0" cy="-40" rx="20" ry="7" fill="#E8B393" opacity="0.22"/>
+      <!-- Rosy cheeks -->
+      <ellipse cx="-24" cy="-60" rx="8.5" ry="5.5" fill="#F48FB1" opacity="0.45"/>
+      <ellipse cx="24" cy="-60" rx="8.5" ry="5.5" fill="#F48FB1" opacity="0.45"/>
+      <!-- Cute button nose -->
+      <path d="M-2.5,-63 Q0,-59.5 2.5,-63" fill="none" stroke="#E8B393" stroke-width="2.6" stroke-linecap="round"/>
+      
+      <path d="M-22,-79 L-10,-83" fill="none" stroke="#7C4728" stroke-width="2.6" stroke-linecap="round"/>
+      <path d="M22,-79 L10,-83" fill="none" stroke="#7C4728" stroke-width="2.6" stroke-linecap="round"/>
+    
+      
+      <path d="M-21,-72 L-10,-68 L-21,-65" fill="none" stroke="#1E1B18" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M21,-72 L10,-68 L21,-65" fill="none" stroke="#1E1B18" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      <ellipse cx="-19" cy="-60" rx="2.5" ry="4" fill="#60A5FA" opacity="0.8"/>
+      <ellipse cx="19" cy="-60" rx="2.5" ry="4" fill="#60A5FA" opacity="0.8"/>
+    
+      <path d="M-10,-50 Q0,-61 10,-50 Q0,-43 -10,-50 Z" fill="#991B1B"/>
+      <!-- Hair Front -->
+      <path d="M-42,-74 C-42,-116 42,-116 42,-74 C26,-92 -26,-92 -42,-74 Z" fill="#7C4728"/>
     </g>
-
-    <!-- Toddler Facing Parent at Eye Level (Right side) -->
-    <g transform="translate(45, 15)">
-      <!-- Toddler Legs & Body -->
-      <rect x="-15" y="10" width="10" height="45" rx="5" fill="#0284c7" />
-      <rect x="5" y="10" width="10" height="45" rx="5" fill="#0284c7" />
-      <rect x="-20" y="-20" width="40" height="38" rx="8" fill="#fbbf24" stroke="#f59e0b" stroke-width="2" />
-      <!-- Toddler Head -->
-      <circle cx="0" cy="-45" r="18" fill="#fde68a" stroke="#f59e0b" stroke-width="2" />
-      <!-- Toddler hair -->
-      <path d="M -18 -55 C -18 -68 18 -68 18 -55 Z" fill="#78350f" />
-      <!-- Toddler softening face listening -->
-      <path d="M -6 -44 Q 0 -48 6 -44" fill="none" stroke="#78350f" stroke-width="2" stroke-linecap="round" />
-    </g>
-
-    <!-- Eye-to-Eye Connection Beam / Calming Wave -->
-    <path d="M -65 -45 Q -15 -35 30 -35" fill="none" stroke="#2dd4bf" stroke-width="3" stroke-dasharray="4 4" />
-
-    <!-- "EYE LEVEL · STEADY ANCHOR" Badge -->
-    <g transform="translate(-15, -75)">
-      <rect x="-80" y="0" width="160" height="26" rx="13" fill="#0f172a" stroke="#2dd4bf" stroke-width="1.5" />
-      <text x="0" y="17" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="10" fill="#5eead4" text-anchor="middle" letter-spacing="1">KNEEL TO EYE LEVEL</text>
-    </g>
-  </g>
-
-  <!-- Bottom Frosted Card Banner with Title and Tagline -->
-  <g transform="translate(48, 330)">
-    <rect width="704" height="114" rx="24" fill="#090d16" opacity="0.88" />
-    <rect width="704" height="114" rx="24" fill="none" stroke="#ffffff" stroke-width="1" opacity="0.12" />
-    <text x="32" y="44" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="24" fill="#ffffff" letter-spacing="-0.5">Public Tantrum Grace</text>
-    <text x="32" y="78" font-family="system-ui, -apple-system, sans-serif" font-weight="600" font-size="13" fill="#94a3b8" letter-spacing="0.2">Supermarket Calm · Forgetting Strangers · Steady Loving Boundary</text>
-    <g transform="translate(640, 48)">
-      <circle cx="0" cy="0" r="18" fill="#fb7185" opacity="0.15" />
-      <polygon points="0,-10 3,-3 10,-3 4,2 6,9 0,5 -6,9 -4,2 -10,-3 -3,-3" fill="#fb7185" />
-    </g>
-  </g>
+  
+  
 </svg>

@@ -1,85 +1,130 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 480" width="800" height="480">
   <defs>
-    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#134e4a" />
-      <stop offset="100%" stop-color="#042f2e" />
-    </linearGradient>
-    <radialGradient id="gentleGlow" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#fef08a" stop-opacity="0.8" />
-      <stop offset="50%" stop-color="#2dd4bf" stop-opacity="0.4" />
-      <stop offset="100%" stop-color="#14b8a6" stop-opacity="0" />
-    </radialGradient>
-    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
-      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.5" />
+    <filter id="softShadow_d7" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#1e293b" flood-opacity="0.12" />
     </filter>
+    
   </defs>
-
-  <rect width="800" height="480" fill="url(#bgGrad)" />
-
-  <!-- Category Pill Badge -->
-  <g transform="translate(48, 36)">
-    <rect width="160" height="32" rx="16" fill="#000000" opacity="0.4" />
-    <rect width="160" height="32" rx="16" fill="none" stroke="#2dd4bf" stroke-width="1.5" opacity="0.7" />
-    <circle cx="20" cy="16" r="5" fill="#2dd4bf" />
-    <text x="32" y="21" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="11" fill="#2dd4bf" letter-spacing="2">DEVELOPMENT</text>
-  </g>
-
-  <!-- Central Thematic Illustration: Cupped Gentle Palms Holding a Delicate Butterfly & Boundary Shield -->
-  <g filter="url(#shadow)" transform="translate(400, 180)">
-    <!-- Soft Protective Aura Circle -->
-    <circle cx="0" cy="0" r="110" fill="url(#gentleGlow)" />
-    <circle cx="0" cy="0" r="85" fill="#0f766e" opacity="0.3" stroke="#5eead4" stroke-width="2" stroke-dasharray="6 6" />
-
-    <!-- Left Gentle Palm Cupping Center -->
-    <g transform="translate(-45, 10) rotate(-15)">
-      <rect x="-30" y="-15" width="45" height="48" rx="12" fill="#fed7aa" stroke="#fb923c" stroke-width="2" />
-      <rect x="-24" y="-45" width="9" height="36" rx="4.5" fill="#fed7aa" stroke="#fb923c" stroke-width="1.5" />
-      <rect x="-13" y="-52" width="9" height="42" rx="4.5" fill="#fed7aa" stroke="#fb923c" stroke-width="1.5" />
-      <rect x="-2" y="-48" width="9" height="38" rx="4.5" fill="#fed7aa" stroke="#fb923c" stroke-width="1.5" />
-      <rect x="9" y="-38" width="8" height="28" rx="4" fill="#fed7aa" stroke="#fb923c" stroke-width="1.5" />
+  
+    
+    <rect width="800" height="480" fill="#FFF1F2"/>
+    <rect y="300" width="800" height="180" fill="#F5E6CC"/>
+    <!-- Window -->
+    <rect x="540" y="38" width="180" height="165" rx="20" fill="#E0F2FE" stroke="#FFFFFF" stroke-width="8"/>
+    <line x1="630" y1="38" x2="630" y2="203" stroke="#FFFFFF" stroke-width="5"/>
+    <line x1="540" y1="120" x2="720" y2="120" stroke="#FFFFFF" stroke-width="5"/>
+    <!-- Pastel bunting -->
+    <path d="M50,32 Q250,76 470,30" fill="none" stroke="#CBD5E1" stroke-width="2.5"/>
+    <polygon points="90,42 115,47 100,72" fill="#FDA4AF"/>
+    <polygon points="160,52 185,54 172,80" fill="#93C5FD"/>
+    <polygon points="230,54 255,54 242,80" fill="#86EFAC"/>
+    <polygon points="300,50 325,47 314,74" fill="#FDE047"/>
+    <polygon points="370,42 395,38 386,66" fill="#C4B5FD"/>
+    <!-- Round play rug -->
+    <ellipse cx="400" cy="395" rx="310" ry="68" fill="#FFE4E6"/>
+    <ellipse cx="400" cy="395" rx="260" ry="52" fill="none" stroke="#FB7185" stroke-width="4" stroke-dasharray="14 10"/>
+  
+    
+    <g transform="translate(295, 278) scale(0.95)">
+      <path d="M-42,56 Q-36,92 18,92 L38,92" fill="none" stroke="#334155" stroke-width="26" stroke-linecap="round"/>
+      <!-- Hair back -->
+      <path d="M-40,-62 C-46,-142 54,-142 48,-62 Z" fill="#231715"/>
+      <!-- Torso -->
+      <path d="M-40,-34 C-46,-4 -40,48 -32,62 L32,62 C40,48 46,-4 40,-34 C24,-42 -24,-42 -40,-34 Z" fill="#10B981"/>
+      <!-- Neck -->
+      <rect x="-10" y="-48" width="20" height="18" rx="8" fill="#8A502B"/>
+      
+      <path d="M28,-18 Q58,2 64,22" fill="none" stroke="#10B981" stroke-width="17" stroke-linecap="round"/>
+      <circle cx="65" cy="24" r="9.5" fill="#A96B42"/>
+    
+      <!-- Head -->
+      <circle cx="-34" cy="-86" r="8" fill="#8A502B"/>
+      <circle cx="42" cy="-86" r="8" fill="#8A502B"/>
+      <circle cx="4" cy="-88" r="38" fill="#A96B42"/>
+      <ellipse cx="-16" cy="-82" rx="7" ry="4.5" fill="#D46A6A" opacity="0.38"/>
+      <ellipse cx="24" cy="-82" rx="7" ry="4.5" fill="#D46A6A" opacity="0.38"/>
+      <circle cx="-9" cy="-90" r="4" fill="#1E1B18"/>
+      <circle cx="17" cy="-90" r="4" fill="#1E1B18"/>
+      <circle cx="-10" cy="-91.2" r="1.3" fill="#FFFFFF"/>
+      <circle cx="16" cy="-91.2" r="1.3" fill="#FFFFFF"/>
+      <path d="M-15,-99 Q-9,-102 -3,-99" fill="none" stroke="#231715" stroke-width="2.3" stroke-linecap="round"/>
+      <path d="M11,-99 Q17,-102 23,-99" fill="none" stroke="#231715" stroke-width="2.3" stroke-linecap="round"/>
+      <path d="M-4,-76 Q4,-68 12,-76" fill="none" stroke="#7D3B36" stroke-width="2.8" stroke-linecap="round"/>
+      <!-- Front bangs -->
+      <path d="M-33,-100 Q-4,-118 41,-100 C36,-134 -28,-134 -33,-100 Z" fill="#231715"/>
     </g>
-
-    <!-- Right Gentle Palm Cupping Center -->
-    <g transform="translate(45, 10) rotate(15)">
-      <rect x="-15" y="-15" width="45" height="48" rx="12" fill="#fed7aa" stroke="#fb923c" stroke-width="2" />
-      <rect x="-17" y="-38" width="8" height="28" rx="4" fill="#fed7aa" stroke="#fb923c" stroke-width="1.5" />
-      <rect x="-7" y="-48" width="9" height="38" rx="4.5" fill="#fed7aa" stroke="#fb923c" stroke-width="1.5" />
-      <rect x="4" y="-52" width="9" height="42" rx="4.5" fill="#fed7aa" stroke="#fb923c" stroke-width="1.5" />
-      <rect x="15" y="-45" width="9" height="36" rx="4.5" fill="#fed7aa" stroke="#fb923c" stroke-width="1.5" />
+  
+    
+    <g transform="translate(475, 268) scale(1.04)">
+      
+      <rect x="-27" y="42" width="18" height="60" rx="9" fill="#334155"/>
+      <rect x="9" y="42" width="18" height="60" rx="9" fill="#334155"/>
+      <ellipse cx="-18" cy="106" rx="14" ry="8" fill="#F59E0B"/><ellipse cx="-18" cy="109" rx="13" ry="3.5" fill="#FFFFFF" opacity="0.85"/><ellipse cx="18" cy="106" rx="14" ry="8" fill="#F59E0B"/><ellipse cx="18" cy="109" rx="13" ry="3.5" fill="#FFFFFF" opacity="0.85"/>
+    
+      
+      <path d="M-29,-20 Q-38,-6 -8,6" fill="none" stroke="#60A5FA" stroke-width="15" stroke-linecap="round"/>
+      <circle cx="-8" cy="6" r="8.5" fill="#A96B42"/>
+    
+      
+      <path d="M29,-20 Q42,-6 34,14" fill="none" stroke="#60A5FA" stroke-width="15" stroke-linecap="round"/>
+      <circle cx="34" cy="16" r="8.5" fill="#A96B42"/>
+    
+      
+    <path d="M-32,-26 C-36,-10 -34,36 -28,48 C-14,54 14,54 28,48 C34,36 36,-10 32,-26 C20,-34 -20,-34 -32,-26 Z" fill="#60A5FA" />
+    
+      <path d="M-31,-4 L31,-4 L32,6 L-32,6 Z" fill="#FDA4AF" opacity="0.55"/>
+      <path d="M-32,16 L32,16 L31,26 L-31,26 Z" fill="#FDA4AF" opacity="0.55"/>
+    
+    
+    
+  
+      <!-- Neck -->
+      <rect x="-8" y="-38" width="16" height="14" rx="6" fill="#8A502B"/>
+      <!-- Hair Back -->
+      
+      <circle cx="-34" cy="-90" r="16" fill="#231715"/>
+      <circle cx="34" cy="-90" r="16" fill="#231715"/>
+      <circle cx="-18" cy="-106" r="17" fill="#231715"/>
+      <circle cx="18" cy="-106" r="17" fill="#231715"/>
+      <circle cx="0" cy="-112" r="19" fill="#231715"/>
+    
+      <!-- Ears -->
+      <circle cx="-41" cy="-66" r="8.5" fill="#8A502B"/>
+      <circle cx="41" cy="-66" r="8.5" fill="#8A502B"/>
+      <!-- Head -->
+      <circle cx="0" cy="-68" r="42" fill="#A96B42"/>
+      <!-- Chin subtle warm highlight -->
+      <ellipse cx="0" cy="-40" rx="20" ry="7" fill="#8A502B" opacity="0.22"/>
+      <!-- Rosy cheeks -->
+      <ellipse cx="-24" cy="-60" rx="8.5" ry="5.5" fill="#D46A6A" opacity="0.45"/>
+      <ellipse cx="24" cy="-60" rx="8.5" ry="5.5" fill="#D46A6A" opacity="0.45"/>
+      <!-- Cute button nose -->
+      <path d="M-2.5,-63 Q0,-59.5 2.5,-63" fill="none" stroke="#8A502B" stroke-width="2.6" stroke-linecap="round"/>
+      
+    <path d="M-21,-81 Q-15,-84 -9,-81" fill="none" stroke="#231715" stroke-width="2.4" stroke-linecap="round"/>
+    <path d="M9,-81 Q15,-84 21,-81" fill="none" stroke="#231715" stroke-width="2.4" stroke-linecap="round"/>
+  
+      
+      <path d="M-21,-69 Q-15,-64 -9,-69" fill="none" stroke="#1E1B18" stroke-width="3" stroke-linecap="round"/>
+      <path d="M9,-69 Q15,-64 21,-69" fill="none" stroke="#1E1B18" stroke-width="3" stroke-linecap="round"/>
+    
+      <path d="M-6,-53 Q0,-49 6,-53" fill="none" stroke="#7D3B36" stroke-width="2.8" stroke-linecap="round"/>
+      <!-- Hair Front -->
+      
+      <circle cx="-22" cy="-100" r="12" fill="#231715"/>
+      <circle cx="0" cy="-104" r="13" fill="#231715"/>
+      <circle cx="22" cy="-100" r="12" fill="#231715"/>
+    
     </g>
-
-    <!-- Delicate Fluttering Butterfly Resting Between Palms -->
-    <g transform="translate(0, -25)">
-      <!-- Left Wings -->
-      <path d="M 0 0 C -35 -30 -40 10 0 12 Z" fill="#f43f5e" stroke="#fda4af" stroke-width="1.5" />
-      <path d="M 0 10 C -25 25 -30 35 0 20 Z" fill="#fb7185" />
-      <!-- Right Wings -->
-      <path d="M 0 0 C 35 -30 40 10 0 12 Z" fill="#f43f5e" stroke="#fda4af" stroke-width="1.5" />
-      <path d="M 0 10 C 25 25 30 35 0 20 Z" fill="#fb7185" />
-      <!-- Butterfly Body & Antennae -->
-      <ellipse cx="0" cy="10" rx="3" ry="14" fill="#1e293b" />
-      <path d="M -2 -4 Q -8 -16 -12 -14" fill="none" stroke="#1e293b" stroke-width="1.5" />
-      <path d="M 2 -4 Q 8 -16 12 -14" fill="none" stroke="#1e293b" stroke-width="1.5" />
-      <!-- Yellow dots on wings -->
-      <circle cx="-16" cy="-6" r="3" fill="#fef08a" />
-      <circle cx="16" cy="-6" r="3" fill="#fef08a" />
+  
+    <!-- Soft plush bunny beside toddler -->
+    <g transform="translate(595, 345)">
+      <ellipse cx="0" cy="18" rx="22" ry="26" fill="#FDE68A"/>
+      <circle cx="0" cy="-10" r="18" fill="#FDE68A"/>
+      <ellipse cx="-8" cy="-34" rx="6" ry="16" fill="#FDE68A"/>
+      <ellipse cx="8" cy="-34" rx="6" ry="16" fill="#FDE68A"/>
+      <circle cx="-6" cy="-12" r="2.5" fill="#1E293B"/><circle cx="6" cy="-12" r="2.5" fill="#1E293B"/>
     </g>
-
-    <!-- Firm Gentle Boundary Ribbon Tag -->
-    <rect x="-70" y="52" width="140" height="26" rx="8" fill="#1e293b" stroke="#2dd4bf" stroke-width="1.5" />
-    <text x="0" y="69" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="11" fill="#5eead4" text-anchor="middle" letter-spacing="1">GENTLE TOUCH</text>
-  </g>
-
-  <!-- Bottom Frosted Card Banner with Title and Tagline -->
-  <g transform="translate(48, 330)">
-    <rect width="704" height="114" rx="24" fill="#090d16" opacity="0.88" />
-    <rect width="704" height="114" rx="24" fill="none" stroke="#ffffff" stroke-width="1" opacity="0.12" />
-    <text x="32" y="44" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="24" fill="#ffffff" letter-spacing="-0.5">Gentle Hands &amp; Safe Touch</text>
-    <text x="32" y="78" font-family="system-ui, -apple-system, sans-serif" font-weight="600" font-size="13" fill="#94a3b8" letter-spacing="0.2">Hands Are for Hugs · Firm Loving Boundaries · Impulse Control</text>
-    <g transform="translate(640, 48)">
-      <circle cx="0" cy="0" r="18" fill="#2dd4bf" opacity="0.15" />
-      <polygon points="0,-10 3,-3 10,-3 4,2 6,9 0,5 -6,9 -4,2 -10,-3 -3,-3" fill="#2dd4bf" />
-    </g>
-  </g>
+  
 </svg>

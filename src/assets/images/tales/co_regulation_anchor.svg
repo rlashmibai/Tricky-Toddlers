@@ -1,76 +1,128 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 480" width="800" height="480">
   <defs>
-    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#4c0519" />
-      <stop offset="100%" stop-color="#2e020d" />
-    </linearGradient>
-    <radialGradient id="sunGlow" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#fda4af" stop-opacity="0.8" />
-      <stop offset="100%" stop-color="#fda4af" stop-opacity="0" />
-    </radialGradient>
-    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
-      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.5" />
+    <filter id="softShadow_t3" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#1e293b" flood-opacity="0.12" />
     </filter>
+    
   </defs>
-
-  <!-- Canvas Background -->
-  <rect width="800" height="480" fill="url(#bgGrad)" />
-
-  <!-- Subtle Playful Grid Pattern -->
-  <g opacity="0.05" stroke="#ffffff" stroke-width="1">
-    <line x1="0" y1="80" x2="800" y2="80" />
-    <line x1="0" y1="160" x2="800" y2="160" />
-    <line x1="0" y1="240" x2="800" y2="240" />
-    <line x1="0" y1="320" x2="800" y2="320" />
-    <line x1="160" y1="0" x2="160" y2="480" />
-    <line x1="320" y1="0" x2="320" y2="480" />
-    <line x1="480" y1="0" x2="480" y2="480" />
-    <line x1="640" y1="0" x2="640" y2="480" />
-  </g>
-
-  <!-- Ambient Light Orbs -->
-  <circle cx="150" cy="120" r="160" fill="#fda4af" opacity="0.12" filter="blur(40px)" />
-  <circle cx="650" cy="340" r="180" fill="#fda4af" opacity="0.1" filter="blur(50px)" />
-
-  <!-- Category Pill Badge at Top Left -->
-  <g transform="translate(48, 36)">
-    <rect width="160" height="32" rx="16" fill="#000000" opacity="0.4" />
-    <rect width="160" height="32" rx="16" fill="none" stroke="#fda4af" stroke-width="1.5" opacity="0.7" />
-    <circle cx="20" cy="16" r="5" fill="#fda4af" />
-    <text x="32" y="21" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="11" fill="#fda4af" letter-spacing="2">TANTRUMS</text>
-  </g>
-
-  <!-- Visual Central Illustration -->
-  <g filter="url(#shadow)">
+  
     
-      <circle cx="400" cy="180" r="95" fill="url(#sunGlow)" opacity="0.25" />
-      <!-- Radiating Calm Rings -->
-      <circle cx="400" cy="180" r="120" fill="none" stroke="#fda4af" stroke-width="1.5" stroke-dasharray="6,6" opacity="0.4" />
-      <circle cx="400" cy="180" r="80" fill="none" stroke="#fda4af" stroke-width="2" opacity="0.6" />
-      <!-- Central Loving Heart -->
-      <path d="M 400 140 C 370 90 320 120 350 170 C 370 200 400 230 400 230 C 400 230 430 200 450 170 C 480 120 430 90 400 140 Z" fill="#f43f5e" stroke="#ffffff" stroke-width="3" />
-      <!-- Calm Anchor Motif -->
-      <circle cx="400" cy="155" r="10" fill="#ffffff" />
-      <path d="M 385 185 Q 400 205 415 185" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" />
+    <rect width="800" height="480" fill="#F0FDFA"/>
+    <rect y="300" width="800" height="180" fill="#F5E6CC"/>
+    <!-- Window -->
+    <rect x="540" y="38" width="180" height="165" rx="20" fill="#E0F2FE" stroke="#FFFFFF" stroke-width="8"/>
+    <line x1="630" y1="38" x2="630" y2="203" stroke="#FFFFFF" stroke-width="5"/>
+    <line x1="540" y1="120" x2="720" y2="120" stroke="#FFFFFF" stroke-width="5"/>
+    <!-- Pastel bunting -->
+    <path d="M50,32 Q250,76 470,30" fill="none" stroke="#CBD5E1" stroke-width="2.5"/>
+    <polygon points="90,42 115,47 100,72" fill="#FDA4AF"/>
+    <polygon points="160,52 185,54 172,80" fill="#93C5FD"/>
+    <polygon points="230,54 255,54 242,80" fill="#86EFAC"/>
+    <polygon points="300,50 325,47 314,74" fill="#FDE047"/>
+    <polygon points="370,42 395,38 386,66" fill="#C4B5FD"/>
+    <!-- Round play rug -->
+    <ellipse cx="400" cy="395" rx="310" ry="68" fill="#CCFBF1"/>
+    <ellipse cx="400" cy="395" rx="260" ry="52" fill="none" stroke="#14B8A6" stroke-width="4" stroke-dasharray="14 10"/>
+  
     
-  </g>
-
-  <!-- Bottom Frosted Card Banner with Title and Tagline -->
-  <g transform="translate(48, 330)">
-    <rect width="704" height="114" rx="24" fill="#090d16" opacity="0.88" />
-    <rect width="704" height="114" rx="24" fill="none" stroke="#ffffff" stroke-width="1" opacity="0.12" />
+    <g transform="translate(335, 268) scale(0.98)">
+      <path d="M-42,56 Q-36,92 18,92 L38,92" fill="none" stroke="#334155" stroke-width="26" stroke-linecap="round"/>
+      <!-- Hair back -->
+      <path d="M-40,-62 C-46,-142 54,-142 48,-62 Z" fill="#231715"/>
+      <!-- Torso -->
+      <path d="M-40,-34 C-46,-4 -40,48 -32,62 L32,62 C40,48 46,-4 40,-34 C24,-42 -24,-42 -40,-34 Z" fill="#0D9488"/>
+      <!-- Neck -->
+      <rect x="-10" y="-48" width="20" height="18" rx="8" fill="#8A502B"/>
+      
+      <path d="M32,-20 Q68,-6 82,12" fill="none" stroke="#0D9488" stroke-width="18" stroke-linecap="round"/>
+      <circle cx="84" cy="14" r="10" fill="#A96B42"/>
+      <path d="M24,6 Q58,20 78,24" fill="none" stroke="#0D9488" stroke-width="16" stroke-linecap="round"/>
+      <circle cx="80" cy="24" r="9.5" fill="#A96B42"/>
     
-    <!-- Title -->
-    <text x="32" y="44" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="24" fill="#ffffff" letter-spacing="-0.5">Co-Regulation: The Calm Anchor</text>
-    
-    <!-- Tagline / Subtitle -->
-    <text x="32" y="78" font-family="system-ui, -apple-system, sans-serif" font-weight="600" font-size="13" fill="#94a3b8" letter-spacing="0.2">Audible Slow Breaths · Soft Voice · Mirror Neurons of Peace</text>
-
-    <!-- Star verified badge at right -->
-    <g transform="translate(640, 48)">
-      <circle cx="0" cy="0" r="18" fill="#fda4af" opacity="0.15" />
-      <polygon points="0,-10 3,-3 10,-3 4,2 6,9 0,5 -6,9 -4,2 -10,-3 -3,-3" fill="#fda4af" />
+      <!-- Head -->
+      <circle cx="-34" cy="-86" r="8" fill="#8A502B"/>
+      <circle cx="42" cy="-86" r="8" fill="#8A502B"/>
+      <circle cx="4" cy="-88" r="38" fill="#A96B42"/>
+      <ellipse cx="-16" cy="-82" rx="7" ry="4.5" fill="#D46A6A" opacity="0.38"/>
+      <ellipse cx="24" cy="-82" rx="7" ry="4.5" fill="#D46A6A" opacity="0.38"/>
+      <circle cx="-9" cy="-90" r="4" fill="#1E1B18"/>
+      <circle cx="17" cy="-90" r="4" fill="#1E1B18"/>
+      <circle cx="-10" cy="-91.2" r="1.3" fill="#FFFFFF"/>
+      <circle cx="16" cy="-91.2" r="1.3" fill="#FFFFFF"/>
+      <path d="M-15,-99 Q-9,-102 -3,-99" fill="none" stroke="#231715" stroke-width="2.3" stroke-linecap="round"/>
+      <path d="M11,-99 Q17,-102 23,-99" fill="none" stroke="#231715" stroke-width="2.3" stroke-linecap="round"/>
+      <path d="M-4,-76 Q4,-68 12,-76" fill="none" stroke="#7D3B36" stroke-width="2.8" stroke-linecap="round"/>
+      <!-- Front bangs -->
+      <path d="M-33,-100 Q-4,-118 41,-100 C36,-134 -28,-134 -33,-100 Z" fill="#231715"/>
     </g>
-  </g>
+  
+    
+    <g transform="translate(465, 278) scale(1.04)">
+      
+      <path d="M-16,44 Q-52,58 -48,74 Q-42,86 -16,74" fill="#1D4ED8" stroke="#1D4ED8" stroke-width="16" stroke-linecap="round"/>
+      <path d="M16,44 Q52,58 48,74 Q42,86 16,74" fill="#1D4ED8" stroke="#1D4ED8" stroke-width="16" stroke-linecap="round"/>
+      <ellipse cx="-48" cy="74" rx="10" ry="7" fill="#F59E0B"/>
+      <ellipse cx="48" cy="74" rx="10" ry="7" fill="#F59E0B"/>
+    
+      
+      <path d="M-29,-20 Q-38,-6 -8,6" fill="none" stroke="#FBBF24" stroke-width="15" stroke-linecap="round"/>
+      <circle cx="-8" cy="6" r="8.5" fill="#A96B42"/>
+    
+      
+      <path d="M29,-20 Q38,-6 8,6" fill="none" stroke="#FBBF24" stroke-width="15" stroke-linecap="round"/>
+      <circle cx="8" cy="6" r="8.5" fill="#A96B42"/>
+    
+      
+    <path d="M-32,-26 C-36,-10 -34,36 -28,48 C-14,54 14,54 28,48 C34,36 36,-10 32,-26 C20,-34 -20,-34 -32,-26 Z" fill="#FBBF24" />
+    
+      <path d="M-31,-4 L31,-4 L32,6 L-32,6 Z" fill="#FDA4AF" opacity="0.55"/>
+      <path d="M-32,16 L32,16 L31,26 L-31,26 Z" fill="#FDA4AF" opacity="0.55"/>
+    
+    
+    
+  
+      <!-- Neck -->
+      <rect x="-8" y="-38" width="16" height="14" rx="6" fill="#8A502B"/>
+      <!-- Hair Back -->
+      
+      <circle cx="-34" cy="-90" r="16" fill="#231715"/>
+      <circle cx="34" cy="-90" r="16" fill="#231715"/>
+      <circle cx="-18" cy="-106" r="17" fill="#231715"/>
+      <circle cx="18" cy="-106" r="17" fill="#231715"/>
+      <circle cx="0" cy="-112" r="19" fill="#231715"/>
+    
+      <!-- Ears -->
+      <circle cx="-41" cy="-66" r="8.5" fill="#8A502B"/>
+      <circle cx="41" cy="-66" r="8.5" fill="#8A502B"/>
+      <!-- Head -->
+      <circle cx="0" cy="-68" r="42" fill="#A96B42"/>
+      <!-- Chin subtle warm highlight -->
+      <ellipse cx="0" cy="-40" rx="20" ry="7" fill="#8A502B" opacity="0.22"/>
+      <!-- Rosy cheeks -->
+      <ellipse cx="-24" cy="-60" rx="8.5" ry="5.5" fill="#D46A6A" opacity="0.45"/>
+      <ellipse cx="24" cy="-60" rx="8.5" ry="5.5" fill="#D46A6A" opacity="0.45"/>
+      <!-- Cute button nose -->
+      <path d="M-2.5,-63 Q0,-59.5 2.5,-63" fill="none" stroke="#8A502B" stroke-width="2.6" stroke-linecap="round"/>
+      
+    <path d="M-21,-81 Q-15,-84 -9,-81" fill="none" stroke="#231715" stroke-width="2.4" stroke-linecap="round"/>
+    <path d="M9,-81 Q15,-84 21,-81" fill="none" stroke="#231715" stroke-width="2.4" stroke-linecap="round"/>
+  
+      
+      <path d="M-21,-69 Q-15,-64 -9,-69" fill="none" stroke="#1E1B18" stroke-width="3" stroke-linecap="round"/>
+      <path d="M9,-69 Q15,-64 21,-69" fill="none" stroke="#1E1B18" stroke-width="3" stroke-linecap="round"/>
+    
+      <path d="M-6,-53 Q0,-49 6,-53" fill="none" stroke="#7D3B36" stroke-width="2.8" stroke-linecap="round"/>
+      <!-- Hair Front -->
+      
+      <circle cx="-22" cy="-100" r="12" fill="#231715"/>
+      <circle cx="0" cy="-104" r="13" fill="#231715"/>
+      <circle cx="22" cy="-100" r="12" fill="#231715"/>
+    
+    </g>
+  
+    <!-- Warm soothing aura heart -->
+    <circle cx="400" cy="230" r="145" fill="#5EEAD4" opacity="0.16"/>
+    <path d="M385,112 C385,104 396,101 400,107 C404,101 415,104 415,112 C415,123 400,134 400,134 C400,134 385,123 385,112 Z" fill="#FB7185"/>
+  
 </svg>

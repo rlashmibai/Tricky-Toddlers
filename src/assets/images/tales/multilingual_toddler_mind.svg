@@ -1,82 +1,130 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 480" width="800" height="480">
   <defs>
-    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#1e1b4b" />
-      <stop offset="100%" stop-color="#0f172a" />
-    </linearGradient>
-    <radialGradient id="brainGlow" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#a855f7" stop-opacity="0.8" />
-      <stop offset="70%" stop-color="#6366f1" stop-opacity="0.3" />
-      <stop offset="100%" stop-color="#3b82f6" stop-opacity="0" />
-    </radialGradient>
-    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
-      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.5" />
+    <filter id="softShadow_l4" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#1e293b" flood-opacity="0.12" />
     </filter>
+    
   </defs>
-
-  <rect width="800" height="480" fill="url(#bgGrad)" />
-
-  <!-- Category Pill Badge -->
-  <g transform="translate(48, 36)">
-    <rect width="160" height="32" rx="16" fill="#000000" opacity="0.4" />
-    <rect width="160" height="32" rx="16" fill="none" stroke="#a855f7" stroke-width="1.5" opacity="0.7" />
-    <circle cx="20" cy="16" r="5" fill="#a855f7" />
-    <text x="32" y="21" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="11" fill="#a855f7" letter-spacing="2">LEARNING</text>
-  </g>
-
-  <!-- Central Thematic Illustration: The Multilingual Mind (Neural Synapses & Language Speech Bubbles) -->
-  <g filter="url(#shadow)" transform="translate(400, 180)">
-    <!-- Central Brain Silhouette / Glowing Synaptic Aura -->
-    <circle cx="0" cy="0" r="100" fill="url(#brainGlow)" />
-
-    <!-- Connecting Synaptic Neural Lines -->
-    <path d="M -80 -45 Q -30 -15 0 0 Q 30 15 90 -40" fill="none" stroke="#c084fc" stroke-width="2" stroke-dasharray="4 4" />
-    <path d="M -90 40 Q -30 15 0 0 Q 30 -15 85 45" fill="none" stroke="#60a5fa" stroke-width="2" stroke-dasharray="4 4" />
-    <circle cx="0" cy="0" r="12" fill="#fbcfe8" stroke="#f472b6" stroke-width="3" />
-
-    <!-- Speech Bubble 1 (Top Left): "Hello! 👋" in English -->
-    <g transform="translate(-140, -55)">
-      <rect x="-55" y="-25" width="110" height="50" rx="16" fill="#3b82f6" stroke="#93c5fd" stroke-width="2" />
-      <polygon points="15,25 25,36 32,25" fill="#3b82f6" />
-      <text x="0" y="6" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="16" fill="#ffffff" text-anchor="middle">HELLO! 👋</text>
+  
+    
+    <rect width="800" height="480" fill="#EFF6FF"/>
+    <rect y="300" width="800" height="180" fill="#F5E6CC"/>
+    <!-- Window -->
+    <rect x="540" y="38" width="180" height="165" rx="20" fill="#E0F2FE" stroke="#FFFFFF" stroke-width="8"/>
+    <line x1="630" y1="38" x2="630" y2="203" stroke="#FFFFFF" stroke-width="5"/>
+    <line x1="540" y1="120" x2="720" y2="120" stroke="#FFFFFF" stroke-width="5"/>
+    <!-- Pastel bunting -->
+    <path d="M50,32 Q250,76 470,30" fill="none" stroke="#CBD5E1" stroke-width="2.5"/>
+    <polygon points="90,42 115,47 100,72" fill="#FDA4AF"/>
+    <polygon points="160,52 185,54 172,80" fill="#93C5FD"/>
+    <polygon points="230,54 255,54 242,80" fill="#86EFAC"/>
+    <polygon points="300,50 325,47 314,74" fill="#FDE047"/>
+    <polygon points="370,42 395,38 386,66" fill="#C4B5FD"/>
+    <!-- Round play rug -->
+    <ellipse cx="400" cy="395" rx="310" ry="68" fill="#DBEAFE"/>
+    <ellipse cx="400" cy="395" rx="260" ry="52" fill="none" stroke="#60A5FA" stroke-width="4" stroke-dasharray="14 10"/>
+  
+    
+    <g transform="translate(265, 254) scale(0.95)">
+      
+      <!-- Hair back -->
+      <path d="M-40,-62 C-46,-142 54,-142 48,-62 Z" fill="#231715"/>
+      <!-- Torso -->
+      <path d="M-40,-34 C-46,-4 -40,48 -32,62 L32,62 C40,48 46,-4 40,-34 C24,-42 -24,-42 -40,-34 Z" fill="#0D9488"/>
+      <!-- Neck -->
+      <rect x="-10" y="-48" width="20" height="18" rx="8" fill="#BA7A4B"/>
+      
+      <path d="M-38,-22 Q-64,-6 -52,18" fill="none" stroke="#0D9488" stroke-width="18" stroke-linecap="round"/>
+      <circle cx="-50" cy="20" r="10" fill="#D89B6C"/>
+      <path d="M38,-22 Q64,-6 52,18" fill="none" stroke="#0D9488" stroke-width="18" stroke-linecap="round"/>
+      <circle cx="50" cy="20" r="10" fill="#D89B6C"/>
+    
+      <!-- Head -->
+      <circle cx="-34" cy="-86" r="8" fill="#BA7A4B"/>
+      <circle cx="42" cy="-86" r="8" fill="#BA7A4B"/>
+      <circle cx="4" cy="-88" r="38" fill="#D89B6C"/>
+      <ellipse cx="-16" cy="-82" rx="7" ry="4.5" fill="#E57373" opacity="0.38"/>
+      <ellipse cx="24" cy="-82" rx="7" ry="4.5" fill="#E57373" opacity="0.38"/>
+      <circle cx="-9" cy="-90" r="4" fill="#1E1B18"/>
+      <circle cx="17" cy="-90" r="4" fill="#1E1B18"/>
+      <circle cx="-10" cy="-91.2" r="1.3" fill="#FFFFFF"/>
+      <circle cx="16" cy="-91.2" r="1.3" fill="#FFFFFF"/>
+      <path d="M-15,-99 Q-9,-102 -3,-99" fill="none" stroke="#231715" stroke-width="2.3" stroke-linecap="round"/>
+      <path d="M11,-99 Q17,-102 23,-99" fill="none" stroke="#231715" stroke-width="2.3" stroke-linecap="round"/>
+      <path d="M-4,-76 Q4,-68 12,-76" fill="none" stroke="#9D4C45" stroke-width="2.8" stroke-linecap="round"/>
+      <!-- Front bangs -->
+      <path d="M-33,-100 Q-4,-118 41,-100 C36,-134 -28,-134 -33,-100 Z" fill="#231715"/>
     </g>
-
-    <!-- Speech Bubble 2 (Top Right): "नमस्ते! 🙏" in Hindi / Devanagari -->
-    <g transform="translate(140, -55)">
-      <rect x="-60" y="-25" width="120" height="50" rx="16" fill="#f59e0b" stroke="#fde68a" stroke-width="2" />
-      <polygon points="-25,25 -32,36 -15,25" fill="#f59e0b" />
-      <text x="0" y="7" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="16" fill="#ffffff" text-anchor="middle">नमस्ते! 🙏</text>
+  
+    
+    <g transform="translate(490, 272) scale(1.05)">
+      
+      <path d="M-16,44 Q-52,58 -48,74 Q-42,86 -16,74" fill="#3B82F6" stroke="#3B82F6" stroke-width="16" stroke-linecap="round"/>
+      <path d="M16,44 Q52,58 48,74 Q42,86 16,74" fill="#3B82F6" stroke="#3B82F6" stroke-width="16" stroke-linecap="round"/>
+      <ellipse cx="-48" cy="74" rx="10" ry="7" fill="#F59E0B"/>
+      <ellipse cx="48" cy="74" rx="10" ry="7" fill="#F59E0B"/>
+    
+      
+      <path d="M-29,-20 Q-54,-34 -64,-50" fill="none" stroke="#F97316" stroke-width="15" stroke-linecap="round"/>
+      <circle cx="-66" cy="-52" r="8.5" fill="#D89B6C"/>
+    
+      
+      <path d="M29,-20 Q52,-46 46,-76" fill="none" stroke="#F97316" stroke-width="15" stroke-linecap="round"/>
+      <circle cx="46" cy="-78" r="8.5" fill="#D89B6C"/>
+    
+      
+    <path d="M-32,-26 C-36,-10 -34,36 -28,48 C-14,54 14,54 28,48 C34,36 36,-10 32,-26 C20,-34 -20,-34 -32,-26 Z" fill="#F97316" />
+    
+      <path d="M-31,-4 L31,-4 L32,6 L-32,6 Z" fill="#FDA4AF" opacity="0.55"/>
+      <path d="M-32,16 L32,16 L31,26 L-31,26 Z" fill="#FDA4AF" opacity="0.55"/>
+    
+    
+    
+  
+      <!-- Neck -->
+      <rect x="-8" y="-38" width="16" height="14" rx="6" fill="#BA7A4B"/>
+      <!-- Hair Back -->
+      
+      <circle cx="-34" cy="-90" r="16" fill="#231715"/>
+      <circle cx="34" cy="-90" r="16" fill="#231715"/>
+      <circle cx="-18" cy="-106" r="17" fill="#231715"/>
+      <circle cx="18" cy="-106" r="17" fill="#231715"/>
+      <circle cx="0" cy="-112" r="19" fill="#231715"/>
+    
+      <!-- Ears -->
+      <circle cx="-41" cy="-66" r="8.5" fill="#BA7A4B"/>
+      <circle cx="41" cy="-66" r="8.5" fill="#BA7A4B"/>
+      <!-- Head -->
+      <circle cx="0" cy="-68" r="42" fill="#D89B6C"/>
+      <!-- Chin subtle warm highlight -->
+      <ellipse cx="0" cy="-40" rx="20" ry="7" fill="#BA7A4B" opacity="0.22"/>
+      <!-- Rosy cheeks -->
+      <ellipse cx="-24" cy="-60" rx="8.5" ry="5.5" fill="#E57373" opacity="0.45"/>
+      <ellipse cx="24" cy="-60" rx="8.5" ry="5.5" fill="#E57373" opacity="0.45"/>
+      <!-- Cute button nose -->
+      <path d="M-2.5,-63 Q0,-59.5 2.5,-63" fill="none" stroke="#BA7A4B" stroke-width="2.6" stroke-linecap="round"/>
+      
+    <path d="M-21,-81 Q-15,-84 -9,-81" fill="none" stroke="#231715" stroke-width="2.4" stroke-linecap="round"/>
+    <path d="M9,-81 Q15,-84 21,-81" fill="none" stroke="#231715" stroke-width="2.4" stroke-linecap="round"/>
+  
+      
+    <circle cx="-15" cy="-70" r="5.2" fill="#1E1B18"/>
+    <circle cx="-16.5" cy="-71.8" r="1.8" fill="#FFFFFF"/>
+    <circle cx="15" cy="-70" r="5.2" fill="#1E1B18"/>
+    <circle cx="13.5" cy="-71.8" r="1.8" fill="#FFFFFF"/>
+  
+      <path d="M-9,-54 Q0,-45 9,-54" fill="none" stroke="#9D4C45" stroke-width="3.2" stroke-linecap="round"/>
+      <!-- Hair Front -->
+      
+      <circle cx="-22" cy="-100" r="12" fill="#231715"/>
+      <circle cx="0" cy="-104" r="13" fill="#231715"/>
+      <circle cx="22" cy="-100" r="12" fill="#231715"/>
+    
     </g>
-
-    <!-- Speech Bubble 3 (Bottom Left): "வணக்கம்! ✨" in Tamil -->
-    <g transform="translate(-135, 55)">
-      <rect x="-60" y="-25" width="120" height="50" rx="16" fill="#ec4899" stroke="#fbcfe8" stroke-width="2" />
-      <polygon points="20,-25 28,-36 35,-25" fill="#ec4899" />
-      <text x="0" y="6" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="15" fill="#ffffff" text-anchor="middle">வணக்கம்! ✨</text>
-    </g>
-
-    <!-- Speech Bubble 4 (Bottom Right): "నమస్కారం! 🌟" in Telugu -->
-    <g transform="translate(135, 55)">
-      <rect x="-65" y="-25" width="130" height="50" rx="16" fill="#10b981" stroke="#a7f3d0" stroke-width="2" />
-      <polygon points="-20,-25 -28,-36 -12,-25" fill="#10b981" />
-      <text x="0" y="6" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="14" fill="#ffffff" text-anchor="middle">నమస్కారం! 🌟</text>
-    </g>
-
-    <!-- Central Brain Growth Badge -->
-    <rect x="-50" y="-12" width="100" height="24" rx="12" fill="#1e1b4b" stroke="#f472b6" stroke-width="2" />
-    <text x="0" y="4" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="9" fill="#fbcfe8" text-anchor="middle" letter-spacing="1">DUAL BRAIN</text>
-  </g>
-
-  <!-- Bottom Frosted Card Banner with Title and Tagline -->
-  <g transform="translate(48, 330)">
-    <rect width="704" height="114" rx="24" fill="#090d16" opacity="0.88" />
-    <rect width="704" height="114" rx="24" fill="none" stroke="#ffffff" stroke-width="1" opacity="0.12" />
-    <text x="32" y="44" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="24" fill="#ffffff" letter-spacing="-0.5">The Multilingual Toddler Mind</text>
-    <text x="32" y="78" font-family="system-ui, -apple-system, sans-serif" font-weight="600" font-size="13" fill="#94a3b8" letter-spacing="0.2">English · Hindi · Tamil · Telugu · Cultural Heritage &amp; Wit</text>
-    <g transform="translate(640, 48)">
-      <circle cx="0" cy="0" r="18" fill="#a855f7" opacity="0.15" />
-      <polygon points="0,-10 3,-3 10,-3 4,2 6,9 0,5 -6,9 -4,2 -10,-3 -3,-3" fill="#a855f7" />
-    </g>
-  </g>
+  
+    <!-- Playful globe & sun/flower story icons -->
+    <circle cx="385" cy="120" r="34" fill="#38BDF8" stroke="#FFFFFF" stroke-width="4"/>
+    <path d="M368,108 Q385,122 396,104 Q404,126 378,136 Z" fill="#22C55E"/>
+  
 </svg>

@@ -1,80 +1,91 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 480" width="800" height="480">
   <defs>
-    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#042f2e" />
-      <stop offset="100%" stop-color="#021c1a" />
-    </linearGradient>
-    <linearGradient id="tentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#14b8a6" />
-      <stop offset="100%" stop-color="#0d9488" />
-    </linearGradient>
-    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
-      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.5" />
+    <filter id="softShadow_d10" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#1e293b" flood-opacity="0.12" />
     </filter>
+    
   </defs>
-
-  <rect width="800" height="480" fill="url(#bgGrad)" />
-
-  <!-- Ambient soothing glow -->
-  <circle cx="400" cy="160" r="150" fill="#2dd4bf" opacity="0.1" filter="blur(50px)" />
-
-  <!-- Category Pill Badge -->
-  <g transform="translate(48, 36)">
-    <rect width="160" height="32" rx="16" fill="#000000" opacity="0.4" />
-    <rect width="160" height="32" rx="16" fill="none" stroke="#2dd4bf" stroke-width="1.5" opacity="0.7" />
-    <circle cx="20" cy="16" r="5" fill="#2dd4bf" />
-    <text x="32" y="21" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="11" fill="#2dd4bf" letter-spacing="2">DEVELOPMENT</text>
-  </g>
-
-  <!-- Central Thematic Illustration: The Sensory Sanctuary Canopy Tent & Muffs -->
-  <g filter="url(#shadow)" transform="translate(400, 180)">
-    <!-- Base rug -->
-    <ellipse cx="0" cy="70" rx="190" ry="25" fill="#0f766e" opacity="0.4" stroke="#2dd4bf" stroke-width="2" />
-
-    <!-- Play Teepee Tent / Canopy -->
-    <!-- Wooden poles -->
-    <line x1="-120" y1="70" x2="30" y2="-95" stroke="#fde68a" stroke-width="6" stroke-linecap="round" />
-    <line x1="120" y1="70" x2="-30" y2="-95" stroke="#fde68a" stroke-width="6" stroke-linecap="round" />
-    <line x1="0" y1="70" x2="0" y2="-105" stroke="#fde68a" stroke-width="6" stroke-linecap="round" />
-
-    <!-- Tent Fabric Shell -->
-    <polygon points="0,-85 -110,65 110,65" fill="url(#tentGrad)" opacity="0.85" stroke="#5eead4" stroke-width="3" />
-    <!-- Tent Open Flap (Peeking into cozy interior) -->
-    <polygon points="0,-30 -40,65 40,65" fill="#042f2e" stroke="#2dd4bf" stroke-width="2" />
-
-    <!-- Twinkling stars inside tent -->
-    <circle cx="-12" cy="15" r="3.5" fill="#fef08a" />
-    <circle cx="15" cy="25" r="2.5" fill="#fef08a" />
-    <circle cx="0" cy="40" r="3" fill="#fef08a" />
-
-    <!-- Weighted Sensory Blanket draped over side -->
-    <path d="M -90 40 Q -70 20 -40 35 L -35 70 L -100 70 Z" fill="#6366f1" stroke="#a5b4fc" stroke-width="2" />
-    <!-- Quilted squares pattern on weighted blanket -->
-    <line x1="-80" y1="40" x2="-50" y2="70" stroke="#818cf8" stroke-width="1.5" />
-    <line x1="-65" y1="35" x2="-35" y2="65" stroke="#818cf8" stroke-width="1.5" />
-
-    <!-- Noise-Dampening Toddler Over-Ear Headphones on the right -->
-    <g transform="translate(130, 25)">
-      <!-- Headband -->
-      <path d="M -22 0 A 22 22 0 0 1 22 0" fill="none" stroke="#f43f5e" stroke-width="5" stroke-linecap="round" />
-      <!-- Left Ear Cup -->
-      <rect x="-28" y="-4" width="12" height="24" rx="6" fill="#fb7185" stroke="#f43f5e" stroke-width="2" />
-      <!-- Right Ear Cup -->
-      <rect x="16" y="-4" width="12" height="24" rx="6" fill="#fb7185" stroke="#f43f5e" stroke-width="2" />
-      <text x="0" y="36" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="8" fill="#5eead4" text-anchor="middle">QUIET</text>
+  
+    
+    <rect width="800" height="480" fill="#EEF2FF"/>
+    <rect y="300" width="800" height="180" fill="#F5E6CC"/>
+    <!-- Window -->
+    <rect x="540" y="38" width="180" height="165" rx="20" fill="#E0F2FE" stroke="#FFFFFF" stroke-width="8"/>
+    <line x1="630" y1="38" x2="630" y2="203" stroke="#FFFFFF" stroke-width="5"/>
+    <line x1="540" y1="120" x2="720" y2="120" stroke="#FFFFFF" stroke-width="5"/>
+    <!-- Pastel bunting -->
+    <path d="M50,32 Q250,76 470,30" fill="none" stroke="#CBD5E1" stroke-width="2.5"/>
+    <polygon points="90,42 115,47 100,72" fill="#FDA4AF"/>
+    <polygon points="160,52 185,54 172,80" fill="#93C5FD"/>
+    <polygon points="230,54 255,54 242,80" fill="#86EFAC"/>
+    <polygon points="300,50 325,47 314,74" fill="#FDE047"/>
+    <polygon points="370,42 395,38 386,66" fill="#C4B5FD"/>
+    <!-- Round play rug -->
+    <ellipse cx="400" cy="395" rx="310" ry="68" fill="#E0E7FF"/>
+    <ellipse cx="400" cy="395" rx="260" ry="52" fill="none" stroke="#A5B4FC" stroke-width="4" stroke-dasharray="14 10"/>
+  
+    <!-- Soft fabric teepee canopy tent -->
+    <polygon points="400,48 165,400 635,400" fill="#FFFBEB" stroke="#CBD5E1" stroke-width="4"/>
+    <polygon points="400,48 255,400 545,400" fill="#FDE68A" opacity="0.5"/>
+    <!-- Cozy floor pillows -->
+    <ellipse cx="320" cy="380" rx="55" ry="25" fill="#93C5FD"/>
+    <ellipse cx="475" cy="382" rx="55" ry="25" fill="#FDA4AF"/>
+    
+    <g transform="translate(400, 295) scale(1)">
+      
+      <path d="M-16,44 Q-52,58 -48,74 Q-42,86 -16,74" fill="#6366F1" stroke="#6366F1" stroke-width="16" stroke-linecap="round"/>
+      <path d="M16,44 Q52,58 48,74 Q42,86 16,74" fill="#6366F1" stroke="#6366F1" stroke-width="16" stroke-linecap="round"/>
+      <ellipse cx="-48" cy="74" rx="10" ry="7" fill="#F59E0B"/>
+      <ellipse cx="48" cy="74" rx="10" ry="7" fill="#F59E0B"/>
+    
+      
+      <path d="M-29,-20 Q-38,-6 -8,6" fill="none" stroke="#34D399" stroke-width="15" stroke-linecap="round"/>
+      <circle cx="-8" cy="6" r="8.5" fill="#FBD5BD"/>
+    
+      
+      <path d="M29,-20 Q38,-6 8,6" fill="none" stroke="#34D399" stroke-width="15" stroke-linecap="round"/>
+      <circle cx="8" cy="6" r="8.5" fill="#FBD5BD"/>
+    
+      
+    <path d="M-32,-26 C-36,-10 -34,36 -28,48 C-14,54 14,54 28,48 C34,36 36,-10 32,-26 C20,-34 -20,-34 -32,-26 Z" fill="#34D399" />
+    
+      <path d="M-31,-4 L31,-4 L32,6 L-32,6 Z" fill="#FDA4AF" opacity="0.55"/>
+      <path d="M-32,16 L32,16 L31,26 L-31,26 Z" fill="#FDA4AF" opacity="0.55"/>
+    
+    
+    
+  
+      <!-- Neck -->
+      <rect x="-8" y="-38" width="16" height="14" rx="6" fill="#E8B393"/>
+      <!-- Hair Back -->
+      <path d="M-46,-54 C-52,-120 52,-120 46,-54 Z" fill="#B86B2B"/>
+      <!-- Ears -->
+      <circle cx="-41" cy="-66" r="8.5" fill="#E8B393"/>
+      <circle cx="41" cy="-66" r="8.5" fill="#E8B393"/>
+      <!-- Head -->
+      <circle cx="0" cy="-68" r="42" fill="#FBD5BD"/>
+      <!-- Chin subtle warm highlight -->
+      <ellipse cx="0" cy="-40" rx="20" ry="7" fill="#E8B393" opacity="0.22"/>
+      <!-- Rosy cheeks -->
+      <ellipse cx="-24" cy="-60" rx="8.5" ry="5.5" fill="#F48FB1" opacity="0.45"/>
+      <ellipse cx="24" cy="-60" rx="8.5" ry="5.5" fill="#F48FB1" opacity="0.45"/>
+      <!-- Cute button nose -->
+      <path d="M-2.5,-63 Q0,-59.5 2.5,-63" fill="none" stroke="#E8B393" stroke-width="2.6" stroke-linecap="round"/>
+      
+    <path d="M-21,-81 Q-15,-84 -9,-81" fill="none" stroke="#B86B2B" stroke-width="2.4" stroke-linecap="round"/>
+    <path d="M9,-81 Q15,-84 21,-81" fill="none" stroke="#B86B2B" stroke-width="2.4" stroke-linecap="round"/>
+  
+      
+      <path d="M-21,-69 Q-15,-64 -9,-69" fill="none" stroke="#1E1B18" stroke-width="3" stroke-linecap="round"/>
+      <path d="M9,-69 Q15,-64 21,-69" fill="none" stroke="#1E1B18" stroke-width="3" stroke-linecap="round"/>
+    
+      <path d="M-6,-53 Q0,-49 6,-53" fill="none" stroke="#C96F63" stroke-width="2.8" stroke-linecap="round"/>
+      <!-- Hair Front -->
+      <path d="M-40,-82 Q0,-100 40,-82 C32,-114 -32,-114 -40,-82 Z" fill="#B86B2B"/>
     </g>
-  </g>
-
-  <!-- Bottom Frosted Card Banner with Title and Tagline -->
-  <g transform="translate(48, 330)">
-    <rect width="704" height="114" rx="24" fill="#090d16" opacity="0.88" />
-    <rect width="704" height="114" rx="24" fill="none" stroke="#ffffff" stroke-width="1" opacity="0.12" />
-    <text x="32" y="44" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="24" fill="#ffffff" letter-spacing="-0.5">Sensory Reset Sanctuary</text>
-    <text x="32" y="78" font-family="system-ui, -apple-system, sans-serif" font-weight="600" font-size="13" fill="#94a3b8" letter-spacing="0.2">Dimming Stimulation · Gentle Pressure · Calming Nervous Systems</text>
-    <g transform="translate(640, 48)">
-      <circle cx="0" cy="0" r="18" fill="#2dd4bf" opacity="0.15" />
-      <polygon points="0,-10 3,-3 10,-3 4,2 6,9 0,5 -6,9 -4,2 -10,-3 -3,-3" fill="#2dd4bf" />
-    </g>
-  </g>
+  
+    <!-- Fairy lights garland -->
+    <circle cx="315" cy="180" r="6" fill="#FEF08A"/><circle cx="400" cy="145" r="7" fill="#FEF08A"/><circle cx="485" cy="180" r="6" fill="#FEF08A"/>
+  
 </svg>

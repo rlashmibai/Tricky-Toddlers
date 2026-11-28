@@ -1,98 +1,127 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 480" width="800" height="480">
   <defs>
-    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#0f172a" />
-      <stop offset="100%" stop-color="#1e1b4b" />
-    </linearGradient>
-    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
-      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.5" />
+    <filter id="softShadow_s10" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#1e293b" flood-opacity="0.12" />
     </filter>
+    
   </defs>
-
-  <rect width="800" height="480" fill="url(#bgGrad)" />
-
-  <!-- Category Pill Badge -->
-  <g transform="translate(48, 36)">
-    <rect width="160" height="32" rx="16" fill="#000000" opacity="0.4" />
-    <rect width="160" height="32" rx="16" fill="none" stroke="#fbbf24" stroke-width="1.5" opacity="0.7" />
-    <circle cx="20" cy="16" r="5" fill="#fbbf24" />
-    <text x="32" y="21" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="11" fill="#fbbf24" letter-spacing="2">SLEEP TIPS</text>
-  </g>
-
-  <!-- Central Thematic Illustration: The Chair Method (Bed, Step-by-Step Chair Progression to Door) -->
-  <g filter="url(#shadow)" transform="translate(400, 185)">
-    <!-- Floor line -->
-    <line x1="-240" y1="70" x2="240" y2="70" stroke="#334155" stroke-width="3" stroke-linecap="round" />
-
-    <!-- Toddler Bed on the Left -->
-    <g transform="translate(-150, 20)">
-      <!-- Headboard -->
-      <rect x="-65" y="-55" width="14" height="105" rx="6" fill="#fde68a" stroke="#d97706" stroke-width="2" />
-      <!-- Footboard -->
-      <rect x="65" y="-30" width="12" height="80" rx="5" fill="#fde68a" stroke="#d97706" stroke-width="2" />
-      <!-- Mattress & Bed Frame -->
-      <rect x="-55" y="0" width="125" height="45" rx="8" fill="#3b82f6" />
-      <rect x="-52" y="-12" width="38" height="20" rx="8" fill="#f8fafc" /> <!-- Pillow -->
-      <!-- Sleeping toddler sleeping blanket -->
-      <path d="M -20 -4 Q 10 -15 65 0 L 65 40 L -20 40 Z" fill="#60a5fa" stroke="#93c5fd" stroke-width="1.5" />
-      <!-- Zzz floating -->
-      <text x="-15" y="-30" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="14" fill="#fef08a">z</text>
-      <text x="0" y="-42" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="18" fill="#fef08a">Z</text>
-      <text x="20" y="-56" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="22" fill="#fef08a">Z</text>
+  
+    
+    <rect width="800" height="480" fill="#3B3675"/>
+    <rect y="330" width="800" height="150" fill="#1E1B4B" opacity="0.65"/>
+    <!-- Crescent window -->
+    <rect x="85" y="42" width="170" height="185" rx="18" fill="#2E2B5F" stroke="#6366F1" stroke-width="6"/>
+    <path d="M195,88 A24,24 0 1,0 212,118 A18,18 0 1,1 195,88 Z" fill="#FEF08A"/>
+    <circle cx="122" cy="82" r="3" fill="#FEF08A"/>
+    <circle cx="152" cy="112" r="2.2" fill="#FFFFFF"/>
+    <circle cx="132" cy="148" r="2.8" fill="#FEF08A"/>
+    <!-- Stars on wall -->
+    <circle cx="420" cy="70" r="3" fill="#FDE047" opacity="0.6"/>
+    <circle cx="510" cy="110" r="2.5" fill="#FDE047" opacity="0.5"/>
+    <circle cx="670" cy="60" r="3.5" fill="#FDE047" opacity="0.6"/>
+    <!-- Warm bedside lamp glow -->
+    <circle cx="660" cy="215" r="110" fill="#FDE047" opacity="0.16"/>
+    <rect x="646" y="238" width="28" height="42" rx="6" fill="#F59E0B"/>
+    <polygon points="628,238 692,238 678,200 642,200" fill="#FEF08A"/>
+  
+    <!-- Parent seated calmly in wooden rocking chair beside crib -->
+    <path d="M180,350 L295,350 L285,220 L190,220 Z" fill="#B45309"/>
+    
+    <g transform="translate(235, 256) scale(0.94)">
+      
+      <!-- Hair back -->
+      <path d="M-40,-62 C-46,-142 54,-142 48,-62 Z" fill="#7C4728"/>
+      <!-- Torso -->
+      <path d="M-40,-34 C-46,-4 -40,48 -32,62 L32,62 C40,48 46,-4 40,-34 C24,-42 -24,-42 -40,-34 Z" fill="#14B8A6"/>
+      <!-- Neck -->
+      <rect x="-10" y="-48" width="20" height="18" rx="8" fill="#E8B393"/>
+      
+      <path d="M-34,-18 Q-44,16 -24,32" fill="none" stroke="#14B8A6" stroke-width="17" stroke-linecap="round"/>
+      <circle cx="-22" cy="34" r="9.5" fill="#FBD5BD"/>
+      <path d="M34,-18 Q44,16 24,32" fill="none" stroke="#14B8A6" stroke-width="17" stroke-linecap="round"/>
+      <circle cx="22" cy="34" r="9.5" fill="#FBD5BD"/>
+    
+      <!-- Head -->
+      <circle cx="-34" cy="-86" r="8" fill="#E8B393"/>
+      <circle cx="42" cy="-86" r="8" fill="#E8B393"/>
+      <circle cx="4" cy="-88" r="38" fill="#FBD5BD"/>
+      <ellipse cx="-16" cy="-82" rx="7" ry="4.5" fill="#F48FB1" opacity="0.38"/>
+      <ellipse cx="24" cy="-82" rx="7" ry="4.5" fill="#F48FB1" opacity="0.38"/>
+      <circle cx="-9" cy="-90" r="4" fill="#1E1B18"/>
+      <circle cx="17" cy="-90" r="4" fill="#1E1B18"/>
+      <circle cx="-10" cy="-91.2" r="1.3" fill="#FFFFFF"/>
+      <circle cx="16" cy="-91.2" r="1.3" fill="#FFFFFF"/>
+      <path d="M-15,-99 Q-9,-102 -3,-99" fill="none" stroke="#7C4728" stroke-width="2.3" stroke-linecap="round"/>
+      <path d="M11,-99 Q17,-102 23,-99" fill="none" stroke="#7C4728" stroke-width="2.3" stroke-linecap="round"/>
+      <path d="M-4,-76 Q4,-68 12,-76" fill="none" stroke="#C96F63" stroke-width="2.8" stroke-linecap="round"/>
+      <!-- Front bangs -->
+      <path d="M-33,-100 Q-4,-118 41,-100 C36,-134 -28,-134 -33,-100 Z" fill="#7C4728"/>
     </g>
-
-    <!-- Progression Path with Dashed Dots and Arrows -->
-    <path d="M -50 45 C 0 30 50 30 110 45" fill="none" stroke="#fbbf24" stroke-width="2.5" stroke-dasharray="6 6" />
-    <polygon points="112,45 104,39 104,51" fill="#fbbf24" />
-
-    <!-- Step 1 Chair (Next to Bed - solid and present) -->
-    <g transform="translate(-40, 20)">
-      <rect x="-16" y="-30" width="6" height="50" rx="3" fill="#fbbf24" />
-      <rect x="-16" y="5" width="32" height="6" rx="3" fill="#fbbf24" />
-      <line x1="-14" y1="11" x2="-14" y2="50" stroke="#f59e0b" stroke-width="3" />
-      <line x1="12" y1="11" x2="12" y2="50" stroke="#f59e0b" stroke-width="3" />
-      <!-- Day 1-3 Badge -->
-      <rect x="-24" y="-55" width="48" height="18" rx="9" fill="#1e293b" stroke="#fbbf24" stroke-width="1.5" />
-      <text x="0" y="-42" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="8" fill="#fbbf24" text-anchor="middle">DAY 1-3</text>
+  
+    <!-- Toddler drifting to sleep in crib right nearby -->
+    <rect x="355" y="230" width="340" height="185" rx="20" fill="#92400E"/>
+    
+    <g transform="translate(525, 262) scale(1.02)">
+      
+      
+      <path d="M-29,-20 Q-42,-6 -34,14" fill="none" stroke="#FBBF24" stroke-width="15" stroke-linecap="round"/>
+      <circle cx="-34" cy="16" r="8.5" fill="#FBD5BD"/>
+    
+      
+      <path d="M29,-20 Q42,-6 34,14" fill="none" stroke="#FBBF24" stroke-width="15" stroke-linecap="round"/>
+      <circle cx="34" cy="16" r="8.5" fill="#FBD5BD"/>
+    
+      
+    <path d="M-32,-26 C-36,-10 -34,36 -28,48 C-14,54 14,54 28,48 C34,36 36,-10 32,-26 C20,-34 -20,-34 -32,-26 Z" fill="#FBBF24" />
+    
+      <circle cx="-14" cy="2" r="3.5" fill="#FEF08A" opacity="0.85"/>
+      <circle cx="15" cy="16" r="3" fill="#FEF08A" opacity="0.85"/>
+      <circle cx="-8" cy="28" r="2.8" fill="#FEF08A" opacity="0.85"/>
+      <circle cx="12" cy="-8" r="3.2" fill="#FEF08A" opacity="0.85"/>
+    
+    
+    
+  
+      <!-- Neck -->
+      <rect x="-8" y="-38" width="16" height="14" rx="6" fill="#E8B393"/>
+      <!-- Hair Back -->
+      
+      <circle cx="-34" cy="-90" r="16" fill="#7C4728"/>
+      <circle cx="34" cy="-90" r="16" fill="#7C4728"/>
+      <circle cx="-18" cy="-106" r="17" fill="#7C4728"/>
+      <circle cx="18" cy="-106" r="17" fill="#7C4728"/>
+      <circle cx="0" cy="-112" r="19" fill="#7C4728"/>
+    
+      <!-- Ears -->
+      <circle cx="-41" cy="-66" r="8.5" fill="#E8B393"/>
+      <circle cx="41" cy="-66" r="8.5" fill="#E8B393"/>
+      <!-- Head -->
+      <circle cx="0" cy="-68" r="42" fill="#FBD5BD"/>
+      <!-- Chin subtle warm highlight -->
+      <ellipse cx="0" cy="-40" rx="20" ry="7" fill="#E8B393" opacity="0.22"/>
+      <!-- Rosy cheeks -->
+      <ellipse cx="-24" cy="-60" rx="8.5" ry="5.5" fill="#F48FB1" opacity="0.45"/>
+      <ellipse cx="24" cy="-60" rx="8.5" ry="5.5" fill="#F48FB1" opacity="0.45"/>
+      <!-- Cute button nose -->
+      <path d="M-2.5,-63 Q0,-59.5 2.5,-63" fill="none" stroke="#E8B393" stroke-width="2.6" stroke-linecap="round"/>
+      
+    <path d="M-21,-81 Q-15,-84 -9,-81" fill="none" stroke="#7C4728" stroke-width="2.4" stroke-linecap="round"/>
+    <path d="M9,-81 Q15,-84 21,-81" fill="none" stroke="#7C4728" stroke-width="2.4" stroke-linecap="round"/>
+  
+      
+      <path d="M-21,-69 Q-15,-64 -9,-69" fill="none" stroke="#1E1B18" stroke-width="3" stroke-linecap="round"/>
+      <path d="M9,-69 Q15,-64 21,-69" fill="none" stroke="#1E1B18" stroke-width="3" stroke-linecap="round"/>
+    
+      <path d="M-6,-53 Q0,-49 6,-53" fill="none" stroke="#C96F63" stroke-width="2.8" stroke-linecap="round"/>
+      <!-- Hair Front -->
+      
+      <circle cx="-22" cy="-100" r="12" fill="#7C4728"/>
+      <circle cx="0" cy="-104" r="13" fill="#7C4728"/>
+      <circle cx="22" cy="-100" r="12" fill="#7C4728"/>
+    
     </g>
-
-    <!-- Step 2 Chair (Mid-room - gentle progression) -->
-    <g transform="translate(45, 20)">
-      <rect x="-16" y="-30" width="6" height="50" rx="3" fill="#fbbf24" opacity="0.6" />
-      <rect x="-16" y="5" width="32" height="6" rx="3" fill="#fbbf24" opacity="0.6" />
-      <line x1="-14" y1="11" x2="-14" y2="50" stroke="#f59e0b" stroke-width="3" opacity="0.6" />
-      <line x1="12" y1="11" x2="12" y2="50" stroke="#f59e0b" stroke-width="3" opacity="0.6" />
-      <rect x="-24" y="-55" width="48" height="18" rx="9" fill="#1e293b" stroke="#fbbf24" stroke-width="1.5" opacity="0.8" />
-      <text x="0" y="-42" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="8" fill="#fbbf24" text-anchor="middle">DAY 4-7</text>
-    </g>
-
-    <!-- Step 3 Chair (At Bedroom Door - independent milestone) -->
-    <g transform="translate(140, 20)">
-      <rect x="-16" y="-30" width="6" height="50" rx="3" fill="#4ade80" />
-      <rect x="-16" y="5" width="32" height="6" rx="3" fill="#4ade80" />
-      <line x1="-14" y1="11" x2="-14" y2="50" stroke="#22c55e" stroke-width="3" />
-      <line x1="12" y1="11" x2="12" y2="50" stroke="#22c55e" stroke-width="3" />
-      <rect x="-26" y="-55" width="52" height="18" rx="9" fill="#1e293b" stroke="#4ade80" stroke-width="1.5" />
-      <text x="0" y="-42" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="8" fill="#4ade80" text-anchor="middle">AT DOOR</text>
-    </g>
-
-    <!-- Open Bedroom Door on far right -->
-    <g transform="translate(205, -25)">
-      <rect x="0" y="0" width="45" height="95" fill="#1e293b" stroke="#475569" stroke-width="2" />
-      <circle cx="8" cy="50" r="3" fill="#fde047" /> <!-- Door handle -->
-    </g>
-  </g>
-
-  <!-- Bottom Frosted Card Banner with Title and Tagline -->
-  <g transform="translate(48, 330)">
-    <rect width="704" height="114" rx="24" fill="#090d16" opacity="0.88" />
-    <rect width="704" height="114" rx="24" fill="none" stroke="#ffffff" stroke-width="1" opacity="0.12" />
-    <text x="32" y="44" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="24" fill="#ffffff" letter-spacing="-0.5">The Chair Method Transition</text>
-    <text x="32" y="78" font-family="system-ui, -apple-system, sans-serif" font-weight="600" font-size="13" fill="#94a3b8" letter-spacing="0.2">Gradual Independent Sleep · Loving Presence · Zero Tears</text>
-    <g transform="translate(640, 48)">
-      <circle cx="0" cy="0" r="18" fill="#fbbf24" opacity="0.15" />
-      <polygon points="0,-10 3,-3 10,-3 4,2 6,9 0,5 -6,9 -4,2 -10,-3 -3,-3" fill="#fbbf24" />
-    </g>
-  </g>
+  
+    <rect x="355" y="325" width="340" height="90" rx="14" fill="#78350F"/>
+  
 </svg>

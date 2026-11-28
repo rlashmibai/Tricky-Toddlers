@@ -1,78 +1,123 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 480" width="800" height="480">
   <defs>
-    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#0f172a" />
-      <stop offset="100%" stop-color="#1e1b4b" />
-    </linearGradient>
-    <linearGradient id="ticketGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#fbbf24" />
-      <stop offset="50%" stop-color="#f59e0b" />
-      <stop offset="100%" stop-color="#d97706" />
-    </linearGradient>
-    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
-      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.5" />
+    <filter id="softShadow_s8" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#1e293b" flood-opacity="0.12" />
     </filter>
+    
   </defs>
-
-  <!-- Background -->
-  <rect width="800" height="480" fill="url(#bgGrad)" />
-
-  <!-- Moon and stars ambient backdrop -->
-  <circle cx="680" cy="90" r="45" fill="#fef08a" opacity="0.15" filter="blur(20px)" />
-  <path d="M 690 60 A 30 30 0 0 0 665 95 A 30 30 0 1 1 690 60 Z" fill="#fef08a" opacity="0.8" />
-  <circle cx="210" cy="70" r="2.5" fill="#ffffff" opacity="0.6" />
-  <circle cx="270" cy="110" r="3" fill="#fde047" opacity="0.7" />
-  <circle cx="150" cy="140" r="2" fill="#ffffff" opacity="0.5" />
-  <circle cx="580" cy="65" r="3.5" fill="#fde047" opacity="0.8" />
-
-  <!-- Category Pill Badge -->
-  <g transform="translate(48, 36)">
-    <rect width="160" height="32" rx="16" fill="#000000" opacity="0.4" />
-    <rect width="160" height="32" rx="16" fill="none" stroke="#fde047" stroke-width="1.5" opacity="0.7" />
-    <circle cx="20" cy="16" r="5" fill="#fde047" />
-    <text x="32" y="21" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="11" fill="#fde047" letter-spacing="2">SLEEP TIPS</text>
-  </g>
-
-  <!-- Visual Central Illustration: The Golden Bedtime Pass Ticket & Bedtime Elements -->
-  <g filter="url(#shadow)" transform="translate(400, 175)">
-    <!-- Cozy Bed with Pillow in Background -->
-    <rect x="-190" y="20" width="380" height="60" rx="14" fill="#334155" opacity="0.9" />
-    <rect x="-180" y="0" width="100" height="30" rx="12" fill="#f8fafc" opacity="0.9" />
-    <!-- Golden Bedtime Pass Ticket Card -->
-    <g transform="rotate(-6)">
-      <rect x="-150" y="-85" width="300" height="130" rx="18" fill="url(#ticketGrad)" stroke="#fef08a" stroke-width="3" />
-      <!-- Perforation notches on edges -->
-      <circle cx="-150" cy="-20" r="14" fill="#1e1b4b" />
-      <circle cx="150" cy="-20" r="14" fill="#1e1b4b" />
-      <!-- Ticket Dashed Line -->
-      <line x1="-50" y1="-85" x2="-50" y2="45" stroke="#78350f" stroke-width="2" stroke-dasharray="6 6" />
-      <!-- Star Icon on Ticket Stub -->
-      <circle cx="-100" cy="-20" r="24" fill="#78350f" opacity="0.25" />
-      <polygon points="-100,-34 -94,-22 -82,-22 -92,-14 -88,-2 -100,-10 -112,-2 -108,-14 -118,-22 -106,-22" fill="#fef3c7" />
-      <!-- Ticket Text -->
-      <text x="50" y="-45" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="18" fill="#451a03" text-anchor="middle" letter-spacing="2">BEDTIME PASS</text>
-      <text x="50" y="-18" font-family="system-ui, -apple-system, sans-serif" font-weight="700" font-size="11" fill="#78350f" text-anchor="middle">VALID FOR 1 WATER CUP OR EXTRA HUG</text>
-      <!-- Stamp Badge -->
-      <rect x="0" y="2" width="100" height="26" rx="6" fill="#78350f" />
-      <text x="50" y="19" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="11" fill="#fef3c7" text-anchor="middle" letter-spacing="1">NO FRICTION</text>
+  
+    
+    <rect width="800" height="480" fill="#3B3675"/>
+    <rect y="330" width="800" height="150" fill="#1E1B4B" opacity="0.65"/>
+    <!-- Crescent window -->
+    <rect x="85" y="42" width="170" height="185" rx="18" fill="#2E2B5F" stroke="#6366F1" stroke-width="6"/>
+    <path d="M195,88 A24,24 0 1,0 212,118 A18,18 0 1,1 195,88 Z" fill="#FEF08A"/>
+    <circle cx="122" cy="82" r="3" fill="#FEF08A"/>
+    <circle cx="152" cy="112" r="2.2" fill="#FFFFFF"/>
+    <circle cx="132" cy="148" r="2.8" fill="#FEF08A"/>
+    <!-- Stars on wall -->
+    <circle cx="420" cy="70" r="3" fill="#FDE047" opacity="0.6"/>
+    <circle cx="510" cy="110" r="2.5" fill="#FDE047" opacity="0.5"/>
+    <circle cx="670" cy="60" r="3.5" fill="#FDE047" opacity="0.6"/>
+    <!-- Warm bedside lamp glow -->
+    <circle cx="660" cy="215" r="110" fill="#FDE047" opacity="0.16"/>
+    <rect x="646" y="238" width="28" height="42" rx="6" fill="#F59E0B"/>
+    <polygon points="628,238 692,238 678,200 642,200" fill="#FEF08A"/>
+  
+    <!-- Warm glowing bedroom doorway with toddler holding a golden star ticket -->
+    <rect x="330" y="65" width="210" height="350" rx="16" fill="#FEF3C7"/>
+    
+    <g transform="translate(435, 268) scale(1.05)">
+      
+      <rect x="-27" y="42" width="18" height="60" rx="9" fill="#3B82F6"/>
+      <rect x="9" y="42" width="18" height="60" rx="9" fill="#3B82F6"/>
+      <ellipse cx="-18" cy="106" rx="14" ry="8" fill="#F59E0B"/><ellipse cx="-18" cy="109" rx="13" ry="3.5" fill="#FFFFFF" opacity="0.85"/><ellipse cx="18" cy="106" rx="14" ry="8" fill="#F59E0B"/><ellipse cx="18" cy="109" rx="13" ry="3.5" fill="#FFFFFF" opacity="0.85"/>
+    
+      
+      <path d="M-29,-20 Q-38,-6 -8,6" fill="none" stroke="#818CF8" stroke-width="15" stroke-linecap="round"/>
+      <circle cx="-8" cy="6" r="8.5" fill="#FBD5BD"/>
+    
+      
+      <path d="M29,-20 Q54,-34 64,-50" fill="none" stroke="#818CF8" stroke-width="15" stroke-linecap="round"/>
+      <circle cx="66" cy="-52" r="8.5" fill="#FBD5BD"/>
+    
+      
+    <path d="M-32,-26 C-36,-10 -34,36 -28,48 C-14,54 14,54 28,48 C34,36 36,-10 32,-26 C20,-34 -20,-34 -32,-26 Z" fill="#818CF8" />
+    
+      <circle cx="-14" cy="2" r="3.5" fill="#FEF08A" opacity="0.85"/>
+      <circle cx="15" cy="16" r="3" fill="#FEF08A" opacity="0.85"/>
+      <circle cx="-8" cy="28" r="2.8" fill="#FEF08A" opacity="0.85"/>
+      <circle cx="12" cy="-8" r="3.2" fill="#FEF08A" opacity="0.85"/>
+    
+    
+    
+  
+      <!-- Neck -->
+      <rect x="-8" y="-38" width="16" height="14" rx="6" fill="#E8B393"/>
+      <!-- Hair Back -->
+      <path d="M-46,-54 C-52,-120 52,-120 46,-54 Z" fill="#B86B2B"/>
+      <!-- Ears -->
+      <circle cx="-41" cy="-66" r="8.5" fill="#E8B393"/>
+      <circle cx="41" cy="-66" r="8.5" fill="#E8B393"/>
+      <!-- Head -->
+      <circle cx="0" cy="-68" r="42" fill="#FBD5BD"/>
+      <!-- Chin subtle warm highlight -->
+      <ellipse cx="0" cy="-40" rx="20" ry="7" fill="#E8B393" opacity="0.22"/>
+      <!-- Rosy cheeks -->
+      <ellipse cx="-24" cy="-60" rx="8.5" ry="5.5" fill="#F48FB1" opacity="0.45"/>
+      <ellipse cx="24" cy="-60" rx="8.5" ry="5.5" fill="#F48FB1" opacity="0.45"/>
+      <!-- Cute button nose -->
+      <path d="M-2.5,-63 Q0,-59.5 2.5,-63" fill="none" stroke="#E8B393" stroke-width="2.6" stroke-linecap="round"/>
+      
+      <path d="M-21,-83 Q-15,-87 -9,-82" fill="none" stroke="#B86B2B" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M9,-81 Q15,-84 21,-81" fill="none" stroke="#B86B2B" stroke-width="2.5" stroke-linecap="round"/>
+    
+      
+    <circle cx="-15" cy="-70" r="5.2" fill="#1E1B18"/>
+    <circle cx="-16.5" cy="-71.8" r="1.8" fill="#FFFFFF"/>
+    <circle cx="15" cy="-70" r="5.2" fill="#1E1B18"/>
+    <circle cx="13.5" cy="-71.8" r="1.8" fill="#FFFFFF"/>
+  
+      <circle cx="2" cy="-52" r="4" fill="#C96F63"/>
+      <!-- Hair Front -->
+      <path d="M-40,-82 Q0,-100 40,-82 C32,-114 -32,-114 -40,-82 Z" fill="#B86B2B"/>
     </g>
-    <!-- Water Glass and Hug Hearts -->
-    <g transform="translate(140, 20)">
-      <rect x="0" y="-25" width="26" height="40" rx="5" fill="#38bdf8" opacity="0.75" stroke="#bae6fd" stroke-width="2" />
-      <line x1="8" y1="-35" x2="16" y2="-5" stroke="#f43f5e" stroke-width="3" stroke-linecap="round" />
+  
+    <!-- Golden star bedtime pass card in hand -->
+    <rect x="492" y="212" width="42" height="28" rx="6" fill="#FBBF24" stroke="#B45309" stroke-width="2"/>
+    <circle cx="513" cy="226" r="6" fill="#FFFFFF"/>
+    
+    <g transform="translate(215, 256) scale(0.96)">
+      
+      <!-- Hair back -->
+      <path d="M-40,-62 C-46,-142 54,-142 48,-62 Z" fill="#B86B2B"/>
+      <!-- Torso -->
+      <path d="M-40,-34 C-46,-4 -40,48 -32,62 L32,62 C40,48 46,-4 40,-34 C24,-42 -24,-42 -40,-34 Z" fill="#0D9488"/>
+      <!-- Neck -->
+      <rect x="-10" y="-48" width="20" height="18" rx="8" fill="#E8B393"/>
+      
+      <path d="M-38,-22 Q-64,-6 -52,18" fill="none" stroke="#0D9488" stroke-width="18" stroke-linecap="round"/>
+      <circle cx="-50" cy="20" r="10" fill="#FBD5BD"/>
+      <path d="M38,-22 Q64,-6 52,18" fill="none" stroke="#0D9488" stroke-width="18" stroke-linecap="round"/>
+      <circle cx="50" cy="20" r="10" fill="#FBD5BD"/>
+    
+      <!-- Head -->
+      <circle cx="-34" cy="-86" r="8" fill="#E8B393"/>
+      <circle cx="42" cy="-86" r="8" fill="#E8B393"/>
+      <circle cx="4" cy="-88" r="38" fill="#FBD5BD"/>
+      <ellipse cx="-16" cy="-82" rx="7" ry="4.5" fill="#F48FB1" opacity="0.38"/>
+      <ellipse cx="24" cy="-82" rx="7" ry="4.5" fill="#F48FB1" opacity="0.38"/>
+      <circle cx="-9" cy="-90" r="4" fill="#1E1B18"/>
+      <circle cx="17" cy="-90" r="4" fill="#1E1B18"/>
+      <circle cx="-10" cy="-91.2" r="1.3" fill="#FFFFFF"/>
+      <circle cx="16" cy="-91.2" r="1.3" fill="#FFFFFF"/>
+      <path d="M-15,-99 Q-9,-102 -3,-99" fill="none" stroke="#B86B2B" stroke-width="2.3" stroke-linecap="round"/>
+      <path d="M11,-99 Q17,-102 23,-99" fill="none" stroke="#B86B2B" stroke-width="2.3" stroke-linecap="round"/>
+      <path d="M-4,-76 Q4,-68 12,-76" fill="none" stroke="#C96F63" stroke-width="2.8" stroke-linecap="round"/>
+      <!-- Front bangs -->
+      <path d="M-33,-100 Q-4,-118 41,-100 C36,-134 -28,-134 -33,-100 Z" fill="#B86B2B"/>
     </g>
-  </g>
-
-  <!-- Bottom Frosted Card Banner with Title and Tagline -->
-  <g transform="translate(48, 330)">
-    <rect width="704" height="114" rx="24" fill="#090d16" opacity="0.88" />
-    <rect width="704" height="114" rx="24" fill="none" stroke="#ffffff" stroke-width="1" opacity="0.12" />
-    <text x="32" y="44" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="24" fill="#ffffff" letter-spacing="-0.5">The Bedtime Pass Routine</text>
-    <text x="32" y="78" font-family="system-ui, -apple-system, sans-serif" font-weight="600" font-size="13" fill="#94a3b8" letter-spacing="0.2">One Golden Ticket for Water or Hug · Zero Bedtime Friction</text>
-    <g transform="translate(640, 48)">
-      <circle cx="0" cy="0" r="18" fill="#fde047" opacity="0.15" />
-      <polygon points="0,-10 3,-3 10,-3 4,2 6,9 0,5 -6,9 -4,2 -10,-3 -3,-3" fill="#fde047" />
-    </g>
-  </g>
+  
+  
 </svg>

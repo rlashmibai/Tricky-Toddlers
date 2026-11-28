@@ -1,78 +1,102 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 480" width="800" height="480">
   <defs>
-    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#0369a1" />
-      <stop offset="100%" stop-color="#082f49" />
-    </linearGradient>
-    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
-      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.5" />
+    <filter id="softShadow_p7" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#1e293b" flood-opacity="0.12" />
     </filter>
+    
   </defs>
-
-  <rect width="800" height="480" fill="url(#bgGrad)" />
-
-  <!-- Category Pill Badge -->
-  <g transform="translate(48, 36)">
-    <rect width="180" height="32" rx="16" fill="#000000" opacity="0.4" />
-    <rect width="180" height="32" rx="16" fill="none" stroke="#38bdf8" stroke-width="1.5" opacity="0.7" />
-    <circle cx="20" cy="16" r="5" fill="#38bdf8" />
-    <text x="32" y="21" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="11" fill="#38bdf8" letter-spacing="2">POTTY TRAINING</text>
-  </g>
-
-  <!-- Central Thematic Illustration: The Travel Potty Kit (Folding Seat, Wet Bag, Post-it Sensor Hack) -->
-  <g filter="url(#shadow)" transform="translate(400, 180)">
-    <!-- Base Travel Duffel / Mat -->
-    <ellipse cx="0" cy="65" rx="210" ry="24" fill="#0c4a6e" stroke="#38bdf8" stroke-width="2" />
-
-    <!-- Compact Folding Travel Potty in Center -->
-    <g transform="translate(-10, 15)">
-      <!-- Oval Seat Rim -->
-      <ellipse cx="0" cy="-10" rx="65" ry="40" fill="#f8fafc" stroke="#38bdf8" stroke-width="3" />
-      <ellipse cx="0" cy="-10" rx="36" ry="22" fill="#0284c7" />
-      <!-- Folding Legs on sides (Green rubber grip feet) -->
-      <path d="M -50 -5 L -65 35" stroke="#10b981" stroke-width="8" stroke-linecap="round" />
-      <path d="M 50 -5 L 65 35" stroke="#10b981" stroke-width="8" stroke-linecap="round" />
-      <ellipse cx="-65" cy="35" rx="8" ry="4" fill="#047857" />
-      <ellipse cx="65" cy="35" rx="8" ry="4" fill="#047857" />
-      <!-- Center Potty Bowl Liner -->
-      <ellipse cx="0" cy="5" rx="28" ry="16" fill="#e0f2fe" opacity="0.8" />
-      <text x="0" y="52" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="10" fill="#bae6fd" text-anchor="middle">FOLDING TRAVEL SEAT</text>
+  
+    
+    <rect width="800" height="480" fill="#BAE6FD"/>
+    <circle cx="670" cy="78" r="46" fill="#FEF08A"/>
+    <!-- Fluffy clouds -->
+    <g fill="#FFFFFF" opacity="0.9">
+      <circle cx="140" cy="86" r="28"/><circle cx="172" cy="78" r="34"/><circle cx="206" cy="88" r="25"/>
+      <circle cx="440" cy="68" r="22"/><circle cx="468" cy="62" r="28"/><circle cx="496" cy="70" r="20"/>
     </g>
-
-    <!-- Outing Kit Items: Post-It Note for Auto Flush Restroom Sensors on Left -->
-    <g transform="translate(-150, -10) rotate(-10)">
-      <rect x="-30" y="-30" width="60" height="60" rx="4" fill="#fef08a" stroke="#facc15" stroke-width="2" />
-      <!-- Hand-written tip on Post-it note -->
-      <text x="0" y="-12" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="8" fill="#854d0e" text-anchor="middle">POST-IT</text>
-      <text x="0" y="2" font-family="system-ui, -apple-system, sans-serif" font-weight="700" font-size="7" fill="#a16207" text-anchor="middle">COVERS AUTO</text>
-      <text x="0" y="14" font-family="system-ui, -apple-system, sans-serif" font-weight="700" font-size="7" fill="#a16207" text-anchor="middle">FLUSH SENSOR</text>
-      <!-- Red circle icon -->
-      <circle cx="20" cy="-20" r="4" fill="#ef4444" />
+    <!-- Soft green hills -->
+    <path d="M0,290 Q240,230 520,285 Q690,310 800,265 L800,480 L0,480 Z" fill="#86EFAC"/>
+    <path d="M0,330 Q300,295 800,340 L800,480 L0,480 Z" fill="#4ADE80"/>
+    <!-- Cute wildflowers -->
+    <circle cx="110" cy="390" r="6" fill="#FEF08A"/><circle cx="110" cy="390" r="2.5" fill="#F97316"/>
+    <circle cx="690" cy="380" r="6" fill="#F472B6"/><circle cx="690" cy="380" r="2.5" fill="#FEF08A"/>
+    <circle cx="620" cy="420" r="5" fill="#FFFFFF"/><circle cx="620" cy="420" r="2" fill="#FACC15"/>
+  
+    <!-- Cozy family station wagon trunk open at picnic stop -->
+    <rect x="95" y="195" width="230" height="135" rx="28" fill="#38BDF8"/>
+    <rect x="115" y="212" width="120" height="58" rx="12" fill="#E0F2FE"/>
+    <circle cx="145" cy="340" r="28" fill="#1E293B"/><circle cx="145" cy="340" r="13" fill="#CBD5E1"/>
+    <circle cx="285" cy="340" r="28" fill="#1E293B"/><circle cx="285" cy="340" r="13" fill="#CBD5E1"/>
+    
+    <g transform="translate(495, 272) scale(1.06)">
+      
+      <rect x="-27" y="42" width="18" height="60" rx="9" fill="#0EA5E9"/>
+      <rect x="9" y="42" width="18" height="60" rx="9" fill="#0EA5E9"/>
+      <ellipse cx="-18" cy="106" rx="14" ry="8" fill="#F59E0B"/><ellipse cx="-18" cy="109" rx="13" ry="3.5" fill="#FFFFFF" opacity="0.85"/><ellipse cx="18" cy="106" rx="14" ry="8" fill="#F59E0B"/><ellipse cx="18" cy="109" rx="13" ry="3.5" fill="#FFFFFF" opacity="0.85"/>
+    
+      
+      <path d="M-29,-20 Q-52,-46 -46,-76" fill="none" stroke="#F59E0B" stroke-width="15" stroke-linecap="round"/>
+      <circle cx="-46" cy="-78" r="8.5" fill="#D89B6C"/>
+    
+      
+      <path d="M29,-20 Q54,-34 64,-50" fill="none" stroke="#F59E0B" stroke-width="15" stroke-linecap="round"/>
+      <circle cx="66" cy="-52" r="8.5" fill="#D89B6C"/>
+    
+      
+    <path d="M-32,-26 C-36,-10 -34,36 -28,48 C-14,54 14,54 28,48 C34,36 36,-10 32,-26 C20,-34 -20,-34 -32,-26 Z" fill="#F59E0B" />
+    
+      <path d="M-31,-4 L31,-4 L32,6 L-32,6 Z" fill="#FDA4AF" opacity="0.55"/>
+      <path d="M-32,16 L32,16 L31,26 L-31,26 Z" fill="#FDA4AF" opacity="0.55"/>
+    
+    
+      <rect x="-24" y="-8" width="48" height="58" rx="10" fill="#0EA5E9"/>
+      <rect x="-22" y="-30" width="9" height="28" rx="4" fill="#0EA5E9"/>
+      <rect x="13" y="-30" width="9" height="28" rx="4" fill="#0EA5E9"/>
+      <circle cx="-17.5" cy="-6" r="3" fill="#FDE047"/>
+      <circle cx="17.5" cy="-6" r="3" fill="#FDE047"/>
+      <rect x="-12" y="10" width="24" height="18" rx="5" fill="#FFFFFF" opacity="0.22"/>
+    
+    
+  
+      <!-- Neck -->
+      <rect x="-8" y="-38" width="16" height="14" rx="6" fill="#BA7A4B"/>
+      <!-- Hair Back -->
+      
+      <circle cx="-42" cy="-78" r="18" fill="#4A2C22"/>
+      <circle cx="42" cy="-78" r="18" fill="#4A2C22"/>
+      <circle cx="-34" cy="-84" r="5" fill="#FB7185"/>
+      <circle cx="34" cy="-84" r="5" fill="#FB7185"/>
+    
+      <!-- Ears -->
+      <circle cx="-41" cy="-66" r="8.5" fill="#BA7A4B"/>
+      <circle cx="41" cy="-66" r="8.5" fill="#BA7A4B"/>
+      <!-- Head -->
+      <circle cx="0" cy="-68" r="42" fill="#D89B6C"/>
+      <!-- Chin subtle warm highlight -->
+      <ellipse cx="0" cy="-40" rx="20" ry="7" fill="#BA7A4B" opacity="0.22"/>
+      <!-- Rosy cheeks -->
+      <ellipse cx="-24" cy="-60" rx="8.5" ry="5.5" fill="#E57373" opacity="0.45"/>
+      <ellipse cx="24" cy="-60" rx="8.5" ry="5.5" fill="#E57373" opacity="0.45"/>
+      <!-- Cute button nose -->
+      <path d="M-2.5,-63 Q0,-59.5 2.5,-63" fill="none" stroke="#BA7A4B" stroke-width="2.6" stroke-linecap="round"/>
+      
+    <path d="M-21,-81 Q-15,-84 -9,-81" fill="none" stroke="#4A2C22" stroke-width="2.4" stroke-linecap="round"/>
+    <path d="M9,-81 Q15,-84 21,-81" fill="none" stroke="#4A2C22" stroke-width="2.4" stroke-linecap="round"/>
+  
+      
+    <circle cx="-15" cy="-70" r="5.2" fill="#1E1B18"/>
+    <circle cx="-16.5" cy="-71.8" r="1.8" fill="#FFFFFF"/>
+    <circle cx="15" cy="-70" r="5.2" fill="#1E1B18"/>
+    <circle cx="13.5" cy="-71.8" r="1.8" fill="#FFFFFF"/>
+  
+      <path d="M-11,-56 Q0,-41 11,-56 Z" fill="#B91C1C"/><path d="M-5,-49 Q0,-52 5,-49" fill="#F87171"/>
+      <!-- Hair Front -->
+      <path d="M-42,-74 C-42,-116 42,-116 42,-74 C26,-92 -26,-92 -42,-74 Z" fill="#4A2C22"/>
     </g>
-
-    <!-- Zip Travel Wet Bag & Wipes Pack on Right -->
-    <g transform="translate(150, 0)">
-      <!-- Waterproof Zippered Pouch -->
-      <rect x="-35" y="-35" width="70" height="60" rx="10" fill="#f43f5e" stroke="#fda4af" stroke-width="2" />
-      <line x1="-35" y1="-22" x2="35" y2="-22" stroke="#ffffff" stroke-width="2" stroke-dasharray="4 2" />
-      <circle cx="-25" cy="-22" r="3" fill="#ffffff" /> <!-- Zipper pull -->
-      <!-- Wipes Dispenser Box peeking -->
-      <rect x="-20" y="5" width="40" height="24" rx="6" fill="#38bdf8" />
-      <ellipse cx="0" cy="17" rx="10" ry="5" fill="#f8fafc" />
-      <text x="0" y="44" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="9" fill="#fda4af" text-anchor="middle">WET BAG</text>
-    </g>
-  </g>
-
-  <!-- Bottom Frosted Card Banner with Title and Tagline -->
-  <g transform="translate(48, 330)">
-    <rect width="704" height="114" rx="24" fill="#090d16" opacity="0.88" />
-    <rect width="704" height="114" rx="24" fill="none" stroke="#ffffff" stroke-width="1" opacity="0.12" />
-    <text x="32" y="44" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="24" fill="#ffffff" letter-spacing="-0.5">Potty Training on the Go</text>
-    <text x="32" y="78" font-family="system-ui, -apple-system, sans-serif" font-weight="600" font-size="13" fill="#94a3b8" letter-spacing="0.2">Folding Car Potty · Post-It Note for Auto Sensors · Outing Kits</text>
-    <g transform="translate(640, 48)">
-      <circle cx="0" cy="0" r="18" fill="#bae6fd" opacity="0.15" />
-      <polygon points="0,-10 3,-3 10,-3 4,2 6,9 0,5 -6,9 -4,2 -10,-3 -3,-3" fill="#bae6fd" />
-    </g>
-  </g>
+  
+    <!-- Compact travel potty seat -->
+    <ellipse cx="620" cy="368" rx="34" ry="15" fill="#FB7185"/>
+    <rect x="595" y="370" width="50" height="22" rx="6" fill="#FFFFFF"/>
+  
 </svg>

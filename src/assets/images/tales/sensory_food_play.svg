@@ -1,86 +1,98 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 480" width="800" height="480">
   <defs>
-    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#064e3b" />
-      <stop offset="100%" stop-color="#022c22" />
-    </linearGradient>
-    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
-      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.5" />
+    <filter id="softShadow_m10" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#1e293b" flood-opacity="0.12" />
     </filter>
+    
   </defs>
-
-  <rect width="800" height="480" fill="url(#bgGrad)" />
-
-  <!-- Category Pill Badge -->
-  <g transform="translate(48, 36)">
-    <rect width="160" height="32" rx="16" fill="#000000" opacity="0.4" />
-    <rect width="160" height="32" rx="16" fill="none" stroke="#34d399" stroke-width="1.5" opacity="0.7" />
-    <circle cx="20" cy="16" r="5" fill="#34d399" />
-    <text x="32" y="21" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="11" fill="#34d399" letter-spacing="2">MEALTIME</text>
-  </g>
-
-  <!-- Central Thematic Illustration: High Chair Tray with Tactile Sensory Finger Foods & Handprints -->
-  <g filter="url(#shadow)" transform="translate(400, 180)">
-    <!-- High Chair Tray Table Outline -->
-    <rect x="-190" y="-35" width="380" height="115" rx="28" fill="#1e293b" stroke="#34d399" stroke-width="3" />
-    <rect x="-175" y="-22" width="350" height="88" rx="20" fill="#0f172a" stroke="#334155" stroke-width="1.5" />
-
-    <!-- Divided Silicone Suction Plate in Center -->
-    <g transform="translate(0, 20)">
-      <!-- Outer Plate Rim -->
-      <ellipse cx="0" cy="0" rx="90" ry="40" fill="#059669" stroke="#34d399" stroke-width="2" />
-      <!-- Left Compartment: Fresh Avocado Cubes & Broccoli Florets -->
-      <path d="M -80 0 C -80 -25 -10 -25 -10 0 C -10 25 -80 25 -80 0 Z" fill="#10b981" />
-      <rect x="-65" y="-12" width="16" height="12" rx="3" fill="#84cc16" />
-      <rect x="-45" y="-6" width="14" height="14" rx="3" fill="#84cc16" />
-      <circle cx="-55" cy="10" r="8" fill="#15803d" /> <!-- Steamed broccoli -->
-
-      <!-- Right Compartment: Sweet Potato / Carrot Batons -->
-      <path d="M 80 0 C 80 -25 10 -25 10 0 C 10 25 80 25 80 0 Z" fill="#047857" />
-      <rect x="25" y="-12" width="30" height="9" rx="3" fill="#f97316" transform="rotate(12 25 -12)" />
-      <rect x="35" y="4" width="28" height="9" rx="3" fill="#f97316" transform="rotate(-8 35 4)" />
-      <circle cx="30" cy="-6" r="5" fill="#facc15" />
+  
+    
+    <rect width="800" height="480" fill="#FFF1F2"/>
+    <rect y="310" width="800" height="170" fill="#FFE4E6"/>
+    <!-- Window with bright garden -->
+    <rect x="70" y="34" width="180" height="190" rx="18" fill="#BAE6FD" stroke="#FFFFFF" stroke-width="8"/>
+    <path d="M70,190 Q140,165 250,188 L250,224 L70,224 Z" fill="#86EFAC"/>
+    <circle cx="205" cy="76" r="22" fill="#FEF08A"/>
+    <line x1="160" y1="34" x2="160" y2="224" stroke="#FFFFFF" stroke-width="5"/>
+    <line x1="70" y1="128" x2="250" y2="128" stroke="#FFFFFF" stroke-width="5"/>
+    <!-- Sunlight beam -->
+    <polygon points="70,224 250,224 440,480 120,480" fill="#FEF9C3" opacity="0.28"/>
+    <!-- Wall shelf with plant -->
+    <rect x="580" y="95" width="160" height="12" rx="6" fill="#D97706" opacity="0.45"/>
+    <rect x="615" y="68" width="28" height="27" rx="5" fill="#F97316"/>
+    <circle cx="622" cy="58" r="11" fill="#22C55E"/>
+    <circle cx="636" cy="55" r="10" fill="#4ADE80"/>
+    <circle cx="629" cy="48" r="9" fill="#16A34A"/>
+    <rect x="675" y="60" width="24" height="35" rx="6" fill="#38BDF8" opacity="0.7"/>
+    <!-- Floor shadow -->
+    <rect y="385" width="800" height="95" fill="#FDE68A" opacity="0.35"/>
+  
+    
+    <g transform="translate(400, 252) scale(1.1)">
+      
+      
+      <path d="M-29,-20 Q-44,-6 -26,16" fill="none" stroke="#EC4899" stroke-width="15" stroke-linecap="round"/>
+      <circle cx="-24" cy="18" r="8.5" fill="#A96B42"/>
+    
+      
+      <path d="M29,-20 Q44,-6 26,16" fill="none" stroke="#EC4899" stroke-width="15" stroke-linecap="round"/>
+      <circle cx="24" cy="18" r="8.5" fill="#A96B42"/>
+    
+      
+    <path d="M-32,-26 C-36,-10 -34,36 -28,48 C-14,54 14,54 28,48 C34,36 36,-10 32,-26 C20,-34 -20,-34 -32,-26 Z" fill="#EC4899" />
+    
+      <path d="M-31,-4 L31,-4 L32,6 L-32,6 Z" fill="#FDA4AF" opacity="0.55"/>
+      <path d="M-32,16 L32,16 L31,26 L-31,26 Z" fill="#FDA4AF" opacity="0.55"/>
+    
+    
+    
+      <path d="M-24,-28 C-28,6 -22,26 0,28 C22,26 28,6 24,-28 C16,-20 -16,-20 -24,-28 Z" fill="#99F6E4" stroke="#FFFFFF" stroke-width="2"/>
+      <circle cx="0" cy="4" r="6" fill="#FFFFFF" opacity="0.55"/>
+    
+  
+      <!-- Neck -->
+      <rect x="-8" y="-38" width="16" height="14" rx="6" fill="#8A502B"/>
+      <!-- Hair Back -->
+      <circle cx="0" cy="-116" r="15" fill="#231715"/><rect x="-10" y="-106" width="20" height="6" rx="3" fill="#F472B6"/>
+      <!-- Ears -->
+      <circle cx="-41" cy="-66" r="8.5" fill="#8A502B"/>
+      <circle cx="41" cy="-66" r="8.5" fill="#8A502B"/>
+      <!-- Head -->
+      <circle cx="0" cy="-68" r="42" fill="#A96B42"/>
+      <!-- Chin subtle warm highlight -->
+      <ellipse cx="0" cy="-40" rx="20" ry="7" fill="#8A502B" opacity="0.22"/>
+      <!-- Rosy cheeks -->
+      <ellipse cx="-24" cy="-60" rx="8.5" ry="5.5" fill="#D46A6A" opacity="0.45"/>
+      <ellipse cx="24" cy="-60" rx="8.5" ry="5.5" fill="#D46A6A" opacity="0.45"/>
+      <!-- Cute button nose -->
+      <path d="M-2.5,-63 Q0,-59.5 2.5,-63" fill="none" stroke="#8A502B" stroke-width="2.6" stroke-linecap="round"/>
+      
+    <path d="M-21,-81 Q-15,-84 -9,-81" fill="none" stroke="#231715" stroke-width="2.4" stroke-linecap="round"/>
+    <path d="M9,-81 Q15,-84 21,-81" fill="none" stroke="#231715" stroke-width="2.4" stroke-linecap="round"/>
+  
+      
+        <path d="M-21,-68 Q-15,-75 -9,-68" fill="none" stroke="#1E1B18" stroke-width="3.2" stroke-linecap="round"/>
+        <path d="M9,-68 Q15,-75 21,-68" fill="none" stroke="#1E1B18" stroke-width="3.2" stroke-linecap="round"/>
+      
+      <path d="M-11,-56 Q0,-41 11,-56 Z" fill="#B91C1C"/><path d="M-5,-49 Q0,-52 5,-49" fill="#F87171"/>
+      <!-- Hair Front -->
+      <path d="M-41,-76 C-40,-114 40,-114 41,-76 C22,-93 -22,-93 -41,-76 Z" fill="#231715"/>
     </g>
-
-    <!-- Messy Tactile Fun: Toddler Handprint Swirl on Left of Tray -->
-    <g transform="translate(-130, 20)">
-      <!-- Palm smudge (Orange Puree) -->
-      <ellipse cx="0" cy="8" rx="14" ry="12" fill="#ea580c" opacity="0.85" />
-      <!-- Finger prints -->
-      <ellipse cx="-12" cy="-8" rx="4" ry="6" fill="#ea580c" opacity="0.85" />
-      <ellipse cx="-4" cy="-14" rx="4" ry="7" fill="#ea580c" opacity="0.85" />
-      <ellipse cx="6" cy="-12" rx="4" ry="7" fill="#ea580c" opacity="0.85" />
-      <ellipse cx="14" cy="-5" rx="3.5" ry="6" fill="#ea580c" opacity="0.85" />
-    </g>
-
-    <!-- Toddler Spoon & Berry Splashes on Right of Tray -->
-    <g transform="translate(130, 20)">
-      <!-- Silicone Teething Spoon -->
-      <ellipse cx="15" cy="-8" rx="10" ry="7" fill="#fb7185" stroke="#f43f5e" stroke-width="1.5" />
-      <rect x="-20" y="-11" width="35" height="6" rx="3" fill="#fb7185" transform="rotate(-15 -20 -11)" />
-      <!-- Blueberry dots -->
-      <circle cx="5" cy="15" r="5" fill="#3b82f6" />
-      <circle cx="-12" cy="18" r="4" fill="#3b82f6" />
-      <circle cx="20" cy="22" r="4.5" fill="#3b82f6" />
-    </g>
-
-    <!-- Exploration Badge Overhead -->
-    <g transform="translate(0, -60)">
-      <rect x="-80" y="0" width="160" height="26" rx="13" fill="#1e1b4b" stroke="#34d399" stroke-width="1.5" />
-      <text x="0" y="17" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="10" fill="#6ee7b7" text-anchor="middle" letter-spacing="1">TACTILE SENSORY PLAY</text>
-    </g>
-  </g>
-
-  <!-- Bottom Frosted Card Banner with Title and Tagline -->
-  <g transform="translate(48, 330)">
-    <rect width="704" height="114" rx="24" fill="#090d16" opacity="0.88" />
-    <rect width="704" height="114" rx="24" fill="none" stroke="#ffffff" stroke-width="1" opacity="0.12" />
-    <text x="32" y="44" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="24" fill="#ffffff" letter-spacing="-0.5">Sensory Food Exploration</text>
-    <text x="32" y="78" font-family="system-ui, -apple-system, sans-serif" font-weight="600" font-size="13" fill="#94a3b8" letter-spacing="0.2">Tactile Play Builds Adventurous Eaters · Zero Pressure</text>
-    <g transform="translate(640, 48)">
-      <circle cx="0" cy="0" r="18" fill="#6ee7b7" opacity="0.15" />
-      <polygon points="0,-10 3,-3 10,-3 4,2 6,9 0,5 -6,9 -4,2 -10,-3 -3,-3" fill="#6ee7b7" />
-    </g>
-  </g>
+  
+    <!-- Cute yogurt smears on toddler cheeks! -->
+    <circle cx="372" cy="186" r="5" fill="#FFFFFF" opacity="0.85"/>
+    <circle cx="428" cy="188" r="4" fill="#FFFFFF" opacity="0.85"/>
+    
+    <rect x="60" y="328" width="680" height="162" rx="22" fill="#D97706"/>
+    <rect x="60" y="328" width="680" height="26" rx="14" fill="#F59E0B"/>
+    <rect x="85" y="334" width="630" height="6" rx="3" fill="#FDE68A" opacity="0.35"/>
+  
+    <!-- Sensory smiley face made of yogurt & berries on silicone mat -->
+    <rect x="290" y="346" width="220" height="74" rx="22" fill="#FDA4AF"/>
+    <circle cx="400" cy="382" r="28" fill="#FFFFFF" opacity="0.9"/>
+    <circle cx="390" cy="376" r="4" fill="#3B82F6"/>
+    <circle cx="410" cy="376" r="4" fill="#3B82F6"/>
+    <path d="M388,388 Q400,398 412,388" fill="none" stroke="#EF4444" stroke-width="3.5" stroke-linecap="round"/>
+  
 </svg>

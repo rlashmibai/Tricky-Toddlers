@@ -315,18 +315,18 @@ export const BlogView: React.FC<BlogViewProps> = ({ onBack, initialCategory = 'A
                 key={article.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: idx * 0.1 }}
+                transition={{ delay: Math.min(idx * 0.03, 0.3) }}
                 onClick={() => handleArticleClick(article)}
                 className="glass-card group cursor-pointer border border-white/5 hover:border-white/20 transition-all overflow-hidden flex flex-col"
               >
-                <div className="h-48 overflow-hidden relative">
+                <div className="h-48 overflow-hidden relative bg-slate-800/60">
                   <img 
                     src={article.image} 
                     alt={article.title}
                     referrerPolicy="no-referrer"
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
                   />
-                  <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors" />
+                  <div className="absolute inset-0 bg-black/5 group-hover:bg-black/0 transition-colors" />
                 </div>
                 <div className="p-6 flex flex-col flex-1">
                   <span className={`text-[10px] font-black uppercase tracking-[0.2em] mb-2 ${article.color}`}>
